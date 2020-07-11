@@ -5,10 +5,10 @@ import com.alibaba.fastjson.JSONObject;
 import com.cn.hzm.core.aws.Encrypt;
 import com.cn.hzm.core.aws.request.BaseRequest;
 import com.cn.hzm.core.aws.request.OrderRequest;
-import com.cn.hzm.core.util.HttpUtil;
-import com.cn.hzm.core.util.TimeUtil;
 import com.cn.hzm.core.aws.request.ProductRequest;
 import com.cn.hzm.core.aws.resp.ListMatchingProductsResponse;
+import com.cn.hzm.core.util.HttpUtil;
+import com.cn.hzm.core.util.TimeUtil;
 import com.cn.hzm.core.util.ToolUtil;
 import com.google.common.collect.Maps;
 

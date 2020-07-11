@@ -1,6 +1,6 @@
 spring:
   profiles:
-    active: @env@
+    active: test
   application:
     name: hzman
 
