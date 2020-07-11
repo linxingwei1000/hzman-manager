@@ -33,7 +33,7 @@
         <fastjson-version>1.2.60</fastjson-version>
         <commons-codec-version>1.10</commons-codec-version>
         <guava-version>29.0-jre</guava-version>
-        <common.collection4.version>4.0</common.collection4.version>
+        <common.collection4.version>4.1</common.collection4.version>
         <httpclient-version>4.5.2</httpclient-version>
         <httpcore-version>4.4.4</httpcore-version>
     </properties>
