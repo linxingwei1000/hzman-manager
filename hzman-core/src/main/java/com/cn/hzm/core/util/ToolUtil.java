@@ -1,7 +1,7 @@
-package com.cn.hzm.util;
+package com.cn.hzm.core.util;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cn.hzm.constant.ContextConst;
+import com.cn.hzm.core.constant.ContextConst;
 import com.google.common.collect.Maps;
 
 import java.io.UnsupportedEncodingException;

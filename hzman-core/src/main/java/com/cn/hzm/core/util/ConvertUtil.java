@@ -1,4 +1,4 @@
-package com.cn.hzm.util;
+package com.cn.hzm.core.util;
 
 import com.thoughtworks.xstream.XStream;
 

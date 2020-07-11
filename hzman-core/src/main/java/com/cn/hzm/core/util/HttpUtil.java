@@ -1,6 +1,6 @@
-package com.cn.hzm.util;
+package com.cn.hzm.core.util;
 
-import com.cn.hzm.constant.ContextConst;
+import com.cn.hzm.core.constant.ContextConst;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
 import org.apache.http.client.methods.CloseableHttpResponse;

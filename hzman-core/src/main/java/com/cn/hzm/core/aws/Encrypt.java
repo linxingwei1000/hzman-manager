@@ -1,4 +1,4 @@
-package com.cn.hzm.aws;
+package com.cn.hzm.core.aws;
 
 
 import java.io.UnsupportedEncodingException;

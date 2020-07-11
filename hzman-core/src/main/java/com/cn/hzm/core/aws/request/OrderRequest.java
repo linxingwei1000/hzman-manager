@@ -1,4 +1,4 @@
-package com.cn.hzm.aws.request;
+package com.cn.hzm.core.aws.request;
 
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;

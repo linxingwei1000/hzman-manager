@@ -1,16 +1,15 @@
-package com.cn.hzm;
+package com.cn.hzm.core;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
-import com.cn.hzm.aws.Encrypt;
-import com.cn.hzm.aws.request.BaseRequest;
-import com.cn.hzm.aws.request.OrderRequest;
-import com.cn.hzm.util.ConvertUtil;
-import com.cn.hzm.util.HttpUtil;
-import com.cn.hzm.util.TimeUtil;
-import com.cn.hzm.aws.request.ProductRequest;
-import com.cn.hzm.aws.resp.ListMatchingProductsResponse;
-import com.cn.hzm.util.ToolUtil;
+import com.cn.hzm.core.aws.Encrypt;
+import com.cn.hzm.core.aws.request.BaseRequest;
+import com.cn.hzm.core.aws.request.OrderRequest;
+import com.cn.hzm.core.util.HttpUtil;
+import com.cn.hzm.core.util.TimeUtil;
+import com.cn.hzm.core.aws.request.ProductRequest;
+import com.cn.hzm.core.aws.resp.ListMatchingProductsResponse;
+import com.cn.hzm.core.util.ToolUtil;
 import com.google.common.collect.Maps;
 
 import java.util.Map;

@@ -1,4 +1,4 @@
-package com.cn.hzm.api;
+package com.cn.hzm.server.api;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;

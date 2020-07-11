@@ -1,4 +1,4 @@
-package com.cn.hzm.constant;
+package com.cn.hzm.core.constant;
 
 /**
  * @author xingweilin@clubfactory.com

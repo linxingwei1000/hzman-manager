@@ -1,4 +1,4 @@
-package com.cn.hzm.util;
+package com.cn.hzm.core.util;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
