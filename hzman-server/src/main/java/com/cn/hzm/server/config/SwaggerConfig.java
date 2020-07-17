@@ -31,8 +31,8 @@ public class SwaggerConfig {
 
     private ApiInfo apiInfo() {
         return new ApiInfoBuilder()
-                .title("基于Swagger构建的Rest API文档")
-                .description("牛逼的我们")
+                .title("hzm swagger api对接专用")
+                .description("打球了啊")
 //                .contact(new Contact("空夜", "http://www.eknown.cn", "eknown@163.com"))
 //                .termsOfServiceUrl("http://www.eknown.com")
                 .version("1.0")
