@@ -10,6 +10,8 @@ import java.util.Collection;
  */
 public class PasswordAuthenticationToken extends AbstractAuthenticationToken {
 
+    private static final long serialVersionUID = 3432091075032920851L;
+
     private final String username;
 
     private String password;
