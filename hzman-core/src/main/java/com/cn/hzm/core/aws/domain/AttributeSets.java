@@ -1,4 +1,4 @@
-package com.cn.hzm.core.aws.resp;
+package com.cn.hzm.core.aws.domain;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import lombok.Data;
@@ -11,5 +11,6 @@ import lombok.Data;
 @XStreamAlias("AttributeSets")
 public class AttributeSets {
 
-
+    @XStreamAlias(value="ns2:ItemAttributes")
+    private ItemAttributes itemAttributes;
 }

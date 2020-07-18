@@ -1,5 +1,7 @@
 package com.cn.hzm.core.aws.request;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
 import lombok.Data;
 
@@ -8,7 +10,7 @@ import lombok.Data;
  * @date 2020/7/11 10:34 上午
  */
 @Data
-public class BaseRequest {
+public abstract class BaseRequest {
 
     @JSONField(name="SellerId")
     protected String SELLER_ID = "AK0HQWR8PUJRG";
@@ -30,4 +32,13 @@ public class BaseRequest {
 
     @JSONField(name="Timestamp")
     private String timestamp;
+
+
+    public JSONObject installJsonStr(){
+        JSONObject jo = (JSONObject) JSON.toJSON(this);
+        privateJson(jo);
+        return jo;
+    }
+
+    protected abstract void privateJson(JSONObject jo);
 }

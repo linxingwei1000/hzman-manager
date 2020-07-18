@@ -1,6 +1,7 @@
-package com.cn.hzm.core.aws.request;
+package com.cn.hzm.core.aws.request.product;
 
 import com.alibaba.fastjson.annotation.JSONField;
+import com.cn.hzm.core.aws.request.BaseRequest;
 import lombok.Data;
 
 /**
@@ -8,7 +9,7 @@ import lombok.Data;
  * @date 2020/7/11 10:34 上午
  */
 @Data
-public class ProductRequest extends BaseRequest{
+public abstract class ProductRequest extends BaseRequest {
 
     @JSONField(name="MarketplaceId")
     protected String MARKETPLACE_ID = "ATVPDKIKX0DER";
@@ -20,10 +21,4 @@ public class ProductRequest extends BaseRequest{
 
     @JSONField(name="Action")
     private String action;
-
-    @JSONField(name="Query")
-    private String query;
-
-    @JSONField(name="QueryContextId")
-    private Integer queryContextId;
 }
