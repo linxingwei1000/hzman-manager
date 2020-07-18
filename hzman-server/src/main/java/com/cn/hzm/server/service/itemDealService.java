@@ -1,6 +1,9 @@
 package com.cn.hzm.server.service;
 
-import com.cn.hzm.core.entity.ItemDO;
+import com.cn.hzm.core.aws.AwsClient;
+import com.cn.hzm.core.aws.resp.product.GetMatchingProductForIdResponse;
+import com.cn.hzm.server.dto.ItemDTO;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 /**
@@ -10,7 +13,12 @@ import org.springframework.stereotype.Service;
 @Service
 public class itemDealService {
 
-    public void processItemCreate(ItemDO itemDO){
+    @Autowired
+    private AwsClient awsClient;
+
+    public void processItemCreate(ItemDTO item){
+
+        GetMatchingProductForIdResponse resp = awsClient.getProductInfoByAsin(item.getAsin());
 
         //asin取aws数据：商品信息，商品库存，销量
 

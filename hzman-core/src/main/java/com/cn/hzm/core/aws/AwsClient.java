@@ -1,54 +1,37 @@
-package com.cn.hzm.core;
+package com.cn.hzm.core.aws;
 
-import com.alibaba.fastjson.JSONObject;
-import com.cn.hzm.core.aws.Encrypt;
 import com.cn.hzm.core.aws.request.BaseRequest;
-import com.cn.hzm.core.aws.request.order.ListOrderRequest;
 import com.cn.hzm.core.aws.request.product.GetMatchProductRequest;
 import com.cn.hzm.core.aws.resp.product.GetMatchingProductForIdResponse;
-import com.cn.hzm.core.aws.resp.product.ListMatchingProductsResponse;
 import com.cn.hzm.core.util.ConvertUtil;
 import com.cn.hzm.core.util.HttpUtil;
 import com.cn.hzm.core.util.TimeUtil;
 import com.cn.hzm.core.util.ToolUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
 
 /**
  * @author xingweilin@clubfactory.com
- * @date 2020/7/11 12:19 下午
+ * @date 2020/7/18 2:50 下午
  */
-public class Test {
+@Component
+public class AwsClient {
 
-    public static void main(String[] args) throws Exception {
-//        ListMatchingProductRequest productRequest = new ListMatchingProductRequest();
-//        productRequest.setAction("ListMatchingProducts");
-//        productRequest.setQuery("hzman");
-//        productRequest.setTimestamp(TimeUtil.getUTC());
-//        doPost(productRequest, ListMatchingProductsResponse.class);
-
+    public GetMatchingProductForIdResponse getProductInfoByAsin(String asin){
         GetMatchProductRequest getMatchProductRequest = new GetMatchProductRequest();
         getMatchProductRequest.setAction("GetMatchingProductForId");
         getMatchProductRequest.setIdType("ASIN");
         getMatchProductRequest.setIds(Lists.newArrayList("B07BGY7HWK"));
         getMatchProductRequest.setTimestamp(TimeUtil.getUTC());
-        GetMatchingProductForIdResponse resp = doPost(getMatchProductRequest, GetMatchingProductForIdResponse.class);
-        System.out.println(JSONObject.toJSONString(resp));
-
-//        ListOrderRequest orderRequest = new ListOrderRequest();
-//        orderRequest.setAction("ListOrders");
-//        orderRequest.setTimestamp(TimeUtil.getUTC());
-//        orderRequest.setMarketplaceIds(Lists.newArrayList("ATVPDKIKX0DER"));
-//        orderRequest.setCreatedAfter("2020-07-09T16:00:00Z");
-//        orderRequest.setCreatedBefore("2020-07-10T16:00:00Z");
-//        doPost(orderRequest, ListMatchingProductsResponse.class);
-
+        return doPost(getMatchProductRequest, GetMatchingProductForIdResponse.class);
     }
 
-    private static<T> T doPost(BaseRequest baseRequest, Class<T> tClass){
+
+    private<T> T doPost(BaseRequest baseRequest, Class<T> tClass){
         String strForSign = ToolUtil.createStrForSign(baseRequest.installJsonStr());
 
         String sign = Encrypt.sign(strForSign);

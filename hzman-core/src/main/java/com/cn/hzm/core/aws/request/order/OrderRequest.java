@@ -1,6 +1,8 @@
-package com.cn.hzm.core.aws.request;
+package com.cn.hzm.core.aws.request.order;
 
+import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.annotation.JSONField;
+import com.cn.hzm.core.aws.request.BaseRequest;
 import lombok.Data;
 
 /**
@@ -8,7 +10,7 @@ import lombok.Data;
  * @date 2020/7/11 10:37 上午
  */
 @Data
-public class OrderRequest extends BaseRequest {
+public abstract class OrderRequest extends BaseRequest {
 
     private String apiSection = "Orders";
 
@@ -18,12 +20,5 @@ public class OrderRequest extends BaseRequest {
     @JSONField(name="Action")
     private String action;
 
-    @JSONField(name="CreatedAfter")
-    private String createdAfter;
 
-    @JSONField(name="CreatedBefore")
-    private String createdBefore;
-
-    @JSONField(name="MarketplaceId.Id.1")
-    private String marketplaceIdOne;
 }
