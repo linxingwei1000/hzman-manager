@@ -18,7 +18,10 @@ import javax.sql.DataSource;
  * @date 2020/7/11 4:33 下午
  */
 @Configuration
-@MapperScan(value = "com.cn.hzm.dao")
+@MapperScan(basePackages = {
+        "com.cn.hzm.item.dao",
+        "com.cn.hzm.stock.dao",
+        "com.cn.hzm.server.dao"})
 @EnableTransactionManagement
 @Slf4j
 public class MybatisPlusConfig {
