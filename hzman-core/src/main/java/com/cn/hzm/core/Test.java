@@ -3,8 +3,10 @@ package com.cn.hzm.core;
 import com.alibaba.fastjson.JSONObject;
 import com.cn.hzm.core.aws.Encrypt;
 import com.cn.hzm.core.aws.request.BaseRequest;
+import com.cn.hzm.core.aws.request.inventory.ListInventoryRequest;
 import com.cn.hzm.core.aws.request.order.ListOrderRequest;
 import com.cn.hzm.core.aws.request.product.GetMatchProductRequest;
+import com.cn.hzm.core.aws.resp.inventory.ListInventorySupplyResponse;
 import com.cn.hzm.core.aws.resp.product.GetMatchingProductForIdResponse;
 import com.cn.hzm.core.aws.resp.product.ListMatchingProductsResponse;
 import com.cn.hzm.core.util.ConvertUtil;
@@ -30,13 +32,22 @@ public class Test {
 //        productRequest.setTimestamp(TimeUtil.getUTC());
 //        doPost(productRequest, ListMatchingProductsResponse.class);
 
-        GetMatchProductRequest getMatchProductRequest = new GetMatchProductRequest();
-        getMatchProductRequest.setAction("GetMatchingProductForId");
-        getMatchProductRequest.setIdType("ASIN");
-        getMatchProductRequest.setIds(Lists.newArrayList("B07BGY7HWK"));
-        getMatchProductRequest.setTimestamp(TimeUtil.getUTC());
-        GetMatchingProductForIdResponse resp = doPost(getMatchProductRequest, GetMatchingProductForIdResponse.class);
-        System.out.println(JSONObject.toJSONString(resp));
+//        GetMatchProductRequest getMatchProductRequest = new GetMatchProductRequest();
+//        getMatchProductRequest.setAction("GetMatchingProductForId");
+//        getMatchProductRequest.setIdType("ASIN");
+//        getMatchProductRequest.setIds(Lists.newArrayList("B07BGY7HWK"));
+//        getMatchProductRequest.setTimestamp(TimeUtil.getUTC());
+//        GetMatchingProductForIdResponse resp = doPost(getMatchProductRequest, GetMatchingProductForIdResponse.class);
+//        System.out.println(JSONObject.toJSONString(resp));
+
+        ListInventoryRequest listInventoryRequest = new ListInventoryRequest();
+        listInventoryRequest.setApiSection("FulfillmentInventory");
+        listInventoryRequest.setAction("ListInventorySupply");
+        listInventoryRequest.setResponseGroup("Basic");
+        listInventoryRequest.setSkus(Lists.newArrayList("XL7907-20T"));
+        listInventoryRequest.setTimestamp(TimeUtil.getUTC());
+        ListInventorySupplyResponse r = doPost(listInventoryRequest, ListInventorySupplyResponse.class);
+        System.out.println(JSONObject.toJSONString(r));
 
 //        ListOrderRequest orderRequest = new ListOrderRequest();
 //        orderRequest.setAction("ListOrders");
@@ -62,6 +73,7 @@ public class Test {
         Map<String, String> headers = Maps.newHashMap();
         headers.put("Content-Type", "text/xml");
         String resp = HttpUtil.postV2(headers, url);
+        System.out.println(resp);
         if(StringUtils.isEmpty(resp)){
             return null;
         }

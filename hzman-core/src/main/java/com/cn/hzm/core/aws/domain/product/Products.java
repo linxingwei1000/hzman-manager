@@ -1,4 +1,4 @@
-package com.cn.hzm.core.aws.domain;
+package com.cn.hzm.core.aws.domain.product;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import com.thoughtworks.xstream.annotations.XStreamImplicit;
@@ -8,12 +8,12 @@ import java.util.List;
 
 /**
  * @author xingweilin@clubfactory.com
- * @date 2020/7/18 3:06 下午
+ * @date 2020/7/7 11:11 下午
  */
 @Data
-@XStreamAlias("SalesRankings")
-public class SalesRankings {
+@XStreamAlias("Products")
+public class Products {
 
-    @XStreamImplicit(itemFieldName="SalesRank")
-    private List<SalesRank> salesRanks;
+    @XStreamImplicit(itemFieldName="Product")
+    private List<Product> list;
 }

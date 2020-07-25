@@ -1,6 +1,5 @@
 package com.cn.hzm.core.aws.resp.product;
 
-import com.cn.hzm.core.aws.domain.Products;
 import com.cn.hzm.core.aws.resp.ResponseMetadata;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import lombok.Data;
@@ -21,10 +20,3 @@ public class GetMatchingProductForIdResponse {
 }
 
 
-@Data
-@XStreamAlias("GetMatchingProductForIdResult")
-class GetMatchingProductForIdResult {
-
-    @XStreamAlias(value = "Products")
-    Products products;
-}

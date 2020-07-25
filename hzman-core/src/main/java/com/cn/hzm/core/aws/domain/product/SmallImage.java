@@ -1,4 +1,4 @@
-package com.cn.hzm.core.aws.domain;
+package com.cn.hzm.core.aws.domain.product;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import lombok.Data;

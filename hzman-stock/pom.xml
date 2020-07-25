@@ -11,5 +11,10 @@
 
     <artifactId>hzman-stock</artifactId>
 
-
+    <dependencies>
+        <dependency>
+            <groupId>com.cn.hzm</groupId>
+            <artifactId>hzman-core</artifactId>
+        </dependency>
+    </dependencies>
 </project>

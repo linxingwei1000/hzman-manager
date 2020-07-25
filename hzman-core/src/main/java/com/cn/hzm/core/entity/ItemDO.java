@@ -20,6 +20,12 @@ public class ItemDO {
 
     private String asin;
 
+    private String sku;
+
+    private String fnsku;
+
+    private String attrs;
+
     private Date ctime;
 
     private Date utime;

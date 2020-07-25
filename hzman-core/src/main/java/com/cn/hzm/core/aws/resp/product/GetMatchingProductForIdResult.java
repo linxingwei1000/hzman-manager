@@ -4,15 +4,14 @@ import com.cn.hzm.core.aws.domain.product.Products;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import lombok.Data;
 
-
 /**
  * @author xingweilin@clubfactory.com
- * @date 2020/7/7 11:10 下午
+ * @date 2020/7/18 4:48 下午
  */
 @Data
-@XStreamAlias("ListMatchingProductsResult")
-public class ListMatchingProductsResult {
+@XStreamAlias("GetMatchingProductForIdResult")
+public class GetMatchingProductForIdResult {
 
-    @XStreamAlias(value="Products")
+    @XStreamAlias(value = "Products")
     Products products;
 }

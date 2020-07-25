@@ -17,6 +17,10 @@
             <groupId>com.cn.hzm</groupId>
             <artifactId>hzman-item</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.cn.hzm</groupId>
+            <artifactId>hzman-stock</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>io.springfox</groupId>

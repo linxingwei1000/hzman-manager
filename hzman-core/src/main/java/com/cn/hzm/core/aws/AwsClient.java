@@ -1,7 +1,9 @@
 package com.cn.hzm.core.aws;
 
 import com.cn.hzm.core.aws.request.BaseRequest;
+import com.cn.hzm.core.aws.request.inventory.ListInventoryRequest;
 import com.cn.hzm.core.aws.request.product.GetMatchProductRequest;
+import com.cn.hzm.core.aws.resp.inventory.ListInventorySupplyResponse;
 import com.cn.hzm.core.aws.resp.product.GetMatchingProductForIdResponse;
 import com.cn.hzm.core.util.ConvertUtil;
 import com.cn.hzm.core.util.HttpUtil;
@@ -21,14 +23,30 @@ import java.util.Map;
 @Component
 public class AwsClient {
 
+    /**
+     * 根据sain获取商品属性
+     * @param asin
+     * @return
+     */
     public GetMatchingProductForIdResponse getProductInfoByAsin(String asin){
         GetMatchProductRequest getMatchProductRequest = new GetMatchProductRequest();
         getMatchProductRequest.setAction("GetMatchingProductForId");
         getMatchProductRequest.setIdType("ASIN");
-        getMatchProductRequest.setIds(Lists.newArrayList("B07BGY7HWK"));
+        getMatchProductRequest.setIds(Lists.newArrayList(asin));
         getMatchProductRequest.setTimestamp(TimeUtil.getUTC());
         return doPost(getMatchProductRequest, GetMatchingProductForIdResponse.class);
     }
+
+    public ListInventorySupplyResponse getInventoryInfoBySku(String sku){
+        ListInventoryRequest listInventoryRequest = new ListInventoryRequest();
+        listInventoryRequest.setApiSection("FulfillmentInventory");
+        listInventoryRequest.setAction("ListInventorySupply");
+        listInventoryRequest.setResponseGroup("Basic");
+        listInventoryRequest.setSkus(Lists.newArrayList(sku));
+        listInventoryRequest.setTimestamp(TimeUtil.getUTC());
+        return doPost(listInventoryRequest, ListInventorySupplyResponse.class);
+    }
+
 
 
     private<T> T doPost(BaseRequest baseRequest, Class<T> tClass){
