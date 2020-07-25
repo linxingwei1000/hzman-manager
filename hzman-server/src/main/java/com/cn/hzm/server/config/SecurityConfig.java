@@ -2,6 +2,8 @@ package com.cn.hzm.server.config;
 
 import com.cn.hzm.server.config.security.PasswordAuthenticationFilter;
 import com.cn.hzm.server.config.security.PasswordAuthenticationProvider;
+import com.cn.hzm.server.service.impl.HzmUserDetailsService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -18,6 +20,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
+    public static void main(String[] args) {
+        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
+        System.out.println(encoder.encode("123456"));
+    }
+    @Autowired
+    HzmUserDetailsService userDetailsService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -40,7 +48,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     public UserDetailsService userDetailsService() {
-        return super.userDetailsService();
+        return userDetailsService;
     }
 
     PasswordAuthenticationFilter passwordAuthenticationFilter(AuthenticationManager authenticationManager) {
