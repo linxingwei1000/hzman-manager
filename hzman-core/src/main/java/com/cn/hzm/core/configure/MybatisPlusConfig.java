@@ -18,7 +18,7 @@ import javax.sql.DataSource;
  * @date 2020/7/11 4:33 下午
  */
 @Configuration
-@MapperScan(value = "com.cn.hzm")
+@MapperScan(value = "com.cn.hzm.dao")
 @EnableTransactionManagement
 @Slf4j
 public class MybatisPlusConfig {
@@ -41,7 +41,7 @@ public class MybatisPlusConfig {
         factory.setDataSource(dataSource);
 
         PathMatchingResourcePatternResolver resolver = new PathMatchingResourcePatternResolver();
-        factory.setMapperLocations(resolver.getResources("classpath*:/mapper/*Mapper.xml"));
+        factory.setMapperLocations(resolver.getResources("classpath*:/mapper/*.xml"));
         return factory.getObject();
     }
 

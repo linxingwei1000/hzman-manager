@@ -20,10 +20,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
  */
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
-    public static void main(String[] args) {
-        BCryptPasswordEncoder encoder = new BCryptPasswordEncoder(10);
-        System.out.println(encoder.encode("123456"));
-    }
+
     @Autowired
     HzmUserDetailsService userDetailsService;
 
@@ -60,7 +57,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests().antMatchers("/", "/login").permitAll().anyRequest().authenticated()
+                .authorizeRequests().antMatchers("/", "/login", "/logout").permitAll().anyRequest().authenticated()
                 .and()
                 .formLogin().loginPage("/").successForwardUrl("/swagger-ui.html").permitAll()
                 .and()
@@ -69,7 +66,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .exceptionHandling()
                 .accessDeniedPage("/error")
                 .and()
-                .addFilter(passwordAuthenticationFilter(authenticationManager()))
+//                .addFilterBefore(passwordAuthenticationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable();
     }
 

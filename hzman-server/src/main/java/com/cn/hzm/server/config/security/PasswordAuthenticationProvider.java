@@ -24,7 +24,7 @@ public class PasswordAuthenticationProvider implements AuthenticationProvider {
         }
 
         String password = (String) authentication.getCredentials();
-        if (!passwordEncoder.matches(userDetails.getPassword(), password)) {
+        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
             throw new HzmUnauthorizedException();
         }
     }

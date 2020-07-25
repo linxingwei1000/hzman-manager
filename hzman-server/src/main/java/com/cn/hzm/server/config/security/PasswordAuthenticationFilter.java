@@ -40,7 +40,7 @@ public class PasswordAuthenticationFilter extends AbstractAuthenticationProcessi
     @Override
     public Authentication attemptAuthentication(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse)
             throws AuthenticationException, IOException, ServletException {
-        if (postOnly && HttpMethod.POST.matches(httpServletRequest.getMethod())) {
+        if (postOnly && !HttpMethod.POST.matches(httpServletRequest.getMethod())) {
             throw new HzmUnauthorizedException();
         }
 

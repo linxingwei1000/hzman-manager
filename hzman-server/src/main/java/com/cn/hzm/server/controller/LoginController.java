@@ -21,12 +21,6 @@ public class LoginController {
     @RequestMapping(value = "/login", method = RequestMethod.POST)
     public HzmResponse login(String username, String password) {
         SecurityContextHolder.getContext().setAuthentication(authenticationManager.authenticate(new PasswordAuthenticationToken(username, password)));
-        return HzmResponse.generateOkResponse("login successfully!</br><a href='/swagger-ui.html'>debug</a>");
-    }
-
-    @RequestMapping(value = "/logout", method = RequestMethod.GET)
-    public HzmResponse logout() {
-        SecurityContextHolder.clearContext();
-        return HzmResponse.generateOkResponse("logout successfully!</br><a href='/'>index</a>");
+        return HzmResponse.generateOkResponse(null);
     }
 }
