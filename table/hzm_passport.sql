@@ -8,5 +8,5 @@ CREATE TABLE `hzm_passport` (
   `update_time` bigint(20) DEFAULT '0' COMMENT '更新时间',
   `last_opt_user_id` bigint(20) DEFAULT NULL COMMENT '最后操作用户id',
   PRIMARY KEY (`id`),
-  KEY `uk_username` (`username`)
+  UNIQUE KEY `uk_username` (`username`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COMMENT='hzm登录账号表';
