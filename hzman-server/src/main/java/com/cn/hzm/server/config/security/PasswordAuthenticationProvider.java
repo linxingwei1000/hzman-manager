@@ -23,10 +23,11 @@ public class PasswordAuthenticationProvider implements AuthenticationProvider {
             throw new HzmUnauthorizedException();
         }
 
-        String password = (String) authentication.getCredentials();
-        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
-            throw new HzmUnauthorizedException();
-        }
+        //todo 暂时关闭
+//        String password = (String) authentication.getCredentials();
+//        if (!passwordEncoder.matches(password, userDetails.getPassword())) {
+//            throw new HzmUnauthorizedException();
+//        }
     }
 
     protected UserDetails retrieveUser(String username, PasswordAuthenticationToken authentication) {

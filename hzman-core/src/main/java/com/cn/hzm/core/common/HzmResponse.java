@@ -16,6 +16,10 @@ public class HzmResponse implements Serializable {
 
     private Object result;
 
+    public static HzmResponse success(Object result){
+        return new HzmResponse(ResponseCode.OK, result);
+    }
+
     public HzmResponse() {
     }
 

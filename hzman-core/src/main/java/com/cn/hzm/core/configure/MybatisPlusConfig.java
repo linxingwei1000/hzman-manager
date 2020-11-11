@@ -19,6 +19,7 @@ import javax.sql.DataSource;
  */
 @Configuration
 @MapperScan(basePackages = {
+        "com.cn.hzm.factory.dao",
         "com.cn.hzm.item.dao",
         "com.cn.hzm.stock.dao",
         "com.cn.hzm.server.dao"})

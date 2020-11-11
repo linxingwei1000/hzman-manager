@@ -26,10 +26,16 @@ public class HzmUserDetailsService implements UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        HzmPassport passport = passportService.findPassportByUsername(username);
-        if (passport == null) {
-            new HzmUnauthorizedException();
-        }
+
+        //todo 暂时修改一下
+//        HzmPassport passport = passportService.findPassportByUsername(username);
+//        if (passport == null) {
+//            new HzmUnauthorizedException();
+//        }
+        HzmPassport passport = new HzmPassport();
+        passport.setUsername("root");
+        passport.setPassword("$2a$10$4EdQAXlng87sn1zSirHmwuH69vnW5PpXA.rN417jExXwmdPTPl.FG");
+        passport.setStatus(1);
         // TODO: 2020/7/25 load role and permissions
         Set<GrantedAuthority> authorities = Sets.newHashSet(new SimpleGrantedAuthority("role_admin"));
 

@@ -31,6 +31,10 @@ public class ItemService {
         return itemMapper.selectList(query);
     }
 
+    public ItemDO getById(Integer id){
+        return itemMapper.selectById(id);
+    }
+
     public ItemDO getItemDOBySku(String sku){
         QueryWrapper<ItemDO> query = new QueryWrapper<>();
         query.eq("sku", sku);

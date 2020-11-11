@@ -15,6 +15,10 @@
     <dependencies>
         <dependency>
             <groupId>com.cn.hzm</groupId>
+            <artifactId>hzman-factory</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.cn.hzm</groupId>
             <artifactId>hzman-item</artifactId>
         </dependency>
         <dependency>
