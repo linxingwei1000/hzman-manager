@@ -53,6 +53,10 @@ public class FactoryDealService {
             factoryDTO.setOrderList(orderDOS.stream().map(orderDO -> {
                 FactoryOrderDTO orderDTO = JSONObject.parseObject(JSONObject.toJSONString(orderDO), FactoryOrderDTO.class);
                 orderDTO.setStatus(OrderStatusEnum.getEnumByCode(orderDO.getOrderStatus()).getDesc());
+
+                ItemDO itemDO = itemService.getItemDOBySku(orderDO.getSku());
+                orderDTO.setTitle(itemDO.getTitle());
+                orderDTO.setIcon(itemDO.getIcon());
                 return orderDTO;
             }).collect(Collectors.toList()));
             return factoryDTO;

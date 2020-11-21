@@ -23,6 +23,10 @@ public class FactoryOrderDTO {
     @ApiModelProperty(value = "商品sku")
     private String sku;
 
+    private String title;
+
+    private String icon;
+
     @ApiModelProperty(value = "订单数量")
     private Integer orderNum;
 
@@ -46,5 +50,7 @@ public class FactoryOrderDTO {
 
     @ApiModelProperty(value = "订单状态")
     private String status;
+
+    private String statusDesc;
 
 }
