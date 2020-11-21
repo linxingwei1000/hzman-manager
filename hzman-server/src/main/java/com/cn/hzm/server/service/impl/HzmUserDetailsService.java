@@ -1,8 +1,10 @@
 package com.cn.hzm.server.service.impl;
 
 import com.cn.hzm.core.exception.HzmUnauthorizedException;
+import com.cn.hzm.server.config.security.HzmGrantedAuthority;
 import com.cn.hzm.server.domain.HzmPassport;
 import com.cn.hzm.server.domain.HzmUserDetails;
+import com.cn.hzm.server.meta.HzmPermission;
 import com.cn.hzm.server.service.PassportService;
 import com.google.common.collect.Sets;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,7 +39,9 @@ public class HzmUserDetailsService implements UserDetailsService {
         passport.setPassword("$2a$10$4EdQAXlng87sn1zSirHmwuH69vnW5PpXA.rN417jExXwmdPTPl.FG");
         passport.setStatus(1);
         // TODO: 2020/7/25 load role and permissions
-        Set<GrantedAuthority> authorities = Sets.newHashSet(new SimpleGrantedAuthority("role_admin"));
+        Set<GrantedAuthority> authorities = Sets.newHashSet();
+        authorities.add(new HzmGrantedAuthority(HzmPermission.SUPER_ADMIN, Sets.newHashSet()));
+        authorities.add(new HzmGrantedAuthority(HzmPermission.PermissionType.USER_MANAGER, Sets.newHashSet(HzmPermission.UserManager.DEL_USER)));
 
         return new HzmUserDetails(passport, authorities);
     }

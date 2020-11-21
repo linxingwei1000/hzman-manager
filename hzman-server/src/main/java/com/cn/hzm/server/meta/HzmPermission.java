@@ -5,6 +5,8 @@ package com.cn.hzm.server.meta;
  */
 public final class HzmPermission {
 
+    public static final String SUPER_ADMIN = "ROLE_ADMIN";
+
     public interface PermissionType {
         String USER_MANAGER = "user_manager";
     }

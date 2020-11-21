@@ -12,7 +12,7 @@ public class IndexController {
     @RequestMapping(value = {"/", "/index", "/home"})
     public String index() {
         return "hello!</br>" +
-                "<form action='/login' method='POST'>" +
+                "<form action='/hzman/login' method='POST'>" +
                 "<div><label>username: <input type='text' name='username'/></label></div>" +
                 "<div><label>password: <input type='password' name='password'/></label></div>" +
                 "<div><input type='submit' value='sign in'/></div>" +
