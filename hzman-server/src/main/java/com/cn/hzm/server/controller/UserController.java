@@ -14,7 +14,8 @@ import static com.cn.hzm.server.meta.HzmPermission.*;
  * Created by yuyang04 on 2020/7/25.
  */
 @Api(tags = "用户管理")
-@RestController("/user")
+@RestController
+@RequestMapping("/user")
 public class UserController {
 
     @PreAuthorize("hasRole('" + SUPER_ADMIN + "') || hasPermission('" + PermissionType.USER_MANAGER + "', '" + UserManager.LIST_USER + "')")
