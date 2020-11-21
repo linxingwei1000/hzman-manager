@@ -12,7 +12,7 @@ import java.util.List;
  */
 @Data
 @ApiModel(description = "工厂DTO")
-public class FactoryDTO {
+public class FactoryDTO extends RespBaseDTO{
 
     @ApiModelProperty(value = "工厂id")
     private Integer id;

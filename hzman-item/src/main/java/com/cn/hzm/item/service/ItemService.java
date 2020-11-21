@@ -21,13 +21,12 @@ public class ItemService {
     @Autowired
     private ItemMapper itemMapper;
 
-    public List<ItemDO> getListByCondition(Map<String, String> condition, Integer offset, Integer limit){
+    public List<ItemDO> getListByCondition(Map<String, String> condition){
         QueryWrapper<ItemDO> query = new QueryWrapper<>();
         if(condition.size()!=0){
         }
 
         query.orderByAsc("ctime");
-        query.last(SqlCommonUtil.limitOffsetSql(offset, limit));
         return itemMapper.selectList(query);
     }
 
@@ -38,6 +37,12 @@ public class ItemService {
     public ItemDO getItemDOBySku(String sku){
         QueryWrapper<ItemDO> query = new QueryWrapper<>();
         query.eq("sku", sku);
+        return itemMapper.selectOne(query);
+    }
+
+    public ItemDO getItemDOByASIN(String asin){
+        QueryWrapper<ItemDO> query = new QueryWrapper<>();
+        query.eq("asin", asin);
         return itemMapper.selectOne(query);
     }
 

@@ -57,16 +57,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                .authorizeRequests().antMatchers("/", "/login", "/logout").permitAll().anyRequest().authenticated()
-                .and()
-                .formLogin().loginPage("/").successForwardUrl("/swagger-ui.html").permitAll()
-                .and()
-                .logout().logoutSuccessUrl("/").permitAll()
-                .and()
-                .exceptionHandling()
-                .accessDeniedPage("/error")
-                .and()
-//                .addFilterBefore(passwordAuthenticationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
+//                .authorizeRequests().antMatchers("/", "/login", "/logout").permitAll().anyRequest().authenticated()
+//                .and()
+//                .formLogin().loginPage("/").successForwardUrl("/swagger-ui.html").permitAll()
+//                .and()
+//                .logout().logoutSuccessUrl("/").permitAll()
+//                .and()
+//                .exceptionHandling()
+//                .accessDeniedPage("/error")
+//                .and()
+////                .addFilterBefore(passwordAuthenticationFilter(authenticationManager()), UsernamePasswordAuthenticationFilter.class)
                 .csrf().disable();
     }
 

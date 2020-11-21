@@ -1,6 +1,7 @@
 package com.cn.hzm.core.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import lombok.Data;
@@ -22,9 +23,17 @@ public class ItemDO {
 
     private String sku;
 
-    private String fnsku;
+    private String title;
 
-    private String attrs;
+    private String icon;
+
+    @TableField(value = "marketplace_id")
+    private String marketplaceId;
+
+    @TableField(value = "attribute_set")
+    private String attributeSet;
+
+    private String relationship;
 
     private Date ctime;
 

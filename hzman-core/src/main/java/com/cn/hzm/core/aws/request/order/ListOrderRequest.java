@@ -19,6 +19,12 @@ public class ListOrderRequest extends OrderRequest{
     @JSONField(name="CreatedBefore")
     private String createdBefore;
 
+    @JSONField(name="LastUpdatedAfter")
+    private String lastUpdatedAfter;
+
+    @JSONField(name="LastUpdatedBefore")
+    private String lastUpdatedBefore;
+
     @JSONField(serialize = false)
     private List<String> marketplaceIds;
 

@@ -11,4 +11,14 @@ public class ContextConst {
     public static final String AWS_URL = "https://mws.amazonservices.com";
 
     public static final String CHARACTER_ENCODING = "UTF-8";
+
+    /**
+     * 爬取新建订单
+     */
+    public static final String OPERATE_SPIDER_CREATE_ORDER = "spider_create_order";
+
+    /**
+     * 爬取更新订单
+     */
+    public static final String OPERATE_SPIDER_UPDATE_ORDER = "spider_update_order";
 }

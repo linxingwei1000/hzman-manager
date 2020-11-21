@@ -23,6 +23,10 @@
         </dependency>
         <dependency>
             <groupId>com.cn.hzm</groupId>
+            <artifactId>hzman-order</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>com.cn.hzm</groupId>
             <artifactId>hzman-stock</artifactId>
         </dependency>
         <dependency>

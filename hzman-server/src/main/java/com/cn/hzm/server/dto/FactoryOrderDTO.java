@@ -20,8 +20,8 @@ public class FactoryOrderDTO {
     @ApiModelProperty(value = "工厂id")
     private Integer factoryId;
 
-    @ApiModelProperty(value = "商品id")
-    private Integer itemId;
+    @ApiModelProperty(value = "商品sku")
+    private String sku;
 
     @ApiModelProperty(value = "订单数量")
     private Integer orderNum;

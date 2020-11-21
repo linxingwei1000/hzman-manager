@@ -54,10 +54,10 @@ public class FactoryApi {
     @RequestMapping(value = "/order/add", method = RequestMethod.GET)
     public HzmResponse createOrder(
             @ApiParam("厂家id") @RequestParam Integer factoryId,
-            @ApiParam("商品id") @RequestParam Integer itemId,
+            @ApiParam("商品sku") @RequestParam String sku,
             @ApiParam("商品数量") @RequestParam Integer orderNum,
             @ApiParam("备注") @RequestParam String remark) {
-        return HzmResponse.success(factoryDealService.createOrder(factoryId, itemId, orderNum, remark));
+        return HzmResponse.success(factoryDealService.createOrder(factoryId, sku, orderNum, remark));
     }
 
     @ApiOperation("厂家确认订单")

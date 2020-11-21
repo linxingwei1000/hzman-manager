@@ -12,8 +12,17 @@ import lombok.Data;
 @Data
 public class InventoryDTO {
 
-    @ApiModelProperty(value = "商品表id")
-    private Integer itemId;
+    @ApiModelProperty(value = "本地自增id")
+    private Integer id;
+
+    @ApiModelProperty(value = "sku")
+    private String sku;
+
+    @ApiModelProperty(value = "asin")
+    private String asin;
+
+    @ApiModelProperty(value = "仓库唯一编号")
+    private String fnsku;
 
     @ApiModelProperty(value = "总商品量")
     private Integer totalQuantity;
@@ -23,6 +32,12 @@ public class InventoryDTO {
 
     @ApiModelProperty(value = "亚马逊库存量")
     private Integer awsStockQuantity;
+
+    @ApiModelProperty(value = "亚马逊库转移中数量")
+    private Integer amazonTransferQuantity;
+
+    @ApiModelProperty(value = "亚马逊库入库中的数量")
+    private Integer amazonInboundQuantity;
 
     @ApiModelProperty(value = "本地库存量")
     private Integer localQuantity;

@@ -3,15 +3,20 @@ package com.cn.hzm.server.service;
 import com.alibaba.fastjson.JSONObject;
 import com.cn.hzm.core.entity.FactoryDO;
 import com.cn.hzm.core.entity.FactoryOrderDO;
+import com.cn.hzm.core.entity.InventoryDO;
+import com.cn.hzm.core.entity.ItemDO;
 import com.cn.hzm.factory.enums.OrderStatusEnum;
 import com.cn.hzm.factory.service.FactoryOrderService;
 import com.cn.hzm.factory.service.FactoryService;
 import com.cn.hzm.item.service.ItemService;
 import com.cn.hzm.server.dto.*;
+import com.cn.hzm.stock.service.InventoryService;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -30,16 +35,19 @@ public class FactoryDealService {
     private FactoryService factoryService;
 
     @Autowired
+    private InventoryService inventoryService;
+
+    @Autowired
     private FactoryOrderService factoryOrderService;
 
-    public List<FactoryDTO> processFactoryList(FactoryConditionDTO factoryConditionDTO) {
+    @Resource(name = "backTaskExecutor")
+    private ThreadPoolTaskExecutor executor;
+
+    public JSONObject processFactoryList(FactoryConditionDTO factoryConditionDTO) {
         Map<String, String> condition = (Map<String, String>) JSONObject.toJSON(factoryConditionDTO);
+        List<FactoryDO> list = factoryService.getListByCondition(condition);
 
-        Integer offset = factoryConditionDTO.getPageSize() * factoryConditionDTO.getPageNum();
-        Integer limit = factoryConditionDTO.getPageSize();
-        List<FactoryDO> list = factoryService.getListByCondition(condition, offset, limit);
-
-        return list.stream().map(factoryDO -> {
+        List<FactoryDTO> factoryDTOS = factoryConditionDTO.pageResult(list).stream().map(factoryDO -> {
             FactoryDTO factoryDTO = JSONObject.parseObject(JSONObject.toJSONString(factoryDO), FactoryDTO.class);
             List<FactoryOrderDO> orderDOS = factoryOrderService.getOrderByFactoryId(factoryDO.getId());
             factoryDTO.setOrderList(orderDOS.stream().map(orderDO -> {
@@ -49,6 +57,11 @@ public class FactoryDealService {
             }).collect(Collectors.toList()));
             return factoryDTO;
         }).collect(Collectors.toList());
+
+        JSONObject respJo = new JSONObject();
+        respJo.put("total", list.size());
+        respJo.put("data", JSONObject.toJSON(factoryDTOS));
+        return respJo;
     }
 
     public void dealFactory(FactoryDTO factoryDTO, Boolean isCreateMode) throws Exception {
@@ -91,7 +104,7 @@ public class FactoryDealService {
     /**
      * 创建厂家订单
      */
-    public Integer createOrder(Integer factoryId, Integer itemId, Integer orderNum, String remark) {
+    public Integer createOrder(Integer factoryId, String sku, Integer orderNum, String remark) {
         FactoryOrderDO factoryOrderDO = new FactoryOrderDO();
 
         if (factoryId == null || factoryService.getByFid(factoryId) == null) {
@@ -100,10 +113,10 @@ public class FactoryDealService {
         factoryOrderDO.setFactoryId(factoryId);
 
 
-        if (itemId == null || itemService.getById(itemId) == null) {
+        if (sku == null || itemService.getItemDOBySku(sku) == null) {
             throw new RuntimeException("商品参数非法");
         }
-        factoryOrderDO.setItemId(itemId);
+        factoryOrderDO.setSku(sku);
 
         if (orderNum == null || orderNum == 0) {
             throw new RuntimeException("商品数量参数非法");
@@ -150,6 +163,17 @@ public class FactoryDealService {
         factoryOrderDO.setReceiveNum(receiveNum);
         factoryOrderDO.setOrderStatus(OrderStatusEnum.ORDER_DELIVERY.getCode());
         factoryOrderService.updateFactoryOrder(factoryOrderDO);
+
+        //同步库存信息
+        executor.execute(() -> {
+            FactoryOrderDO temp = factoryOrderService.getOrderById(oId);
+            InventoryDO inventoryDO = inventoryService.getInventoryBySku(temp.getSku());
+
+            Integer localNum = inventoryDO.getLocalQuantity() == null ? 0 : inventoryDO.getLocalQuantity();
+            inventoryDO.setLocalQuantity(localNum + receiveNum);
+            inventoryService.updateInventory(inventoryDO);
+        });
+
     }
 
     public void pay(Integer oId, String paymentVoucher) {

@@ -2,7 +2,6 @@ package com.cn.hzm.server.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cn.hzm.core.aws.AwsClient;
-import com.cn.hzm.core.aws.domain.inventory.Member;
 import com.cn.hzm.core.aws.resp.product.GetMatchingProductForIdResponse;
 import com.cn.hzm.core.entity.InventoryDO;
 import com.cn.hzm.core.entity.ItemDO;
@@ -16,7 +15,6 @@ import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.util.StringUtils;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -38,60 +36,49 @@ public class ItemDealService {
     @Resource
     private InventoryService inventoryService;
 
-    public List<ItemDTO> processListItem(ItemConditionDTO conditionDTO) {
+    public JSONObject processListItem(ItemConditionDTO conditionDTO) {
         Map<String, String> condition = (Map<String, String>) JSONObject.toJSON(conditionDTO);
-
-        Integer offset = conditionDTO.getPageSize() * conditionDTO.getPageNum();
-        Integer limit = conditionDTO.getPageSize();
-        List<ItemDO> list = itemService.getListByCondition(condition, offset, limit);
+        List<ItemDO> list = itemService.getListByCondition(condition);
 
         List<ItemDTO> itemDTOS = Lists.newArrayList();
-        list.forEach(itemDO -> {
+        conditionDTO.pageResult(list).forEach(itemDO -> {
             ItemDTO itemDTO = JSONObject.parseObject(JSONObject.toJSONString(itemDO), ItemDTO.class);
-
-            InventoryDO inventoryDO = inventoryService.getInventoryByItemId(itemDO.getId());
+            InventoryDO inventoryDO = inventoryService.getInventoryByAsin(itemDO.getAsin());
             itemDTO.setInventoryDTO(JSONObject.parseObject(JSONObject.toJSONString(inventoryDO), InventoryDTO.class));
             itemDTOS.add(itemDTO);
         });
-        return itemDTOS;
+
+        JSONObject respJo = new JSONObject();
+        respJo.put("total", list.size());
+        respJo.put("data",JSONObject.toJSON(itemDTOS));
+        return respJo;
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void processItemCreate(ItemDTO item) {
-
-        ItemDO itemDO = new ItemDO();
-        InventoryDO inventoryDO = new InventoryDO();
-
-        //asin取aws数据：商品库存，销量
-        //todo sku 空判断
-        itemDO.setSku(item.getSku());
-        Member member = ConvertUtil.convertToInventoryDO(awsClient.getInventoryInfoBySku(item.getSku()), inventoryDO);
-
-        //设置属性
-        itemDO.setFnsku(member.getFnsku());
-
-        //设置asin
-        itemDO.setAsin(member.getAsin());
+    public void processSync(String sku) {
 
         //asin取aws数据：商品信息
-        if(!StringUtils.isEmpty(itemDO.getAsin())){
-            GetMatchingProductForIdResponse resp = awsClient.getProductInfoByAsin(itemDO.getAsin());
-            itemDO.setAttrs(JSONObject.toJSONString(resp));
-        }
+        GetMatchingProductForIdResponse resp = awsClient.getProductInfoByAsin("SellerSKU", sku);
+        ItemDO itemDO = ConvertUtil.convertToItemDO(new ItemDO(), resp, sku);
 
-        ItemDO old = itemService.getItemDOBySku(item.getSku());
-        if(old!=null){
+        ItemDO old = itemService.getItemDOBySku(sku);
+        if (old != null) {
             itemDO.setId(old.getId());
             itemService.updateItem(itemDO);
-        }else{
+        } else {
             itemService.createItem(itemDO);
         }
 
-        if (itemDO.getId() == null) {
-            throw new RuntimeException("创建商品失败");
+        //存在就更新
+        InventoryDO tmpInventory = inventoryService.getInventoryBySku(sku);
+        if (tmpInventory == null) {
+            tmpInventory = new InventoryDO();
+            tmpInventory.setLocalQuantity(0);
+            ConvertUtil.convertToInventoryDO(awsClient.getInventoryInfoBySku(sku), tmpInventory);
+            inventoryService.createInventory(tmpInventory);
+        } else {
+            ConvertUtil.convertToInventoryDO(awsClient.getInventoryInfoBySku(sku), tmpInventory);
+            inventoryService.updateInventory(tmpInventory);
         }
-
-        inventoryDO.setItemId(itemDO.getId());
-        inventoryService.createInventory(inventoryDO);
     }
 }

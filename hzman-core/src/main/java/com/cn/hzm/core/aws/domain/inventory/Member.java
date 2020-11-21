@@ -15,7 +15,7 @@ public class Member {
     private String condition;
 
     @XStreamAlias(value="SupplyDetail")
-    private String supplyDetail;
+    private SupplyDetail supplyDetail;
 
     @XStreamAlias(value="TotalSupplyQuantity")
     private Integer totalSupplyQuantity;

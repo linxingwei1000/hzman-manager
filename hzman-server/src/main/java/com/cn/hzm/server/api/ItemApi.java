@@ -2,14 +2,11 @@ package com.cn.hzm.server.api;
 
 import com.cn.hzm.core.common.HzmResponse;
 import com.cn.hzm.server.dto.ItemConditionDTO;
-import com.cn.hzm.server.dto.ItemDTO;
 import com.cn.hzm.server.service.ItemDealService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import io.swagger.annotations.ApiParam;
+import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
 
@@ -32,9 +29,16 @@ public class ItemApi {
     }
 
     @ApiOperation("创建商品")
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public HzmResponse createItem(@RequestBody ItemDTO item){
-        itemDealService.processItemCreate(item);
+    @RequestMapping(value = "/sync", method = RequestMethod.GET)
+    public HzmResponse syncItem(@ApiParam("商品sku") @RequestParam String sku){
+        itemDealService.processSync(sku);
+        return HzmResponse.success(true);
+    }
+
+    @ApiOperation("刷新商品")
+    @RequestMapping(value = "/refresh", method = RequestMethod.GET)
+    public HzmResponse createItem(@ApiParam("商品sku") @RequestParam String sku){
+        itemDealService.processSync(sku);
         return HzmResponse.success(true);
     }
 }

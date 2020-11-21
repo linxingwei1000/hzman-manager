@@ -21,12 +21,12 @@ public class FactoryService {
     @Autowired
     private FactoryMapper factoryMapper;
 
-    public List<FactoryDO> getListByCondition(Map<String, String> condition, Integer offset, Integer limit){
+    public List<FactoryDO> getListByCondition(Map<String, String> condition){
         QueryWrapper<FactoryDO> query = new QueryWrapper<>();
         if(condition.size()!=0){
         }
         query.orderByAsc("ctime");
-        query.last(SqlCommonUtil.limitOffsetSql(offset, limit));
+        //query.last(SqlCommonUtil.limitOffsetSql(offset, limit));
         return factoryMapper.selectList(query);
     }
 

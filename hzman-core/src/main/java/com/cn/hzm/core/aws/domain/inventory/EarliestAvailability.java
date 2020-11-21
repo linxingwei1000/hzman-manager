@@ -13,4 +13,7 @@ public class EarliestAvailability {
 
     @XStreamAlias(value="TimepointType")
     private String timepointType;
+
+    @XStreamAlias(value="DateTime")
+    private String dateTime;
 }

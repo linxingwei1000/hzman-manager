@@ -22,8 +22,7 @@ public class FactoryOrderDO {
     @TableField(value = "factory_id")
     private Integer factoryId;
 
-    @TableField(value = "item_id")
-    private Integer itemId;
+    private String sku;
 
     @TableField(value = "order_num")
     private Integer orderNum;

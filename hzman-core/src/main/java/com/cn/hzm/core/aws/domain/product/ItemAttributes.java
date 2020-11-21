@@ -1,7 +1,10 @@
 package com.cn.hzm.core.aws.domain.product;
 
 import com.thoughtworks.xstream.annotations.XStreamAlias;
+import com.thoughtworks.xstream.annotations.XStreamImplicit;
 import lombok.Data;
+
+import java.util.List;
 
 /**
  * @author xingweilin@clubfactory.com
@@ -38,8 +41,8 @@ public class ItemAttributes {
     @XStreamAlias(value="ns2:Manufacturer")
     private String manufacturer;
 
-    @XStreamAlias(value="ns2:MaterialType")
-    private String materialType;
+    @XStreamImplicit(itemFieldName="ns2:MaterialType")
+    private List<String> materialType;
 
     @XStreamAlias(value="ns2:MetalStamp")
     private String metalStamp;
@@ -73,4 +76,37 @@ public class ItemAttributes {
 
     @XStreamAlias(value="ns2:Title")
     private String title;
+
+    @XStreamAlias(value="ns2:ListPrice")
+    private String listPrice;
+
+    @XStreamAlias(value="ns2:ItemDimensions")
+    private String itemDimensions;
+
+    @XStreamAlias(value="ns2:IsAutographed")
+    private String isAutographed;
+
+    @XStreamAlias(value="ns2:IsMemorabilia")
+    private String isMemorabilia;
+
+    @XStreamAlias(value="ns2:PackageQuantity")
+    private String packageQuantity;
+
+    @XStreamAlias(value="ns2:RingSize")
+    private String ringSize;
+
+    @XStreamAlias(value="ns2:TotalGemWeight")
+    private String totalGemWeight;
+
+    @XStreamAlias(value="ns2:IsAdultProduct")
+    private String isAdultProduct;
+
+    @XStreamAlias(value="ns2:BackFinding")
+    private String backFinding;
+
+    @XStreamAlias(value="ns2:Size")
+    private String size;
+
+
+
 }
