@@ -28,10 +28,10 @@ public class InventoryDTO {
     private Integer totalQuantity;
 
     @ApiModelProperty(value = "亚马逊总商品量")
-    private Integer awsQuantity;
+    private Integer amazonQuantity;
 
     @ApiModelProperty(value = "亚马逊库存量")
-    private Integer awsStockQuantity;
+    private Integer amazonStockQuantity;
 
     @ApiModelProperty(value = "亚马逊库转移中数量")
     private Integer amazonTransferQuantity;
