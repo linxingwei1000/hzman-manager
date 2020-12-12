@@ -9,6 +9,7 @@ import com.cn.hzm.item.service.ItemService;
 import com.cn.hzm.server.dto.InventoryDTO;
 import com.cn.hzm.server.dto.ItemConditionDTO;
 import com.cn.hzm.server.dto.ItemDTO;
+import com.cn.hzm.server.dto.SimpleItemDTO;
 import com.cn.hzm.server.util.ConvertUtil;
 import com.cn.hzm.stock.service.InventoryService;
 import com.google.common.collect.Lists;
@@ -19,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import javax.annotation.Resource;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author xingweilin@clubfactory.com
@@ -50,7 +52,7 @@ public class ItemDealService {
 
         JSONObject respJo = new JSONObject();
         respJo.put("total", list.size());
-        respJo.put("data",JSONObject.toJSON(itemDTOS));
+        respJo.put("data", JSONObject.toJSON(itemDTOS));
         return respJo;
     }
 
@@ -80,5 +82,22 @@ public class ItemDealService {
             ConvertUtil.convertToInventoryDO(awsClient.getInventoryInfoBySku(sku), tmpInventory);
             inventoryService.updateInventory(tmpInventory);
         }
+    }
+
+    public List<SimpleItemDTO> fuzzyQuery(Integer searchType, String value) {
+        String searchKey = "sku";
+        switch (searchType) {
+            case 1:
+                searchKey = "sku";
+                break;
+            case 2:
+                searchKey = "title";
+                break;
+            default:
+        }
+
+        List<ItemDO> list = itemService.fuzzyQuery(searchKey, value);
+        return list.stream().map(item -> JSONObject.parseObject(JSONObject.toJSONString(item), SimpleItemDTO.class))
+                .collect(Collectors.toList());
     }
 }

@@ -24,21 +24,28 @@ public class ItemApi {
 
     @ApiOperation("列商品")
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public HzmResponse listItem(@RequestBody ItemConditionDTO conditionDTO){
+    public HzmResponse listItem(@RequestBody ItemConditionDTO conditionDTO) {
         return HzmResponse.success(itemDealService.processListItem(conditionDTO));
     }
 
     @ApiOperation("创建商品")
     @RequestMapping(value = "/sync", method = RequestMethod.GET)
-    public HzmResponse syncItem(@ApiParam("商品sku") @RequestParam String sku){
+    public HzmResponse syncItem(@ApiParam("商品sku") @RequestParam String sku) {
         itemDealService.processSync(sku);
         return HzmResponse.success(true);
     }
 
     @ApiOperation("刷新商品")
     @RequestMapping(value = "/refresh", method = RequestMethod.GET)
-    public HzmResponse createItem(@ApiParam("商品sku") @RequestParam String sku){
+    public HzmResponse createItem(@ApiParam("商品sku") @RequestParam String sku) {
         itemDealService.processSync(sku);
         return HzmResponse.success(true);
+    }
+
+    @ApiOperation("商品模糊查询")
+    @RequestMapping(value = "/fuzzy", method = RequestMethod.GET)
+    public HzmResponse fuzzyQuery(@ApiParam(name = "查询类型", defaultValue = "1") @RequestParam Integer searchType,
+                                  @ApiParam("查询值") @RequestParam String value) {
+        return HzmResponse.success(itemDealService.fuzzyQuery(searchType, value));
     }
 }

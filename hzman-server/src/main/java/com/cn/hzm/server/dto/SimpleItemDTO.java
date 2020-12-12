@@ -10,12 +10,9 @@ import java.util.Date;
  * @author xingweilin@clubfactory.com
  * @date 2020/7/17 9:50 下午
  */
-@ApiModel(description = "商品DTO")
+@ApiModel(description = "简单商品DTO")
 @Data
-public class ItemDTO extends RespBaseDTO{
-
-    @ApiModelProperty(value = "ID", example = "100")
-    private Integer id;
+public class SimpleItemDTO{
 
     @ApiModelProperty(value = "ASIN", example = "B07BGY7HWK")
     private String asin;
@@ -28,19 +25,4 @@ public class ItemDTO extends RespBaseDTO{
 
     @ApiModelProperty(value = "SKU", example = "N190301")
     private String sku;
-
-    @ApiModelProperty(value = "商品属性")
-    private String attributeSet;
-
-    @ApiModelProperty(value = "商品相关属性")
-    private String relationship;
-
-    @ApiModelProperty(value = "库存信息", example = "N190301")
-    private InventoryDTO inventoryDTO;
-
-    @ApiModelProperty("创建时间")
-    private Date ctime;
-
-    @ApiModelProperty("更新时间")
-    private Date utime;
 }

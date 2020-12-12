@@ -49,7 +49,7 @@ public class FactoryOrderDTO {
     private String paymentVoucher;
 
     @ApiModelProperty(value = "订单状态")
-    private String status;
+    private Integer status;
 
     private String statusDesc;
 

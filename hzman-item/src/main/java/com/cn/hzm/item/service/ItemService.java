@@ -46,6 +46,12 @@ public class ItemService {
         return itemMapper.selectOne(query);
     }
 
+    public List<ItemDO> fuzzyQuery(String field, String value){
+        QueryWrapper<ItemDO> query = new QueryWrapper<>();
+        query.likeLeft(field, value);
+        return itemMapper.selectList(query);
+    }
+
     /**
      * 创建商品
      * @param itemDO
