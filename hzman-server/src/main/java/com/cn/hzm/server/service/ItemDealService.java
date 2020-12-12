@@ -40,6 +40,8 @@ public class ItemDealService {
 
     public JSONObject processListItem(ItemConditionDTO conditionDTO) {
         Map<String, String> condition = (Map<String, String>) JSONObject.toJSON(conditionDTO);
+        condition.remove("pageNum");
+        condition.remove("pageSize");
         List<ItemDO> list = itemService.getListByCondition(condition);
 
         List<ItemDTO> itemDTOS = Lists.newArrayList();

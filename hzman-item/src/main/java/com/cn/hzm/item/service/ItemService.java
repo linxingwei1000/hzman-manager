@@ -24,6 +24,9 @@ public class ItemService {
     public List<ItemDO> getListByCondition(Map<String, String> condition){
         QueryWrapper<ItemDO> query = new QueryWrapper<>();
         if(condition.size()!=0){
+            for(Map.Entry<String, String>entry: condition.entrySet()){
+                query.eq(entry.getKey(), entry.getValue());
+            }
         }
 
         query.orderByAsc("ctime");
@@ -48,7 +51,7 @@ public class ItemService {
 
     public List<ItemDO> fuzzyQuery(String field, String value){
         QueryWrapper<ItemDO> query = new QueryWrapper<>();
-        query.likeLeft(field, value);
+        query.like(field, value);
         return itemMapper.selectList(query);
     }
 

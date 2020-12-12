@@ -107,6 +107,26 @@ public class FactoryDealService {
         factoryService.deleteFactory(fId);
     }
 
+    public JSONObject orderList(FactoryOrderConditionDTO factoryOrderConditionDTO) {
+        List<FactoryOrderDO> orderDOS = factoryOrderService.getOrderByFactoryId(factoryOrderConditionDTO.getFactoryId());
+        List<FactoryOrderDTO> dtos = factoryOrderConditionDTO.pageResult(orderDOS).stream().map(orderDO -> {
+            FactoryOrderDTO orderDTO = JSONObject.parseObject(JSONObject.toJSONString(orderDO), FactoryOrderDTO.class);
+            orderDTO.setStatus(orderDO.getOrderStatus());
+            orderDTO.setStatusDesc(OrderStatusEnum.getEnumByCode(orderDO.getOrderStatus()).getDesc());
+
+
+            ItemDO itemDO = itemService.getItemDOBySku(orderDO.getSku());
+            orderDTO.setTitle(itemDO.getTitle());
+            orderDTO.setIcon(itemDO.getIcon());
+            return orderDTO;
+        }).collect(Collectors.toList());
+
+        JSONObject respJo = new JSONObject();
+        respJo.put("total", orderDOS.size());
+        respJo.put("data", JSONObject.toJSON(dtos));
+        return respJo;
+    }
+
     /**
      * 创建厂家订单
      */

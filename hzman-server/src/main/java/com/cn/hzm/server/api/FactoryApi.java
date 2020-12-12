@@ -3,6 +3,7 @@ package com.cn.hzm.server.api;
 import com.cn.hzm.core.common.HzmResponse;
 import com.cn.hzm.server.dto.FactoryConditionDTO;
 import com.cn.hzm.server.dto.FactoryDTO;
+import com.cn.hzm.server.dto.FactoryOrderConditionDTO;
 import com.cn.hzm.server.service.FactoryDealService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -49,6 +50,13 @@ public class FactoryApi {
 //        factoryDealService.deleteFactory(fId);
 //        return HzmResponse.success(true);
 //    }
+
+
+    @ApiOperation("创建厂家订单")
+    @RequestMapping(value = "/order/list", method = RequestMethod.POST)
+    public HzmResponse createOrder(@RequestBody FactoryOrderConditionDTO factoryOrderConditionDTO) {
+        return HzmResponse.success(factoryDealService.orderList(factoryOrderConditionDTO));
+    }
 
     @ApiOperation("创建厂家订单")
     @RequestMapping(value = "/order/add", method = RequestMethod.GET)

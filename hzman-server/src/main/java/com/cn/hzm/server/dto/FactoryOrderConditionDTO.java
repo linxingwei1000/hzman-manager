@@ -7,9 +7,9 @@ import lombok.Data;
  * @author xingweilin@clubfactory.com
  * @date 2020/7/25 3:57 下午
  */
-@ApiModel(description = "商品条件搜索DTO")
+@ApiModel(description = "厂家订单条件搜索DTO")
 @Data
-public class ItemConditionDTO extends PageDTO{
+public class FactoryOrderConditionDTO extends PageDTO{
 
-    //private String sku;
+    private Integer factoryId;
 }
