@@ -10,34 +10,32 @@ import java.util.Date;
 
 /**
  * @author xingweilin@clubfactory.com
- * @date 2020/7/25 2:45 下午
+ * @date 2021/1/9 6:50 下午
  */
 @Data
-@TableName("hzm_factory")
-public class FactoryDO {
+@TableName("hzm_sale_info")
+public class SaleInfoDO {
 
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    @TableField(value = "factory_name")
-    private String factoryName;
+    private String sku;
 
-    private String address;
+    @TableField(value = "stat_date")
+    private String statDate;
 
-    @TableField(value = "contact_person")
-    private String contactPerson;
+    @TableField(value = "sale_num")
+    private Integer saleNum;
 
+    @TableField(value = "sale_volume")
+    private Double saleVolume;
 
-    @TableField(value = "contact_info")
-    private String contactInfo;
+    @TableField(value = "unit_price")
+    private Double unitPrice;
 
-    private String wx;
-
-    @TableField(value = "collect_method")
-    private String collectMethod;
+    private String config;
 
     private Date ctime;
 
     private Date utime;
-
 }

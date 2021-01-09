@@ -29,6 +29,11 @@ public class FactoryDTO extends RespBaseDTO{
     @ApiModelProperty(value = "工厂联系方式")
     private String contactInfo;
 
+    private String wx;
+
+    @ApiModelProperty(value = "收款方式")
+    private String collectMethod;
+
     @ApiModelProperty(value = "工厂订单")
     List<FactoryOrderDTO> orderList;
 

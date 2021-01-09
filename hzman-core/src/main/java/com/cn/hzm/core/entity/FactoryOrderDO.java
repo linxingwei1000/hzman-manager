@@ -22,16 +22,6 @@ public class FactoryOrderDO {
     @TableField(value = "factory_id")
     private Integer factoryId;
 
-    private String sku;
-
-    @TableField(value = "order_num")
-    private Integer orderNum;
-
-    private String remark;
-
-    @TableField(value = "item_price")
-    private Double itemPrice;
-
     @TableField(value = "delivery_date")
     private String deliveryDate;
 

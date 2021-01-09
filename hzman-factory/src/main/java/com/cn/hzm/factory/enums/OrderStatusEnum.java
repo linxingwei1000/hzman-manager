@@ -10,11 +10,12 @@ public enum OrderStatusEnum {
      * 订单状态
      */
     ORDER_START(0, "订单开始"),
-    ORDER_FACTORY_CONFIRM(1, "厂家确认订单"),
-    ORDER_CONFIRM(2, "公司确认订单"),
-    ORDER_FACTORY_DELIVERY(3, "厂家交货"),
-    ORDER_DELIVERY(4, "公司确认收货"),
-    ORDER_PAY(5, "财务支付订单"),
+    ORDER_CONFIRM_PLACE(1, "公司确认下单"),
+    ORDER_FACTORY_CONFIRM(2, "厂家确认订单"),
+    ORDER_CONFIRM(3, "公司确认订单"),
+    ORDER_FACTORY_DELIVERY(4, "厂家交货"),
+    ORDER_DELIVERY(5, "公司确认收货"),
+    ORDER_PAY(6, "财务支付订单"),
     ;
 
     private Integer code;

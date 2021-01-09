@@ -36,6 +36,15 @@ public class TimeUtil {
         return UTC_FORMAT.format(date);
     }
 
+
+    public static Date transform(String utcDate) throws ParseException {
+        if (utcDate.length() == 20) {
+            return transformUTCToDate(utcDate);
+        } else {
+            return transformMilliSecondUTCToDate(utcDate);
+        }
+    }
+
     public static Date transformUTCToDate(String utcDate) throws ParseException {
         return UTC_FORMAT.parse(utcDate);
     }
@@ -57,18 +66,48 @@ public class TimeUtil {
         return SIMPLE_FORMAT.format(date);
     }
 
+    public static Date transformTimeToUTC(Date date){
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.set(Calendar.HOUR_OF_DAY, 8);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        return calendar.getTime();
+    }
+
+    public static Date getYesterdayZeroUTCDate() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(new Date());
+        calendar.set(Calendar.HOUR_OF_DAY, 8);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+        calendar.add(Calendar.DATE, -1);
+        return calendar.getTime();
+    }
+
+    public static Date getUTCDayEndTime(Date date) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DATE, 1);
+        calendar.add(Calendar.SECOND, -1);
+        return calendar.getTime();
+    }
 
     /**
      * 当前时间加减天数
      *
      * @param date
-     * @param num
+     * @param dayNum
+     * @param hourNum
+     * @param minuteNum
      * @return
      */
-    public static Date dateFixByDay(Date date, int num) {
+    public static Date dateFixByDay(Date date, int dayNum, int hourNum, int minuteNum) {
         Calendar calendar = new GregorianCalendar();
         calendar.setTime(date);
-        calendar.add(Calendar.DATE, num);
+        calendar.add(Calendar.DATE, dayNum);
+        calendar.add(Calendar.HOUR, hourNum);
+        calendar.add(Calendar.MINUTE, minuteNum);
         return calendar.getTime();
     }
 
@@ -81,7 +120,7 @@ public class TimeUtil {
         System.out.println(getUTC());
         String source = "2020-11-11";
         Date beginDate = getDateBySimple(source);
-        Date endDate = dateFixByDay(beginDate, -1);
+        Date endDate = dateFixByDay(beginDate, 0, 0, 30);
 
         System.out.println(String.format("begin:%s end:%s  endDate:%s", dateToUTC(beginDate), dateToUTC(endDate), getSimpleFormat(endDate)));
 

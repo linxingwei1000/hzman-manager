@@ -96,6 +96,9 @@ public class Order {
     @XStreamAlias(value="MarketplaceId")
     private String marketplaceId;
 
+    @XStreamAlias(value="DefaultShipFromLocationAddress")
+    private DefaultShipFromLocationAddress defaultShipFromLocationAddress;
+
     @XStreamAlias(value="FulfillmentChannel")
     private String fulfillmentChannel;
 

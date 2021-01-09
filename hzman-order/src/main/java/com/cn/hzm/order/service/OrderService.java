@@ -30,7 +30,7 @@ public class OrderService {
         String purchaseDate = condition.remove("purchaseDate");
         if (!StringUtils.isEmpty(purchaseDate)) {
             Date date = TimeUtil.getDateBySimple(purchaseDate);
-            Date nextDate = TimeUtil.dateFixByDay(date, 1);
+            Date nextDate = TimeUtil.dateFixByDay(date, 1, 0, 0);
             query.between("purchase_date", date, nextDate);
         }
 
@@ -49,7 +49,7 @@ public class OrderService {
         String lastUpdateDate = condition.remove("lastUpdateDate");
         if (!StringUtils.isEmpty(lastUpdateDate)) {
             Date date = TimeUtil.getDateBySimple(lastUpdateDate);
-            Date nextDate = TimeUtil.dateFixByDay(date, 1);
+            Date nextDate = TimeUtil.dateFixByDay(date, 1, 0, 0);
             query.between("last_update_date", date, nextDate);
         }
 
@@ -79,6 +79,13 @@ public class OrderService {
         });
 
         query.orderByAsc("ctime");
+        return orderMapper.selectList(query);
+    }
+
+    public List<OrderDO> getOrdersByPurchaseDate(Date startDate, Date endDate){
+        QueryWrapper<OrderDO> query = new QueryWrapper<>();
+        query.between("purchase_date", startDate, endDate);
+        query.orderByAsc("purchase_date");
         return orderMapper.selectList(query);
     }
 

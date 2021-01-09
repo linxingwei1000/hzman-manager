@@ -13,28 +13,24 @@ import java.util.Date;
  * @date 2020/7/25 2:45 下午
  */
 @Data
-@TableName("hzm_factory")
-public class FactoryDO {
+@TableName("hzm_factory_order_item")
+public class FactoryOrderItemDO {
 
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    @TableField(value = "factory_name")
-    private String factoryName;
+    @TableField(value = "factory_order_id")
+    private Integer factoryOrderId;
 
-    private String address;
+    private String sku;
 
-    @TableField(value = "contact_person")
-    private String contactPerson;
+    @TableField(value = "order_num")
+    private Integer orderNum;
 
+    private String remark;
 
-    @TableField(value = "contact_info")
-    private String contactInfo;
-
-    private String wx;
-
-    @TableField(value = "collect_method")
-    private String collectMethod;
+    @TableField(value = "item_price")
+    private Double itemPrice;
 
     private Date ctime;
 

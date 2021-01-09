@@ -1,11 +1,10 @@
 package com.cn.hzm.server.service;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cn.hzm.core.entity.FactoryDO;
-import com.cn.hzm.core.entity.FactoryOrderDO;
-import com.cn.hzm.core.entity.InventoryDO;
-import com.cn.hzm.core.entity.ItemDO;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.cn.hzm.core.entity.*;
 import com.cn.hzm.factory.enums.OrderStatusEnum;
+import com.cn.hzm.factory.service.FactoryOrderItemService;
 import com.cn.hzm.factory.service.FactoryOrderService;
 import com.cn.hzm.factory.service.FactoryService;
 import com.cn.hzm.item.service.ItemService;
@@ -15,6 +14,7 @@ import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.List;
@@ -40,6 +40,9 @@ public class FactoryDealService {
     @Autowired
     private FactoryOrderService factoryOrderService;
 
+    @Autowired
+    private FactoryOrderItemService factoryOrderItemService;
+
     @Resource(name = "backTaskExecutor")
     private ThreadPoolTaskExecutor executor;
 
@@ -55,10 +58,14 @@ public class FactoryDealService {
                 orderDTO.setStatus(orderDO.getOrderStatus());
                 orderDTO.setStatusDesc(OrderStatusEnum.getEnumByCode(orderDO.getOrderStatus()).getDesc());
 
-
-                ItemDO itemDO = itemService.getItemDOBySku(orderDO.getSku());
-                orderDTO.setTitle(itemDO.getTitle());
-                orderDTO.setIcon(itemDO.getIcon());
+                List<FactoryOrderItemDO> orderItemDOS = factoryOrderItemService.getItemsByOrderId(orderDO.getId());
+                orderDTO.setOrderItems(orderItemDOS.stream().map(orderItemDO -> {
+                    FactoryOrderItemDTO orderItemDTO = JSONObject.parseObject(JSONObject.toJSONString(orderItemDO), FactoryOrderItemDTO.class);
+                    ItemDO itemDO = itemService.getItemDOBySku(orderItemDO.getSku());
+                    orderItemDTO.setTitle(itemDO.getTitle());
+                    orderItemDTO.setIcon(itemDO.getIcon());
+                    return orderItemDTO;
+                }).collect(Collectors.toList()));
                 return orderDTO;
             }).collect(Collectors.toList()));
             return factoryDTO;
@@ -114,10 +121,14 @@ public class FactoryDealService {
             orderDTO.setStatus(orderDO.getOrderStatus());
             orderDTO.setStatusDesc(OrderStatusEnum.getEnumByCode(orderDO.getOrderStatus()).getDesc());
 
-
-            ItemDO itemDO = itemService.getItemDOBySku(orderDO.getSku());
-            orderDTO.setTitle(itemDO.getTitle());
-            orderDTO.setIcon(itemDO.getIcon());
+            List<FactoryOrderItemDO> orderItemDOS = factoryOrderItemService.getItemsByOrderId(orderDO.getId());
+            orderDTO.setOrderItems(orderItemDOS.stream().map(orderItemDO -> {
+                FactoryOrderItemDTO orderItemDTO = JSONObject.parseObject(JSONObject.toJSONString(orderItemDO), FactoryOrderItemDTO.class);
+                ItemDO itemDO = itemService.getItemDOBySku(orderItemDO.getSku());
+                orderItemDTO.setTitle(itemDO.getTitle());
+                orderItemDTO.setIcon(itemDO.getIcon());
+                return orderItemDTO;
+            }).collect(Collectors.toList()));
             return orderDTO;
         }).collect(Collectors.toList());
 
@@ -128,33 +139,81 @@ public class FactoryDealService {
     }
 
     /**
-     * 创建厂家订单
+     * 修改厂家订单
+     * @return
      */
-    public Integer createOrder(Integer factoryId, String sku, Integer orderNum, String remark) {
-        FactoryOrderDO factoryOrderDO = new FactoryOrderDO();
-
-        if (factoryId == null || factoryService.getByFid(factoryId) == null) {
+    @Transactional
+    public Integer createOrder(CreateFactoryOrderDTO createFactoryOrderDTO){
+        if (createFactoryOrderDTO.getFactoryId() == null || factoryService.getByFid(createFactoryOrderDTO.getFactoryId()) == null) {
             throw new RuntimeException("厂家参数非法");
         }
-        factoryOrderDO.setFactoryId(factoryId);
 
-
-        if (sku == null || itemService.getItemDOBySku(sku) == null) {
-            throw new RuntimeException("商品参数非法");
-        }
-        factoryOrderDO.setSku(sku);
-
-        if (orderNum == null || orderNum == 0) {
-            throw new RuntimeException("商品数量参数非法");
-        }
-        factoryOrderDO.setOrderNum(orderNum);
-        factoryOrderDO.setRemark(remark);
+        //创建工厂订单
+        FactoryOrderDO factoryOrderDO = new FactoryOrderDO();
+        factoryOrderDO.setFactoryId(createFactoryOrderDTO.getFactoryId());
         factoryOrderDO.setOrderStatus(OrderStatusEnum.ORDER_START.getCode());
         factoryOrderService.createFactoryOrder(factoryOrderDO);
-        return factoryOrderDO.getId();
+
+        List<CreateFactoryOrderItemDTO> orderItems = createFactoryOrderDTO.getOrderItems();
+        for(CreateFactoryOrderItemDTO orderItemDTO: orderItems){
+            FactoryOrderItemDO orderItemDO = new FactoryOrderItemDO();
+            orderItemDO.setFactoryOrderId(factoryOrderDO.getId());
+            orderItemDO.setSku(orderItemDTO.getSku());
+            orderItemDO.setOrderNum(orderItemDTO.getOrderNum());
+            orderItemDO.setRemark(orderItemDTO.getRemark());
+            factoryOrderItemService.createFactoryOrderItem(orderItemDO);
+        }
+        return 1;
     }
 
-    public void factoryConfirmOrder(Integer oId, Double itemPrice, String deliveryDate) {
+    /**
+     * 修改厂家订单
+     * @return
+     */
+    @Transactional
+    public Integer modOrderItem(List<FactoryOrderItemDTO> orderItems){
+        for(FactoryOrderItemDTO orderItemDTO: orderItems){
+            FactoryOrderItemDO orderItemDO = new FactoryOrderItemDO();
+            orderItemDO.setId(orderItemDTO.getId());
+            orderItemDO.setSku(orderItemDTO.getSku());
+            orderItemDO.setOrderNum(orderItemDTO.getOrderNum());
+            orderItemDO.setRemark(orderItemDTO.getRemark());
+            factoryOrderItemService.updateFactoryOrder(orderItemDO);
+        }
+        return 1;
+    }
+
+    /**
+     * 创建厂家订单
+     */
+    @Transactional
+    public Integer addOrderItem(Integer factoryId, Integer factoryOrderId, String sku, Integer orderNum, String remark) {
+        FactoryOrderDO factoryOrderDO = factoryOrderService.getOrderById(factoryOrderId);
+        if(factoryOrderDO==null){
+            factoryOrderDO = new FactoryOrderDO();
+            factoryOrderDO.setFactoryId(factoryId);
+            factoryOrderDO.setOrderStatus(OrderStatusEnum.ORDER_START.getCode());
+            factoryOrderService.createFactoryOrder(factoryOrderDO);
+        }
+        FactoryOrderItemDO orderItemDO = new FactoryOrderItemDO();
+        orderItemDO.setFactoryOrderId(factoryOrderDO.getId());
+        orderItemDO.setSku(sku);
+        orderItemDO.setOrderNum(orderNum);
+        orderItemDO.setRemark(remark);
+        factoryOrderItemService.createFactoryOrderItem(orderItemDO);
+
+        return 1;
+    }
+
+    public void hzmConfirmPlace(Integer oId) {
+        FactoryOrderDO factoryOrderDO = new FactoryOrderDO();
+        factoryOrderDO.setId(oId);
+        factoryOrderDO.setOrderStatus(OrderStatusEnum.ORDER_CONFIRM_PLACE.getCode());
+        factoryOrderService.updateFactoryOrder(factoryOrderDO);
+    }
+
+    @Transactional
+    public void factoryConfirmOrder(List<FactoryOrderItemDTO> orderItems, Integer oId, String deliveryDate) {
         FactoryOrderDO old = factoryOrderService.getOrderById(oId);
         if (old.getOrderStatus() > OrderStatusEnum.ORDER_FACTORY_CONFIRM.getCode()) {
             throw new RuntimeException("当前订单状态不能修改");
@@ -162,10 +221,16 @@ public class FactoryDealService {
 
         FactoryOrderDO factoryOrderDO = new FactoryOrderDO();
         factoryOrderDO.setId(oId);
-        factoryOrderDO.setItemPrice(itemPrice);
         factoryOrderDO.setDeliveryDate(deliveryDate);
         factoryOrderDO.setOrderStatus(OrderStatusEnum.ORDER_FACTORY_CONFIRM.getCode());
         factoryOrderService.updateFactoryOrder(factoryOrderDO);
+
+        for(FactoryOrderItemDTO orderItemDTO: orderItems){
+            FactoryOrderItemDO orderItemDO = new FactoryOrderItemDO();
+            orderItemDO.setId(orderItemDTO.getId());
+            orderItemDO.setItemPrice(orderItemDTO.getItemPrice());
+            factoryOrderItemService.updateFactoryOrder(orderItemDO);
+        }
     }
 
     public void hzmConfirm(Integer oId) {
@@ -190,16 +255,14 @@ public class FactoryDealService {
         factoryOrderDO.setOrderStatus(OrderStatusEnum.ORDER_DELIVERY.getCode());
         factoryOrderService.updateFactoryOrder(factoryOrderDO);
 
+        List<FactoryOrderItemDO> orderItemDOS = factoryOrderItemService.getItemsByOrderId(oId);
         //同步库存信息
-        executor.execute(() -> {
-            FactoryOrderDO temp = factoryOrderService.getOrderById(oId);
-            InventoryDO inventoryDO = inventoryService.getInventoryBySku(temp.getSku());
-
+        executor.execute(() -> orderItemDOS.forEach(orderItem ->{
+            InventoryDO inventoryDO = inventoryService.getInventoryBySku(orderItem.getSku());
             Integer localNum = inventoryDO.getLocalQuantity() == null ? 0 : inventoryDO.getLocalQuantity();
             inventoryDO.setLocalQuantity(localNum + receiveNum);
             inventoryService.updateInventory(inventoryDO);
-        });
-
+        }));
     }
 
     public void pay(Integer oId, String paymentVoucher) {

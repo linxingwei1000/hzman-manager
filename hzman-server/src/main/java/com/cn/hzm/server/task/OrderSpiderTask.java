@@ -11,6 +11,8 @@ import com.cn.hzm.core.entity.InventoryDO;
 import com.cn.hzm.core.entity.ItemDO;
 import com.cn.hzm.core.entity.OrderDO;
 import com.cn.hzm.core.entity.OrderItemDO;
+import com.cn.hzm.core.exception.ExceptionCode;
+import com.cn.hzm.core.exception.HzmanException;
 import com.cn.hzm.core.util.TimeUtil;
 import com.cn.hzm.item.service.ItemService;
 import com.cn.hzm.order.service.OrderItemService;
@@ -19,6 +21,8 @@ import com.cn.hzm.server.service.OperateDependService;
 import com.cn.hzm.server.util.ConvertUtil;
 import com.cn.hzm.stock.service.InventoryService;
 import com.google.common.collect.Lists;
+import com.thoughtworks.xstream.mapper.CannotResolveClassException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -35,6 +39,7 @@ import java.util.concurrent.Executors;
  * @author xingweilin@clubfactory.com
  * @date 2020/11/18 10:26 上午
  */
+@Slf4j
 @Component
 public class OrderSpiderTask {
 
@@ -58,18 +63,18 @@ public class OrderSpiderTask {
 
     private static final Integer UTC_BETWEEN_DATE_SECOND = 8 * 60 * 60 * 1000;
 
-    private static final Integer DAY_SECOND = 24 * 60 * 60 * 1000;
+    private static final Integer DURATION_SECOND = 30 * 60 * 1000;
 
     /**
      * 线程任务：无限爬取远端订单
+     *
      * @throws Exception
      */
     @PostConstruct
     public void initTask() throws Exception {
 
-        //todo 先关闭
-//        ExecutorService createOrderTask = Executors.newSingleThreadExecutor();
-//        createOrderTask.execute(this::createOrderSpider);
+        ExecutorService createOrderTask = Executors.newSingleThreadExecutor();
+        createOrderTask.execute(this::createOrderSpider);
 
 //        ExecutorService updateOrderTask = Executors.newSingleThreadExecutor();
 //        updateOrderTask.execute(this::updateOrderSpider);
@@ -77,13 +82,14 @@ public class OrderSpiderTask {
 
     /**
      * 单个amazonId爬取任务
+     *
      * @param amazonId
      * @throws ParseException
      * @throws InterruptedException
      */
     public void amazonIdSpiderTask(String amazonId) throws ParseException, InterruptedException {
         GetOrderResponse orderResponse = awsClient.getListOrderByAmazonIds(Lists.newArrayList(amazonId));
-        List<String> amazonIds = parseOrderResp(orderResponse.getGetOrderResult().getOrders().getList(),  true);
+        List<String> amazonIds = parseOrderResp(orderResponse.getGetOrderResult().getOrders().getList(), true);
         getOrderItems(amazonIds);
     }
 
@@ -91,6 +97,15 @@ public class OrderSpiderTask {
         while (true) {
             try {
                 doSpiderOrder(ContextConst.OPERATE_SPIDER_CREATE_ORDER, true);
+            } catch (HzmanException e) {
+                if(e.getExceptionCode().equals(ExceptionCode.REQUEST_LIMIT)){
+                    try {
+                        log.info("爬虫任务触发限流 暂停5分钟");
+                        Thread.sleep(5 * 60 * 1000);
+                    } catch (InterruptedException ex) {
+                        ex.printStackTrace();
+                    }
+                }
             } catch (Exception e) {
                 e.printStackTrace();
                 try {
@@ -121,12 +136,12 @@ public class OrderSpiderTask {
         String strBeginDate = operateDependService.getValueByKey(sign);
 
         Date beginDate = TimeUtil.transformUTCToDate(strBeginDate);
-        Date endDate = TimeUtil.dateFixByDay(beginDate, 1);
+        Date endDate = TimeUtil.dateFixByDay(beginDate, 0, 0, 30);
         String strEndDate = TimeUtil.dateToUTC(endDate);
 
         //如果是同一天的请求，endDate为空
         boolean needUpdateDate = true;
-        if (System.currentTimeMillis() - beginDate.getTime() - UTC_BETWEEN_DATE_SECOND < DAY_SECOND) {
+        if (System.currentTimeMillis() - beginDate.getTime() - UTC_BETWEEN_DATE_SECOND < DURATION_SECOND) {
             strEndDate = null;
             needUpdateDate = false;
         }
@@ -156,8 +171,8 @@ public class OrderSpiderTask {
             return;
         }
 
-        //如果拉取当天数据，每分钟执行一次
-        Thread.sleep(60 * 1000);
+        //如果拉取当天数据，每半小时执行一次
+        Thread.sleep(30 * 60 * 1000);
     }
 
     /**
@@ -239,7 +254,7 @@ public class OrderSpiderTask {
 
             //爬取商品信息
             ItemDO itemDO = itemService.getItemDOByASIN(orderItem.getAsin());
-            if(itemDO == null){
+            if (itemDO == null) {
                 GetMatchingProductForIdResponse resp = awsClient.getProductInfoByAsin("ASIN", orderItem.getAsin());
                 itemDO = ConvertUtil.convertToItemDO(new ItemDO(), resp, orderItem.getSellerSKU());
                 itemService.createItem(itemDO);
@@ -247,12 +262,11 @@ public class OrderSpiderTask {
 
             //刷新库存
             InventoryDO inventoryDO = inventoryService.getInventoryBySku(orderItem.getSellerSKU());
-            if(inventoryDO !=null){
+            if (inventoryDO != null) {
                 ConvertUtil.convertToInventoryDO(awsClient.getInventoryInfoBySku(orderItem.getSellerSKU()), inventoryDO);
                 inventoryService.updateInventory(inventoryDO);
-            }else{
+            } else {
                 inventoryDO = new InventoryDO();
-                inventoryDO.setLocalQuantity(0);
                 ConvertUtil.convertToInventoryDO(awsClient.getInventoryInfoBySku(orderItem.getSellerSKU()), inventoryDO);
                 inventoryService.createInventory(inventoryDO);
             }

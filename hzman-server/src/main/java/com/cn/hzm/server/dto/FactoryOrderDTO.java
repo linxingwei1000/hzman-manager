@@ -4,7 +4,7 @@ import io.swagger.annotations.ApiModel;
 import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
-import java.util.Date;
+import java.util.List;
 
 /**
  * @author xingweilin@clubfactory.com
@@ -19,22 +19,6 @@ public class FactoryOrderDTO {
 
     @ApiModelProperty(value = "工厂id")
     private Integer factoryId;
-
-    @ApiModelProperty(value = "商品sku")
-    private String sku;
-
-    private String title;
-
-    private String icon;
-
-    @ApiModelProperty(value = "订单数量")
-    private Integer orderNum;
-
-    @ApiModelProperty(value = "备注")
-    private String remark;
-
-    @ApiModelProperty(value = "商品单价")
-    private Double itemPrice;
 
     @ApiModelProperty(value = "厂家交货时间")
     private String deliveryDate;
@@ -52,5 +36,7 @@ public class FactoryOrderDTO {
     private Integer status;
 
     private String statusDesc;
+
+    List<FactoryOrderItemDTO> orderItems;
 
 }

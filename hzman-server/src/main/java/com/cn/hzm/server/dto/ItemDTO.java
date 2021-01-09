@@ -35,6 +35,15 @@ public class ItemDTO extends RespBaseDTO{
     @ApiModelProperty(value = "商品相关属性")
     private String relationship;
 
+    @ApiModelProperty(value = "今日销量数据")
+    private SaleInfoDTO today;
+
+    @ApiModelProperty(value = "昨日销量数据")
+    private SaleInfoDTO yesterday;
+
+    @ApiModelProperty(value = "上周同天销量数据")
+    private SaleInfoDTO lastWeekToday;
+
     @ApiModelProperty(value = "库存信息", example = "N190301")
     private InventoryDTO inventoryDTO;
 

@@ -46,6 +46,8 @@ CREATE TABLE hzm.hzm_factory (
   `address` varchar(255) default '' COMMENT '厂家地址',
   `contact_person` varchar(128) NOT NULL COMMENT '厂家联系人',
   `contact_info` varchar(128) default '' COMMENT '厂家联系方式',
+  `wx` varchar(255) default '' COMMENT '微信',
+  `collect_method` varchar(512) default '' COMMENT '收款方式',
   `ctime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `utime` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
@@ -55,10 +57,6 @@ drop table hzm.hzm_factory_order;
 CREATE TABLE hzm.hzm_factory_order (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
   `factory_id` int(11) unsigned NOT NULL COMMENT '厂家id',
-  `sku` varchar(128) not null default '' comment 'sku，用户侧填写',
-  `order_num` int(11) unsigned NOT NULL COMMENT '订货数量',
-  `remark` varchar(255) default '' COMMENT '备注',
-  `item_price` double unsigned default 0 COMMENT '商品单价，厂家填写',
   `delivery_date` varchar(64) default NULL COMMENT '厂家交货日期，厂家填写',
   `waybill_num` varchar(255) default NULL COMMENT '运单编号',
   `receive_num` int(11) unsigned default 0 COMMENT '确认收货数量',
@@ -68,6 +66,21 @@ CREATE TABLE hzm.hzm_factory_order (
   `utime` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='厂家订单表';
+
+
+drop table hzm.hzm_factory_order_item;
+CREATE TABLE hzm.hzm_factory_order_item (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `factory_order_id` int(11) unsigned NOT NULL COMMENT '厂家订单id',
+  `sku` varchar(128) not null default '' comment 'sku，用户侧填写',
+  `order_num` int(11) unsigned NOT NULL COMMENT '订货数量',
+  `remark` varchar(255) default '' COMMENT '备注',
+  `item_price` double unsigned default 0 COMMENT '商品单价，厂家填写',
+  `ctime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `utime` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_factory_order_id` (`factory_order_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='厂家订单商品详情表';
 
 
 drop table hzm.hzm_operate_depend;
@@ -176,3 +189,19 @@ CREATE TABLE hzm.hzm_amazon_order_item (
   `utime` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='amazon订单商品表';
+
+
+drop table hzm.hzm_sale_info;
+CREATE TABLE hzm.hzm_sale_info (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `sku` varchar(128) not null default '' comment 'sku，用户侧填写',
+  `stat_date` varchar(255) not null COMMENT '统计日期',
+  `sale_num` int(11) unsigned NOT NULL COMMENT '销量',
+  `sale_volume` double unsigned not null COMMENT '销售额',
+  `unit_price` double unsigned not null COMMENT '单价',
+  `config` varchar(2048) default '' COMMENT '额外统计数据',
+  `ctime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `utime` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_stat_date` (`stat_date`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='销量统计表';

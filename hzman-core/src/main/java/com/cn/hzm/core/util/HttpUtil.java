@@ -3,6 +3,7 @@ package com.cn.hzm.core.util;
 import com.cn.hzm.core.constant.ContextConst;
 import org.apache.http.HttpEntity;
 import org.apache.http.NameValuePair;
+import org.apache.http.client.config.RequestConfig;
 import org.apache.http.client.methods.CloseableHttpResponse;
 import org.apache.http.client.methods.HttpPost;
 import org.apache.http.impl.client.CloseableHttpClient;
@@ -19,6 +20,12 @@ import java.util.*;
  */
 public class HttpUtil {
 
+    private static RequestConfig requestConfig = RequestConfig.custom()
+            .setConnectTimeout(5000)
+            .setConnectionRequestTimeout(5000)
+            .setSocketTimeout(5000)
+            .build();
+
     /**
      * @param headers 请求头
      * @param url     请求url
@@ -29,6 +36,7 @@ public class HttpUtil {
         CloseableHttpClient httpClient = HttpClients.createDefault();
         // 创建httpPost
         HttpPost httpPost = new HttpPost(url);
+        httpPost.setConfig(requestConfig);
 
         if (headers != null && headers.size() > 0) {
             for (String key : headers.keySet()) {

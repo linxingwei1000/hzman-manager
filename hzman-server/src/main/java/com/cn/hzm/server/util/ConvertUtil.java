@@ -57,12 +57,12 @@ public class ConvertUtil {
 
         Integer transferNum = 0;
         Integer inboundNum = 0;
-        if(member.getSupplyDetail()!=null){
-            for(DetailMember detailMember : member.getSupplyDetail().getMembers()){
-                if(detailMember.getSupplyType().equals("Inbound")){
+        if (member.getSupplyDetail() != null && member.getSupplyDetail().getMembers() != null) {
+            for (DetailMember detailMember : member.getSupplyDetail().getMembers()) {
+                if (detailMember.getSupplyType().equals("Inbound")) {
                     inboundNum += detailMember.getQuantity();
-                }else if(detailMember.getSupplyType().equals("Transfer")){
-                    transferNum+= detailMember.getQuantity();
+                } else if (detailMember.getSupplyType().equals("Transfer")) {
+                    transferNum += detailMember.getQuantity();
                 }
             }
             inventoryDO.setSupplyDetail(JSONObject.toJSONString(member.getSupplyDetail()));
@@ -70,6 +70,14 @@ public class ConvertUtil {
 
         inventoryDO.setAmazonTransferQuantity(transferNum);
         inventoryDO.setAmazonInboundQuantity(inboundNum);
+
+        if (inventoryDO.getId() != null) {
+            //本地库存=本地库存-入库货件,todo----刷新一只减如何处理
+            int local = inventoryDO.getLocalQuantity() - inventoryDO.getAmazonInboundQuantity();
+            inventoryDO.setLocalQuantity(Math.max(local, 0));
+        } else {
+            inventoryDO.setLocalQuantity(0);
+        }
         inventoryDO.calculateTotalQuantity();
         return inventoryDO;
     }
@@ -77,8 +85,8 @@ public class ConvertUtil {
     public static OrderDO convertToOrderDO(OrderDO orderDO, Order order) throws ParseException {
         orderDO.setAmazonOrderId(order.getAmazonOrderId());
         orderDO.setSellerOrderId(order.getSellerOrderId());
-        orderDO.setPurchaseDate(TimeUtil.transformMilliSecondUTCToDate(order.getPurchaseDate()));
-        orderDO.setLastUpdateDate(TimeUtil.transformMilliSecondUTCToDate(order.getLastUpdateDate()));
+        orderDO.setPurchaseDate(TimeUtil.transform(order.getPurchaseDate()));
+        orderDO.setLastUpdateDate(TimeUtil.transform(order.getLastUpdateDate()));
         orderDO.setOrderStatus(order.getOrderStatus());
         orderDO.setFulfillmentChannel(order.getFulfillmentChannel());
         orderDO.setSalesChannel(order.getSalesChannel());
@@ -187,8 +195,8 @@ public class ConvertUtil {
         orderItemDO.setConditionId(orderItem.getConditionId());
         orderItemDO.setConditionSubtypeId(orderItem.getConditionSubtypeId());
 
-        orderItemDO.setScheduledDeliveryStartDate(orderItem.getScheduledDeliveryStartDate() != null ? TimeUtil.transformMilliSecondUTCToDate(orderItem.getScheduledDeliveryStartDate()) : null);
-        orderItemDO.setScheduledDeliveryEndDate(orderItem.getScheduledDeliveryEndDate() != null ? TimeUtil.transformMilliSecondUTCToDate(orderItem.getScheduledDeliveryEndDate()) : null);
+        orderItemDO.setScheduledDeliveryStartDate(orderItem.getScheduledDeliveryStartDate() != null ? TimeUtil.transform(orderItem.getScheduledDeliveryStartDate()) : null);
+        orderItemDO.setScheduledDeliveryEndDate(orderItem.getScheduledDeliveryEndDate() != null ? TimeUtil.transform(orderItem.getScheduledDeliveryEndDate()) : null);
 
         orderItemDO.setTaxCollection(JSONObject.toJSONString(orderItem.getTaxCollection()));
         orderItemDO.setProductInfo(JSONObject.toJSONString(orderItem.getProductInfo()));

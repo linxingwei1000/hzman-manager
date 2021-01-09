@@ -5,11 +5,11 @@ import lombok.Data;
 
 /**
  * @author xingweilin@clubfactory.com
- * @date 2020/11/16 2:23 下午
+ * @date 2021/1/7 10:27 上午
  */
 @Data
-@XStreamAlias("ShippingAddress")
-public class ShippingAddress {
+@XStreamAlias("DefaultShipFromLocationAddress")
+public class DefaultShipFromLocationAddress {
 
     @XStreamAlias(value="City")
     private String city;
@@ -17,18 +17,24 @@ public class ShippingAddress {
     @XStreamAlias(value="PostalCode")
     private String postalCode;
 
-    @XStreamAlias(value="Municipality")
-    private String municipality;
-
     @XStreamAlias(value="isAddressSharingConfidential")
     private String isAddressSharingConfidential;
 
     @XStreamAlias(value="StateOrRegion")
     private String stateOrRegion;
 
+    @XStreamAlias(value="Phone")
+    private String phone;
+
     @XStreamAlias(value="CountryCode")
     private String countryCode;
 
-    @XStreamAlias(value="County")
-    private String county;
+    @XStreamAlias(value="Name")
+    private String name;
+
+    @XStreamAlias(value="AddressLine1")
+    private String addressLine1;
+
+    @XStreamAlias(value="AddressLine2")
+    private String addressLine2;
 }

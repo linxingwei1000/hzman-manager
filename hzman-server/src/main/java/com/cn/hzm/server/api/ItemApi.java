@@ -48,4 +48,11 @@ public class ItemApi {
                                   @ApiParam("查询值") @RequestParam String value) {
         return HzmResponse.success(itemDealService.fuzzyQuery(searchType, value));
     }
+
+    @ApiOperation("本地商品库存修改")
+    @RequestMapping(value = "/inventory/local", method = RequestMethod.GET)
+    public HzmResponse fuzzyQuery(@ApiParam(name = "库存id") @RequestParam Integer iId,
+                                  @ApiParam("修改值") @RequestParam Integer curLocalNum) {
+        return HzmResponse.success(itemDealService.modLocalNum(iId, curLocalNum));
+    }
 }
