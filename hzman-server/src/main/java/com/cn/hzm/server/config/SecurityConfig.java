@@ -2,7 +2,6 @@ package com.cn.hzm.server.config;
 
 import com.cn.hzm.server.config.security.PasswordAuthenticationFilter;
 import com.cn.hzm.server.config.security.PasswordAuthenticationProvider;
-import com.cn.hzm.server.service.impl.HzmUserDetailsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.env.Environment;
@@ -15,8 +14,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-
-import javax.annotation.Resource;
 
 /**
  * Created by yuyang04 on 2020/7/11.

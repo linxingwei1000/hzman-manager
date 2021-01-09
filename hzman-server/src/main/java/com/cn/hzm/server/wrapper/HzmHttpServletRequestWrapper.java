@@ -69,8 +69,7 @@ public class HzmHttpServletRequestWrapper extends HttpServletRequestWrapper {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        InputStream byteArrayInputStream = new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
-        return byteArrayInputStream;
+        return new ByteArrayInputStream(byteArrayOutputStream.toByteArray());
     }
 
     @Override
@@ -96,7 +95,7 @@ public class HzmHttpServletRequestWrapper extends HttpServletRequestWrapper {
 
             @Override
             public boolean isReady() {
-                return false;
+                return true;
             }
 
             @Override

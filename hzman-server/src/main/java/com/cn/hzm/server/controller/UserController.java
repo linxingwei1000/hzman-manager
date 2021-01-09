@@ -3,7 +3,6 @@ package com.cn.hzm.server.controller;
 import com.cn.hzm.core.common.HzmResponse;
 import com.cn.hzm.server.meta.HzmPermission;
 import io.swagger.annotations.*;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -18,7 +17,6 @@ import static com.cn.hzm.server.meta.HzmPermission.*;
 @RequestMapping("/user")
 public class UserController {
 
-    @PreAuthorize("hasRole('" + SUPER_ADMIN + "') || hasPermission('" + PermissionType.USER_MANAGER + "', '" + UserManager.LIST_USER + "')")
     @ApiOperation(value = "1.1 用户列表", notes = "查看用户列表", response = HzmPermission.class)
     @ApiResponses({
             @ApiResponse(response = HzmResponse.class, code = 200, message = "success")
