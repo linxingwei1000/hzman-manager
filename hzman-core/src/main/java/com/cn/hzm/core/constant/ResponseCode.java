@@ -11,6 +11,10 @@ public enum ResponseCode {
     BAD_REQUEST(400, "bad request"),
     UNAUTHORIZED(401, "unauthorized"),
     FORBIDDEN(403, "forbidden"),
+    TOKEN_INVALID(420, "invalid token"),
+    TOKEN_EXPIRED(421, "token expired"),
+
+    SERVER_ERROR(500, "error"),
     ;
 
     private int code;

@@ -2,8 +2,6 @@ package com.cn.hzm.server.domain;
 
 import com.cn.hzm.core.common.BaseDomain;
 
-import java.io.Serializable;
-
 /**
  * Created by yuyang04 on 2020/7/18.
  */
@@ -15,6 +13,8 @@ public class HzmPassport extends BaseDomain {
     private String username;
 
     private String password;
+
+    private String token;
 
     private Integer status;
 
@@ -40,6 +40,14 @@ public class HzmPassport extends BaseDomain {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
     }
 
     public Integer getStatus() {

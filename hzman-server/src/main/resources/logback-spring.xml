@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration scan="true" scanPeriod="60 seconds" debug="false">
+    <contextName>logback</contextName>
+    <springProperty scope="context" name="project.name" source="spring.application.name" defaultValue="hzman"/>
+    <property name="log.path" value="./hzman-logs" />
+    <property name="pattern.layout" value="%d{yyyy-MM-dd HH:mm:ss.SSS} %-5p [%t] %c{1} [%L] - %X{traceId} %m%n" />
+
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+        <filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+            <level>debug</level>
+        </filter>
+        <encoder>
+            <pattern>${pattern.layout}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="file" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <file>${log.path}/${project.name}.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <fileNamePattern>${log.path}/${project.name}-%d{yyyy-MM-dd}.log</fileNamePattern>
+            <maxHistory>30</maxHistory>
+            <totalSizeCap>100GB</totalSizeCap>
+        </rollingPolicy>
+        <encoder>
+            <pattern>${pattern.layout}</pattern>
+        </encoder>
+    </appender>
+
+    <appender name="FILE_ERROR" class="ch.qos.logback.core.rolling.RollingFileAppender">
+        <filter class="ch.qos.logback.classic.filter.LevelFilter">
+            <level>ERROR</level>
+            <OnMismatch>DENY</OnMismatch>
+            <OnMatch>ACCEPT</OnMatch>
+        </filter>
+        <file>${log.path}/${project.name}_error.log</file>
+        <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+            <FileNamePattern>${log.path}/${project.name}-%d{yyyy-MM-dd}_error.log</FileNamePattern>
+            <MaxHistory>30</MaxHistory>
+        </rollingPolicy>
+
+        <!-- 输出的日志内容格式化-->
+        <layout class="ch.qos.logback.classic.PatternLayout">
+            <Pattern>${pattern.layout}</Pattern>
+        </layout>
+    </appender>
+
+    <!--以下包 不打印日志-->
+
+    <springProfile name="local">
+        <root level="DEBUG">
+            <appender-ref ref="file" />
+            <appender-ref ref="FILE_ERROR" />
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+
+    <springProfile name="test">
+        <root level="debug">
+            <appender-ref ref="file" />
+            <appender-ref ref="FILE_ERROR" />
+            <appender-ref ref="CONSOLE" />
+        </root>
+    </springProfile>
+
+    <springProfile name="prod">
+        <root level="debug">
+            <appender-ref ref="file" />
+            <appender-ref ref="FILE_ERROR" />
+        </root>
+    </springProfile>
+</configuration>

@@ -111,6 +111,10 @@ public class TimeUtil {
         return calendar.getTime();
     }
 
+    public static long nowMillis() {
+        return System.currentTimeMillis();
+    }
+
     public static void main(String[] args) throws ParseException {
 
         String strUtc = "2020-11-18T00:00:39.030Z";

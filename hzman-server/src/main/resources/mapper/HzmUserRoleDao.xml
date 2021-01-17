@@ -1,13 +1,12 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="com.cn.hzm.server.dao.HzmPassportDao">
+<mapper namespace="com.cn.hzm.server.dao.HzmUserRoleDao">
     <!--auto generated Code-->
-    <resultMap id="AllColumnMap" type="com.cn.hzm.server.domain.HzmPassport">
+    <resultMap id="AllColumnMap" type="com.cn.hzm.server.domain.HzmUserRole">
         <result column="id" property="id"/>
-        <result column="username" property="username"/>
-        <result column="password" property="password"/>
-        <result column="token" property="token"/>
-        <result column="status" property="status"/>
+        <result column="passport_id" property="passportId"/>
+        <result column="role_id" property="roleId"/>
+        <result column="valid" property="valid"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
         <result column="last_opt_user_id" property="lastOptUserId"/>
@@ -16,10 +15,9 @@
     <!--auto generated Code-->
     <sql id="all_column">
         `id`,
-        `username`,
-        `password`,
-        `token`,
-        `status`,
+        `passport_id`,
+        `role_id`,
+        `valid`,
         `create_time`,
         `update_time`,
         `last_opt_user_id`
@@ -27,21 +25,19 @@
 
     <!--auto generated Code-->
     <insert id="insert" useGeneratedKeys="true" keyProperty="pojo.id">
-        INSERT INTO hzm_passport (
+        INSERT INTO hzm_user_role (
             `id`,
-            `username`,
-            `password`,
-            `token`,
-            `status`,
+            `passport_id`,
+            `role_id`,
+            `valid`,
             `create_time`,
             `update_time`,
             `last_opt_user_id`
         ) VALUES (
             #{pojo.id},
-            #{pojo.username},
-            #{pojo.password},
-            #{pojo.token},
-            #{pojo.status},
+            #{pojo.passportId},
+            #{pojo.roleId},
+            #{pojo.valid},
             #{pojo.createTime},
             #{pojo.updateTime},
             #{pojo.lastOptUserId}
@@ -50,13 +46,12 @@
 
     <!--auto generated Code-->
     <insert id="insertSelective" useGeneratedKeys="true" keyProperty="pojo.id">
-        INSERT INTO hzm_passport
+        INSERT INTO hzm_user_role
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="pojo.id!=null"> `id`,</if>
-            <if test="pojo.username!=null"> `username`,</if>
-            <if test="pojo.password!=null"> `password`,</if>
-            <if test="pojo.token!=null"> `token`,</if>
-            <if test="pojo.status!=null"> `status`,</if>
+            <if test="pojo.passportId!=null"> `passport_id`,</if>
+            <if test="pojo.roleId!=null"> `role_id`,</if>
+            <if test="pojo.valid!=null"> `valid`,</if>
             <if test="pojo.createTime!=null"> `create_time`,</if>
             <if test="pojo.updateTime!=null"> `update_time`,</if>
             <if test="pojo.lastOptUserId!=null"> `last_opt_user_id`,</if>
@@ -64,10 +59,9 @@
         VALUES
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="pojo.id!=null">#{pojo.id},</if>
-            <if test="pojo.username!=null">#{pojo.username},</if>
-            <if test="pojo.password!=null">#{pojo.password},</if>
-            <if test="pojo.token!=null">#{pojo.token},</if>
-            <if test="pojo.status!=null">#{pojo.status},</if>
+            <if test="pojo.passportId!=null">#{pojo.passportId},</if>
+            <if test="pojo.roleId!=null">#{pojo.roleId},</if>
+            <if test="pojo.valid!=null">#{pojo.valid},</if>
             <if test="pojo.createTime!=null">#{pojo.createTime},</if>
             <if test="pojo.updateTime!=null">#{pojo.updateTime},</if>
             <if test="pojo.lastOptUserId!=null">#{pojo.lastOptUserId},</if>
@@ -76,16 +70,15 @@
 
     <!--auto generated Code-->
     <insert id="insertList">
-        INSERT INTO hzm_passport (
+        INSERT INTO hzm_user_role (
         <include refid="all_column"/>
         )VALUES
         <foreach collection="pojos" item="pojo" index="index" separator=",">
             (
             #{pojo.id},
-            #{pojo.username},
-            #{pojo.password},
-            #{pojo.token},
-            #{pojo.status},
+            #{pojo.passportId},
+            #{pojo.roleId},
+            #{pojo.valid},
             #{pojo.createTime},
             #{pojo.updateTime},
             #{pojo.lastOptUserId}
@@ -95,13 +88,12 @@
 
     <!--auto generated Code-->
     <update id="update">
-        UPDATE hzm_passport
+        UPDATE hzm_user_role
         <set>
             <if test="pojo.id != null"> `id` = #{pojo.id}, </if>
-            <if test="pojo.username != null"> `username` = #{pojo.username}, </if>
-            <if test="pojo.password != null"> `password` = #{pojo.password}, </if>
-            <if test="pojo.token != null"> `password` = #{pojo.token}, </if>
-            <if test="pojo.status != null"> `password` = #{pojo.status}, </if>
+            <if test="pojo.passportId != null"> `passport_id` = #{pojo.passportId}, </if>
+            <if test="pojo.roleId != null"> `role_id` = #{pojo.roleId}, </if>
+            <if test="pojo.valid != null"> `valid` = #{pojo.valid}, </if>
             <if test="pojo.createTime != null"> `create_time` = #{pojo.createTime}, </if>
             <if test="pojo.updateTime != null"> `update_time` = #{pojo.updateTime}, </if>
             <if test="pojo.lastOptUserId != null"> `last_opt_user_id` = #{pojo.lastOptUserId} </if>
@@ -109,20 +101,15 @@
         WHERE id = #{pojo.id}
     </update>
 
-    <!--auto generated by codehelper on 2020-07-18 16:39:18-->
-    <select id="findByUsername" resultMap="AllColumnMap">
+<!--auto generated by codehelper on 2021-01-17 18:28:28-->
+    <select id="findByPassportIdAndValidType" resultMap="AllColumnMap">
         select
         <include refid="all_column"/>
-        from hzm_passport
-        where `username`=#{username}
-    </select>
-
-    <!--auto generated by codehelper on 2020-07-18 16:40:33-->
-    <select id="findById" resultMap="AllColumnMap">
-        select
-        <include refid="all_column"/>
-        from hzm_passport
-        where `id`=#{id}
+        from hzm_user_role
+        where `passport_id`=#{passportId}
+        <if test="valid != null">
+            and `valid`=#{valid}
+        </if>
     </select>
 </mapper>
 

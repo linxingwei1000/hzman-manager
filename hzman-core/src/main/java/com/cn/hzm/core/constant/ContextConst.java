@@ -6,6 +6,12 @@ package com.cn.hzm.core.constant;
  */
 public class ContextConst {
 
+    public static final String TRACE_ID = "traceId";
+
+    public static final String EXCEPTION_LOG_KEY = "_exception";
+
+    public static final String AUTH_HEADER_ACCOUNT_ID = "accountId";
+
     public static final String SIGN_URL = "mws.amazonservices.com";
 
     public static final String AWS_URL = "https://mws.amazonservices.com";
