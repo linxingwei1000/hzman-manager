@@ -1,5 +1,7 @@
 package com.cn.hzm.core.exception;
 
+import com.cn.hzm.core.constant.ResponseCode;
+
 /**
  * Created by yuyang04 on 2020/7/11.
  */
@@ -7,6 +9,11 @@ public class HzmBasicRuntimeException extends RuntimeException {
 
     private static final long serialVersionUID = -3459497515674209141L;
     private final int code;
+
+    public HzmBasicRuntimeException(ResponseCode code) {
+        super(code.getMessage());
+        this.code = code.getCode();
+    }
 
     public HzmBasicRuntimeException(int code) {
         this.code = code;

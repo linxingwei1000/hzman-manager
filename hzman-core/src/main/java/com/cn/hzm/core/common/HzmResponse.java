@@ -1,6 +1,7 @@
 package com.cn.hzm.core.common;
 
 import com.cn.hzm.core.constant.ResponseCode;
+import com.cn.hzm.core.context.HzmContext;
 
 import java.io.Serializable;
 
@@ -16,11 +17,15 @@ public class HzmResponse implements Serializable {
 
     private Object result;
 
+    private String requestId;
+
     public static HzmResponse success(Object result){
         return new HzmResponse(ResponseCode.OK, result);
     }
 
     public HzmResponse() {
+        HzmContext.get().setResponse(this);
+        this.requestId = HzmContext.get().getTraceId();
     }
 
     public HzmResponse(ResponseCode code, Object result) {
@@ -32,12 +37,14 @@ public class HzmResponse implements Serializable {
     }
 
     public HzmResponse(int code, String msg, Object result) {
+        this();
         this.code = code;
         this.msg = msg;
         this.result = result;
     }
 
     public HzmResponse(int code, String msg) {
+        this();
         this.code = code;
         this.msg = msg;
     }
@@ -64,6 +71,14 @@ public class HzmResponse implements Serializable {
 
     public void setResult(Object result) {
         this.result = result;
+    }
+
+    public String getRequestId() {
+        return requestId;
+    }
+
+    public void setRequestId(String requestId) {
+        this.requestId = requestId;
     }
 
     public static HzmResponse generateOkResponse(Object result) {

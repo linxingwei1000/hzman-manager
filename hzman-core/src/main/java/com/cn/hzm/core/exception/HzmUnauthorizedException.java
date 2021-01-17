@@ -7,8 +7,10 @@ import com.cn.hzm.core.constant.ResponseCode;
  */
 public class HzmUnauthorizedException extends HzmBasicRuntimeException {
 
+    private static final long serialVersionUID = -2565043341775799321L;
+
     public HzmUnauthorizedException() {
-        super(ResponseCode.UNAUTHORIZED.getMessage(), ResponseCode.UNAUTHORIZED.getCode());
+        super(ResponseCode.UNAUTHORIZED);
     }
 
     public HzmUnauthorizedException(String message) {

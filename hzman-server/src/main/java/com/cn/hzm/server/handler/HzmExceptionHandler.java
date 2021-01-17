@@ -2,6 +2,7 @@ package com.cn.hzm.server.handler;
 
 import com.cn.hzm.core.common.HzmResponse;
 import com.cn.hzm.core.constant.ResponseCode;
+import com.cn.hzm.core.exception.HzmBasicRuntimeException;
 import com.cn.hzm.core.exception.HzmUnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,13 +26,20 @@ public class HzmExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handlerIllegalArgumentException(IllegalArgumentException ex, WebRequest request) {
         logger.error(ex.getMessage());
 
-        return new ResponseEntity<>(new HzmResponse(ResponseCode.BAD_REQUEST), new HttpHeaders(), HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(new HzmResponse(ResponseCode.BAD_REQUEST));
     }
 
     @ExceptionHandler({HzmUnauthorizedException.class})
     public ResponseEntity<Object> handlerHzmUnauthorizedException(HzmUnauthorizedException ex, WebRequest request) {
         logger.error(ex.getMessage());
 
-        return new ResponseEntity<>(new HzmResponse(ex.getCode(), ex.getMessage()), new HttpHeaders(), HttpStatus.OK);
+        return ResponseEntity.status(HttpStatus.OK).body(new HzmResponse(ex.getCode(), ex.getMessage()));
+    }
+
+    @ExceptionHandler({HzmBasicRuntimeException.class})
+    public ResponseEntity<Object> handlerHzmBasicRuntimeException(HzmBasicRuntimeException ex, WebRequest request) {
+        logger.error(ex.getMessage());
+
+        return ResponseEntity.status(HttpStatus.OK).body(new HzmResponse(ex.getCode(), ex.getMessage()));
     }
 }
