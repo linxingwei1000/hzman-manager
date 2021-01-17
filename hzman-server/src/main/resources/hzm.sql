@@ -38,6 +38,23 @@ CREATE TABLE hzm.hzm_inventory (
   KEY `idx_asin` (`asin`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='库存表';
 
+drop table hzm.hzm_shipment_item_record;
+CREATE TABLE hzm.hzm_shipment_item_record (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `quantity_shipped` int(11) unsigned default 0 COMMENT '发送货物数',
+  `shipment_id` varchar(255) default NULL COMMENT '运单单号',
+  `prep_details_list` varchar(1024) default NULL COMMENT '细节',
+  `fulfillment_network_sku` varchar(255) default NULL COMMENT 'networkSKU',
+  `seller_sku` varchar(128) not null comment 'sku，用户侧填写',
+  `quantity_received` int(11) unsigned default 0 COMMENT '收到货物数',
+  `quantity_in_case` int(11) unsigned default 0 COMMENT '货物in case',
+  `ctime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `utime` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_seller_sku` (`seller_sku`),
+  KEY `idx_shipment_id` (`shipment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='amazon货运入库记录表';
+
 
 drop table hzm.hzm_factory;
 CREATE TABLE hzm.hzm_factory (
@@ -59,8 +76,8 @@ CREATE TABLE hzm.hzm_factory_order (
   `factory_id` int(11) unsigned NOT NULL COMMENT '厂家id',
   `delivery_date` varchar(64) default NULL COMMENT '厂家交货日期，厂家填写',
   `waybill_num` varchar(255) default NULL COMMENT '运单编号',
-  `receive_num` int(11) unsigned default 0 COMMENT '确认收货数量',
   `payment_voucher` varchar(255) default NULL COMMENT '付款凭证，图片地址',
+  `desc` varchar(512) default '' COMMENT '订单描述',
   `order_status` tinyint(4) unsigned NOT NULL COMMENT '订单状态',
   `ctime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `utime` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
@@ -76,12 +93,25 @@ CREATE TABLE hzm.hzm_factory_order_item (
   `order_num` int(11) unsigned NOT NULL COMMENT '订货数量',
   `remark` varchar(255) default '' COMMENT '备注',
   `item_price` double unsigned default 0 COMMENT '商品单价，厂家填写',
+  `receive_num` int(11) unsigned default 0 COMMENT '确认收货数量',
   `ctime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `utime` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
   KEY `idx_factory_order_id` (`factory_order_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='厂家订单商品详情表';
 
+drop table hzm.hzm_factory_item;
+CREATE TABLE hzm.hzm_factory_item (
+  `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+  `factory_id` int(11) unsigned NOT NULL COMMENT '厂家id',
+  `sku` varchar(128) not null default '' comment 'sku，用户侧填写',
+  `factory_price` double unsigned default 0 COMMENT '厂家单价',
+  `ctime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+  `utime` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+  PRIMARY KEY (`id`),
+  KEY `idx_factory_id` (`factory_id`),
+  KEY `idx_sku` (`sku`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='厂家商品认领表';
 
 drop table hzm.hzm_operate_depend;
 CREATE TABLE hzm.hzm_operate_depend (

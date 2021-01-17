@@ -37,6 +37,8 @@ public class FactoryOrderDTO {
 
     private String statusDesc;
 
+    private String orderDesc;
+
     List<FactoryOrderItemDTO> orderItems;
 
 }

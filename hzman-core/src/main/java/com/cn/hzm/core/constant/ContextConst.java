@@ -17,8 +17,39 @@ public class ContextConst {
      */
     public static final String OPERATE_SPIDER_CREATE_ORDER = "spider_create_order";
 
+
     /**
-     * 爬取更新订单
+     * 爬取货物入库
      */
-    public static final String OPERATE_SPIDER_UPDATE_ORDER = "spider_update_order";
+    public static final String OPERATE_SHIPMENT_INFO = "spider_shipment_info";
+
+    /**
+     * 今日销量降序
+     */
+    public static final int ITEM_SORT_TODAY_DESC = 0;
+
+    /**
+     * 今日销量升序
+     */
+    public static final int ITEM_SORT_TODAY_ASC = 1;
+
+    /**
+     * 昨日销量降序
+     */
+    public static final int ITEM_SORT_YESTERDAY_DESC = 2;
+
+    /**
+     * 昨日销量升序
+     */
+    public static final int ITEM_SORT_YESTERDAY_ASC = 3;
+
+    /**
+     * 上周同日销量降序
+     */
+    public static final int ITEM_SORT_LAST_WEEK_DESC = 4;
+
+    /**
+     * 上周同日销量升序
+     */
+    public static final int ITEM_SORT_LAST_WEEK_ASC = 5;
 }

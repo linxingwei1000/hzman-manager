@@ -14,9 +14,14 @@ public class ConvertUtil {
     public static <T> T toBean(Class<T> clazz, String xml) {
         T xmlObject;
         XStream xstream = new XStream();
+
+        XStream.setupDefaultSecurity(xstream);
+
+        xstream.allowTypes(new Class[]{clazz});
+
         xstream.processAnnotations(clazz);
         xstream.autodetectAnnotations(true);
-        xmlObject= (T) xstream.fromXML(xml);
+        xmlObject = (T) xstream.fromXML(xml);
         return xmlObject;
     }
 

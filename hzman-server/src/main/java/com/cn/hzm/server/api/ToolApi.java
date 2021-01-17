@@ -1,12 +1,18 @@
 package com.cn.hzm.server.api;
 
 import com.cn.hzm.core.common.HzmResponse;
+import com.cn.hzm.core.util.FtpFileUtil;
 import com.cn.hzm.server.task.DailyStatTask;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+
+import javax.servlet.http.HttpServletRequest;
+import java.io.IOException;
+import java.io.InputStream;
 
 /**
  * @author xingweilin@clubfactory.com
@@ -30,8 +36,23 @@ public class ToolApi {
     @ApiOperation("修复一段时间销量统计")
     @RequestMapping(value = "/sale/fix/duration", method = RequestMethod.GET)
     public HzmResponse fixDuration(@ApiParam("修复开始日期") @RequestParam String statDate,
-                                @ApiParam("修复天数") @RequestParam Integer dayNum) {
+                                   @ApiParam("修复天数") @RequestParam Integer dayNum) {
         dailyStatTask.statSaleInfoDurationDay(statDate, dayNum);
         return HzmResponse.success("true");
+    }
+
+    @ApiOperation("ftp上传")
+    @RequestMapping(value = "/ftp/upload", method = RequestMethod.POST)
+    public HzmResponse uploadImg(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws IOException {
+
+        String fileName = file.getOriginalFilename();
+        InputStream inputStream = file.getInputStream();
+//        String filePath = null;
+//        boolean flag = FtpFileUtil.uploadFile(fileName, inputStream);
+//        if (flag) {
+//            filePath = fileName;
+//        }
+
+        return HzmResponse.success("http://asalwaysjewelry.newidc2.cn/test/test.jpg");
     }
 }

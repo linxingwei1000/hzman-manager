@@ -11,5 +11,13 @@ import lombok.Data;
 @Data
 public class ItemConditionDTO extends PageDTO{
 
-    //private String sku;
+    /**
+     * sku 模糊查询
+     */
+    private String sku;
+
+    /**
+     * 排序
+     */
+    private Integer itemSortType;
 }

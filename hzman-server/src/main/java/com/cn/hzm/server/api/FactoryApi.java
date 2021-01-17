@@ -1,6 +1,5 @@
 package com.cn.hzm.server.api;
 
-import com.alibaba.fastjson.JSONObject;
 import com.cn.hzm.core.common.HzmResponse;
 import com.cn.hzm.server.dto.*;
 import com.cn.hzm.server.service.FactoryDealService;
@@ -47,6 +46,14 @@ public class FactoryApi {
         return HzmResponse.success(true);
     }
 
+    @ApiOperation("商品厂家认领")
+    @RequestMapping(value = "/item/claim", method = RequestMethod.GET)
+    public HzmResponse modifyItem(@ApiParam("工厂Id") @RequestParam Integer factoryId,
+                                  @ApiParam("sku") @RequestParam String sku) throws Exception {
+        factoryDealService.factoryClaimItem(factoryId, sku);
+        return HzmResponse.success(true);
+    }
+
 //    @ApiOperation("删除厂家")
 //    @RequestMapping(value = "/del/{fId}", method = RequestMethod.GET)
 //    public HzmResponse deleteItem(@PathVariable Integer fId) {
@@ -59,6 +66,12 @@ public class FactoryApi {
     @RequestMapping(value = "/order/list", method = RequestMethod.POST)
     public HzmResponse listOrder(@RequestBody FactoryOrderConditionDTO factoryOrderConditionDTO) {
         return HzmResponse.success(factoryDealService.orderList(factoryOrderConditionDTO));
+    }
+
+    @ApiOperation("根据订单状态获取订单")
+    @RequestMapping(value = "/order/list/status", method = RequestMethod.GET)
+    public HzmResponse listOrder(@ApiParam("订单状态") @RequestParam Integer orderStatus) {
+        return HzmResponse.success(factoryDealService.getOrderByStatus(orderStatus));
     }
 
     @ApiOperation("创建厂家订单商品")
@@ -74,14 +87,9 @@ public class FactoryApi {
     }
 
     @ApiOperation("添加厂家订单商品")
-    @RequestMapping(value = "/order/mod", method = RequestMethod.GET)
-    public HzmResponse modOrder(
-            @ApiParam("工厂Id") @RequestParam Integer factoryId,
-            @ApiParam("工厂订单Id") @RequestParam Integer factoryOrderId,
-            @ApiParam("商品sku") @RequestParam String sku,
-            @ApiParam("商品数量") @RequestParam Integer orderNum,
-            @ApiParam("备注") @RequestParam String remark) {
-        return HzmResponse.success(factoryDealService.addOrderItem(factoryId, factoryOrderId, sku, orderNum, remark));
+    @RequestMapping(value = "/order/item/add", method = RequestMethod.POST)
+    public HzmResponse orderItemAdd(@RequestBody AddFactoryOrderDTO addFactoryOrderDTO) {
+        return HzmResponse.success(factoryDealService.addOrderItem(addFactoryOrderDTO));
     }
 
     @ApiOperation("公司确认下单")
@@ -94,10 +102,8 @@ public class FactoryApi {
 
     @ApiOperation("厂家确认订单")
     @RequestMapping(value = "/order/factory/confirm", method = RequestMethod.POST)
-    public HzmResponse factoryConfirmOrder(@RequestBody List<FactoryOrderItemDTO> orderItems,
-            @ApiParam("交货日期yyyy-mm-dd") @RequestParam String deliveryDate,
-            @ApiParam("订单id") @RequestParam Integer oId) {
-        factoryDealService.factoryConfirmOrder(orderItems, oId, deliveryDate);
+    public HzmResponse factoryConfirmOrder(@RequestBody FactoryConfirmDTO factoryConfirmDTO) {
+        factoryDealService.factoryConfirmOrder(factoryConfirmDTO.getOrderItems(), factoryConfirmDTO.getOrderId(), factoryConfirmDTO.getDeliveryDate());
         return HzmResponse.success(true);
     }
 
@@ -119,11 +125,9 @@ public class FactoryApi {
     }
 
     @ApiOperation("公司完成订单")
-    @RequestMapping(value = "/order/hzm/complete", method = RequestMethod.GET)
-    public HzmResponse complete(
-            @ApiParam("实收商品数量") @RequestParam Integer receiveNum,
-            @ApiParam("订单id") @RequestParam Integer oId) {
-        factoryDealService.complete(oId, receiveNum);
+    @RequestMapping(value = "/order/hzm/complete", method = RequestMethod.POST)
+    public HzmResponse complete(@RequestBody AddFactoryOrderDTO addFactoryOrderDTO) {
+        factoryDealService.complete(addFactoryOrderDTO.getFactoryOrderId(), addFactoryOrderDTO.getOrderItems());
         return HzmResponse.success(true);
     }
 

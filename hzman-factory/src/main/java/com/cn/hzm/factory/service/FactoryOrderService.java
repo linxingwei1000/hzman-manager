@@ -26,6 +26,14 @@ public class FactoryOrderService {
     public List<FactoryOrderDO> getOrderByFactoryId(Integer fId){
         QueryWrapper<FactoryOrderDO> query = new QueryWrapper<>();
         query.eq("factory_id", fId);
+        query.orderByDesc("ctime");
+        return factoryOrderMapper.selectList(query);
+    }
+
+    public List<FactoryOrderDO> getOrderByStatus(Integer orderStatus){
+        QueryWrapper<FactoryOrderDO> query = new QueryWrapper<>();
+        query.eq("order_status", orderStatus);
+        query.orderByDesc("ctime");
         return factoryOrderMapper.selectList(query);
     }
 

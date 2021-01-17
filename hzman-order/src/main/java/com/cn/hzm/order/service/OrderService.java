@@ -82,7 +82,21 @@ public class OrderService {
         return orderMapper.selectList(query);
     }
 
-    public List<OrderDO> getOrdersByPurchaseDate(Date startDate, Date endDate){
+    public List<OrderDO> getOrdersByOrderStatus(String orderStatus, Integer offset, Integer limit) {
+        QueryWrapper<OrderDO> query = new QueryWrapper<>();
+        query.eq("order_status", orderStatus);
+        query.orderByAsc("purchase_date");
+        query.last(String.format("limit %d,%d", offset, limit));
+        return orderMapper.selectList(query);
+    }
+
+    public List<OrderDO> getOrdersByAmazonIds(List<String> amazonOrderIds) {
+        QueryWrapper<OrderDO> query = new QueryWrapper<>();
+        query.in("amazon_order_id", amazonOrderIds);
+        return orderMapper.selectList(query);
+    }
+
+    public List<OrderDO> getOrdersByPurchaseDate(Date startDate, Date endDate) {
         QueryWrapper<OrderDO> query = new QueryWrapper<>();
         query.between("purchase_date", startDate, endDate);
         query.orderByAsc("purchase_date");

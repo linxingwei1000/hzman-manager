@@ -40,11 +40,13 @@
         <xstream.version>1.4.11</xstream.version>
         <fastjson-version>1.2.60</fastjson-version>
         <commons-codec-version>1.10</commons-codec-version>
+        <commons-net-version>3.3</commons-net-version>
         <guava-version>29.0-jre</guava-version>
         <httpclient-version>4.5.2</httpclient-version>
         <httpcore-version>4.4.4</httpcore-version>
         <gson.version>2.8.5</gson.version>
         <commons-lang3.version>3.4</commons-lang3.version>
+        <caffeine.version>2.8.0</caffeine.version>
     </properties>
 
     <dependencyManagement>
@@ -129,6 +131,11 @@
                 <version>${commons-codec-version}</version>
             </dependency>
             <dependency>
+                <groupId>commons-net</groupId>
+                <artifactId>commons-net</artifactId>
+                <version>${commons-net-version}</version>
+            </dependency>
+            <dependency>
                 <groupId>com.google.guava</groupId>
                 <artifactId>guava</artifactId>
                 <version>${guava-version}</version>
@@ -153,6 +160,12 @@
                 <artifactId>commons-lang3</artifactId>
                 <version>${commons-lang3.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.github.ben-manes.caffeine</groupId>
+                <artifactId>caffeine</artifactId>
+                <version>${caffeine.version}</version>
+            </dependency>
+
         </dependencies>
     </dependencyManagement>
 

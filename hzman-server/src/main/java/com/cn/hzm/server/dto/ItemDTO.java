@@ -5,6 +5,7 @@ import io.swagger.annotations.ApiModelProperty;
 import lombok.Data;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author xingweilin@clubfactory.com
@@ -46,6 +47,9 @@ public class ItemDTO extends RespBaseDTO{
 
     @ApiModelProperty(value = "库存信息", example = "N190301")
     private InventoryDTO inventoryDTO;
+
+    @ApiModelProperty(value = "商品工厂信息")
+    private List<FactoryItemDTO> factoryItemDTOS;
 
     @ApiModelProperty("创建时间")
     private Date ctime;

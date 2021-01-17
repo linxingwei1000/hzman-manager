@@ -1,6 +1,5 @@
 package com.cn.hzm.core.aws.domain.order;
 
-import com.baomidou.mybatisplus.annotation.TableField;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import lombok.Data;
 

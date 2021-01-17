@@ -1,9 +1,13 @@
 package com.cn.hzm.core.aws;
 
 import com.cn.hzm.core.aws.request.BaseRequest;
+import com.cn.hzm.core.aws.request.fulfilment.ShipmentItemsByNextTokenRequest;
+import com.cn.hzm.core.aws.request.fulfilment.ShipmentItemsRequest;
 import com.cn.hzm.core.aws.request.inventory.ListInventoryRequest;
 import com.cn.hzm.core.aws.request.order.*;
 import com.cn.hzm.core.aws.request.product.GetMatchProductRequest;
+import com.cn.hzm.core.aws.resp.fulfilment.ListInboundShipmentItemsByNextTokenResponse;
+import com.cn.hzm.core.aws.resp.fulfilment.ListInboundShipmentItemsResponse;
 import com.cn.hzm.core.aws.resp.inventory.ListInventorySupplyResponse;
 import com.cn.hzm.core.aws.resp.order.*;
 import com.cn.hzm.core.aws.resp.product.GetMatchingProductForIdResponse;
@@ -52,6 +56,19 @@ public class AwsClient {
         listInventoryRequest.setSkus(Lists.newArrayList(sku));
         listInventoryRequest.setTimestamp(TimeUtil.getUTC());
         return doPost(listInventoryRequest, ListInventorySupplyResponse.class);
+    }
+
+    /**
+     * 根据amazonOrderIds批量获取订单
+     * @param amazonOrderIds
+     * @return
+     */
+    public GetOrderResponse getOrder(List<String> amazonOrderIds) {
+        GetOrderRequest getOrderRequest = new GetOrderRequest();
+        getOrderRequest.setAction("GetOrder");
+        getOrderRequest.setAmazonOrderId(amazonOrderIds);
+        getOrderRequest.setTimestamp(TimeUtil.getUTC());
+        return doPost(getOrderRequest, GetOrderResponse.class);
     }
 
     /**
@@ -137,6 +154,40 @@ public class AwsClient {
         return doPost(tokenRequest, ListOrderItemsByNextTokenResponse.class);
     }
 
+    /**
+     * 获取商品入库信息
+     * @param shipmentId
+     * @param beginDate
+     * @param endDate
+     * @return
+     */
+    public ListInboundShipmentItemsResponse getShipmentItems(String shipmentId, String beginDate, String endDate){
+        ShipmentItemsRequest shipmentItemsRequest = new ShipmentItemsRequest();
+        shipmentItemsRequest.setAction("ListInboundShipmentItems");
+        shipmentItemsRequest.setTimestamp(TimeUtil.getUTC());
+
+        if(StringUtils.isEmpty(shipmentId)){
+            shipmentItemsRequest.setLastUpdatedAfter(beginDate);
+            shipmentItemsRequest.setLastUpdatedBefore(endDate);
+        }else{
+            shipmentItemsRequest.setShipmentId(shipmentId);
+        }
+        return doPost(shipmentItemsRequest, ListInboundShipmentItemsResponse.class);
+    }
+
+    /**
+     * 获取商品入库信息
+     * @param nextToken
+     * @return
+     */
+    public ListInboundShipmentItemsByNextTokenResponse getShipmentItemsByNextToken(String nextToken){
+        ShipmentItemsByNextTokenRequest shipmentItemsRequest = new ShipmentItemsByNextTokenRequest();
+        shipmentItemsRequest.setAction("ListInboundShipmentItemsByNextToken");
+        shipmentItemsRequest.setTimestamp(TimeUtil.getUTC());
+        shipmentItemsRequest.setNextToken(nextToken);
+        return doPost(shipmentItemsRequest, ListInboundShipmentItemsByNextTokenResponse.class);
+    }
+
 
     private <T> T doPost(BaseRequest baseRequest, Class<T> tClass) {
         String strForSign = ToolUtil.createStrForSign(baseRequest.installJsonStr());
@@ -152,7 +203,7 @@ public class AwsClient {
         Map<String, String> headers = Maps.newHashMap();
         headers.put("Content-Type", "text/xml");
         String resp = HttpUtil.postV2(headers, url);
-        log.info("aws resp:{}", resp);
+        //log.info("aws resp:{}", resp);
         if (StringUtils.isEmpty(resp)) {
             return null;
         }

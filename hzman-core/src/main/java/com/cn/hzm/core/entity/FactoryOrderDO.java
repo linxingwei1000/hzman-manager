@@ -28,12 +28,11 @@ public class FactoryOrderDO {
     @TableField(value = "waybill_num")
     private String waybillNum;
 
-    @TableField(value = "receive_num")
-    private Integer receiveNum;
-
     @TableField(value = "payment_voucher")
     private String paymentVoucher;
 
+    @TableField(value = "order_desc")
+    private String orderDesc;
 
     @TableField(value = "order_status")
     private Integer orderStatus;

@@ -10,33 +10,24 @@ import java.util.Date;
 
 /**
  * @author xingweilin@clubfactory.com
- * @date 2020/7/25 2:45 下午
+ * @date 2021/1/17 3:44 下午
  */
 @Data
-@TableName("hzm_factory_order_item")
-public class FactoryOrderItemDO {
+@TableName("hzm_factory_item")
+public class FactoryItemDO {
 
     @TableId(type = IdType.AUTO)
     private Integer id;
 
-    @TableField(value = "factory_order_id")
-    private Integer factoryOrderId;
+    @TableField(value = "factory_id")
+    private Integer factoryId;
 
     private String sku;
 
-    @TableField(value = "order_num")
-    private Integer orderNum;
-
-    private String remark;
-
-    @TableField(value = "item_price")
-    private Double itemPrice;
-
-    @TableField(value = "receive_num")
-    private Integer receiveNum;
+    @TableField(value = "factory_price")
+    private Double factoryPrice;
 
     private Date ctime;
 
     private Date utime;
-
 }

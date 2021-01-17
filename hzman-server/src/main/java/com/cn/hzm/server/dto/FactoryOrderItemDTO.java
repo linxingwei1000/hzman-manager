@@ -12,7 +12,7 @@ import lombok.Data;
 @ApiModel(description = "工厂订单商品DTO")
 public class FactoryOrderItemDTO {
 
-    @ApiModelProperty(value = "订单商品id")
+    @ApiModelProperty(value = "商品订单id")
     private Integer id;
 
     @ApiModelProperty(value = "工厂订单id")

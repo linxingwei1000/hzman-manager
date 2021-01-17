@@ -2,7 +2,6 @@ package com.cn.hzm.item.service;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cn.hzm.core.entity.ItemDO;
-import com.cn.hzm.core.util.SqlCommonUtil;
 import com.cn.hzm.item.dao.ItemMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -21,15 +20,14 @@ public class ItemService {
     @Autowired
     private ItemMapper itemMapper;
 
-    public List<ItemDO> getListByCondition(Map<String, String> condition){
+    public List<ItemDO> getListByCondition(Map<String, String> condition, String[] fields){
         QueryWrapper<ItemDO> query = new QueryWrapper<>();
         if(condition.size()!=0){
-            for(Map.Entry<String, String>entry: condition.entrySet()){
-                query.eq(entry.getKey(), entry.getValue());
+            if(condition.containsKey("sku")){
+                query.like("sku", condition.get("sku"));
             }
         }
-
-        query.orderByAsc("ctime");
+        query.select(fields);
         return itemMapper.selectList(query);
     }
 

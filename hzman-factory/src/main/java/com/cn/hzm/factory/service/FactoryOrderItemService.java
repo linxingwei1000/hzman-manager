@@ -39,6 +39,7 @@ public class FactoryOrderItemService {
     public List<FactoryOrderItemDO> getOrderBySku(String sku){
         QueryWrapper<FactoryOrderItemDO> query = new QueryWrapper<>();
         query.eq("sku", sku);
+        query.orderByDesc("ctime");
         return factoryOrderItemMapper.selectList(query);
     }
 
