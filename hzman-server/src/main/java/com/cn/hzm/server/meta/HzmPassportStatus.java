@@ -7,7 +7,7 @@ import java.util.stream.Stream;
 /**
  * Created by yuyang04 on 2020/7/18.
  */
-public enum PassportStatus {
+public enum HzmPassportStatus {
 
     ENABLE(1, "启用"),
 
@@ -21,7 +21,7 @@ public enum PassportStatus {
 
     private String desc;
 
-    PassportStatus(Integer value, String desc) {
+    HzmPassportStatus(Integer value, String desc) {
         this.value = value;
         this.desc = desc;
     }
@@ -34,12 +34,16 @@ public enum PassportStatus {
         return desc;
     }
 
-    private static final Map<Integer, PassportStatus> LOOK_UP;
+    private static final Map<Integer, HzmPassportStatus> LOOK_UP;
     static {
         LOOK_UP = Stream.of(values()).collect(Collectors.toMap(s -> s.value, s -> s, (s1, s2) -> s1));
     }
 
-    public static PassportStatus findByValue(Integer value) {
+    public static HzmPassportStatus findByValue(Integer value) {
         return LOOK_UP.get(value);
+    }
+
+    public static boolean isActive(Integer status) {
+        return ENABLE.getValue().equals(status);
     }
 }

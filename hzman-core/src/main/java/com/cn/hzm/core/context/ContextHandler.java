@@ -31,17 +31,12 @@ public class ContextHandler {
 
         context.setParam(requestWrapper.getQueryString());
 
-        LogContext.context();
-
         LOGGER.info("uri: {}, original request body: {}, header: {}, path param: {}.",
                 requestWrapper.getRequestURI(), context.getBody(), getHeaderString(requestWrapper), context.getParam());
     }
 
     public void destroyContext() {
         HzmContext.get().unload();
-
-        LogContext.context().clear();
-
         MDC.clear();
     }
 

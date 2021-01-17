@@ -1,12 +1,23 @@
 package com.cn.hzm.core.context;
 
+import com.cn.hzm.core.common.HzmResponse;
 import com.cn.hzm.core.constant.ClientTypeEnum;
+import com.cn.hzm.core.constant.ContextConst;
+import com.cn.hzm.core.util.GsonUtil;
 import com.cn.hzm.core.util.TimeUtil;
+import com.google.common.collect.Maps;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.util.Map;
+import java.util.Set;
 
 /**
  * Created by yuyang04 on 2021/1/9.
  */
 public class HzmContext {
+
+    private static final Logger LOGGER = LoggerFactory.getLogger(HzmContext.class);
 
     private static final ThreadLocal<HzmContext> THREAD_LOCAL = new InheritableThreadLocal<>();
 
@@ -26,6 +37,14 @@ public class HzmContext {
 
     private String peer;
 
+    private HzmResponse response;
+
+    private long spend;
+
+    private Map<String, Object> props = Maps.newLinkedHashMap();
+
+    private Set<String> roles;
+
     public static HzmContext get() {
         return THREAD_LOCAL.get();
     }
@@ -35,6 +54,11 @@ public class HzmContext {
         context.setTraceId(traceId);
         THREAD_LOCAL.set(context);
         return context;
+    }
+
+    public void printLog() {
+        setSpend(TimeUtil.nowMillis() - getStartTime());
+        LOGGER.info(GsonUtil.toJson(this));
     }
 
     public void unload() {
@@ -103,5 +127,44 @@ public class HzmContext {
 
     public void setPeer(String peer) {
         this.peer = peer;
+    }
+
+    public HzmResponse getResponse() {
+        return response;
+    }
+
+    public void setResponse(HzmResponse response) {
+        this.response = response;
+    }
+
+    public long getSpend() {
+        return spend;
+    }
+
+    public void setSpend(long spend) {
+        this.spend = spend;
+    }
+
+    public Set<String> getRoles() {
+        return roles;
+    }
+
+    public void setRoles(Set<String> roles) {
+        this.roles = roles;
+    }
+
+    public void putLogProperties(String key, Object value) {
+        this.props.put(key, value);
+    }
+
+    public void exception(Exception ex) {
+        if (ex != null) {
+            putLogProperties(ContextConst.EXCEPTION_LOG_KEY, ex.getMessage());
+            LOGGER.error(ex.getMessage(), ex);
+        }
+    }
+
+    public Map<String, Object> getLogProperties() {
+        return props;
     }
 }
