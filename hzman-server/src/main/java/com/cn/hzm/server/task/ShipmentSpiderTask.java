@@ -68,9 +68,9 @@ public class ShipmentSpiderTask {
         }, 60, 2, TimeUnit.SECONDS);
 
 
-//        //爬取订单任务
-//        ExecutorService shipmentTask = Executors.newSingleThreadExecutor();
-//        shipmentTask.execute(this::shipmentSpider);
+        //爬取订单任务
+        ExecutorService shipmentTask = Executors.newSingleThreadExecutor();
+        shipmentTask.execute(this::shipmentSpider);
     }
 
     private void shipmentSpider() {

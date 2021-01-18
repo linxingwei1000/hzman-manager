@@ -43,6 +43,14 @@ public class FactoryOrderItemService {
         return factoryOrderItemMapper.selectList(query);
     }
 
+    public FactoryOrderItemDO getItemByOrderIdAndSku(Integer oId, String sku){
+        QueryWrapper<FactoryOrderItemDO> query = new QueryWrapper<>();
+        query.eq("factory_order_id", oId);
+        query.eq("sku", sku);
+        query.orderByDesc("ctime");
+        return factoryOrderItemMapper.selectOne(query);
+    }
+
     /**
      * 更新订单商品
      * @param factoryOrderItemDO

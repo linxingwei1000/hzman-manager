@@ -13,6 +13,7 @@ import com.cn.hzm.factory.service.FactoryService;
 import com.cn.hzm.item.service.ItemService;
 import com.cn.hzm.order.service.SaleInfoService;
 import com.cn.hzm.server.cache.ItemDetailCache;
+import com.cn.hzm.server.cache.comparator.SortHelper;
 import com.cn.hzm.server.dto.*;
 import com.cn.hzm.server.util.ConvertUtil;
 import com.cn.hzm.stock.service.InventoryService;
@@ -64,19 +65,19 @@ public class ItemDealService {
     private Map<String, Object> syncLock = Maps.newHashMap();
 
     public JSONObject processListItem(ItemConditionDTO conditionDTO) {
+        List<ItemDTO> itemRespList;
         if(StringUtils.isEmpty(conditionDTO.getSku())){
-
+            itemRespList = itemDetailCache.getCacheBySort(conditionDTO.getItemSortType());
+        }else{
+            Map<String, String> condition = (Map<String, String>) JSONObject.toJSON(conditionDTO);
+            List<ItemDO> list = itemService.getListByCondition(condition, new String[]{"sku"});
+            itemRespList = SortHelper.sortItem(conditionDTO.getItemSortType(),
+                    itemDetailCache.getCache(list.stream().map(ItemDO::getSku).collect(Collectors.toList())));
         }
-        Map<String, String> condition = (Map<String, String>) JSONObject.toJSON(conditionDTO);
-        condition.remove("pageNum");
-        condition.remove("pageSize");
-        List<ItemDO> list = itemService.getListByCondition(condition, new String[]{"sku"});
-
-        List<ItemDTO> itemDTOS = itemDetailCache.getCache(conditionDTO.pageResult(list).stream().map(ItemDO::getSku).collect(Collectors.toList()));
 
         JSONObject respJo = new JSONObject();
-        respJo.put("total", list.size());
-        respJo.put("data", JSONObject.toJSON(itemDTOS));
+        respJo.put("total", itemRespList.size());
+        respJo.put("data", conditionDTO.pageResult(itemRespList));
         return respJo;
     }
 

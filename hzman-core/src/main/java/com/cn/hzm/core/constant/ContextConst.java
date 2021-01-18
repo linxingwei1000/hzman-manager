@@ -58,4 +58,19 @@ public class ContextConst {
      * 上周同日销量升序
      */
     public static final int ITEM_SORT_LAST_WEEK_ASC = 5;
+
+    /**
+     * amazon订单状态：Pending
+     */
+    public static final String AMAZON_STATUS_PENDING = "Pending";
+
+    /**
+     * amazon订单状态：Canceled
+     */
+    public static final String AMAZON_STATUS_CANCELED = "Canceled";
+
+    /**
+     * amazon订单状态：Shipped
+     */
+    public static final String AMAZON_STATUS_SHIPPED = "Shipped";
 }

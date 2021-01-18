@@ -16,6 +16,6 @@ public class TodaySaleAscComparator implements Comparator<ItemDTO> {
 
         SaleInfoDTO s1 = o1.getToday();
         SaleInfoDTO s2 = o2.getToday();
-        return s2.getSaleNum() - s1.getSaleNum();
+        return SortHelper.compareEach(s2.getSaleNum(), s1.getSaleNum(), o2.getSku(), o1.getSku());
     }
 }

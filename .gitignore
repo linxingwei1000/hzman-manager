@@ -41,3 +41,4 @@ logs/.target/
 tool/output/*
 *.tar.gz
 bin/
+/hzman-logs/

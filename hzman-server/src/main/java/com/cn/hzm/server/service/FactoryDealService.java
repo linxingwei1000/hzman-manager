@@ -256,12 +256,19 @@ public class FactoryDealService {
     @Transactional
     public Integer addOrderItem(AddFactoryOrderDTO addFactoryOrderDTO) {
         addFactoryOrderDTO.getOrderItems().forEach(orderItem -> {
-            FactoryOrderItemDO orderItemDO = new FactoryOrderItemDO();
-            orderItemDO.setFactoryOrderId(addFactoryOrderDTO.getFactoryOrderId());
-            orderItemDO.setSku(orderItem.getSku());
-            orderItemDO.setOrderNum(orderItem.getOrderNum());
-            orderItemDO.setRemark(orderItem.getRemark());
-            factoryOrderItemService.createFactoryOrderItem(orderItemDO);
+            FactoryOrderItemDO old = factoryOrderItemService.getItemByOrderIdAndSku(addFactoryOrderDTO.getFactoryOrderId(), orderItem.getSku());
+            if(old!=null){
+                old.setOrderNum(orderItem.getOrderNum() + old.getOrderNum());
+                old.setRemark(orderItem.getRemark());
+                factoryOrderItemService.updateFactoryOrder(old);
+            }else{
+                FactoryOrderItemDO orderItemDO = new FactoryOrderItemDO();
+                orderItemDO.setFactoryOrderId(addFactoryOrderDTO.getFactoryOrderId());
+                orderItemDO.setSku(orderItem.getSku());
+                orderItemDO.setOrderNum(orderItem.getOrderNum());
+                orderItemDO.setRemark(orderItem.getRemark());
+                factoryOrderItemService.createFactoryOrderItem(orderItemDO);
+            }
         });
 
         return 1;

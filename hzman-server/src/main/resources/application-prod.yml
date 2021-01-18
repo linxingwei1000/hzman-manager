@@ -1,44 +1,6 @@
 spring:
-  redis:
-    database: 4
-    host: search-sys.mxcyd8.ng.0001.usw2.cache.amazonaws.com
-    port: 6379
-    jedis:
-      pool:
-        max-active: 5000
-  elasticsearch:
-    jest:
-      uris: https://search-search-new-7fk2y5ycc3z676n5b76d4cowe4.us-west-2.es.amazonaws.com
-  aop:
-    auto: true
-    proxy-target-class: true
-
-aws:
-  sqs:
-    access-key: AKIAIQPFQ4FBEQAEZZZA
-    secret-key: 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
-    region-static: us-west-2
-  elasticsearch:
-    host: search-search-new-7fk2y5ycc3z676n5b76d4cowe4.us-west-2.es.amazonaws.com
-    port: 80
-
-
-search:
-  broker_url: http://search-491144797.us-west-2.elb.amazonaws.com:8080
-  REQUEST_ES_TIMEOUT_MILLI_SECS: 500
-  REQUEST_ES_CONNECT_TIMEOUT_MILLI_SECS: 500
-  REQUEST_ES_READ_TIMEOUT_MILLI_SECS: 500
-  HTTP_MAX_CONNECTION_COUNT: 200
-  SEARCH_HOST_MAX_CONNECTION_COUNT: 200
-  USE_CACHE: true
-  DISASTER_TOLERANCE: true
-
-
-complete:
-  url: http://complete-1142976317.us-west-2.elb.amazonaws.com:8080
-
-env: PRO
-
-serverId:
-  application: csearch_item
-  group: csearch_item_host
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://60.190.138.133:3306/hzm?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
+    username: root
+    password: hzman2021yzf

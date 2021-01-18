@@ -96,8 +96,11 @@ public class OrderService {
         return orderMapper.selectList(query);
     }
 
-    public List<OrderDO> getOrdersByPurchaseDate(Date startDate, Date endDate) {
+    public List<OrderDO> getOrdersByPurchaseDate(Date startDate, Date endDate, String orderStatus) {
         QueryWrapper<OrderDO> query = new QueryWrapper<>();
+        if (!StringUtils.isEmpty(orderStatus)) {
+            query.eq("order_status", orderStatus);
+        }
         query.between("purchase_date", startDate, endDate);
         query.orderByAsc("purchase_date");
         return orderMapper.selectList(query);

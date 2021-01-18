@@ -1,5 +1,7 @@
 package com.cn.hzm.server.task;
 
+import com.alibaba.fastjson.JSONObject;
+import com.cn.hzm.core.constant.ContextConst;
 import com.cn.hzm.core.entity.OrderDO;
 import com.cn.hzm.core.entity.OrderItemDO;
 import com.cn.hzm.core.entity.SaleInfoDO;
@@ -108,12 +110,15 @@ public class DailyStatTask {
     private void statDailySaleInfoByDate(Date startDate, Date endDate) {
         String statDate = TimeUtil.getSimpleFormat(startDate);
 
-        List<OrderDO> orders = orderService.getOrdersByPurchaseDate(startDate, endDate);
+        List<OrderDO> orders = orderService.getOrdersByPurchaseDate(startDate, endDate, null);
 
         Map<String, SaleInfoDO> saleInfoMap = Maps.newHashMap();
         for (OrderDO order : orders) {
             List<OrderItemDO> itemList = orderItemService.getOrderByAmazonId(order.getAmazonOrderId());
             itemList.forEach(orderItem -> {
+                if (orderItem.getItemPriceAmount() == 0.0 || orderItem.getQuantityOrdered() == 0) {
+                    return;
+                }
                 SaleInfoDO saleInfoDO = saleInfoMap.get(orderItem.getSku());
                 if (saleInfoDO == null) {
                     saleInfoDO = new SaleInfoDO();

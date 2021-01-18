@@ -71,11 +71,8 @@ public class ConvertUtil {
         inventoryDO.setAmazonTransferQuantity(transferNum);
         inventoryDO.setAmazonInboundQuantity(inboundNum);
 
-        if (inventoryDO.getId() != null) {
-            //本地库存=本地库存-入库货件,todo----刷新一只减如何处理
-            int local = inventoryDO.getLocalQuantity() - inventoryDO.getAmazonInboundQuantity();
-            inventoryDO.setLocalQuantity(Math.max(local, 0));
-        } else {
+        //设置初始值
+        if (inventoryDO.getId() == null) {
             inventoryDO.setLocalQuantity(0);
         }
         inventoryDO.calculateTotalQuantity();

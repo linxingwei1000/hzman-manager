@@ -16,6 +16,6 @@ public class LastWeekSaleDescComparator implements Comparator<ItemDTO> {
 
         SaleInfoDTO s1 = o1.getLastWeekToday();
         SaleInfoDTO s2 = o2.getLastWeekToday();
-        return s1.getSaleNum() - s2.getSaleNum();
+        return SortHelper.compareEach(s1.getSaleNum(), s2.getSaleNum(), o1.getSku(), o2.getSku());
     }
 }

@@ -72,8 +72,6 @@ public class OrderSpiderTask {
 
     private static final Integer DURATION_SECOND = 30 * 60 * 1000;
 
-    private static final String AMAZON_STATUS_PENDING = "Pending";
-
 
     /**
      * 单个amazonId爬取任务
@@ -125,13 +123,13 @@ public class OrderSpiderTask {
         }, 60, 2, TimeUnit.SECONDS);
 
 
-//        //爬取订单任务
-//        ExecutorService createOrderTask = Executors.newSingleThreadExecutor();
-//        createOrderTask.execute(this::createOrderSpider);
-//
-//        //更新订单任务
-//        ExecutorService updateOrderSpider = Executors.newSingleThreadExecutor();
-//        updateOrderSpider.execute(this::updateOrderSpider);
+        //爬取订单任务
+        ExecutorService createOrderTask = Executors.newSingleThreadExecutor();
+        createOrderTask.execute(this::createOrderSpider);
+
+        //更新订单任务
+        ExecutorService updateOrderSpider = Executors.newSingleThreadExecutor();
+        updateOrderSpider.execute(this::updateOrderSpider);
     }
 
     private void createOrderSpider() {
@@ -175,7 +173,7 @@ public class OrderSpiderTask {
         log.info("更新订单任务开始");
 
         while (true) {
-            List<OrderDO> orders = orderService.getOrdersByOrderStatus(AMAZON_STATUS_PENDING, offset, limit);
+            List<OrderDO> orders = orderService.getOrdersByOrderStatus(ContextConst.AMAZON_STATUS_PENDING, offset, limit);
 
             List<String> amazonOrderIds = orders.stream().map(OrderDO::getAmazonOrderId).collect(Collectors.toList());
 
@@ -185,7 +183,7 @@ public class OrderSpiderTask {
 
             //剔除Pending状态订单
             List<Order> tmp = orderResponse.getGetOrderResult().getOrders().getList().stream()
-                    .filter(order -> !AMAZON_STATUS_PENDING.equals(order.getOrderStatus()))
+                    .filter(order -> !ContextConst.AMAZON_STATUS_PENDING.equals(order.getOrderStatus()))
                     .collect(Collectors.toList());
             changeTotal += tmp.size();
 

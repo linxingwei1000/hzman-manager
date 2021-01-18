@@ -34,9 +34,9 @@ public class SaleInfoService {
      *
      * @param saleInfoDO
      */
-    public Boolean updateSaleInfo(SaleInfoDO saleInfoDO) {
+    public Integer updateSaleInfo(SaleInfoDO saleInfoDO) {
         saleInfoDO.setUtime(new Date());
-        return saleInfoMapper.updateById(saleInfoDO) != 0;
+        return saleInfoMapper.updateById(saleInfoDO);
     }
 
     public SaleInfoDO getSaleInfoDOByDate(String statDate, String sku){
