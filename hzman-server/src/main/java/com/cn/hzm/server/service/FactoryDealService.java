@@ -3,6 +3,9 @@ package com.cn.hzm.server.service;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cn.hzm.core.entity.*;
+import com.cn.hzm.core.exception.ExceptionCode;
+import com.cn.hzm.core.exception.HzmException;
+import com.cn.hzm.core.util.TimeUtil;
 import com.cn.hzm.factory.enums.OrderStatusEnum;
 import com.cn.hzm.factory.service.FactoryItemService;
 import com.cn.hzm.factory.service.FactoryOrderItemService;
@@ -120,11 +123,12 @@ public class FactoryDealService {
      * @param factoryId
      * @param sku
      */
-    public void factoryClaimItem(Integer factoryId, String sku) {
+    public void factoryClaimItem(Integer factoryId, String sku, String desc) {
 
         FactoryItemDO factoryItemDO = new FactoryItemDO();
         factoryItemDO.setFactoryId(factoryId);
         factoryItemDO.setSku(sku);
+        factoryItemDO.setItemDesc(desc);
 
         List<FactoryOrderDO> orders = factoryOrderService.getOrderByFactoryId(factoryId);
         if (!CollectionUtils.isEmpty(orders)) {
@@ -163,13 +167,28 @@ public class FactoryDealService {
         factoryService.deleteFactory(fId);
     }
 
-    public JSONObject orderList(FactoryOrderConditionDTO factoryOrderConditionDTO) {
+    /**
+     * 获取厂家外链订单
+     * @param factoryOrderConditionDTO
+     * @return
+     */
+    public JSONObject outOrderList(FactoryOrderConditionDTO factoryOrderConditionDTO){
         List<FactoryOrderDO> orderDOS = factoryOrderService.getOrderByFactoryId(factoryOrderConditionDTO.getFactoryId());
-        List<FactoryOrderDTO> dtos = factoryOrderConditionDTO.pageResult(orderDOS).stream().map(orderDO -> {
+        List<FactoryOrderDO> needDealOrders = orderDOS.stream().filter(order -> OrderStatusEnum.ORDER_CONFIRM_PLACE.getCode().equals(order.getOrderStatus())
+                ||OrderStatusEnum.ORDER_FACTORY_CONFIRM.getCode().equals(order.getOrderStatus())
+                ||OrderStatusEnum.ORDER_FACTORY_DELIVERY.getCode().equals(order.getOrderStatus())
+                ||OrderStatusEnum.ORDER_PAY.getCode().equals(order.getOrderStatus())).collect(Collectors.toList());
+        return processOrderList(needDealOrders, factoryOrderConditionDTO);
+    }
+
+
+    private JSONObject processOrderList(List<FactoryOrderDO> needDealOrders, FactoryOrderConditionDTO condition){
+        List<FactoryOrderDTO> dtos = condition.pageResult(needDealOrders).stream().map(orderDO -> {
             FactoryOrderDTO orderDTO = JSONObject.parseObject(JSONObject.toJSONString(orderDO), FactoryOrderDTO.class);
             orderDTO.setStatus(orderDO.getOrderStatus());
             orderDTO.setStatusDesc(OrderStatusEnum.getEnumByCode(orderDO.getOrderStatus()).getDesc());
             orderDTO.setOrderDesc(orderDO.getOrderDesc());
+            orderDTO.setOrderCreateTime(TimeUtil.getDateFormat(orderDO.getCtime()));
 
             List<FactoryOrderItemDO> orderItemDOS = factoryOrderItemService.getItemsByOrderId(orderDO.getId());
             orderDTO.setOrderItems(orderItemDOS.stream().map(orderItemDO -> {
@@ -183,9 +202,20 @@ public class FactoryDealService {
         }).collect(Collectors.toList());
 
         JSONObject respJo = new JSONObject();
-        respJo.put("total", orderDOS.size());
+        respJo.put("total", needDealOrders.size());
         respJo.put("data", JSONObject.toJSON(dtos));
         return respJo;
+    }
+
+
+    /**
+     * 获取所有订单
+     * @param factoryOrderConditionDTO
+     * @return
+     */
+    public JSONObject orderList(FactoryOrderConditionDTO factoryOrderConditionDTO) {
+        List<FactoryOrderDO> orderDOS = factoryOrderService.getOrderByFactoryId(factoryOrderConditionDTO.getFactoryId());
+        return processOrderList(orderDOS, factoryOrderConditionDTO);
     }
 
     public JSONArray getOrderByStatus(Integer orderStatus) {
@@ -203,7 +233,7 @@ public class FactoryDealService {
     }
 
     /**
-     * 修改厂家订单
+     * 创建厂家订单
      *
      * @return
      */
@@ -232,6 +262,27 @@ public class FactoryDealService {
         return 1;
     }
 
+
+    /**
+     * 删除订单
+     * @param orderId
+     * @return
+     */
+    public Integer deleteOrder(Integer orderId){
+        FactoryOrderDO factoryOrderDO = factoryOrderService.getOrderById(orderId);
+        if(factoryOrderDO.getOrderStatus() > OrderStatusEnum.ORDER_CONFIRM_PLACE.getCode()){
+            throw new HzmException(ExceptionCode.ORDER_DELETE_ILLEGAL);
+        }
+
+        //删除订单
+        factoryOrderService.deleteFactoryOrder(orderId);
+
+        //删除订单商品
+        factoryOrderItemService.deleteByOrderId(orderId);
+
+        return 1;
+    }
+
     /**
      * 修改厂家订单
      *
@@ -251,7 +302,7 @@ public class FactoryDealService {
     }
 
     /**
-     * 创建厂家订单
+     *  添加厂家订单
      */
     @Transactional
     public Integer addOrderItem(AddFactoryOrderDTO addFactoryOrderDTO) {
@@ -331,11 +382,8 @@ public class FactoryDealService {
         factoryOrderService.updateFactoryOrder(factoryOrderDO);
     }
 
+    @Transactional
     public void complete(Integer oId, List<CreateFactoryOrderItemDTO> orderItems) {
-        FactoryOrderDO factoryOrderDO = new FactoryOrderDO();
-        factoryOrderDO.setId(oId);
-        factoryOrderDO.setOrderStatus(OrderStatusEnum.ORDER_DELIVERY.getCode());
-        factoryOrderService.updateFactoryOrder(factoryOrderDO);
 
         Map<String, Integer> skuMap = orderItems.stream().collect(Collectors.toMap(CreateFactoryOrderItemDTO::getSku, CreateFactoryOrderItemDTO::getOrderNum));
         List<FactoryOrderItemDO> orderItemDOS = factoryOrderItemService.getItemsByOrderId(oId);
@@ -343,6 +391,11 @@ public class FactoryDealService {
             orderItem.setReceiveNum(skuMap.getOrDefault(orderItem.getSku(), 0));
             factoryOrderItemService.updateFactoryOrder(orderItem);
         });
+
+        FactoryOrderDO factoryOrderDO = new FactoryOrderDO();
+        factoryOrderDO.setId(oId);
+        factoryOrderDO.setOrderStatus(OrderStatusEnum.ORDER_DELIVERY.getCode());
+        factoryOrderService.updateFactoryOrder(factoryOrderDO);
 
         //同步库存信息
         executor.execute(() -> orderItemDOS.forEach(orderItem ->

@@ -55,4 +55,8 @@ public class FactoryOrderService {
         factoryOrderDO.setUtime(new Date());
         factoryOrderMapper.updateById(factoryOrderDO);
     }
+
+    public Integer deleteFactoryOrder(Integer oId){
+        return factoryOrderMapper.deleteById(oId);
+    }
 }

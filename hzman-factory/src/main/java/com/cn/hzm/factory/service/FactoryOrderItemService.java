@@ -60,4 +60,9 @@ public class FactoryOrderItemService {
         factoryOrderItemMapper.updateById(factoryOrderItemDO);
     }
 
+    public Integer deleteByOrderId(Integer oId){
+        QueryWrapper<FactoryOrderItemDO> query = new QueryWrapper<>();
+        query.eq("factory_order_id", oId);
+        return factoryOrderItemMapper.delete(query);
+    }
 }

@@ -1,12 +1,15 @@
 package com.cn.hzm.server.api;
 
 import com.cn.hzm.core.common.HzmResponse;
+import com.cn.hzm.core.exception.ExceptionCode;
+import com.cn.hzm.core.exception.HzmException;
 import com.cn.hzm.core.util.FtpFileUtil;
 import com.cn.hzm.server.task.DailyStatTask;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -44,15 +47,12 @@ public class ToolApi {
     @ApiOperation("ftp上传")
     @RequestMapping(value = "/ftp/upload", method = RequestMethod.POST)
     public HzmResponse uploadImg(@RequestParam("file") MultipartFile file, HttpServletRequest request) throws IOException {
-
         String fileName = file.getOriginalFilename();
         InputStream inputStream = file.getInputStream();
-//        String filePath = null;
-//        boolean flag = FtpFileUtil.uploadFile(fileName, inputStream);
-//        if (flag) {
-//            filePath = fileName;
-//        }
-
-        return HzmResponse.success("http://asalwaysjewelry.newidc2.cn/test/test.jpg");
+        String ftpPath = FtpFileUtil.uploadFile(fileName, inputStream, "pay");
+        if(!StringUtils.isEmpty(ftpPath)){
+            return HzmResponse.success(ftpPath);
+        }
+        throw new HzmException(ExceptionCode.FTP_UPLOAD_ERR);
     }
 }

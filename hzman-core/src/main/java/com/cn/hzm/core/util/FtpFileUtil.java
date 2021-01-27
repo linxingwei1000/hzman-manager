@@ -12,48 +12,70 @@ import java.io.InputStream;
  */
 public class FtpFileUtil {
 
-    //ftp服务器ip地址
+    /**
+     * ftp服务器ip地址
+     */
     private static final String FTP_ADDRESS = "122.225.98.164";
-    //端口号
-    private static final int FTP_PORT = 2122;
-    //用户名
-    private static final String FTP_USERNAME = "liftp";
-    //密码
-    private static final String FTP_PASSWORD = "liftpserver";
-    //图片路径
-    private static final String FTP_BASEPATH = "/home/hzman/pay";
 
-    public static boolean uploadFile(String originFileName, InputStream input) {
-        boolean success = false;
+    /**
+     * 端口号
+     */
+    private static final int FTP_PORT = 2122;
+
+    /**
+     * 用户名
+     */
+    private static final String FTP_USERNAME = "liftp2";
+
+    /**
+     * 密码
+     */
+    private static final String FTP_PASSWORD = "liftp2pass";
+
+    /**
+     * 图片路径：付款图片
+     */
+    private static final String PAY_PATH = "/erp/pay/";
+
+    /**
+     * 图片路径：商品细节
+     */
+    private static final String DETAIL_PATH = "/erp/image/";
+
+    private static final String URI_PRE = "http://image.hzman.com.cn";
+
+    public static String uploadFile(String originFileName, InputStream input, String photoType) {
         FTPClient ftp = new FTPClient();
         ftp.setControlEncoding("GBK");
+        String path;
         try {
-            int reply;
-            ftp.connect(FTP_ADDRESS, FTP_PORT);// 连接FTP服务器
-            ftp.login(FTP_USERNAME, FTP_PASSWORD);// 登录
-            reply = ftp.getReplyCode();
+            ftp.connect(FTP_ADDRESS, FTP_PORT);
+            ftp.login(FTP_USERNAME, FTP_PASSWORD);
+
+            int reply = ftp.getReplyCode();
             if (!FTPReply.isPositiveCompletion(reply)) {
-                ftp.disconnect();
-                return success;
+                return null;
             }
+
             ftp.setFileType(FTPClient.BINARY_FILE_TYPE);
-            ftp.makeDirectory(FTP_BASEPATH);
-            ftp.changeWorkingDirectory(FTP_BASEPATH);
+
+            //根据图片功能选择路径
+            path = "detail".equals(photoType) ? DETAIL_PATH : PAY_PATH;
+            ftp.changeWorkingDirectory(path);
             ftp.storeFile(originFileName, input);
-            input.close();
-            ftp.logout();
-            success = true;
-        } catch (IOException e) {
+        } catch (Exception e) {
             e.printStackTrace();
+            return null;
         } finally {
-            if (ftp.isConnected()) {
-                try {
+            try {
+                input.close();
+                ftp.logout();
+                if (ftp.isConnected()) {
                     ftp.disconnect();
-                } catch (IOException ioe) {
                 }
+            } catch (IOException ignored) {
             }
         }
-        return success;
+        return URI_PRE + path + originFileName;
     }
-
 }

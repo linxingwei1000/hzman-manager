@@ -49,9 +49,16 @@ public class FactoryApi {
     @ApiOperation("商品厂家认领")
     @RequestMapping(value = "/item/claim", method = RequestMethod.GET)
     public HzmResponse modifyItem(@ApiParam("工厂Id") @RequestParam Integer factoryId,
-                                  @ApiParam("sku") @RequestParam String sku) throws Exception {
-        factoryDealService.factoryClaimItem(factoryId, sku);
+                                  @ApiParam("sku") @RequestParam String sku,
+                                  @ApiParam("desc") @RequestParam String desc) throws Exception {
+        factoryDealService.factoryClaimItem(factoryId, sku, desc);
         return HzmResponse.success(true);
+    }
+
+    @ApiOperation("厂家外链查看订单")
+    @RequestMapping(value = "/out/order/list", method = RequestMethod.POST)
+    public HzmResponse outList(@ApiParam("订单id") FactoryOrderConditionDTO factoryOrderConditionDTO) {
+        return HzmResponse.success(factoryDealService.outOrderList(factoryOrderConditionDTO));
     }
 
 //    @ApiOperation("删除厂家")
@@ -72,6 +79,12 @@ public class FactoryApi {
     @RequestMapping(value = "/order/list/status", method = RequestMethod.GET)
     public HzmResponse listOrder(@ApiParam("订单状态") @RequestParam Integer orderStatus) {
         return HzmResponse.success(factoryDealService.getOrderByStatus(orderStatus));
+    }
+
+    @ApiOperation("删除厂家订单")
+    @RequestMapping(value = "/order/delete", method = RequestMethod.GET)
+    public HzmResponse deleteOrder(@ApiParam("订单id") @RequestParam Integer orderId) {
+        return HzmResponse.success(factoryDealService.deleteOrder(orderId));
     }
 
     @ApiOperation("创建厂家订单商品")

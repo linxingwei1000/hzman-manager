@@ -8,7 +8,7 @@ import com.cn.hzm.core.aws.resp.fulfilment.ListInboundShipmentItemsResponse;
 import com.cn.hzm.core.constant.ContextConst;
 import com.cn.hzm.core.entity.ShipmentItemRecordDO;
 import com.cn.hzm.core.exception.ExceptionCode;
-import com.cn.hzm.core.exception.HzmanException;
+import com.cn.hzm.core.exception.HzmException;
 import com.cn.hzm.core.util.TimeUtil;
 import com.cn.hzm.server.service.ItemDealService;
 import com.cn.hzm.server.service.OperateDependService;
@@ -68,16 +68,16 @@ public class ShipmentSpiderTask {
         }, 60, 2, TimeUnit.SECONDS);
 
 
-        //爬取订单任务
-        ExecutorService shipmentTask = Executors.newSingleThreadExecutor();
-        shipmentTask.execute(this::shipmentSpider);
+//        //爬取订单任务
+//        ExecutorService shipmentTask = Executors.newSingleThreadExecutor();
+//        shipmentTask.execute(this::shipmentSpider);
     }
 
     private void shipmentSpider() {
         while (true) {
             try {
                 doShipmentSpider();
-            } catch (HzmanException e) {
+            } catch (HzmException e) {
                 if (e.getExceptionCode().equals(ExceptionCode.REQUEST_LIMIT)) {
                     log.error("爬虫任务触发限流");
                 }

@@ -10,7 +10,7 @@ import com.cn.hzm.core.entity.ItemDO;
 import com.cn.hzm.core.entity.OrderDO;
 import com.cn.hzm.core.entity.OrderItemDO;
 import com.cn.hzm.core.exception.ExceptionCode;
-import com.cn.hzm.core.exception.HzmanException;
+import com.cn.hzm.core.exception.HzmException;
 import com.cn.hzm.core.util.TimeUtil;
 import com.cn.hzm.item.service.ItemService;
 import com.cn.hzm.order.service.OrderItemService;
@@ -123,20 +123,20 @@ public class OrderSpiderTask {
         }, 60, 2, TimeUnit.SECONDS);
 
 
-        //爬取订单任务
-        ExecutorService createOrderTask = Executors.newSingleThreadExecutor();
-        createOrderTask.execute(this::createOrderSpider);
-
-        //更新订单任务
-        ExecutorService updateOrderSpider = Executors.newSingleThreadExecutor();
-        updateOrderSpider.execute(this::updateOrderSpider);
+//        //爬取订单任务
+//        ExecutorService createOrderTask = Executors.newSingleThreadExecutor();
+//        createOrderTask.execute(this::createOrderSpider);
+//
+//        //更新订单任务
+//        ExecutorService updateOrderSpider = Executors.newSingleThreadExecutor();
+//        updateOrderSpider.execute(this::updateOrderSpider);
     }
 
     private void createOrderSpider() {
         while (true) {
             try {
                 doSpiderOrder();
-            } catch (HzmanException e) {
+            } catch (HzmException e) {
                 if (e.getExceptionCode().equals(ExceptionCode.REQUEST_LIMIT)) {
                     log.error("爬虫任务触发限流");
                 }
@@ -151,7 +151,7 @@ public class OrderSpiderTask {
             Set<String> needFixSaleInfoDay = Sets.newHashSet();
             try {
                 doUpdateOrder(needFixSaleInfoDay);
-            } catch (HzmanException e) {
+            } catch (HzmException e) {
                 if (e.getExceptionCode().equals(ExceptionCode.REQUEST_LIMIT)) {
                     log.error("订单状态更新任务触发限流");
                 }

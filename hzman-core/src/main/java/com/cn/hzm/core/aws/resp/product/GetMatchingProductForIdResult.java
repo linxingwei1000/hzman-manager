@@ -1,5 +1,6 @@
 package com.cn.hzm.core.aws.resp.product;
 
+import com.cn.hzm.core.aws.domain.product.ProductError;
 import com.cn.hzm.core.aws.domain.product.Products;
 import com.thoughtworks.xstream.annotations.XStreamAlias;
 import lombok.Data;
@@ -14,4 +15,7 @@ public class GetMatchingProductForIdResult {
 
     @XStreamAlias(value = "Products")
     Products products;
+
+    @XStreamAlias(value = "Error")
+    ProductError error;
 }

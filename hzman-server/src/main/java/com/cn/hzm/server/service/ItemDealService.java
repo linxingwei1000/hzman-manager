@@ -2,8 +2,11 @@ package com.cn.hzm.server.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cn.hzm.core.aws.AwsClient;
+import com.cn.hzm.core.aws.domain.product.ProductError;
 import com.cn.hzm.core.aws.resp.product.GetMatchingProductForIdResponse;
 import com.cn.hzm.core.entity.*;
+import com.cn.hzm.core.exception.ExceptionCode;
+import com.cn.hzm.core.exception.HzmException;
 import com.cn.hzm.core.util.TimeUtil;
 import com.cn.hzm.factory.enums.OrderStatusEnum;
 import com.cn.hzm.factory.service.FactoryItemService;
@@ -86,6 +89,13 @@ public class ItemDealService {
 
         //asin取aws数据：商品信息
         GetMatchingProductForIdResponse resp = awsClient.getProductInfoByAsin("SellerSKU", sku);
+
+        //判断错误
+        if(resp.getGetMatchingProductForIdResult().getError()!=null){
+            ProductError error = resp.getGetMatchingProductForIdResult().getError();
+            throw new HzmException(ExceptionCode.REQUEST_SKU_REQUEST_ERROR, error.getMessage());
+        }
+
         ItemDO itemDO = ConvertUtil.convertToItemDO(new ItemDO(), resp, sku);
 
         ItemDO old = itemService.getItemDOBySku(sku);
@@ -163,6 +173,7 @@ public class ItemDealService {
             factoryItemDTO.setFactoryName(factoryDO.getFactoryName());
             factoryItemDTO.setSku(factoryItemDO.getSku());
             factoryItemDTO.setFactoryPrice(factoryItemDO.getFactoryPrice());
+            factoryItemDTO.setDesc(factoryItemDO.getItemDesc());
             return factoryItemDTO;
         }).collect(Collectors.toList()));
 

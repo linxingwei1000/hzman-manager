@@ -15,6 +15,8 @@ public class TimeUtil {
 
     private static final SimpleDateFormat SIMPLE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
     private static final SimpleDateFormat UTC_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
     private static final SimpleDateFormat UTC_MILLISECOND_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
@@ -64,6 +66,10 @@ public class TimeUtil {
 
     public static String getSimpleFormat(Date date) {
         return SIMPLE_FORMAT.format(date);
+    }
+
+    public static String getDateFormat(Date date) {
+        return DATE_FORMAT.format(date);
     }
 
     public static Date transformTimeToUTC(Date date){

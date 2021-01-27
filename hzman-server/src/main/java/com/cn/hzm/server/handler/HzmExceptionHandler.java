@@ -4,9 +4,9 @@ import com.cn.hzm.core.common.HzmResponse;
 import com.cn.hzm.core.constant.ResponseCode;
 import com.cn.hzm.core.exception.HzmBasicRuntimeException;
 import com.cn.hzm.core.exception.HzmUnauthorizedException;
+import com.cn.hzm.core.exception.HzmException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -41,5 +41,11 @@ public class HzmExceptionHandler extends ResponseEntityExceptionHandler {
         logger.error(ex.getMessage());
 
         return ResponseEntity.status(HttpStatus.OK).body(new HzmResponse(ex.getCode(), ex.getMessage()));
+    }
+
+    @ExceptionHandler({HzmException.class})
+    public ResponseEntity<Object> handlerHzmException(HzmException ex, WebRequest request) {
+        logger.error(ex.getMessage());
+        return ResponseEntity.status(HttpStatus.OK).body(new HzmResponse(ex.getExceptionCode().code(), ex.getMessage()));
     }
 }

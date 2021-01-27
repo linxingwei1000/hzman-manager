@@ -27,6 +27,9 @@ public class FactoryItemDO {
     @TableField(value = "factory_price")
     private Double factoryPrice;
 
+    @TableField(value = "item_desc")
+    private String itemDesc;
+
     private Date ctime;
 
     private Date utime;

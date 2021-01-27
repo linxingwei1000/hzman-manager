@@ -16,10 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.TreeSet;
+import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -40,6 +37,7 @@ public class ItemDetailCache {
     @Autowired
     private ItemDealService itemDealService;
 
+    private Map<String, ItemDTO> oldDTOMAp;
 
     private TreeSet<ItemDTO> todaySaleDesc;
     private TreeSet<ItemDTO> todaySaleAsc;
@@ -50,6 +48,8 @@ public class ItemDetailCache {
 
     @PostConstruct
     public void installCacheConfig() {
+
+        oldDTOMAp = Maps.newHashMap();
 
         todaySaleDesc = Sets.newTreeSet(new TodaySaleDescComparator());
         todaySaleAsc = Sets.newTreeSet(new TodaySaleAscComparator());
@@ -91,6 +91,11 @@ public class ItemDetailCache {
      * @return
      */
     public List<ItemDTO> getCacheBySort(Integer sortType){
+        //默认按今天倒排
+        if(sortType ==null){
+            sortType = ContextConst.ITEM_SORT_TODAY_DESC;
+        }
+
         switch (sortType){
             case ContextConst.ITEM_SORT_TODAY_DESC:
                 return Lists.newArrayList(todaySaleDesc);
@@ -132,7 +137,19 @@ public class ItemDetailCache {
         ItemDO itemDO = itemService.getItemDOBySku(sku);
         ItemDTO itemDTO = itemDealService.buildItemDTO(itemDO);
 
-        //添加到排序set
+        ItemDTO old = oldDTOMAp.get(sku);
+        //删除老的
+        if(old!=null){
+            todaySaleDesc.remove(old);
+            todaySaleAsc.remove(old);
+            yesterdaySaleDesc.remove(old);
+            yesterdaySaleAsc.remove(old);
+            lastWeekSaleDesc.remove(old);
+            lastWeekSaleAsc.remove(old);
+            oldDTOMAp.put(sku, itemDTO);
+        }
+
+        //添加新的
         todaySaleDesc.add(itemDTO);
         todaySaleAsc.add(itemDTO);
         yesterdaySaleDesc.add(itemDTO);

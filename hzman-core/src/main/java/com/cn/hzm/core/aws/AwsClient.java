@@ -12,7 +12,7 @@ import com.cn.hzm.core.aws.resp.inventory.ListInventorySupplyResponse;
 import com.cn.hzm.core.aws.resp.order.*;
 import com.cn.hzm.core.aws.resp.product.GetMatchingProductForIdResponse;
 import com.cn.hzm.core.exception.ExceptionCode;
-import com.cn.hzm.core.exception.HzmanException;
+import com.cn.hzm.core.exception.HzmException;
 import com.cn.hzm.core.util.ConvertUtil;
 import com.cn.hzm.core.util.HttpUtil;
 import com.cn.hzm.core.util.TimeUtil;
@@ -212,7 +212,7 @@ public class AwsClient {
         if (resp.contains("ErrorResponse")) {
             //触发amazon限流
             if (resp.contains("RequestThrottled")) {
-                throw new HzmanException(ExceptionCode.REQUEST_LIMIT);
+                throw new HzmException(ExceptionCode.REQUEST_LIMIT);
             }
         }
 

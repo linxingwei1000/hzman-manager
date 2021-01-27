@@ -79,6 +79,7 @@ CREATE TABLE hzm.hzm_factory_order (
   `payment_voucher` varchar(255) default NULL COMMENT '付款凭证，图片地址',
   `desc` varchar(512) default '' COMMENT '订单描述',
   `order_status` tinyint(4) unsigned NOT NULL COMMENT '订单状态',
+  `order_desc` varchar(1024) DEFAULT NULL COMMENT '订单描述',
   `ctime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `utime` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
@@ -106,6 +107,7 @@ CREATE TABLE hzm.hzm_factory_item (
   `factory_id` int(11) unsigned NOT NULL COMMENT '厂家id',
   `sku` varchar(128) not null default '' comment 'sku，用户侧填写',
   `factory_price` double unsigned default 0 COMMENT '厂家单价',
+  `item_desc` double unsigned default 0 COMMENT '商品描述',
   `ctime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `utime` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),
