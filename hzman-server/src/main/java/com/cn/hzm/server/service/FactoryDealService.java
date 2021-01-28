@@ -2,6 +2,7 @@ package com.cn.hzm.server.service;
 
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.cn.hzm.core.context.HzmContext;
 import com.cn.hzm.core.entity.*;
 import com.cn.hzm.core.exception.ExceptionCode;
 import com.cn.hzm.core.exception.HzmException;
@@ -13,7 +14,9 @@ import com.cn.hzm.factory.service.FactoryOrderService;
 import com.cn.hzm.factory.service.FactoryService;
 import com.cn.hzm.item.service.ItemService;
 import com.cn.hzm.server.cache.ItemDetailCache;
+import com.cn.hzm.server.domain.HzmUserRole;
 import com.cn.hzm.server.dto.*;
+import com.cn.hzm.server.meta.HzmRoleType;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -58,12 +61,14 @@ public class FactoryDealService {
     @Resource(name = "backTaskExecutor")
     private ThreadPoolTaskExecutor executor;
 
+    private static final String HIDE_INFO = "*******";
+
     public JSONObject processFactoryList(FactoryConditionDTO factoryConditionDTO) {
         Map<String, String> condition = (Map<String, String>) JSONObject.toJSON(factoryConditionDTO);
         List<FactoryDO> list = factoryService.getListByCondition(condition);
 
         List<FactoryDTO> factoryDTOS = factoryConditionDTO.pageResult(list).stream().map(factoryDO -> {
-            FactoryDTO factoryDTO = JSONObject.parseObject(JSONObject.toJSONString(factoryDO), FactoryDTO.class);
+            FactoryDTO factoryDTO = roleControlFactoryInfo(factoryDO);
             List<FactoryOrderDO> orderDOS = factoryOrderService.getOrderByFactoryId(factoryDO.getId());
             factoryDTO.setOrderList(orderDOS.stream().map(orderDO -> {
                 FactoryOrderDTO orderDTO = JSONObject.parseObject(JSONObject.toJSONString(orderDO), FactoryOrderDTO.class);
@@ -87,6 +92,23 @@ public class FactoryDealService {
         respJo.put("total", list.size());
         respJo.put("data", JSONObject.toJSON(factoryDTOS));
         return respJo;
+    }
+
+    private FactoryDTO roleControlFactoryInfo(FactoryDO factoryDO) {
+        FactoryDTO factoryDTO;
+        Set<String> roleSet = HzmContext.get().getRoles();
+        if (!roleSet.contains(HzmRoleType.ROLE_ADMIN.getRoleId())) {
+            factoryDTO = new FactoryDTO();
+            factoryDTO.setFactoryName(factoryDO.getFactoryName());
+            factoryDTO.setAddress(HIDE_INFO);
+            factoryDTO.setCollectMethod(HIDE_INFO);
+            factoryDTO.setContactPerson(HIDE_INFO);
+            factoryDTO.setContactInfo(HIDE_INFO);
+            factoryDTO.setWx(HIDE_INFO);
+        } else {
+            factoryDTO = JSONObject.parseObject(JSONObject.toJSONString(factoryDO), FactoryDTO.class);
+        }
+        return factoryDTO;
     }
 
     public void dealFactory(FactoryDTO factoryDTO, Boolean isCreateMode) throws Exception {
@@ -148,10 +170,10 @@ public class FactoryDealService {
         }
 
         FactoryItemDO old = factoryItemService.getInfoBySkuAndFactoryId(sku, factoryId);
-        if(old !=null){
+        if (old != null) {
             factoryItemDO.setId(old.getId());
             factoryItemService.updateFactoryItem(factoryItemDO);
-        }else{
+        } else {
             factoryItemService.createFactoryItem(factoryItemDO);
         }
         //刷新缓存
@@ -169,20 +191,28 @@ public class FactoryDealService {
 
     /**
      * 获取厂家外链订单
+     *
      * @param factoryOrderConditionDTO
      * @return
      */
-    public JSONObject outOrderList(FactoryOrderConditionDTO factoryOrderConditionDTO){
+    public JSONObject outOrderList(FactoryOrderConditionDTO factoryOrderConditionDTO) {
         List<FactoryOrderDO> orderDOS = factoryOrderService.getOrderByFactoryId(factoryOrderConditionDTO.getFactoryId());
         List<FactoryOrderDO> needDealOrders = orderDOS.stream().filter(order -> OrderStatusEnum.ORDER_CONFIRM_PLACE.getCode().equals(order.getOrderStatus())
-                ||OrderStatusEnum.ORDER_FACTORY_CONFIRM.getCode().equals(order.getOrderStatus())
-                ||OrderStatusEnum.ORDER_FACTORY_DELIVERY.getCode().equals(order.getOrderStatus())
-                ||OrderStatusEnum.ORDER_PAY.getCode().equals(order.getOrderStatus())).collect(Collectors.toList());
+                || OrderStatusEnum.ORDER_CONFIRM.getCode().equals(order.getOrderStatus())
+                || OrderStatusEnum.ORDER_PAY.getCode().equals(order.getOrderStatus())).collect(Collectors.toList());
         return processOrderList(needDealOrders, factoryOrderConditionDTO);
     }
 
 
-    private JSONObject processOrderList(List<FactoryOrderDO> needDealOrders, FactoryOrderConditionDTO condition){
+    private JSONObject processOrderList(List<FactoryOrderDO> needDealOrders, FactoryOrderConditionDTO condition) {
+        //角色过滤厂家订单
+        Set<String> roleSet = HzmContext.get().getRoles();
+        if (roleSet.size() == 1 && roleSet.contains(HzmRoleType.ROLE_FACTORY.getRoleId())) {
+            needDealOrders = needDealOrders.stream().filter(order -> OrderStatusEnum.ORDER_CONFIRM_PLACE.getCode().equals(order.getOrderStatus())
+                    || OrderStatusEnum.ORDER_CONFIRM.getCode().equals(order.getOrderStatus())
+                    || OrderStatusEnum.ORDER_PAY.getCode().equals(order.getOrderStatus())).collect(Collectors.toList());
+        }
+
         List<FactoryOrderDTO> dtos = condition.pageResult(needDealOrders).stream().map(orderDO -> {
             FactoryOrderDTO orderDTO = JSONObject.parseObject(JSONObject.toJSONString(orderDO), FactoryOrderDTO.class);
             orderDTO.setStatus(orderDO.getOrderStatus());
@@ -210,6 +240,7 @@ public class FactoryDealService {
 
     /**
      * 获取所有订单
+     *
      * @param factoryOrderConditionDTO
      * @return
      */
@@ -265,12 +296,13 @@ public class FactoryDealService {
 
     /**
      * 删除订单
+     *
      * @param orderId
      * @return
      */
-    public Integer deleteOrder(Integer orderId){
+    public Integer deleteOrder(Integer orderId) {
         FactoryOrderDO factoryOrderDO = factoryOrderService.getOrderById(orderId);
-        if(factoryOrderDO.getOrderStatus() > OrderStatusEnum.ORDER_CONFIRM_PLACE.getCode()){
+        if (factoryOrderDO.getOrderStatus() > OrderStatusEnum.ORDER_CONFIRM_PLACE.getCode()) {
             throw new HzmException(ExceptionCode.ORDER_DELETE_ILLEGAL);
         }
 
@@ -302,17 +334,17 @@ public class FactoryDealService {
     }
 
     /**
-     *  添加厂家订单
+     * 添加厂家订单
      */
     @Transactional
     public Integer addOrderItem(AddFactoryOrderDTO addFactoryOrderDTO) {
         addFactoryOrderDTO.getOrderItems().forEach(orderItem -> {
             FactoryOrderItemDO old = factoryOrderItemService.getItemByOrderIdAndSku(addFactoryOrderDTO.getFactoryOrderId(), orderItem.getSku());
-            if(old!=null){
+            if (old != null) {
                 old.setOrderNum(orderItem.getOrderNum() + old.getOrderNum());
                 old.setRemark(orderItem.getRemark());
                 factoryOrderItemService.updateFactoryOrder(old);
-            }else{
+            } else {
                 FactoryOrderItemDO orderItemDO = new FactoryOrderItemDO();
                 orderItemDO.setFactoryOrderId(addFactoryOrderDTO.getFactoryOrderId());
                 orderItemDO.setSku(orderItem.getSku());
@@ -387,7 +419,7 @@ public class FactoryDealService {
 
         Map<String, Integer> skuMap = orderItems.stream().collect(Collectors.toMap(CreateFactoryOrderItemDTO::getSku, CreateFactoryOrderItemDTO::getOrderNum));
         List<FactoryOrderItemDO> orderItemDOS = factoryOrderItemService.getItemsByOrderId(oId);
-        orderItemDOS.forEach(orderItem ->{
+        orderItemDOS.forEach(orderItem -> {
             orderItem.setReceiveNum(skuMap.getOrDefault(orderItem.getSku(), 0));
             factoryOrderItemService.updateFactoryOrder(orderItem);
         });

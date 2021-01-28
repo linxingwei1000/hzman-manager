@@ -217,12 +217,14 @@ public class ItemDealService {
             switch (operateType) {
                 case "set":
                     inventory.setLocalQuantity(dealNum);
+                    inventory.calculateTotalQuantity();
                     inventoryService.updateInventory(inventory);
                     break;
                 case "mod":
                     Integer localNum = inventory.getLocalQuantity() == null ? 0 : inventory.getLocalQuantity();
                     Integer nowLocal = localNum + dealNum;
                     inventory.setLocalQuantity(nowLocal < 0 ? 0 : nowLocal);
+                    inventory.calculateTotalQuantity();
                     inventoryService.updateInventory(inventory);
                     break;
                 case "refresh":

@@ -111,5 +111,10 @@
             and `valid`=#{valid}
         </if>
     </select>
+
+    <delete id="deleteRoleByPassportId">
+        delete from hzm_user_role where `passport_id`=#{passportId}
+    </delete>
+
 </mapper>
 

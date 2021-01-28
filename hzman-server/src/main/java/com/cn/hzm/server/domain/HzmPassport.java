@@ -14,6 +14,8 @@ public class HzmPassport extends BaseDomain {
 
     private String password;
 
+    private Integer companyId;
+
     private String token;
 
     private Integer status;
@@ -40,6 +42,14 @@ public class HzmPassport extends BaseDomain {
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public Integer getCompanyId() {
+        return companyId;
+    }
+
+    public void setCompanyId(Integer companyId) {
+        this.companyId = companyId;
     }
 
     public String getToken() {

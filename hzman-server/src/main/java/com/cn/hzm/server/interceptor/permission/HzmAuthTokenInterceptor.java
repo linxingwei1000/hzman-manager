@@ -56,7 +56,7 @@ public class HzmAuthTokenInterceptor implements HandlerInterceptor {
             throw new HzmUnauthorizedException();
         }
 
-        if (token.getCreateTime() + authTokenEffectiveMills >= TimeUtil.nowMillis()) {
+        if (TimeUtil.nowMillis() >= token.getCreateTime() + authTokenEffectiveMills) {
             throw new HzmBasicRuntimeException(ResponseCode.TOKEN_EXPIRED);
         }
 

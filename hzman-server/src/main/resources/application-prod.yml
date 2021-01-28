@@ -4,3 +4,6 @@ spring:
     url: jdbc:mysql://60.190.138.133:3306/hzm?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull
     username: root
     password: hzman2021yzf
+
+spider:
+  switch: true

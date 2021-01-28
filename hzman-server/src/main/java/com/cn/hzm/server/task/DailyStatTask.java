@@ -1,7 +1,5 @@
 package com.cn.hzm.server.task;
 
-import com.alibaba.fastjson.JSONObject;
-import com.cn.hzm.core.constant.ContextConst;
 import com.cn.hzm.core.entity.OrderDO;
 import com.cn.hzm.core.entity.OrderItemDO;
 import com.cn.hzm.core.entity.SaleInfoDO;
@@ -74,7 +72,7 @@ public class DailyStatTask {
      */
     public void statSaleInfoChooseDate(String strDate) {
         //跳过当日修复
-        String strCurDate = TimeUtil.getSimpleFormat(TimeUtil.getYesterdayZeroUTCDate());
+        String strCurDate = TimeUtil.getSimpleFormat(TimeUtil.transformTimeToUTC(new Date()));
         if (strCurDate.equals(strDate)) {
             log.info("当日【{}】销量信息无需修复", strCurDate);
             return;
@@ -101,7 +99,7 @@ public class DailyStatTask {
 
     @Scheduled(cron = "0 */5 * * * ?")
     public void statTodaySaleData() {
-        Date startDate = TimeUtil.getYesterdayZeroUTCDate();
+        Date startDate = TimeUtil.transformTimeToUTC(new Date());
         Date endDate = TimeUtil.getUTCDayEndTime(startDate);
 
         statDailySaleInfoByDate(startDate, endDate);
@@ -119,6 +117,9 @@ public class DailyStatTask {
                 if (orderItem.getItemPriceAmount() == 0.0 || orderItem.getQuantityOrdered() == 0) {
                     return;
                 }
+                log.info("orderId:{} sku:{} num:{} price:{}",
+                        orderItem.getAmazonOrderId(), orderItem.getSku(), orderItem.getQuantityOrdered(), orderItem.getItemPriceAmount());
+
                 SaleInfoDO saleInfoDO = saleInfoMap.get(orderItem.getSku());
                 if (saleInfoDO == null) {
                     saleInfoDO = new SaleInfoDO();

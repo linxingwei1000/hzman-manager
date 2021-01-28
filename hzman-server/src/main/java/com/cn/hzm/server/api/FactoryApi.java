@@ -2,6 +2,9 @@ package com.cn.hzm.server.api;
 
 import com.cn.hzm.core.common.HzmResponse;
 import com.cn.hzm.server.dto.*;
+import com.cn.hzm.server.interceptor.permission.HzmAuthPermission;
+import com.cn.hzm.server.interceptor.permission.HzmAuthToken;
+import com.cn.hzm.server.meta.HzmRoleType;
 import com.cn.hzm.server.service.FactoryDealService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -20,6 +23,8 @@ import java.util.List;
 @RestController
 @RequestMapping("/factory")
 @Slf4j
+@HzmAuthToken
+
 public class FactoryApi {
 
 
@@ -28,12 +33,14 @@ public class FactoryApi {
 
     @ApiOperation("列厂家")
     @RequestMapping(value = "/list", method = RequestMethod.POST)
+    @HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN, HzmRoleType.ROLE_EMPLOYEE})
     public HzmResponse listItem(@RequestBody FactoryConditionDTO factoryConditionDTO) {
         return HzmResponse.success(factoryDealService.processFactoryList(factoryConditionDTO));
     }
 
     @ApiOperation("创建厂家")
     @RequestMapping(value = "/add", method = RequestMethod.POST)
+    @HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN})
     public HzmResponse createItem(@RequestBody FactoryDTO factoryDTO) throws Exception {
         factoryDealService.dealFactory(factoryDTO, true);
         return HzmResponse.success(true);
@@ -41,12 +48,14 @@ public class FactoryApi {
 
     @ApiOperation("修改厂家信息")
     @RequestMapping(value = "/mod", method = RequestMethod.POST)
+    @HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN})
     public HzmResponse modifyItem(@RequestBody FactoryDTO factoryDTO) throws Exception {
         factoryDealService.dealFactory(factoryDTO, false);
         return HzmResponse.success(true);
     }
 
     @ApiOperation("商品厂家认领")
+    @HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN})
     @RequestMapping(value = "/item/claim", method = RequestMethod.GET)
     public HzmResponse modifyItem(@ApiParam("工厂Id") @RequestParam Integer factoryId,
                                   @ApiParam("sku") @RequestParam String sku,

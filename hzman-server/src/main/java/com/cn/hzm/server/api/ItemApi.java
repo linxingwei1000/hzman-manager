@@ -2,6 +2,9 @@ package com.cn.hzm.server.api;
 
 import com.cn.hzm.core.common.HzmResponse;
 import com.cn.hzm.server.dto.ItemConditionDTO;
+import com.cn.hzm.server.interceptor.permission.HzmAuthPermission;
+import com.cn.hzm.server.interceptor.permission.HzmAuthToken;
+import com.cn.hzm.server.meta.HzmRoleType;
 import com.cn.hzm.server.service.ItemDealService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -17,6 +20,8 @@ import javax.annotation.Resource;
 @Api(tags = "商品中心api")
 @RestController
 @RequestMapping("/item")
+@HzmAuthToken
+@HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN, HzmRoleType.ROLE_EMPLOYEE})
 public class ItemApi {
 
     @Resource

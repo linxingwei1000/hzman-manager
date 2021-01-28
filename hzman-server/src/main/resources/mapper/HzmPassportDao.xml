@@ -6,6 +6,7 @@
         <result column="id" property="id"/>
         <result column="username" property="username"/>
         <result column="password" property="password"/>
+        <result column="company_id" property="companyId"/>
         <result column="token" property="token"/>
         <result column="status" property="status"/>
         <result column="create_time" property="createTime"/>
@@ -18,6 +19,7 @@
         `id`,
         `username`,
         `password`,
+        `company_id`,
         `token`,
         `status`,
         `create_time`,
@@ -31,6 +33,7 @@
             `id`,
             `username`,
             `password`,
+            `company_id`,
             `token`,
             `status`,
             `create_time`,
@@ -40,6 +43,7 @@
             #{pojo.id},
             #{pojo.username},
             #{pojo.password},
+            #{pojo.companyId},
             #{pojo.token},
             #{pojo.status},
             #{pojo.createTime},
@@ -55,6 +59,7 @@
             <if test="pojo.id!=null"> `id`,</if>
             <if test="pojo.username!=null"> `username`,</if>
             <if test="pojo.password!=null"> `password`,</if>
+            <if test="pojo.companyId!=null"> `company_id`,</if>
             <if test="pojo.token!=null"> `token`,</if>
             <if test="pojo.status!=null"> `status`,</if>
             <if test="pojo.createTime!=null"> `create_time`,</if>
@@ -66,6 +71,7 @@
             <if test="pojo.id!=null">#{pojo.id},</if>
             <if test="pojo.username!=null">#{pojo.username},</if>
             <if test="pojo.password!=null">#{pojo.password},</if>
+            <if test="pojo.companyId!=null">#{pojo.companyId},</if>
             <if test="pojo.token!=null">#{pojo.token},</if>
             <if test="pojo.status!=null">#{pojo.status},</if>
             <if test="pojo.createTime!=null">#{pojo.createTime},</if>
@@ -84,6 +90,7 @@
             #{pojo.id},
             #{pojo.username},
             #{pojo.password},
+            #{pojo.companyId},
             #{pojo.token},
             #{pojo.status},
             #{pojo.createTime},
@@ -100,8 +107,9 @@
             <if test="pojo.id != null"> `id` = #{pojo.id}, </if>
             <if test="pojo.username != null"> `username` = #{pojo.username}, </if>
             <if test="pojo.password != null"> `password` = #{pojo.password}, </if>
-            <if test="pojo.token != null"> `password` = #{pojo.token}, </if>
-            <if test="pojo.status != null"> `password` = #{pojo.status}, </if>
+            <if test="pojo.companyId != null"> `company_id` = #{pojo.companyId}, </if>
+            <if test="pojo.token != null"> `token` = #{pojo.token}, </if>
+            <if test="pojo.status != null"> `status` = #{pojo.status}, </if>
             <if test="pojo.createTime != null"> `create_time` = #{pojo.createTime}, </if>
             <if test="pojo.updateTime != null"> `update_time` = #{pojo.updateTime}, </if>
             <if test="pojo.lastOptUserId != null"> `last_opt_user_id` = #{pojo.lastOptUserId} </if>
@@ -123,6 +131,15 @@
         <include refid="all_column"/>
         from hzm_passport
         where `id`=#{id}
+    </select>
+
+    <select id="findByCondition" resultMap="AllColumnMap">
+        select
+        <include refid="all_column"/>
+        from hzm_passport
+        where 1=1
+        <if test="username != null">and `username` like #{username} </if>
+        <if test="companyId != null">and `company_id` = #{companyId} </if>
     </select>
 </mapper>
 

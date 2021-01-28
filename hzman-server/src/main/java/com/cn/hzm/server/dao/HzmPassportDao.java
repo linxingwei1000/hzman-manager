@@ -20,4 +20,6 @@ public interface HzmPassportDao {
 
     HzmPassport findById(@Param("id")Long id);
 
+    List<HzmPassport> findByCondition(@Param("username") String username, @Param("companyId") Integer companyId);
+
 }

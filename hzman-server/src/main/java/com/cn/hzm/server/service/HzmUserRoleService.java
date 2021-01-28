@@ -32,4 +32,8 @@ public class HzmUserRoleService {
     public List<HzmUserRole> findValidRoleByPassportId(Long passportId) {
         return hzmUserRoleDao.findByPassportIdAndValidType(passportId, HzmUserRoleValidType.EFFECTIVE.getType());
     }
+
+    public int deleteRoleByPassportId(Long passportId){
+        return hzmUserRoleDao.deleteRoleByPassportId(passportId);
+    }
 }

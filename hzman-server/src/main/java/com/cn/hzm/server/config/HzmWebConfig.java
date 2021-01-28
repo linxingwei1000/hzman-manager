@@ -3,6 +3,7 @@ package com.cn.hzm.server.config;
 import com.cn.hzm.core.context.ContextHandler;
 import com.cn.hzm.core.context.HzmRequestFilter;
 import com.cn.hzm.server.interceptor.HzmCommonInterceptor;
+import com.cn.hzm.server.interceptor.permission.HzmAuthPermissionInterceptor;
 import com.cn.hzm.server.interceptor.permission.HzmAuthTokenInterceptor;
 import com.google.common.collect.Maps;
 import org.springframework.boot.web.servlet.FilterRegistrationBean;
@@ -29,10 +30,14 @@ public class HzmWebConfig implements WebMvcConfigurer {
     @Resource
     private HzmAuthTokenInterceptor hzmAuthTokenInterceptor;
 
+    @Resource
+    private HzmAuthPermissionInterceptor hzmAuthPermissionInterceptor;
+
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(hzmCommonInterceptor).addPathPatterns("/**").excludePathPatterns("/health/**");
-        registry.addInterceptor(hzmAuthTokenInterceptor).addPathPatterns("/user/**");
+        registry.addInterceptor(hzmAuthTokenInterceptor).addPathPatterns("/user/**", "/factory/**", "/item/**");
+        registry.addInterceptor(hzmAuthPermissionInterceptor).addPathPatterns("/user/**", "/factory/**", "/item/**");
     }
 
     @Order(0)

@@ -22,6 +22,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
@@ -70,6 +71,9 @@ public class OrderSpiderTask {
 
     private Semaphore orderItemSemaphore;
 
+    @Value("${spider.switch:false}")
+    private Boolean spiderSwitch;
+
     private static final Integer DURATION_SECOND = 30 * 60 * 1000;
 
 
@@ -91,6 +95,11 @@ public class OrderSpiderTask {
      */
     @PostConstruct
     public void initTask() {
+
+        if(!spiderSwitch){
+            log.info("测试环境关闭爬虫任务");
+            return;
+        }
 
         orderSemaphore = new Semaphore(6);
 
@@ -123,13 +132,13 @@ public class OrderSpiderTask {
         }, 60, 2, TimeUnit.SECONDS);
 
 
-//        //爬取订单任务
-//        ExecutorService createOrderTask = Executors.newSingleThreadExecutor();
-//        createOrderTask.execute(this::createOrderSpider);
-//
-//        //更新订单任务
-//        ExecutorService updateOrderSpider = Executors.newSingleThreadExecutor();
-//        updateOrderSpider.execute(this::updateOrderSpider);
+        //爬取订单任务
+        ExecutorService createOrderTask = Executors.newSingleThreadExecutor();
+        createOrderTask.execute(this::createOrderSpider);
+
+        //更新订单任务
+        ExecutorService updateOrderSpider = Executors.newSingleThreadExecutor();
+        updateOrderSpider.execute(this::updateOrderSpider);
     }
 
     private void createOrderSpider() {

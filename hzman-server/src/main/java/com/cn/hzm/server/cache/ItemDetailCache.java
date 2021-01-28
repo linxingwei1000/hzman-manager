@@ -146,10 +146,10 @@ public class ItemDetailCache {
             yesterdaySaleAsc.remove(old);
             lastWeekSaleDesc.remove(old);
             lastWeekSaleAsc.remove(old);
-            oldDTOMAp.put(sku, itemDTO);
         }
 
         //添加新的
+        oldDTOMAp.put(sku, itemDTO);
         todaySaleDesc.add(itemDTO);
         todaySaleAsc.add(itemDTO);
         yesterdaySaleDesc.add(itemDTO);

@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * Created by yuyang04 on 2020/7/18.
@@ -30,6 +31,20 @@ public class PassportServiceImpl implements PassportService {
     @Resource
     private HzmPassportDao passportDao;
 
+
+    @Override
+    public Integer insertPassport(HzmPassport hzmPassport) {
+        hzmPassport.setCreateTime(System.currentTimeMillis());
+        hzmPassport.setUpdateTime(System.currentTimeMillis());
+        return passportDao.insert(hzmPassport);
+    }
+
+    @Override
+    public Integer updatePassport(HzmPassport hzmPassport) {
+        hzmPassport.setUpdateTime(System.currentTimeMillis());
+        return passportDao.update(hzmPassport);
+    }
+
     @Override
     public HzmPassport findPassportByUsername(String username) {
         return passportDao.findByUsername(username);
@@ -38,6 +53,11 @@ public class PassportServiceImpl implements PassportService {
     @Override
     public HzmPassport findPassportById(Long id) {
         return passportDao.findById(id);
+    }
+
+    @Override
+    public List<HzmPassport> findPassportByCondition(String username, Integer companyId) {
+        return passportDao.findByCondition(username, companyId);
     }
 
     @Override

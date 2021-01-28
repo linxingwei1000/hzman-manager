@@ -17,4 +17,6 @@ public interface HzmUserRoleDao {
     int update(@Param("pojo") HzmUserRole pojo);
 
     List<HzmUserRole> findByPassportIdAndValidType(@Param("passportId") Long passportId, @Param("valid") Integer valid);
+
+    int deleteRoleByPassportId(@Param("passportId") Long passportId);
 }
