@@ -60,6 +60,7 @@ public class AwsClient {
 
     /**
      * 根据amazonOrderIds批量获取订单
+     *
      * @param amazonOrderIds
      * @return
      */
@@ -156,20 +157,21 @@ public class AwsClient {
 
     /**
      * 获取商品入库信息
+     *
      * @param shipmentId
      * @param beginDate
      * @param endDate
      * @return
      */
-    public ListInboundShipmentItemsResponse getShipmentItems(String shipmentId, String beginDate, String endDate){
+    public ListInboundShipmentItemsResponse getShipmentItems(String shipmentId, String beginDate, String endDate) {
         ShipmentItemsRequest shipmentItemsRequest = new ShipmentItemsRequest();
         shipmentItemsRequest.setAction("ListInboundShipmentItems");
         shipmentItemsRequest.setTimestamp(TimeUtil.getUTC());
 
-        if(StringUtils.isEmpty(shipmentId)){
+        if (StringUtils.isEmpty(shipmentId)) {
             shipmentItemsRequest.setLastUpdatedAfter(beginDate);
             shipmentItemsRequest.setLastUpdatedBefore(endDate);
-        }else{
+        } else {
             shipmentItemsRequest.setShipmentId(shipmentId);
         }
         return doPost(shipmentItemsRequest, ListInboundShipmentItemsResponse.class);
@@ -177,10 +179,11 @@ public class AwsClient {
 
     /**
      * 获取商品入库信息
+     *
      * @param nextToken
      * @return
      */
-    public ListInboundShipmentItemsByNextTokenResponse getShipmentItemsByNextToken(String nextToken){
+    public ListInboundShipmentItemsByNextTokenResponse getShipmentItemsByNextToken(String nextToken) {
         ShipmentItemsByNextTokenRequest shipmentItemsRequest = new ShipmentItemsByNextTokenRequest();
         shipmentItemsRequest.setAction("ListInboundShipmentItemsByNextToken");
         shipmentItemsRequest.setTimestamp(TimeUtil.getUTC());
@@ -215,7 +218,13 @@ public class AwsClient {
                 throw new HzmException(ExceptionCode.REQUEST_LIMIT);
             }
         }
-
-        return ConvertUtil.toBean(tClass, resp);
+        T t = null;
+        try {
+            t = ConvertUtil.toBean(tClass, resp);
+        } catch (Exception e) {
+            log.error("parse resp:{} error:{}", resp, e.toString());
+            e.printStackTrace();
+        }
+        return t;
     }
 }

@@ -38,7 +38,7 @@ CREATE TABLE hzm.hzm_user_role (
   PRIMARY KEY (`id`),
   UNIQUE KEY `uk_passportId_roleId` (`passport_id`,`role_id`),
   KEY `idx_passportId_valid` (`passport_id`,`valid`)
-) ENGINE=InnoDB AUTO_INCREMENT=1010 DEFAULT CHARSET=utf8 COMMENT='hzm用户角色表'
+) ENGINE=InnoDB AUTO_INCREMENT=1010 DEFAULT CHARSET=utf8 COMMENT='hzm用户角色表';
 
 drop table hzm.hzm_item;
 CREATE TABLE hzm.hzm_item (

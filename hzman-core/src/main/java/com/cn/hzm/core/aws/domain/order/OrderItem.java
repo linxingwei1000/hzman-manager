@@ -141,4 +141,7 @@ public class OrderItem {
     @XStreamAlias(value="PriceDesignation")
     private String priceDesignation;
 
+    @XStreamAlias(value="SerialNumberRequired")
+    private String serialNumberRequired;
+
 }

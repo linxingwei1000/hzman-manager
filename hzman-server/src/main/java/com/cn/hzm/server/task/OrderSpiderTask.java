@@ -167,7 +167,17 @@ public class OrderSpiderTask {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-            dailyStatTask.statSaleInfoByMulchDate(needFixSaleInfoDay);
+
+            if(!CollectionUtils.isEmpty(needFixSaleInfoDay)){
+                dailyStatTask.statSaleInfoByMulchDate(needFixSaleInfoDay);
+            }
+
+            //更新任务休息间隔：5分钟
+            try {
+                Thread.sleep(5 * 60 * 1000);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -183,6 +193,9 @@ public class OrderSpiderTask {
 
         while (true) {
             List<OrderDO> orders = orderService.getOrdersByOrderStatus(ContextConst.AMAZON_STATUS_PENDING, offset, limit);
+            if(CollectionUtils.isEmpty(orders)){
+                break;
+            }
 
             List<String> amazonOrderIds = orders.stream().map(OrderDO::getAmazonOrderId).collect(Collectors.toList());
 
@@ -265,6 +278,7 @@ public class OrderSpiderTask {
         }
 
         List<String> amazonIds = parseOrderResp(r.getListOrdersResult().getOrders().getList());
+        log.info("时间段【{}】---【{}】爬取订单数量：{}", strBeginDate, strEndDate, amazonIds.size());
         getOrderItems(amazonIds);
         total += amazonIds.size();
 
@@ -276,6 +290,7 @@ public class OrderSpiderTask {
             nextToken = tokenResponse.getListOrdersByNextTokenResult().getNextToken();
 
             List<String> tmpIds = parseOrderResp(tokenResponse.getListOrdersByNextTokenResult().getOrders().getList());
+            log.info("时间段【{}】---【{}】nextToken 爬取订单数量：{}", strBeginDate, strEndDate, amazonIds.size());
             getOrderItems(tmpIds);
             total += tmpIds.size();
         }
