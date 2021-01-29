@@ -405,7 +405,7 @@ public class FactoryDealService {
             factoryOrderItemService.updateFactoryOrder(orderItemDO);
 
             //存在认领记录，更新最新订价
-            FactoryItemDO factoryItemDO = factoryItemService.getInfoBySkuAndFactoryId(orderItemDO.getSku(), old.getFactoryId());
+            FactoryItemDO factoryItemDO = factoryItemService.getInfoBySkuAndFactoryId(orderItemDTO.getSku(), old.getFactoryId());
             if (factoryItemDO != null) {
                 factoryItemDO.setFactoryPrice(orderItemDTO.getItemPrice());
                 factoryItemService.updateFactoryItem(factoryItemDO);

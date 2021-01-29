@@ -409,3 +409,5 @@ Caused by: java.lang.NullPointerException: null
 	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:942)
 	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1005)
 	... 48 common frames omitted
+2021-01-29 15:08:23.157 ERROR [http-nio-8082-exec-1] c.c.h.s.h.HzmExceptionHandler [41] - 57a7bdacb870455c98fb7541d3f0bbdc invalid token
+2021-01-29 15:27:50.004 ERROR [http-nio-8082-exec-8] c.c.h.s.h.HzmExceptionHandler [41] - 909d5ed7a96d4336af278c83eb5e48eb token expired
