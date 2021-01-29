@@ -1,5 +1,6 @@
 package com.cn.hzm.core.util;
 
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPReply;
 
@@ -10,6 +11,7 @@ import java.io.InputStream;
  * @author xingweilin@clubfactory.com
  * @date 2021/1/17 3:30 下午
  */
+@Slf4j
 public class FtpFileUtil {
 
     /**
@@ -62,7 +64,10 @@ public class FtpFileUtil {
             //根据图片功能选择路径
             path = "detail".equals(photoType) ? DETAIL_PATH : PAY_PATH;
             ftp.changeWorkingDirectory(path);
+
+            log.info("begin ftp upload path:{} name:{}", path, originFileName);
             ftp.storeFile(originFileName, input);
+            log.info("finish ftp upload path:{} name:{}", path, originFileName);
         } catch (Exception e) {
             e.printStackTrace();
             return null;

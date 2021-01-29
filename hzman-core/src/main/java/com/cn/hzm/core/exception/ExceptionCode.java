@@ -25,7 +25,8 @@ public enum ExceptionCode {
   ORDER_DELETE_ILLEGAL(20003, "订单删除操作失败：只有厂家确认前的订单可以删除"),
 
   FACTORY_NO_EXIST(20004, "工厂不存在"),
-
+  FACTORY_ORDER_ITEM_MUST(20005, "工厂订单商品必选"),
+  FACTORY_ORDER_ITEM_NUM_MUST(20006, "工厂订单商品数量必填"),
   ;
 
 

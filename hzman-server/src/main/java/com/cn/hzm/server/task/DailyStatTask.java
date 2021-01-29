@@ -117,8 +117,6 @@ public class DailyStatTask {
                 if (orderItem.getItemPriceAmount() == 0.0 || orderItem.getQuantityOrdered() == 0) {
                     return;
                 }
-                log.info("orderId:{} sku:{} num:{} price:{}",
-                        orderItem.getAmazonOrderId(), orderItem.getSku(), orderItem.getQuantityOrdered(), orderItem.getItemPriceAmount());
 
                 SaleInfoDO saleInfoDO = saleInfoMap.get(orderItem.getSku());
                 if (saleInfoDO == null) {

@@ -26,9 +26,6 @@ public class FactoryOrderDTO {
     @ApiModelProperty(value = "运单编号")
     private String waybillNum;
 
-    @ApiModelProperty(value = "实收数量")
-    private Integer receiveNum;
-
     @ApiModelProperty(value = "付款凭证")
     private String paymentVoucher;
 

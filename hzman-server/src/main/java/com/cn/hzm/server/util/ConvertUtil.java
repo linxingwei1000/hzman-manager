@@ -48,12 +48,12 @@ public class ConvertUtil {
     public static InventoryDO convertToInventoryDO(ListInventorySupplyResponse inventory, InventoryDO inventoryDO) {
         Member member = inventory.getListInventorySupplyResult().getInventorySupplyList().getMembers().get(0);
         inventoryDO.setSku(member.getSellerSKU());
-        inventoryDO.setAsin(member.getAsin());
-        inventoryDO.setFnsku(member.getFnsku());
+        inventoryDO.setAsin(member.getAsin() == null ? "" : member.getAsin());
+        inventoryDO.setFnsku(member.getFnsku() == null ? "" : member.getFnsku());
         inventoryDO.setItemCondition(member.getCondition());
         inventoryDO.setEarliestAvailability(JSONObject.toJSONString(member.getEarliestAvailability()));
-        inventoryDO.setAmazonQuantity(member.getTotalSupplyQuantity());
-        inventoryDO.setAmazonStockQuantity(member.getInStockSupplyQuantity());
+        inventoryDO.setAmazonQuantity(member.getTotalSupplyQuantity() == null ? 0 : member.getTotalSupplyQuantity());
+        inventoryDO.setAmazonStockQuantity(member.getInStockSupplyQuantity() == null ? 0 : member.getInStockSupplyQuantity());
 
         Integer transferNum = 0;
         Integer inboundNum = 0;

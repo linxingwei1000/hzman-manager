@@ -34,4 +34,7 @@ public class FactoryOrderItemDTO {
     @ApiModelProperty(value = "商品单价")
     private Double itemPrice;
 
+    @ApiModelProperty(value = "实际收货数量")
+    private Integer receiveNum;
+
 }

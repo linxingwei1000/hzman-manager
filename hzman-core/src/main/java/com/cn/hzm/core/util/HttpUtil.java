@@ -24,7 +24,7 @@ public class HttpUtil {
     private static RequestConfig requestConfig = RequestConfig.custom()
             .setConnectTimeout(5000)
             .setConnectionRequestTimeout(5000)
-            .setSocketTimeout(5000)
+            .setSocketTimeout(10000)
             .build();
 
     /**

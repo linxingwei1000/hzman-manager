@@ -355,23 +355,25 @@ public class OrderSpiderTask {
             OrderItemDO old = orderItemService.getOrderItemByOrderItemId(orderItem.getOrderItemId());
             OrderItemDO update = new OrderItemDO();
             if (old != null) {
+                //已经处理过订单，不做任何操作
                 update.setId(old.getId());
                 update.setOtherConfig(old.getOtherConfig());
                 orderItemService.updateOrderItem(ConvertUtil.convertToOrderItemDO(update, orderItem, amazonId));
             } else {
                 orderItemService.createOrderItem(ConvertUtil.convertToOrderItemDO(update, orderItem, amazonId));
-            }
 
-            //爬取商品信息
-            ItemDO itemDO = itemService.getItemDOByASIN(orderItem.getAsin());
-            if (itemDO == null) {
-                GetMatchingProductForIdResponse resp = awsClient.getProductInfoByAsin("ASIN", orderItem.getAsin());
-                itemDO = ConvertUtil.convertToItemDO(new ItemDO(), resp, orderItem.getSellerSKU());
-                itemService.createItem(itemDO);
-            }
+                //爬取商品信息
+                ItemDO itemDO = itemService.getItemDOByASIN(orderItem.getAsin());
+                if (itemDO == null) {
+                    GetMatchingProductForIdResponse resp = awsClient.getProductInfoByAsin("ASIN", orderItem.getAsin());
+                    itemDO = ConvertUtil.convertToItemDO(new ItemDO(), resp, orderItem.getSellerSKU());
+                    itemService.createItem(itemDO);
+                }
 
-            //刷新库存
-            itemDealService.dealSkuInventory(orderItem.getSellerSKU(), "refresh", 0);
+                //刷新库存
+                log.info("amazonOrderId【{}】 sku【{}】刷新库存", amazonId, orderItem.getSellerSKU());
+                itemDealService.dealSkuInventory(orderItem.getSellerSKU(), "refresh", 0);
+            }
         }
     }
 

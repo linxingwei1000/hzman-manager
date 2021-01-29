@@ -274,6 +274,9 @@ public class FactoryDealService {
             throw new RuntimeException("厂家参数非法");
         }
 
+        //check
+        createFactoryOrderDTO.getOrderItems().forEach(item -> checkOrderItem(item.getSku(), item.getOrderNum()));
+
         //创建工厂订单
         FactoryOrderDO factoryOrderDO = new FactoryOrderDO();
         factoryOrderDO.setFactoryId(createFactoryOrderDTO.getFactoryId());
@@ -315,6 +318,17 @@ public class FactoryDealService {
         return 1;
     }
 
+
+    private void checkOrderItem(String sku, Integer num) {
+        if (StringUtils.isEmpty(sku)) {
+            throw new HzmException(ExceptionCode.FACTORY_ORDER_ITEM_MUST);
+        }
+
+        if (num == null || num == 0) {
+            throw new HzmException(ExceptionCode.FACTORY_ORDER_ITEM_NUM_MUST);
+        }
+    }
+
     /**
      * 修改厂家订单
      *
@@ -322,6 +336,9 @@ public class FactoryDealService {
      */
     @Transactional
     public Integer modOrderItem(List<FactoryOrderItemDTO> orderItems) {
+        //check
+        orderItems.forEach(item -> checkOrderItem(item.getSku(), item.getOrderNum()));
+
         for (FactoryOrderItemDTO orderItemDTO : orderItems) {
             FactoryOrderItemDO orderItemDO = new FactoryOrderItemDO();
             orderItemDO.setId(orderItemDTO.getId());
