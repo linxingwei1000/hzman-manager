@@ -14,7 +14,6 @@ import com.cn.hzm.factory.service.FactoryOrderService;
 import com.cn.hzm.factory.service.FactoryService;
 import com.cn.hzm.item.service.ItemService;
 import com.cn.hzm.server.cache.ItemDetailCache;
-import com.cn.hzm.server.domain.HzmUserRole;
 import com.cn.hzm.server.dto.*;
 import com.cn.hzm.server.meta.HzmRoleType;
 import org.apache.commons.lang3.StringUtils;
@@ -62,6 +61,8 @@ public class FactoryDealService {
     private ThreadPoolTaskExecutor executor;
 
     private static final String HIDE_INFO = "*******";
+
+    private static final Double HIDE_PRICE_INFO = 999999.99;
 
     public JSONObject processFactoryList(FactoryConditionDTO factoryConditionDTO) {
         Map<String, String> condition = (Map<String, String>) JSONObject.toJSON(factoryConditionDTO);
@@ -197,10 +198,7 @@ public class FactoryDealService {
      */
     public JSONObject outOrderList(FactoryOrderConditionDTO factoryOrderConditionDTO) {
         List<FactoryOrderDO> orderDOS = factoryOrderService.getOrderByFactoryId(factoryOrderConditionDTO.getFactoryId());
-        List<FactoryOrderDO> needDealOrders = orderDOS.stream().filter(order -> OrderStatusEnum.ORDER_CONFIRM_PLACE.getCode().equals(order.getOrderStatus())
-                || OrderStatusEnum.ORDER_CONFIRM.getCode().equals(order.getOrderStatus())
-                || OrderStatusEnum.ORDER_PAY.getCode().equals(order.getOrderStatus())).collect(Collectors.toList());
-        return processOrderList(needDealOrders, factoryOrderConditionDTO);
+        return processOrderList(orderDOS, factoryOrderConditionDTO);
     }
 
 
@@ -209,7 +207,7 @@ public class FactoryDealService {
         Set<String> roleSet = HzmContext.get().getRoles();
         if (roleSet.size() == 1 && roleSet.contains(HzmRoleType.ROLE_FACTORY.getRoleId())) {
             needDealOrders = needDealOrders.stream().filter(order -> OrderStatusEnum.ORDER_CONFIRM_PLACE.getCode().equals(order.getOrderStatus())
-                    || OrderStatusEnum.ORDER_CONFIRM.getCode().equals(order.getOrderStatus())
+                    || OrderStatusEnum.ORDER_FACTORY_CONFIRM.getCode().equals(order.getOrderStatus())
                     || OrderStatusEnum.ORDER_PAY.getCode().equals(order.getOrderStatus())).collect(Collectors.toList());
         }
 
@@ -223,6 +221,11 @@ public class FactoryDealService {
             List<FactoryOrderItemDO> orderItemDOS = factoryOrderItemService.getItemsByOrderId(orderDO.getId());
             orderDTO.setOrderItems(orderItemDOS.stream().map(orderItemDO -> {
                 FactoryOrderItemDTO orderItemDTO = JSONObject.parseObject(JSONObject.toJSONString(orderItemDO), FactoryOrderItemDTO.class);
+                if (roleSet.size() == 1 && roleSet.contains(HzmRoleType.ROLE_EMPLOYEE.getRoleId())) {
+                    orderItemDTO.setItemPrice(HIDE_PRICE_INFO);
+                    orderItemDTO.setTotalPrice(HIDE_PRICE_INFO);
+                }
+
                 ItemDO itemDO = itemService.getItemDOBySku(orderItemDO.getSku());
                 orderItemDTO.setTitle(itemDO.getTitle());
                 orderItemDTO.setIcon(itemDO.getIcon());
@@ -381,7 +384,7 @@ public class FactoryDealService {
         factoryOrderService.updateFactoryOrder(factoryOrderDO);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void factoryConfirmOrder(List<FactoryOrderItemDTO> orderItems, Integer oId, String deliveryDate) {
         FactoryOrderDO old = factoryOrderService.getOrderById(oId);
         if (old.getOrderStatus() > OrderStatusEnum.ORDER_FACTORY_CONFIRM.getCode()) {
@@ -416,22 +419,33 @@ public class FactoryDealService {
         executor.execute(() -> itemDetailCache.refreshCaches(orderItems.stream().map(FactoryOrderItemDTO::getSku).collect(Collectors.toList())));
     }
 
-    public void hzmConfirm(Integer oId) {
-        FactoryOrderDO factoryOrderDO = new FactoryOrderDO();
-        factoryOrderDO.setId(oId);
-        factoryOrderDO.setOrderStatus(OrderStatusEnum.ORDER_CONFIRM.getCode());
-        factoryOrderService.updateFactoryOrder(factoryOrderDO);
-    }
+    @Transactional(rollbackFor = Exception.class)
+    public void delivery(FactoryDeliveryDTO factoryDeliveryDTO) {
 
-    public void delivery(Integer oId, String waybillNum) {
+        int totalNum = 0;
+        double totalPrice = 0.0;
+        for (FactoryOrderItemDTO orderItemDTO : factoryDeliveryDTO.getOrderItems()) {
+            FactoryOrderItemDO orderItemDO = new FactoryOrderItemDO();
+            orderItemDO.setId(orderItemDTO.getId());
+            orderItemDO.setDeliveryNum(orderItemDTO.getDeliveryNum());
+            orderItemDO.setTotalPrice(orderItemDTO.getItemPrice() * orderItemDTO.getDeliveryNum());
+            factoryOrderItemService.updateFactoryOrder(orderItemDO);
+
+            //统计总量数据
+            totalNum += orderItemDTO.getDeliveryNum();
+            totalPrice += orderItemDO.getTotalPrice();
+        }
+
         FactoryOrderDO factoryOrderDO = new FactoryOrderDO();
-        factoryOrderDO.setId(oId);
-        factoryOrderDO.setWaybillNum(waybillNum);
+        factoryOrderDO.setId(factoryDeliveryDTO.getOrderId());
+        factoryOrderDO.setWaybillNum(factoryDeliveryDTO.getWaybillNum());
+        factoryOrderDO.setTotalNum(totalNum);
+        factoryOrderDO.setTotalPrice(totalPrice);
         factoryOrderDO.setOrderStatus(OrderStatusEnum.ORDER_FACTORY_DELIVERY.getCode());
         factoryOrderService.updateFactoryOrder(factoryOrderDO);
     }
 
-    @Transactional
+    @Transactional(rollbackFor = Exception.class)
     public void complete(Integer oId, List<CreateFactoryOrderItemDTO> orderItems) {
 
         Map<String, Integer> skuMap = orderItems.stream().collect(Collectors.toMap(CreateFactoryOrderItemDTO::getSku, CreateFactoryOrderItemDTO::getOrderNum));

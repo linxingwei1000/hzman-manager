@@ -122,6 +122,8 @@ CREATE TABLE hzm.hzm_factory_order (
   `desc` varchar(512) default '' COMMENT '订单描述',
   `order_status` tinyint(4) unsigned NOT NULL COMMENT '订单状态',
   `order_desc` varchar(1024) DEFAULT NULL COMMENT '订单描述',
+  `total_num` tinyint(6) unsigned DEFAULT NULL COMMENT '订单商品总量',
+  `total_price` double unsigned default 0 COMMENT '订单总价',
   `ctime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `utime` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`)
@@ -136,7 +138,9 @@ CREATE TABLE hzm.hzm_factory_order_item (
   `order_num` int(11) unsigned NOT NULL COMMENT '订货数量',
   `remark` varchar(255) default '' COMMENT '备注',
   `item_price` double unsigned default 0 COMMENT '商品单价，厂家填写',
+  `deliveryNum` int(11) unsigned default 0 COMMENT '交货数量',
   `receive_num` int(11) unsigned default 0 COMMENT '确认收货数量',
+  `total_price` double unsigned default 0 COMMENT '总价',
   `ctime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
   `utime` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
   PRIMARY KEY (`id`),

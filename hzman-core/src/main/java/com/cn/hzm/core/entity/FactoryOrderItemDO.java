@@ -32,8 +32,14 @@ public class FactoryOrderItemDO {
     @TableField(value = "item_price")
     private Double itemPrice;
 
+    @TableField(value = "delivery_num")
+    private Integer deliveryNum;
+
     @TableField(value = "receive_num")
     private Integer receiveNum;
+
+    @TableField(value = "total_price")
+    private Double totalPrice;
 
     private Date ctime;
 

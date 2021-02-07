@@ -31,6 +31,12 @@ public class FactoryOrderDO {
     @TableField(value = "payment_voucher")
     private String paymentVoucher;
 
+    @TableField(value = "total_num")
+    private Integer totalNum;
+
+    @TableField(value = "total_price")
+    private Double totalPrice;
+
     @TableField(value = "order_desc")
     private String orderDesc;
 

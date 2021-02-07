@@ -122,27 +122,18 @@ public class FactoryApi {
         return HzmResponse.success(true);
     }
 
-    @ApiOperation("厂家确认订单")
+    @ApiOperation("厂家生产订单")
     @RequestMapping(value = "/order/factory/confirm", method = RequestMethod.POST)
     public HzmResponse factoryConfirmOrder(@RequestBody FactoryConfirmDTO factoryConfirmDTO) {
         factoryDealService.factoryConfirmOrder(factoryConfirmDTO.getOrderItems(), factoryConfirmDTO.getOrderId(), factoryConfirmDTO.getDeliveryDate());
         return HzmResponse.success(true);
     }
 
-    @ApiOperation("公司确认订单")
-    @RequestMapping(value = "/order/hzm/confirm", method = RequestMethod.GET)
-    public HzmResponse hzmConfirm(
-            @ApiParam("订单id") @RequestParam Integer oId) {
-        factoryDealService.hzmConfirm(oId);
-        return HzmResponse.success(true);
-    }
 
-    @ApiOperation("厂家确认交货")
-    @RequestMapping(value = "/order/factory/delivery", method = RequestMethod.GET)
-    public HzmResponse delivery(
-            @ApiParam("运单编号") @RequestParam String waybillNum,
-            @ApiParam("订单id") @RequestParam Integer oId) {
-        factoryDealService.delivery(oId, waybillNum);
+    @ApiOperation("厂家交货")
+    @RequestMapping(value = "/order/factory/delivery", method = RequestMethod.POST)
+    public HzmResponse delivery(@RequestBody FactoryDeliveryDTO factoryDeliveryDTO) {
+        factoryDealService.delivery(factoryDeliveryDTO);
         return HzmResponse.success(true);
     }
 

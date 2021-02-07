@@ -36,6 +36,12 @@ public class FactoryOrderDTO {
 
     private String orderDesc;
 
+    @ApiModelProperty(value = "订单总量")
+    private Integer totalNum;
+
+    @ApiModelProperty(value = "订单总价")
+    private Double totalPrice;
+
     List<FactoryOrderItemDTO> orderItems;
 
     @ApiModelProperty(value = "订单创建时间")

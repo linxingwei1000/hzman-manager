@@ -143,7 +143,6 @@ public class ItemDealService {
             FactoryOrderDO order = factoryOrderService.getOrderById(orderItem.getFactoryOrderId());
             map.put(order.getId(), order);
             return OrderStatusEnum.ORDER_FACTORY_CONFIRM.getCode().equals(order.getOrderStatus())
-                    || OrderStatusEnum.ORDER_CONFIRM.getCode().equals(order.getOrderStatus())
                     || OrderStatusEnum.ORDER_FACTORY_DELIVERY.getCode().equals(order.getOrderStatus());
         }).map(order -> {
             FactoryQuantityDTO dto = new FactoryQuantityDTO();

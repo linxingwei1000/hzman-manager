@@ -45,7 +45,7 @@ public class UserController {
     @ApiResponses({
             @ApiResponse(response = HzmResponse.class, code = 200, message = "success")
     })
-    @HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN, HzmRoleType.ROLE_EMPLOYEE})
+    @HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN})
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     public HzmResponse listUser(@RequestBody UserConditionDTO userConditionDTO) {
         return HzmResponse.success(userDealService.getUserList(userConditionDTO));
