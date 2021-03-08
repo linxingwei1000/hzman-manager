@@ -43,4 +43,7 @@ public class FactoryOrderItemDTO {
     @ApiModelProperty(value = "实际收货数量")
     private Integer receiveNum;
 
+    @ApiModelProperty(value = "剩余运输中数量")
+    private Integer remainNum;
+
 }

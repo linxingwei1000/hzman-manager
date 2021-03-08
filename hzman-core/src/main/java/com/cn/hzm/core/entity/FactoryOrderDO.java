@@ -40,6 +40,9 @@ public class FactoryOrderDO {
     @TableField(value = "order_desc")
     private String orderDesc;
 
+    @TableField(value = "receive_address")
+    private String receiveAddress;
+
     @TableField(value = "order_status")
     private Integer orderStatus;
 

@@ -84,7 +84,7 @@ public class TimeUtil {
     public static Date getYesterdayZeroUTCDate() {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
-        calendar.set(Calendar.HOUR_OF_DAY, 8);
+        calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
         calendar.add(Calendar.DATE, -1);
@@ -114,6 +114,20 @@ public class TimeUtil {
         calendar.add(Calendar.DATE, dayNum);
         calendar.add(Calendar.HOUR, hourNum);
         calendar.add(Calendar.MINUTE, minuteNum);
+        return calendar.getTime();
+    }
+
+    /**
+     * 当前时间加减年
+     *
+     * @param date
+     * @param yearNum
+     * @return
+     */
+    public static Date dateFixByYear(Date date, int yearNum) {
+        Calendar calendar = new GregorianCalendar();
+        calendar.setTime(date);
+        calendar.add(Calendar.YEAR, yearNum);
         return calendar.getTime();
     }
 

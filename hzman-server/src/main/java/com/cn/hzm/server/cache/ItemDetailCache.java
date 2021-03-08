@@ -6,12 +6,14 @@ import com.cn.hzm.item.service.ItemService;
 import com.cn.hzm.server.cache.comparator.*;
 import com.cn.hzm.server.dto.ItemDTO;
 import com.cn.hzm.server.service.ItemDealService;
+import com.cn.hzm.server.task.SmartReplenishmentTask;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -20,6 +22,7 @@ import java.util.*;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 /**
  * @author xingweilin@clubfactory.com
@@ -37,26 +40,31 @@ public class ItemDetailCache {
     @Autowired
     private ItemDealService itemDealService;
 
-    private Map<String, ItemDTO> oldDTOMAp;
+    @Autowired
+    private SmartReplenishmentTask smartReplenishmentTask;
 
-    private TreeSet<ItemDTO> todaySaleDesc;
-    private TreeSet<ItemDTO> todaySaleAsc;
-    private TreeSet<ItemDTO> yesterdaySaleDesc;
-    private TreeSet<ItemDTO> yesterdaySaleAsc;
-    private TreeSet<ItemDTO> lastWeekSaleDesc;
-    private TreeSet<ItemDTO> lastWeekSaleAsc;
+    private Map<String, ItemDTO> skuMap;
+
+    private Map<Integer, Comparator<ItemDTO>> comparatorMap;
+
+    private Queue<String> newItemSku;
 
     @PostConstruct
     public void installCacheConfig() {
 
-        oldDTOMAp = Maps.newHashMap();
+        skuMap = Maps.newHashMap();
 
-        todaySaleDesc = Sets.newTreeSet(new TodaySaleDescComparator());
-        todaySaleAsc = Sets.newTreeSet(new TodaySaleAscComparator());
-        yesterdaySaleDesc = Sets.newTreeSet(new YesterdaySaleDescComparator());
-        yesterdaySaleAsc = Sets.newTreeSet(new YesterdaySaleAscComparator());
-        lastWeekSaleDesc = Sets.newTreeSet(new LastWeekSaleDescComparator());
-        lastWeekSaleAsc = Sets.newTreeSet(new LastWeekSaleAscComparator());
+        newItemSku = Lists.newLinkedList();
+
+        comparatorMap = Maps.newHashMap();
+        comparatorMap.put(ContextConst.ITEM_SORT_TODAY_DESC, new TodaySaleDescComparator());
+        comparatorMap.put(ContextConst.ITEM_SORT_TODAY_ASC, new TodaySaleAscComparator());
+        comparatorMap.put(ContextConst.ITEM_SORT_YESTERDAY_DESC, new YesterdaySaleDescComparator());
+        comparatorMap.put(ContextConst.ITEM_SORT_YESTERDAY_ASC, new YesterdaySaleAscComparator());
+        comparatorMap.put(ContextConst.ITEM_SORT_SALE_INVENTORY_DESC, new SaleInventoryDescComparator());
+        comparatorMap.put(ContextConst.ITEM_SORT_SALE_INVENTORY_ASC, new SaleInventoryAscComparator());
+        comparatorMap.put(ContextConst.ITEM_SORT_LOCAL_INVENTORY_DESC, new LocalInventoryDescComparator());
+        comparatorMap.put(ContextConst.ITEM_SORT_LOCAL_INVENTORY_ASC, new LocalInventoryAscComparator());
 
         cache = Caffeine.newBuilder()
                 .maximumSize(10000)
@@ -75,47 +83,87 @@ public class ItemDetailCache {
             return t;
         });
 
+        //启动程序计算智能补货
+        Set<String> dealSku = smartReplenishmentTask.init();
+
         executor.submit(() -> {
             List<ItemDO> items = itemService.getListByCondition(Maps.newHashMap(), new String[]{"sku"});
 
             long startTime = System.currentTimeMillis();
             log.info("商品详情缓存加载流程开始，需缓存个数：{}", items.size());
-            items.forEach(itemDO -> cache.put(itemDO.getSku(), installItemDTO(itemDO.getSku())));
+            items.forEach(itemDO -> {
+                if (!dealSku.contains(itemDO.getSku())) {
+                    cache.put(itemDO.getSku(), installItemDTO(itemDO.getSku()));
+                }
+            });
             log.info("商品详情缓存加载流程结束，耗时：{}", System.currentTimeMillis() - startTime);
+        });
+
+        //新品爬去线程
+        ExecutorService itemExecutor = Executors.newSingleThreadExecutor(r -> {
+            Thread t = new Thread(r);
+            t.setName("异常商品信息爬取线程");
+            return t;
+        });
+
+        itemExecutor.submit(()->{
+            while(true){
+                String sku = newItemSku.poll();
+                if(StringUtils.isEmpty(sku)){
+                    Thread.sleep(60 * 1000);
+                    continue;
+                }
+                try{
+                    log.info("异常导致商品数据未获取sku【{}】，{}获取商品详情", sku, Thread.currentThread().getName());
+                    itemDealService.processSync(sku);
+                }catch (Exception e){
+                    newItemSku.offer(sku);
+                }
+
+            }
         });
     }
 
     /**
      * 根据排序获取缓存
+     *
      * @param sortType
      * @return
      */
-    public List<ItemDTO> getCacheBySort(Integer sortType){
-        //默认按今天倒排
-        if(sortType ==null){
-            sortType = ContextConst.ITEM_SORT_TODAY_DESC;
+    public List<ItemDTO> getCacheBySort(Integer searchType, String key, Integer sortType) {
+
+        Collection<ItemDTO> temp = skuMap.values();
+        if (!StringUtils.isEmpty(key)) {
+            switch (searchType) {
+                //sku 过滤
+                case 1:
+                    temp = temp.stream().filter(item -> item.getSku().contains(key)).collect(Collectors.toList());
+                    break;
+                //title 过滤
+                case 2:
+                    String[] keys = key.split(" ");
+                    temp = temp.stream().filter(item -> {
+                        for (String subKey : keys) {
+                            if (!item.getTitle().toLowerCase().contains(subKey.toLowerCase())) {
+                                return false;
+                            }
+                        }
+                        return true;
+                    }).collect(Collectors.toList());
+                    break;
+                default:
+            }
         }
 
-        switch (sortType){
-            case ContextConst.ITEM_SORT_TODAY_DESC:
-                return Lists.newArrayList(todaySaleDesc);
-            case ContextConst.ITEM_SORT_TODAY_ASC:
-                return Lists.newArrayList(todaySaleAsc);
-            case ContextConst.ITEM_SORT_YESTERDAY_DESC:
-                return Lists.newArrayList(yesterdaySaleDesc);
-            case ContextConst.ITEM_SORT_YESTERDAY_ASC:
-                return Lists.newArrayList(yesterdaySaleAsc);
-            case ContextConst.ITEM_SORT_LAST_WEEK_DESC:
-                return Lists.newArrayList(lastWeekSaleDesc);
-            case ContextConst.ITEM_SORT_LAST_WEEK_ASC:
-                return Lists.newArrayList(lastWeekSaleAsc);
-            default:
-                throw new IllegalStateException("Unexpected value: " + sortType);
-        }
+        Comparator<ItemDTO> comparator = comparatorMap.getOrDefault(sortType, new TodaySaleDescComparator());
+        Set<ItemDTO> list = Sets.newTreeSet(comparator);
+        list.addAll(temp);
+        return Lists.newArrayList(list);
     }
 
     /**
      * 根据sku获取缓存
+     *
      * @param skus
      * @return
      */
@@ -135,27 +183,15 @@ public class ItemDetailCache {
 
     public ItemDTO installItemDTO(String sku) {
         ItemDO itemDO = itemService.getItemDOBySku(sku);
-        ItemDTO itemDTO = itemDealService.buildItemDTO(itemDO);
-
-        ItemDTO old = oldDTOMAp.get(sku);
-        //删除老的
-        if(old!=null){
-            todaySaleDesc.remove(old);
-            todaySaleAsc.remove(old);
-            yesterdaySaleDesc.remove(old);
-            yesterdaySaleAsc.remove(old);
-            lastWeekSaleDesc.remove(old);
-            lastWeekSaleAsc.remove(old);
+        if (itemDO == null) {
+            newItemSku.offer(sku);
+            return null;
         }
 
-        //添加新的
-        oldDTOMAp.put(sku, itemDTO);
-        todaySaleDesc.add(itemDTO);
-        todaySaleAsc.add(itemDTO);
-        yesterdaySaleDesc.add(itemDTO);
-        yesterdaySaleAsc.add(itemDTO);
-        lastWeekSaleDesc.add(itemDTO);
-        lastWeekSaleAsc.add(itemDTO);
+        ItemDTO itemDTO = itemDealService.buildItemDTO(itemDO);
+
+        //添加或者覆盖
+        skuMap.put(sku, itemDTO);
 
         return itemDTO;
     }

@@ -12,9 +12,14 @@ import lombok.Data;
 public class ItemConditionDTO extends PageDTO{
 
     /**
-     * sku 模糊查询
+     * 搜索类型
      */
-    private String sku;
+    private Integer searchType;
+
+    /**
+     * key 模糊查询
+     */
+    private String key;
 
     /**
      * 排序

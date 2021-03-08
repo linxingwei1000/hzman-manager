@@ -36,8 +36,8 @@ public class HzmWebConfig implements WebMvcConfigurer {
     @Override
     public void addInterceptors(InterceptorRegistry registry) {
         registry.addInterceptor(hzmCommonInterceptor).addPathPatterns("/**").excludePathPatterns("/health/**");
-        registry.addInterceptor(hzmAuthTokenInterceptor).addPathPatterns("/user/**", "/factory/**", "/item/**");
-        registry.addInterceptor(hzmAuthPermissionInterceptor).addPathPatterns("/user/**", "/factory/**", "/item/**");
+        registry.addInterceptor(hzmAuthTokenInterceptor).addPathPatterns("/user/**", "/factory/**", "/item/**", "/order/**");
+        registry.addInterceptor(hzmAuthPermissionInterceptor).addPathPatterns("/user/**", "/factory/**", "/item/**", "/order/**");
     }
 
     @Order(0)

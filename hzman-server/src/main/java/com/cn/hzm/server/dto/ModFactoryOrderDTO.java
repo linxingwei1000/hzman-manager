@@ -12,7 +12,9 @@ import java.util.List;
  */
 @Data
 @ApiModel(description = "工厂订单创建DTO")
-public class CreateFactoryOrderDTO {
+public class ModFactoryOrderDTO {
+
+    private Integer orderId;
 
     @ApiModelProperty(value = "工厂id")
     private Integer factoryId;
@@ -23,5 +25,5 @@ public class CreateFactoryOrderDTO {
     @ApiModelProperty(value = "收货地址")
     private String receiveAddress;
 
-    List<CreateFactoryOrderItemDTO> orderItems;
+    List<FactoryOrderItemDTO> orderItems;
 }

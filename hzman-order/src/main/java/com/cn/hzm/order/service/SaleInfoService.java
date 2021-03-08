@@ -3,10 +3,12 @@ package com.cn.hzm.order.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cn.hzm.core.entity.SaleInfoDO;
 import com.cn.hzm.order.dao.SaleInfoMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author xingweilin@clubfactory.com
@@ -44,5 +46,14 @@ public class SaleInfoService {
         query.eq("stat_date", statDate);
         query.eq("sku", sku);
         return saleInfoMapper.selectOne(query);
+    }
+
+    public List<SaleInfoDO> getSaleInfoByDurationDate(String sku, String statBeginDate, String statEndDate){
+        QueryWrapper<SaleInfoDO> query = new QueryWrapper<>();
+        query.between("stat_date", statBeginDate, statEndDate);
+        if(!StringUtils.isEmpty(sku)){
+            query.eq("sku", sku);
+        }
+        return saleInfoMapper.selectList(query);
     }
 }

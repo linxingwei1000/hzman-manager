@@ -18,13 +18,16 @@ import com.cn.hzm.order.service.SaleInfoService;
 import com.cn.hzm.server.cache.ItemDetailCache;
 import com.cn.hzm.server.cache.comparator.SortHelper;
 import com.cn.hzm.server.dto.*;
+import com.cn.hzm.server.task.SmartReplenishmentTask;
 import com.cn.hzm.server.util.ConvertUtil;
 import com.cn.hzm.stock.service.InventoryService;
 import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.util.CollectionUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -35,6 +38,7 @@ import java.util.stream.Collectors;
  * @author xingweilin@clubfactory.com
  * @date 2020/7/11 5:55 下午
  */
+@Slf4j
 @Service
 public class ItemDealService {
 
@@ -65,18 +69,13 @@ public class ItemDealService {
     @Autowired
     private ItemDetailCache itemDetailCache;
 
+    @Autowired
+    private SmartReplenishmentTask smartReplenishmentTask;
+
     private Map<String, Object> syncLock = Maps.newHashMap();
 
     public JSONObject processListItem(ItemConditionDTO conditionDTO) {
-        List<ItemDTO> itemRespList;
-        if(StringUtils.isEmpty(conditionDTO.getSku())){
-            itemRespList = itemDetailCache.getCacheBySort(conditionDTO.getItemSortType());
-        }else{
-            Map<String, String> condition = (Map<String, String>) JSONObject.toJSON(conditionDTO);
-            List<ItemDO> list = itemService.getListByCondition(condition, new String[]{"sku"});
-            itemRespList = SortHelper.sortItem(conditionDTO.getItemSortType(),
-                    itemDetailCache.getCache(list.stream().map(ItemDO::getSku).collect(Collectors.toList())));
-        }
+        List<ItemDTO> itemRespList = itemDetailCache.getCacheBySort(conditionDTO.getSearchType(), conditionDTO.getKey(), conditionDTO.getItemSortType());
 
         JSONObject respJo = new JSONObject();
         respJo.put("total", itemRespList.size());
@@ -91,7 +90,7 @@ public class ItemDealService {
         GetMatchingProductForIdResponse resp = awsClient.getProductInfoByAsin("SellerSKU", sku);
 
         //判断错误
-        if(resp.getGetMatchingProductForIdResult().getError()!=null){
+        if (resp.getGetMatchingProductForIdResult().getError() != null) {
             ProductError error = resp.getGetMatchingProductForIdResult().getError();
             throw new HzmException(ExceptionCode.REQUEST_SKU_REQUEST_ERROR, error.getMessage());
         }
@@ -158,16 +157,18 @@ public class ItemDealService {
         itemDTO.setInventoryDTO(inventoryDTO);
 
         //销量
-        Date date = new Date();
-        itemDTO.setToday(getSaleInfoByDate(TimeUtil.dateFixByDay(date, 0, -8, 0), itemDTO.getSku()));
-        itemDTO.setYesterday(getSaleInfoByDate(TimeUtil.dateFixByDay(date, -1, -8, 0), itemDTO.getSku()));
-        itemDTO.setLastWeekToday(getSaleInfoByDate(TimeUtil.dateFixByDay(date, -7, -8, 0), itemDTO.getSku()));
+        Date utcDate = TimeUtil.dateFixByDay(new Date(), 0, -8, 0);
+        itemDTO.setToday(getSaleInfoByDate(utcDate, itemDTO.getSku()));
+        itemDTO.setYesterday(getSaleInfoByDate(TimeUtil.dateFixByDay(utcDate, -1, 0, 0), itemDTO.getSku()));
+        itemDTO.setDuration30Day(getSaleInfoByDurationDate(utcDate, itemDTO.getSku()));
+        itemDTO.setLastYearDuration30Day(getSaleInfoByDurationDate(TimeUtil.dateFixByYear(utcDate, -1), itemDTO.getSku()));
 
         //商品工厂归宿信息
         List<FactoryItemDO> factoryItemDOS = factoryItemService.getInfoBySku(itemDTO.getSku());
         itemDTO.setFactoryItemDTOS(factoryItemDOS.stream().map(factoryItemDO -> {
             FactoryDO factoryDO = factoryService.getByFid(factoryItemDO.getFactoryId());
             FactoryItemDTO factoryItemDTO = new FactoryItemDTO();
+            factoryItemDTO.setId(factoryItemDO.getId());
             factoryItemDTO.setFactoryId(factoryDO.getId());
             factoryItemDTO.setFactoryName(factoryDO.getFactoryName());
             factoryItemDTO.setSku(factoryItemDO.getSku());
@@ -175,6 +176,10 @@ public class ItemDealService {
             factoryItemDTO.setDesc(factoryItemDO.getItemDesc());
             return factoryItemDTO;
         }).collect(Collectors.toList()));
+
+        //智能补货标
+        SmartReplenishmentDTO smart = smartReplenishmentTask.getSmartReplenishment(itemDO.getSku());
+        itemDTO.setReplenishmentCode(smart == null ? 0 : smart.getReplenishmentCode());
 
         return itemDTO;
     }
@@ -192,6 +197,31 @@ public class ItemDealService {
             saleInfoDTO.setSaleNum(saleInfoDO.getSaleNum());
             saleInfoDTO.setSaleVolume(saleInfoDO.getSaleVolume());
             saleInfoDTO.setUnitPrice(saleInfoDO.getUnitPrice());
+        }
+        return saleInfoDTO;
+    }
+
+    private SaleInfoDTO getSaleInfoByDurationDate(Date date, String sku){
+        Date beginDate = TimeUtil.dateFixByDay(date, -30, 0, 0);
+        String strEndDate = TimeUtil.getSimpleFormat(date);
+        String strBeginDate = TimeUtil.getSimpleFormat(beginDate);
+        List<SaleInfoDO> compareList = saleInfoService.getSaleInfoByDurationDate(sku, strBeginDate, strEndDate);
+
+        int saleNum = 0;
+        double saleVolume = 0.0;
+        if(!CollectionUtils.isEmpty(compareList)){
+            for(SaleInfoDO saleInfo: compareList){
+                saleNum += saleInfo.getSaleNum();
+                saleVolume += saleInfo.getSaleVolume();
+            }
+        }
+        SaleInfoDTO saleInfoDTO = new SaleInfoDTO();
+        saleInfoDTO.setSaleNum(saleNum);
+        saleInfoDTO.setSaleVolume(saleVolume);
+        if(saleNum==0){
+            saleInfoDTO.setUnitPrice(0.0);
+        }else{
+            saleInfoDTO.setUnitPrice(saleVolume/(double)saleNum);
         }
         return saleInfoDTO;
     }
@@ -241,5 +271,9 @@ public class ItemDealService {
             }
             itemDetailCache.refreshCache(sku);
         }
+    }
+
+    public List<SmartReplenishmentDTO> querySmartList() {
+        return smartReplenishmentTask.getSmartReplenishmentDTOList(null);
     }
 }

@@ -14,7 +14,7 @@ public enum OrderStatusEnum {
     ORDER_FACTORY_CONFIRM(2, "厂家生产"),
     ORDER_FACTORY_DELIVERY(3, "厂家交货"),
     ORDER_DELIVERY(4, "收货"),
-    ORDER_PAY(5, "财务支付订单"),
+    ORDER_PAY(5, "付款完成"),
     ;
 
     private Integer code;

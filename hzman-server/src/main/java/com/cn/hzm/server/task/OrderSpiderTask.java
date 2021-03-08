@@ -96,14 +96,13 @@ public class OrderSpiderTask {
     @PostConstruct
     public void initTask() {
 
-        if(!spiderSwitch){
+        if (!spiderSwitch) {
             log.info("测试环境关闭爬虫任务");
             return;
         }
 
-        orderSemaphore = new Semaphore(6);
-
         //订单商品爬取资源定时充能
+        orderSemaphore = new Semaphore(6);
         ScheduledThreadPoolExecutor orderScheduledTask = new ScheduledThreadPoolExecutor(1);
         orderScheduledTask.scheduleAtFixedRate(() -> {
             if (orderSemaphore.availablePermits() < 6) {
@@ -111,19 +110,17 @@ public class OrderSpiderTask {
             }
         }, 60, 60, TimeUnit.SECONDS);
 
-        getOrderSemaphore = new Semaphore(6);
-
         //订单商品爬取资源定时充能
+        getOrderSemaphore = new Semaphore(6);
         ScheduledThreadPoolExecutor getOrderScheduledTask = new ScheduledThreadPoolExecutor(1);
         getOrderScheduledTask.scheduleAtFixedRate(() -> {
-            if (orderSemaphore.availablePermits() < 6) {
-                orderSemaphore.release(1);
+            if (getOrderSemaphore.availablePermits() < 6) {
+                getOrderSemaphore.release(1);
             }
         }, 60, 60, TimeUnit.SECONDS);
 
-        orderItemSemaphore = new Semaphore(30);
-
         //订单商品爬取资源定时充能
+        orderItemSemaphore = new Semaphore(30);
         ScheduledThreadPoolExecutor scheduledTask = new ScheduledThreadPoolExecutor(1);
         scheduledTask.scheduleAtFixedRate(() -> {
             if (orderItemSemaphore.availablePermits() < 30) {
@@ -157,9 +154,19 @@ public class OrderSpiderTask {
 
     private void updateOrderSpider() {
         while (true) {
-            Set<String> needFixSaleInfoDay = Sets.newHashSet();
             try {
-                doUpdateOrder(needFixSaleInfoDay);
+                List<OrderDO> orders = orderService.getOrdersByOrderStatus(ContextConst.AMAZON_STATUS_PENDING);
+                if (!CollectionUtils.isEmpty(orders)) {
+
+                    Set<String> needFixSaleInfoDay = Sets.newHashSet();
+                    doUpdateOrder(needFixSaleInfoDay, orders);
+
+                    if (!CollectionUtils.isEmpty(needFixSaleInfoDay)) {
+                        dailyStatTask.statSaleInfoByMulchDate(needFixSaleInfoDay);
+                    }
+                }
+
+                Thread.sleep(10 * 60 * 1000);
             } catch (HzmException e) {
                 if (e.getExceptionCode().equals(ExceptionCode.REQUEST_LIMIT)) {
                     log.error("订单状态更新任务触发限流");
@@ -167,90 +174,77 @@ public class OrderSpiderTask {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-
-            if(!CollectionUtils.isEmpty(needFixSaleInfoDay)){
-                dailyStatTask.statSaleInfoByMulchDate(needFixSaleInfoDay);
-            }
-
-            //更新任务休息间隔：5分钟
-            try {
-                Thread.sleep(5 * 60 * 1000);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
         }
     }
 
 
-    private void doUpdateOrder(Set<String> needFixSaleInfoDay) throws ParseException, InterruptedException {
+    private void doUpdateOrder(Set<String> needFixSaleInfoDay, List<OrderDO> totalOrders) {
+        log.info("数据库中需要更新订单的数量：{}", totalOrders.size());
 
-        int offset = 0;
+        int dbOrderNum = totalOrders.size();
         int limit = 50;
-
+        int dealTimes = dbOrderNum / 50;
         long startTime = System.currentTimeMillis();
         int changeTotal = 0;
-        log.info("更新订单任务开始");
 
-        while (true) {
-            List<OrderDO> orders = orderService.getOrdersByOrderStatus(ContextConst.AMAZON_STATUS_PENDING, offset, limit);
-            if(CollectionUtils.isEmpty(orders)){
-                break;
-            }
+        for (int curNum = 0; curNum < dealTimes; curNum++) {
+            int start = curNum * limit;
+            int end = Math.min(dbOrderNum, (curNum + 1) * limit);
 
-            List<String> amazonOrderIds = orders.stream().map(OrderDO::getAmazonOrderId).collect(Collectors.toList());
+            log.info("处理更新订单 start【{}】 end【{}】", start, end);
+            List<OrderDO> subOrders = totalOrders.subList(start, end);
 
             //获取资源
-            getOrderSemaphore.acquire();
-            GetOrderResponse orderResponse = awsClient.getOrder(amazonOrderIds);
+            try {
+                List<String> subIds = subOrders.stream().map(OrderDO::getAmazonOrderId).collect(Collectors.toList());
 
-            //剔除Pending状态订单
-            List<Order> tmp = orderResponse.getGetOrderResult().getOrders().getList().stream()
-                    .filter(order -> !ContextConst.AMAZON_STATUS_PENDING.equals(order.getOrderStatus()))
-                    .collect(Collectors.toList());
-            changeTotal += tmp.size();
+                getOrderSemaphore.acquire();
+                GetOrderResponse orderResponse = awsClient.getOrder(subIds);
 
-            Map<String, OrderDO> orderMap = orders.stream().collect(Collectors.toMap(OrderDO::getAmazonOrderId, orderDO -> orderDO));
-            for (Order order : tmp) {
-                String amazonId = order.getAmazonOrderId();
+                //剔除Pending状态订单
+                List<Order> tmp = orderResponse.getGetOrderResult().getOrders().getList().stream()
+                        .filter(order -> !ContextConst.AMAZON_STATUS_PENDING.equals(order.getOrderStatus()))
+                        .collect(Collectors.toList());
 
-                //获取资源
-                orderItemSemaphore.acquire();
-                ListOrderItemsResponse tokenResponse = awsClient.getListOrderItemsByAmazonId(amazonId);
-
-                parseOrderItem(tokenResponse.getListOrderItemsResult().getOrderItems().getList(), amazonId);
-
-                String nextToken = tokenResponse.getListOrderItemsResult().getNextToken();
-                while (!StringUtils.isEmpty(nextToken)) {
+                Map<String, OrderDO> orderMap = subOrders.stream().collect(Collectors.toMap(OrderDO::getAmazonOrderId, orderDO -> orderDO));
+                for (Order order : tmp) {
+                    String amazonId = order.getAmazonOrderId();
 
                     //获取资源
                     orderItemSemaphore.acquire();
-                    ListOrderItemsByNextTokenResponse response = awsClient.getListOrderItemByAmazonIds(nextToken);
+                    ListOrderItemsResponse tokenResponse = awsClient.getListOrderItemsByAmazonId(amazonId);
 
-                    nextToken = response.getListOrderItemsByNextTokenResult().getNextToken();
-                    parseOrderItem(response.getListOrderItemsByNextTokenResult().getOrderItems().getList(), amazonId);
+                    parseOrderItem(tokenResponse.getListOrderItemsResult().getOrderItems().getList(), amazonId);
+
+                    String nextToken = tokenResponse.getListOrderItemsResult().getNextToken();
+                    while (!StringUtils.isEmpty(nextToken)) {
+
+                        //获取资源
+                        orderItemSemaphore.acquire();
+                        ListOrderItemsByNextTokenResponse response = awsClient.getListOrderItemByAmazonIds(nextToken);
+
+                        nextToken = response.getListOrderItemsByNextTokenResult().getNextToken();
+                        parseOrderItem(response.getListOrderItemsByNextTokenResult().getOrderItems().getList(), amazonId);
+                    }
+
+                    //最后处理，保证订单商品更新完成
+                    OrderDO old = orderMap.get(amazonId);
+                    OrderDO update = new OrderDO();
+                    update.setId(old.getId());
+                    update.setOtherConfig(old.getOtherConfig());
+                    ConvertUtil.convertToOrderDO(update, order);
+                    orderService.updateOrder(update);
+                    changeTotal++;
+
+                    log.info("更新订单状态 amazonOrderId【{}】purchaseTime:【{}】", amazonId, update.getPurchaseDate());
+                    needFixSaleInfoDay.add(TimeUtil.getSimpleFormat(TimeUtil.transform(order.getPurchaseDate())));
                 }
-
-                //最后处理，保证订单商品更新完成
-                OrderDO old = orderMap.get(amazonId);
-                OrderDO update = new OrderDO();
-                update.setId(old.getId());
-                update.setOtherConfig(old.getOtherConfig());
-                ConvertUtil.convertToOrderDO(update, order);
-                orderService.updateOrder(update);
-
-                needFixSaleInfoDay.add(TimeUtil.getSimpleFormat(TimeUtil.transform(order.getPurchaseDate())));
+            } catch (Exception e) {
+                log.error("更新订单错误：{}", e.getMessage(), e);
             }
-
-            //退出循环
-            if (orders.size() < limit) {
-                break;
-            }
-            offset += limit;
         }
-
         log.info("更新订单任务结束，本次任务耗时：{}, 共更新订单【{}】条", System.currentTimeMillis() - startTime, changeTotal);
     }
-
 
     private void doSpiderOrder() throws ParseException, InterruptedException {
         log.info("爬取订单任务开始");

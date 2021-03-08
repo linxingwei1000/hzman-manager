@@ -34,6 +34,10 @@ public class FactoryItemService {
         factoryItemMapper.updateById(factoryItemDO);
     }
 
+    public FactoryItemDO getInfoById(Integer id) {
+        return factoryItemMapper.selectById(id);
+    }
+
     public List<FactoryItemDO> getInfoBySku(String sku){
         QueryWrapper<FactoryItemDO> query = new QueryWrapper<>();
         query.eq("sku", sku);
@@ -45,5 +49,9 @@ public class FactoryItemService {
         query.eq("sku", sku);
         query.eq("factory_id", factoryId);
         return factoryItemMapper.selectOne(query);
+    }
+
+    public Integer deleteFactoryItem(Integer id) {
+        return factoryItemMapper.deleteById(id);
     }
 }

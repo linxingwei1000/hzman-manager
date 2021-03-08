@@ -1,5 +1,9 @@
 package com.cn.hzm.core.constant;
 
+import com.google.common.collect.Lists;
+
+import java.util.List;
+
 /**
  * @author xingweilin@clubfactory.com
  * @date 2020/7/11 10:54 上午
@@ -50,14 +54,24 @@ public class ContextConst {
     public static final int ITEM_SORT_YESTERDAY_ASC = 3;
 
     /**
-     * 上周同日销量降序
+     * 可售库存降序
      */
-    public static final int ITEM_SORT_LAST_WEEK_DESC = 4;
+    public static final int ITEM_SORT_SALE_INVENTORY_DESC = 4;
 
     /**
-     * 上周同日销量升序
+     * 可售库存升序
      */
-    public static final int ITEM_SORT_LAST_WEEK_ASC = 5;
+    public static final int ITEM_SORT_SALE_INVENTORY_ASC = 5;
+
+    /**
+     * 本地库存降序
+     */
+    public static final int ITEM_SORT_LOCAL_INVENTORY_DESC = 6;
+
+    /**
+     * 本地库存升序
+     */
+    public static final int ITEM_SORT_LOCAL_INVENTORY_ASC = 7;
 
     /**
      * amazon订单状态：Pending
@@ -73,4 +87,14 @@ public class ContextConst {
      * amazon订单状态：Shipped
      */
     public static final String AMAZON_STATUS_SHIPPED = "Shipped";
+
+    /**
+     * amazon订单状态：localDelete，本地删除状态，防止僵尸订单影响正常订单更新流程
+     */
+    public static final String AMAZON_STATUS_DELETE = "localDelete";
+
+    /**
+     * 收货地址列表
+     */
+    public static final List<String> RECEIVE_ADDRESS = Lists.newArrayList("杭州市滨江区江虹南路316号京安创业园3幢3楼305，李裕平收，15381111258");
 }

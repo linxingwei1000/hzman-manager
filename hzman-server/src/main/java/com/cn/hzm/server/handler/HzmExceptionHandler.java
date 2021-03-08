@@ -2,6 +2,7 @@ package com.cn.hzm.server.handler;
 
 import com.cn.hzm.core.common.HzmResponse;
 import com.cn.hzm.core.constant.ResponseCode;
+import com.cn.hzm.core.exception.ExceptionCode;
 import com.cn.hzm.core.exception.HzmBasicRuntimeException;
 import com.cn.hzm.core.exception.HzmUnauthorizedException;
 import com.cn.hzm.core.exception.HzmException;
@@ -47,5 +48,12 @@ public class HzmExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Object> handlerHzmException(HzmException ex, WebRequest request) {
         logger.error(ex.getMessage());
         return ResponseEntity.status(HttpStatus.OK).body(new HzmResponse(ex.getExceptionCode().code(), ex.getMessage()));
+    }
+
+    @ExceptionHandler({Exception.class})
+    public ResponseEntity<Object> handlerException(Exception ex, WebRequest request) {
+        logger.error(ex.getMessage());
+        ex.printStackTrace();
+        return ResponseEntity.status(HttpStatus.OK).body(new HzmResponse(ExceptionCode.INTERNAL_SERVER_ERR.code(),ExceptionCode.INTERNAL_SERVER_ERR.desc()));
     }
 }

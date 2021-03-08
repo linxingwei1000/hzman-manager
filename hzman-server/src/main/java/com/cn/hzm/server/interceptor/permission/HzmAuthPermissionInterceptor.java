@@ -1,14 +1,11 @@
 package com.cn.hzm.server.interceptor.permission;
 
-import com.cn.hzm.core.constant.ResponseCode;
 import com.cn.hzm.core.context.HzmContext;
-import com.cn.hzm.core.exception.HzmBasicRuntimeException;
 import com.cn.hzm.core.exception.HzmUnauthorizedException;
 import com.cn.hzm.core.util.HzmCollectionUtil;
 import com.cn.hzm.server.domain.HzmUserRole;
 import com.cn.hzm.server.meta.HzmRoleType;
 import com.cn.hzm.server.service.HzmUserRoleService;
-import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import org.springframework.core.annotation.AnnotationUtils;
 import org.springframework.stereotype.Component;

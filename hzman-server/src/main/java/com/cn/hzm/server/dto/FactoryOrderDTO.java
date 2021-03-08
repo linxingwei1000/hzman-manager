@@ -20,6 +20,9 @@ public class FactoryOrderDTO {
     @ApiModelProperty(value = "工厂id")
     private Integer factoryId;
 
+    @ApiModelProperty(value = "工厂名")
+    private String factoryName;
+
     @ApiModelProperty(value = "厂家交货时间")
     private String deliveryDate;
 
@@ -35,6 +38,9 @@ public class FactoryOrderDTO {
     private String statusDesc;
 
     private String orderDesc;
+
+    @ApiModelProperty(value = "收货地址")
+    private String receiveAddress;
 
     @ApiModelProperty(value = "订单总量")
     private Integer totalNum;

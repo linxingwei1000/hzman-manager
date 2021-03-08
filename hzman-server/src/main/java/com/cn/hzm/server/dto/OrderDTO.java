@@ -61,9 +61,6 @@ public class OrderDTO extends RespBaseDTO{
     @ApiModelProperty(value="订单类型")
     private String orderType;
 
-    @ApiModelProperty(value="商品订单")
-    List<OrderItemDTO> orderItemDTOS;
-
 //    @ApiModelProperty(value="订单中第一件商品销售渠道")
 //    private String salesChannel;
 //

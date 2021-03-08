@@ -42,14 +42,20 @@ public class ItemDTO extends RespBaseDTO{
     @ApiModelProperty(value = "昨日销量数据")
     private SaleInfoDTO yesterday;
 
-    @ApiModelProperty(value = "上周同天销量数据")
-    private SaleInfoDTO lastWeekToday;
+    @ApiModelProperty(value = "最近30天数据")
+    private SaleInfoDTO duration30Day;
+
+    @ApiModelProperty(value = "去年同期30天数据")
+    private SaleInfoDTO lastYearDuration30Day;
 
     @ApiModelProperty(value = "库存信息", example = "N190301")
     private InventoryDTO inventoryDTO;
 
     @ApiModelProperty(value = "商品工厂信息")
     private List<FactoryItemDTO> factoryItemDTOS;
+
+    @ApiModelProperty(value = "智能补货标")
+    private Integer replenishmentCode;
 
     @ApiModelProperty("创建时间")
     private Date ctime;

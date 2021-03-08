@@ -21,23 +21,15 @@ public class OrderItemService {
     @Autowired
     private OrderItemMapper orderItemMapper;
 
-    public List<OrderItemDO> getListByCondition(Map<String, String> condition, Integer offset, Integer limit) {
-        QueryWrapper<OrderItemDO> query = new QueryWrapper<>();
-        if (condition.size() != 0) {
-        }
-
-        query.orderByAsc("ctime");
-        query.last(SqlCommonUtil.limitOffsetSql(offset, limit));
-        return orderItemMapper.selectList(query);
-    }
-
-    public OrderItemDO getById(Integer id) {
-        return orderItemMapper.selectById(id);
-    }
-
     public List<OrderItemDO> getOrderByAmazonId(String amazonOrderId) {
         QueryWrapper<OrderItemDO> query = new QueryWrapper<>();
         query.eq("amazon_order_id", amazonOrderId);
+        return orderItemMapper.selectList(query);
+    }
+
+    public List<OrderItemDO> getOrderByBathAmazonId(List<String> amazonOrderIds) {
+        QueryWrapper<OrderItemDO> query = new QueryWrapper<>();
+        query.in("amazon_order_id", amazonOrderIds);
         return orderItemMapper.selectList(query);
     }
 

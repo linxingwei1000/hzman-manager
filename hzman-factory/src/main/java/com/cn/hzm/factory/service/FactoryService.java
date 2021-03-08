@@ -34,6 +34,10 @@ public class FactoryService {
         return factoryMapper.selectById(fId);
     }
 
+    public List<FactoryDO> getByIds(List<Integer> fIds){
+        return factoryMapper.selectBatchIds(fIds);
+    }
+
     public FactoryDO getByName(String name){
         QueryWrapper<FactoryDO> query = new QueryWrapper<>();
         query.eq("factory_name", name);

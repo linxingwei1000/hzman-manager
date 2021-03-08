@@ -16,6 +16,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author xingweilin@clubfactory.com
@@ -47,9 +48,8 @@ public class DailyStatTask {
         Date date = TimeUtil.getDateBySimple(strDate);
 
         while (num > 0) {
-            Date startDate = TimeUtil.transformTimeToUTC(date);
-            Date endDate = TimeUtil.getUTCDayEndTime(startDate);
-            statDailySaleInfoByDate(startDate, endDate);
+            Date endDate = TimeUtil.getUTCDayEndTime(date);
+            statDailySaleInfoByDate(date, endDate);
 
             date = TimeUtil.dateFixByDay(date, 1, 0, 0);
             num--;
@@ -71,21 +71,12 @@ public class DailyStatTask {
      * @param strDate
      */
     public void statSaleInfoChooseDate(String strDate) {
-        //跳过当日修复
-        String strCurDate = TimeUtil.getSimpleFormat(TimeUtil.transformTimeToUTC(new Date()));
-        if (strCurDate.equals(strDate)) {
-            log.info("当日【{}】销量信息无需修复", strCurDate);
-            return;
-        }
-
         Date date = TimeUtil.getDateBySimple(strDate);
-
-        Date startDate = TimeUtil.transformTimeToUTC(date);
-        Date endDate = TimeUtil.getUTCDayEndTime(startDate);
+        Date endDate = TimeUtil.getUTCDayEndTime(date);
 
         long startTime = System.currentTimeMillis();
         log.info("【{}】销量信息修复开始", strDate);
-        statDailySaleInfoByDate(startDate, endDate);
+        statDailySaleInfoByDate(date, endDate);
         log.info("【{}】销量信息修复结束，耗时:{}", strDate, System.currentTimeMillis() - startTime);
     }
 
@@ -99,7 +90,7 @@ public class DailyStatTask {
 
     @Scheduled(cron = "0 */5 * * * ?")
     public void statTodaySaleData() {
-        Date startDate = TimeUtil.transformTimeToUTC(new Date());
+        Date startDate = TimeUtil.getDateBySimple(TimeUtil.getSimpleFormat(new Date()));
         Date endDate = TimeUtil.getUTCDayEndTime(startDate);
 
         statDailySaleInfoByDate(startDate, endDate);
@@ -108,31 +99,36 @@ public class DailyStatTask {
     private void statDailySaleInfoByDate(Date startDate, Date endDate) {
         String statDate = TimeUtil.getSimpleFormat(startDate);
 
-        List<OrderDO> orders = orderService.getOrdersByPurchaseDate(startDate, endDate, null);
+        List<OrderDO> orders = orderService.getOrdersByPurchaseDate(startDate, endDate, null, new String[]{"amazon_order_id"});
 
-        Map<String, SaleInfoDO> saleInfoMap = Maps.newHashMap();
-        for (OrderDO order : orders) {
-            List<OrderItemDO> itemList = orderItemService.getOrderByAmazonId(order.getAmazonOrderId());
-            itemList.forEach(orderItem -> {
-                if (orderItem.getItemPriceAmount() == 0.0 || orderItem.getQuantityOrdered() == 0) {
-                    return;
-                }
-
-                SaleInfoDO saleInfoDO = saleInfoMap.get(orderItem.getSku());
-                if (saleInfoDO == null) {
-                    saleInfoDO = new SaleInfoDO();
-                    saleInfoDO.setSaleNum(orderItem.getQuantityOrdered());
-                    saleInfoDO.setSaleVolume(orderItem.getItemPriceAmount());
-                    saleInfoDO.setStatDate(statDate);
-                    saleInfoDO.setConfig("");
-                } else {
-                    saleInfoDO.setSaleNum(saleInfoDO.getSaleNum() + orderItem.getQuantityOrdered());
-                    saleInfoDO.setSaleVolume(saleInfoDO.getSaleVolume() + orderItem.getItemPriceAmount());
-                }
-                saleInfoMap.put(orderItem.getSku(), saleInfoDO);
-            });
+        //防止mybatis in 搜索优化功能：mybatis使用in搜索时，如果入仓为空，删除in条件，改为全表搜索
+        //全表搜索，数据库所有数据加入内存，导致OOM
+        if (orders.size() == 0) {
+            return;
         }
 
+        List<String> amazonOrderIds = orders.stream().map(OrderDO::getAmazonOrderId).collect(Collectors.toList());
+        List<OrderItemDO> itemList = orderItemService.getOrderByBathAmazonId(amazonOrderIds);
+
+        Map<String, SaleInfoDO> saleInfoMap = Maps.newHashMap();
+        itemList.forEach(orderItem -> {
+            if (orderItem.getItemPriceAmount() == 0.0 || orderItem.getQuantityOrdered() == 0) {
+                return;
+            }
+
+            SaleInfoDO saleInfoDO = saleInfoMap.get(orderItem.getSku());
+            if (saleInfoDO == null) {
+                saleInfoDO = new SaleInfoDO();
+                saleInfoDO.setSaleNum(orderItem.getQuantityOrdered());
+                saleInfoDO.setSaleVolume(orderItem.getItemPriceAmount());
+                saleInfoDO.setStatDate(statDate);
+                saleInfoDO.setConfig("");
+            } else {
+                saleInfoDO.setSaleNum(saleInfoDO.getSaleNum() + orderItem.getQuantityOrdered());
+                saleInfoDO.setSaleVolume(saleInfoDO.getSaleVolume() + orderItem.getItemPriceAmount());
+            }
+            saleInfoMap.put(orderItem.getSku(), saleInfoDO);
+        });
 
         saleInfoMap.entrySet().stream()
                 .filter(entry -> entry.getValue().getSaleNum() != null && entry.getValue().getSaleNum() > 0)
@@ -153,7 +149,6 @@ public class DailyStatTask {
 
         //刷新本地缓存
         itemDetailCache.refreshCaches(Lists.newArrayList(saleInfoMap.keySet()));
-
         log.info("【{}】销量数据统计完成 共计{}条数据", statDate, saleInfoMap.size());
     }
 }

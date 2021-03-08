@@ -56,8 +56,14 @@ public class ItemApi {
 
     @ApiOperation("本地商品库存修改")
     @RequestMapping(value = "/inventory/local", method = RequestMethod.GET)
-    public HzmResponse fuzzyQuery(@ApiParam(name = "sku") @RequestParam String sku,
+    public HzmResponse inventoryLocal(@ApiParam(name = "sku") @RequestParam String sku,
                                   @ApiParam("修改值") @RequestParam Integer curLocalNum) {
         return HzmResponse.success(itemDealService.modLocalNum(sku, curLocalNum));
+    }
+
+    @ApiOperation("智能补货展示接口")
+    @RequestMapping(value = "/smart", method = RequestMethod.GET)
+    public HzmResponse smart() {
+        return HzmResponse.success(itemDealService.querySmartList());
     }
 }

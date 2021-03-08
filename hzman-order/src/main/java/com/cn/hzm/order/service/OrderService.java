@@ -22,10 +22,8 @@ public class OrderService {
     @Autowired
     private OrderMapper orderMapper;
 
-    public List<OrderDO> getListByCondition(Map<String, String> condition) {
+    public List<OrderDO> getListByCondition(Map<String, String> condition, String[] fields) {
         QueryWrapper<OrderDO> query = new QueryWrapper<>();
-        if (condition.size() != 0) {
-        }
 
         String purchaseDate = condition.remove("purchaseDate");
         if (!StringUtils.isEmpty(purchaseDate)) {
@@ -77,16 +75,16 @@ public class OrderService {
                 query.eq(k, v);
             }
         });
-
+        query.select(fields);
         query.orderByAsc("ctime");
         return orderMapper.selectList(query);
     }
 
-    public List<OrderDO> getOrdersByOrderStatus(String orderStatus, Integer offset, Integer limit) {
+    public List<OrderDO> getOrdersByOrderStatus(String orderStatus) {
         QueryWrapper<OrderDO> query = new QueryWrapper<>();
         query.eq("order_status", orderStatus);
         query.orderByAsc("purchase_date");
-        query.last(String.format("limit %d,%d", offset, limit));
+        //query.last(String.format("limit %d,%d", offset, limit));
         return orderMapper.selectList(query);
     }
 
@@ -96,12 +94,13 @@ public class OrderService {
         return orderMapper.selectList(query);
     }
 
-    public List<OrderDO> getOrdersByPurchaseDate(Date startDate, Date endDate, String orderStatus) {
+    public List<OrderDO> getOrdersByPurchaseDate(Date startDate, Date endDate, String orderStatus, String[] fields) {
         QueryWrapper<OrderDO> query = new QueryWrapper<>();
         if (!StringUtils.isEmpty(orderStatus)) {
             query.eq("order_status", orderStatus);
         }
         query.between("purchase_date", startDate, endDate);
+        query.select(fields);
         query.orderByAsc("purchase_date");
         return orderMapper.selectList(query);
     }

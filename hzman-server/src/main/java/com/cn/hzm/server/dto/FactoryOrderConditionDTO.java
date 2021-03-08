@@ -12,4 +12,6 @@ import lombok.Data;
 public class FactoryOrderConditionDTO extends PageDTO{
 
     private Integer factoryId;
+
+    private Integer orderStatus;
 }
