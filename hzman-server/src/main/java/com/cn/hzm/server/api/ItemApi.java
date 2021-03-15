@@ -21,7 +21,7 @@ import javax.annotation.Resource;
 @RestController
 @RequestMapping("/item")
 @HzmAuthToken
-@HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN, HzmRoleType.ROLE_EMPLOYEE})
+@HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN, HzmRoleType.ROLE_EMPLOYEE, HzmRoleType.ROLE_NEW_EMPLOYEE})
 public class ItemApi {
 
     @Resource

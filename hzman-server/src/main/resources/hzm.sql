@@ -137,6 +137,7 @@ CREATE TABLE hzm.hzm_factory_order_item (
   `sku` varchar(128) not null default '' comment 'sku，用户侧填写',
   `order_num` int(11) unsigned NOT NULL COMMENT '订货数量',
   `remark` varchar(255) default '' COMMENT '备注',
+  `factory_remark` varchar(255) default '' COMMENT '厂家备注',
   `item_price` double unsigned default 0 COMMENT '商品单价，厂家填写',
   `delivery_num` int(11) unsigned default 0 COMMENT '交货数量',
   `receive_num` int(11) unsigned default 0 COMMENT '确认收货数量',

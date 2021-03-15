@@ -1,8 +1,1 @@
-2021-03-06 17:05:55.040 ERROR [http-nio-8082-exec-1] c.c.h.s.h.HzmExceptionHandler [55] - 90db8c7e2fdf4a2c979ec032da6f5a03 
-### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
-### The error may exist in com/cn/hzm/factory/dao/FactoryMapper.java (best guess)
-### The error may involve defaultParameterMap
-### The error occurred while setting parameters
-### SQL: SELECT id,factory_name,address,contact_person,contact_info,wx,collect_method,ctime,utime FROM hzm_factory WHERE id IN ( )
-### Cause: java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
-; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ')' at line 1
+2021-03-10 16:46:51.466 ERROR [http-nio-8082-exec-1] c.c.h.s.h.HzmExceptionHandler [42] - 304d8937a024452fb998a9e07b48a236 token expired

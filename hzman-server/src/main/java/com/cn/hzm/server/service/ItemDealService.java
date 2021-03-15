@@ -180,6 +180,7 @@ public class ItemDealService {
         //智能补货标
         SmartReplenishmentDTO smart = smartReplenishmentTask.getSmartReplenishment(itemDO.getSku());
         itemDTO.setReplenishmentCode(smart == null ? 0 : smart.getReplenishmentCode());
+        itemDTO.setReplenishmentNum(smart == null ? 0 : smart.getNeedNum().intValue());
 
         return itemDTO;
     }

@@ -57,6 +57,9 @@ public class ItemDTO extends RespBaseDTO{
     @ApiModelProperty(value = "智能补货标")
     private Integer replenishmentCode;
 
+    @ApiModelProperty(value = "智能补货数量")
+    private Integer replenishmentNum;
+
     @ApiModelProperty("创建时间")
     private Date ctime;
 

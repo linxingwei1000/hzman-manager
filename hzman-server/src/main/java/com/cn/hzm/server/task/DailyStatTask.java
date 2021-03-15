@@ -112,20 +112,22 @@ public class DailyStatTask {
 
         Map<String, SaleInfoDO> saleInfoMap = Maps.newHashMap();
         itemList.forEach(orderItem -> {
-            if (orderItem.getItemPriceAmount() == 0.0 || orderItem.getQuantityOrdered() == 0) {
+            //应老板要求，销量统计数量
+            if (orderItem.getQuantityOrdered() == 0) {
                 return;
             }
 
+            double itemPrice = orderItem.getItemPriceAmount() == null ? 0.0 : orderItem.getItemPriceAmount();
             SaleInfoDO saleInfoDO = saleInfoMap.get(orderItem.getSku());
             if (saleInfoDO == null) {
                 saleInfoDO = new SaleInfoDO();
                 saleInfoDO.setSaleNum(orderItem.getQuantityOrdered());
-                saleInfoDO.setSaleVolume(orderItem.getItemPriceAmount());
+                saleInfoDO.setSaleVolume(itemPrice);
                 saleInfoDO.setStatDate(statDate);
                 saleInfoDO.setConfig("");
             } else {
                 saleInfoDO.setSaleNum(saleInfoDO.getSaleNum() + orderItem.getQuantityOrdered());
-                saleInfoDO.setSaleVolume(saleInfoDO.getSaleVolume() + orderItem.getItemPriceAmount());
+                saleInfoDO.setSaleVolume(saleInfoDO.getSaleVolume() + itemPrice);
             }
             saleInfoMap.put(orderItem.getSku(), saleInfoDO);
         });

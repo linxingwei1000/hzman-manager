@@ -22,6 +22,11 @@ public enum HzmRoleType {
     ROLE_EMPLOYEE("employee", "普通员工"),
 
     /**
+     * 新员工角色
+     */
+    ROLE_NEW_EMPLOYEE("new_employee", "新员工"),
+
+    /**
      * 厂家用户角色
      */
     ROLE_FACTORY("factoryUser", "厂家用户"),

@@ -6,6 +6,7 @@ import com.cn.hzm.item.service.ItemService;
 import com.cn.hzm.server.cache.comparator.*;
 import com.cn.hzm.server.dto.ItemDTO;
 import com.cn.hzm.server.service.ItemDealService;
+import com.cn.hzm.server.task.ItemRefreshTask;
 import com.cn.hzm.server.task.SmartReplenishmentTask;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
@@ -42,6 +43,9 @@ public class ItemDetailCache {
 
     @Autowired
     private SmartReplenishmentTask smartReplenishmentTask;
+
+    @Autowired
+    private ItemRefreshTask itemRefreshTask;
 
     private Map<String, ItemDTO> skuMap;
 
@@ -97,6 +101,9 @@ public class ItemDetailCache {
                 }
             });
             log.info("商品详情缓存加载流程结束，耗时：{}", System.currentTimeMillis() - startTime);
+
+            //本地商品缓存结束，开启商品刷新任务
+            itemRefreshTask.init();
         });
 
         //新品爬去线程
@@ -106,17 +113,17 @@ public class ItemDetailCache {
             return t;
         });
 
-        itemExecutor.submit(()->{
-            while(true){
+        itemExecutor.submit(() -> {
+            while (true) {
                 String sku = newItemSku.poll();
-                if(StringUtils.isEmpty(sku)){
+                if (StringUtils.isEmpty(sku)) {
                     Thread.sleep(60 * 1000);
                     continue;
                 }
-                try{
+                try {
                     log.info("异常导致商品数据未获取sku【{}】，{}获取商品详情", sku, Thread.currentThread().getName());
                     itemDealService.processSync(sku);
-                }catch (Exception e){
+                } catch (Exception e) {
                     newItemSku.offer(sku);
                 }
 
@@ -133,26 +140,38 @@ public class ItemDetailCache {
     public List<ItemDTO> getCacheBySort(Integer searchType, String key, Integer sortType) {
 
         Collection<ItemDTO> temp = skuMap.values();
-        if (!StringUtils.isEmpty(key)) {
-            switch (searchType) {
-                //sku 过滤
-                case 1:
+        switch (searchType) {
+            //sku 过滤
+            case 1:
+                if (!StringUtils.isEmpty(key)) {
                     temp = temp.stream().filter(item -> item.getSku().contains(key)).collect(Collectors.toList());
+                }
+                break;
+            //title 过滤
+            case 2:
+                //关键字段为空，直接跳过筛选
+                if (StringUtils.isEmpty(key)) {
                     break;
-                //title 过滤
-                case 2:
-                    String[] keys = key.split(" ");
-                    temp = temp.stream().filter(item -> {
-                        for (String subKey : keys) {
-                            if (!item.getTitle().toLowerCase().contains(subKey.toLowerCase())) {
-                                return false;
-                            }
+                }
+                String[] keys = key.split(" ");
+                temp = temp.stream().filter(item -> {
+                    for (String subKey : keys) {
+                        if (!item.getTitle().toLowerCase().contains(subKey.toLowerCase())) {
+                            return false;
                         }
-                        return true;
-                    }).collect(Collectors.toList());
-                    break;
-                default:
-            }
+                    }
+                    return true;
+                }).collect(Collectors.toList());
+                break;
+            //订货过滤
+            case 3:
+                temp = getCache(smartReplenishmentTask.getOrderSkus());
+                break;
+            //发货过滤
+            case 4:
+                temp = getCache(smartReplenishmentTask.getShipSkus());
+                break;
+            default:
         }
 
         Comparator<ItemDTO> comparator = comparatorMap.getOrDefault(sortType, new TodaySaleDescComparator());

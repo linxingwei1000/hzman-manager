@@ -28,7 +28,7 @@ public class AmazonOrderService {
         Map<String, String> conditionMap = Maps.newHashMap();
         conditionMap.put("order_status", ContextConst.AMAZON_STATUS_PENDING);
         List<OrderDO> list = orderService.getListByCondition(conditionMap,
-               new String[]{"id", "amazon_order_id", "purchase_date"});
+               new String[]{"id", "amazon_order_id", "purchase_date", "order_status"});
 
         List<OrderDTO> orderDTOS = conditionDTO.pageResult(list).stream().map(
                 orderDO -> JSONObject.parseObject(JSONObject.toJSONString(orderDO), OrderDTO.class))
@@ -40,10 +40,10 @@ public class AmazonOrderService {
         return respJo;
     }
 
-    public Boolean localDeleteAmazonOrder(Integer amazonOrderDbId){
-        OrderDO orderDO = new OrderDO();
-        orderDO.setId(amazonOrderDbId);
-        orderDO.setOrderStatus(ContextConst.AMAZON_STATUS_DELETE);
-        return orderService.updateOrder(orderDO);
+    public Boolean localDeleteAmazonOrder(String amazonOrderDbId){
+        OrderDO old = orderService.getOrderByAmazonId(amazonOrderDbId);
+
+        old.setOrderStatus(ContextConst.AMAZON_STATUS_DELETE);
+        return orderService.updateOrder(old);
     }
 }

@@ -483,6 +483,7 @@ public class FactoryDealService {
             FactoryOrderItemDO orderItemDO = new FactoryOrderItemDO();
             orderItemDO.setId(orderItemDTO.getId());
             orderItemDO.setItemPrice(orderItemDTO.getItemPrice());
+            orderItemDO.setFactoryRemark(orderItemDTO.getFactoryRemark());
             factoryOrderItemService.updateFactoryOrder(orderItemDO);
 
             //存在认领记录，更新最新订价
@@ -511,6 +512,7 @@ public class FactoryDealService {
             FactoryOrderItemDO orderItemDO = new FactoryOrderItemDO();
             orderItemDO.setId(orderItemDTO.getId());
             orderItemDO.setDeliveryNum(orderItemDTO.getDeliveryNum());
+            orderItemDO.setFactoryRemark(orderItemDTO.getFactoryRemark());
             factoryOrderItemService.updateFactoryOrder(orderItemDO);
         }
 
@@ -518,6 +520,13 @@ public class FactoryDealService {
         factoryOrderDO.setId(factoryDeliveryDTO.getOrderId());
         factoryOrderDO.setWaybillNum(factoryDeliveryDTO.getWaybillNum());
         factoryOrderDO.setOrderStatus(OrderStatusEnum.ORDER_FACTORY_DELIVERY.getCode());
+        factoryOrderService.updateFactoryOrder(factoryOrderDO);
+    }
+
+    public void rollbackDelivery(Integer oId) {
+        FactoryOrderDO factoryOrderDO = new FactoryOrderDO();
+        factoryOrderDO.setId(oId);
+        factoryOrderDO.setOrderStatus(OrderStatusEnum.ORDER_FACTORY_CONFIRM.getCode());
         factoryOrderService.updateFactoryOrder(factoryOrderDO);
     }
 

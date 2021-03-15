@@ -31,6 +31,9 @@ public class FactoryOrderItemDTO {
     @ApiModelProperty(value = "备注")
     private String remark;
 
+    @ApiModelProperty(value = "厂家备注")
+    private String factoryRemark;
+
     @ApiModelProperty(value = "商品单价")
     private Double itemPrice;
 

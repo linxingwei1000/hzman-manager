@@ -29,6 +29,9 @@ public class FactoryOrderItemDO {
 
     private String remark;
 
+    @TableField(value = "factory_remark")
+    private String factoryRemark;
+
     @TableField(value = "item_price")
     private Double itemPrice;
 

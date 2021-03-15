@@ -42,11 +42,14 @@ public class SmartReplenishmentTask {
     @Autowired
     private ItemDetailCache itemDetailCache;
 
-    public Map<String, SmartReplenishmentDTO> replenishmentMap;
+    private Map<String, SmartReplenishmentDTO> replenishmentMap;
 
     @Value("${spider.switch:false}")
     private Boolean spiderSwitch;
 
+    private List<String> shipSkus;
+
+    private List<String> orderSkus;
 
     public SmartReplenishmentDTO getSmartReplenishment(String sku) {
         return replenishmentMap.get(sku);
@@ -59,8 +62,19 @@ public class SmartReplenishmentTask {
         return skus.stream().map(sku -> replenishmentMap.getOrDefault(sku, null)).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
+    public List<String> getShipSkus(){
+        return this.shipSkus;
+    }
+
+    public List<String> getOrderSkus(){
+        return this.orderSkus;
+    }
+
     public Set<String> init() {
         replenishmentMap = Maps.newHashMap();
+        shipSkus = Lists.newArrayList();
+        orderSkus = Lists.newArrayList();
+
         statDailySaleData();
 
         //todo 测试数据
@@ -76,15 +90,19 @@ public class SmartReplenishmentTask {
     private void testData() {
         SmartReplenishmentDTO smartReplenishmentDTO = createReplenishmentInfo("JZ1903033A-10", 100L, ReplenishmentEnum.REPLENISHMENT_SHIP);
         replenishmentMap.put("JZ1903033A-10", smartReplenishmentDTO);
+        shipSkus.add("JZ1903033A-10");
 
         smartReplenishmentDTO = createReplenishmentInfo("JZ1903033A-8", 200L, ReplenishmentEnum.REPLENISHMENT_SHIP);
         replenishmentMap.put("JZ1903033A-8", smartReplenishmentDTO);
+        shipSkus.add("JZ1903033A-8");
 
         smartReplenishmentDTO = createReplenishmentInfo("SZ7602B", 400L, ReplenishmentEnum.REPLENISHMENT_ORDER);
         replenishmentMap.put("SZ7602B", smartReplenishmentDTO);
+        orderSkus.add("SZ7602B");
 
         smartReplenishmentDTO = createReplenishmentInfo("XL7907-18", 500L, ReplenishmentEnum.REPLENISHMENT_ORDER);
         replenishmentMap.put("XL7907-18", smartReplenishmentDTO);
+        orderSkus.add("XL7907-18");
 
         //刷新商品
         itemDetailCache.getCache(Lists.newArrayList(replenishmentMap.keySet()));
@@ -106,6 +124,8 @@ public class SmartReplenishmentTask {
         List<ItemDO> itemList = itemService.getListByCondition(Maps.newHashMap(), new String[]{"sku"});
 
         Map<String, SmartReplenishmentDTO> tmpMap = Maps.newHashMap();
+        List<String> tmpShipList = Lists.newArrayList();
+        List<String> tmpOrderList = Lists.newArrayList();
         //计算智能补货
         itemList.forEach(item -> {
             List<SaleInfoDO> saleInfos = lastYearCompareMap.get(item.getSku());
@@ -135,12 +155,16 @@ public class SmartReplenishmentTask {
             if (inventoryDO.getTotalQuantity() >= predictNum) {
                 if (inventoryDO.getAmazonQuantity() < predictNum) {
                     tmpMap.put(item.getSku(), createReplenishmentInfo(item.getSku(), predictNum - inventoryDO.getAmazonQuantity(), ReplenishmentEnum.REPLENISHMENT_SHIP));
+                    tmpShipList.add(item.getSku());
                 }
             } else {
                 tmpMap.put(item.getSku(), createReplenishmentInfo(item.getSku(), predictNum - inventoryDO.getTotalQuantity(), ReplenishmentEnum.REPLENISHMENT_ORDER));
+                tmpOrderList.add(item.getSku());
             }
         });
         replenishmentMap = tmpMap;
+        shipSkus = tmpShipList;
+        orderSkus = tmpOrderList;
 
         //刷新商品
         itemDetailCache.getCache(Lists.newArrayList(replenishmentMap.keySet()));

@@ -1,6 +1,5 @@
 package com.cn.hzm.server.api;
 
-import com.alibaba.fastjson.JSONObject;
 import com.cn.hzm.core.common.HzmResponse;
 import com.cn.hzm.core.constant.ContextConst;
 import com.cn.hzm.server.dto.*;
@@ -35,7 +34,7 @@ public class FactoryApi {
 
     @ApiOperation("列厂家")
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    @HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN, HzmRoleType.ROLE_EMPLOYEE})
+    @HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN, HzmRoleType.ROLE_EMPLOYEE, HzmRoleType.ROLE_NEW_EMPLOYEE})
     public HzmResponse listItem(@RequestBody FactoryConditionDTO factoryConditionDTO) {
         return HzmResponse.success(factoryDealService.processFactoryList(factoryConditionDTO));
     }
@@ -81,12 +80,6 @@ public class FactoryApi {
         factoryDealService.deleteFactoryItem(itemInfoId);
         return HzmResponse.success(true);
     }
-
-//    @ApiOperation("厂家外链查看订单")
-//    @RequestMapping(value = "/out/order/list", method = RequestMethod.POST)
-//    public HzmResponse outList(@ApiParam("订单id") FactoryOrderConditionDTO factoryOrderConditionDTO) {
-//        return HzmResponse.success(factoryDealService.outOrderList(factoryOrderConditionDTO));
-//    }
 
 //    @ApiOperation("删除厂家")
 //    @RequestMapping(value = "/del/{fId}", method = RequestMethod.GET)
@@ -151,6 +144,13 @@ public class FactoryApi {
     @RequestMapping(value = "/order/factory/delivery", method = RequestMethod.POST)
     public HzmResponse delivery(@RequestBody FactoryDeliveryDTO factoryDeliveryDTO) {
         factoryDealService.delivery(factoryDeliveryDTO);
+        return HzmResponse.success(true);
+    }
+
+    @ApiOperation("订单状态回滚：公司收货->厂家交货")
+    @RequestMapping(value = "/order/rollback/delivery", method = RequestMethod.GET)
+    public HzmResponse rollbackDelivery(@ApiParam("订单id") @RequestParam Integer orderId) {
+        factoryDealService.rollbackDelivery(orderId);
         return HzmResponse.success(true);
     }
 

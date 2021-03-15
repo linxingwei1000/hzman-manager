@@ -42,7 +42,7 @@ public class OrderApi {
 
     @ApiOperation("删除僵尸订单")
     @RequestMapping(value = "/amazon/delete", method = RequestMethod.GET)
-    public HzmResponse localDelete(@ApiParam("amazonId") @RequestParam Integer amazonId){
+    public HzmResponse localDelete(@ApiParam("amazonId") @RequestParam String amazonId){
         return HzmResponse.success(amazonOrderService.localDeleteAmazonOrder(amazonId));
     }
 }
