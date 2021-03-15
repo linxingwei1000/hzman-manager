@@ -53,12 +53,16 @@ public class ItemDetailCache {
 
     private Queue<String> newItemSku;
 
+    private Map<String, Integer> newItemMap;
+
     @PostConstruct
     public void installCacheConfig() {
 
         skuMap = Maps.newHashMap();
 
         newItemSku = Lists.newLinkedList();
+
+        newItemMap = Maps.newHashMap();
 
         comparatorMap = Maps.newHashMap();
         comparatorMap.put(ContextConst.ITEM_SORT_TODAY_DESC, new TodaySaleDescComparator());
@@ -121,12 +125,17 @@ public class ItemDetailCache {
                     continue;
                 }
                 try {
-                    log.info("异常导致商品数据未获取sku【{}】，{}获取商品详情", sku, Thread.currentThread().getName());
+                    log.info("异常导致商品数据未获取sku【{}】", sku);
                     itemDealService.processSync(sku);
                 } catch (Exception e) {
-                    newItemSku.offer(sku);
+                    Integer times = newItemMap.getOrDefault(sku, 0);
+                    if(times < 3){
+                        newItemSku.offer(sku);
+                        newItemMap.put(sku, ++times);
+                    }else{
+                        log.info("获取sku【{}】获取商品详情次数超限", sku);
+                    }
                 }
-
             }
         });
     }
