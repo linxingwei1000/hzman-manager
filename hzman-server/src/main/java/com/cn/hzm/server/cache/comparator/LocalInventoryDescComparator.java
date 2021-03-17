@@ -16,6 +16,6 @@ public class LocalInventoryDescComparator implements Comparator<ItemDTO> {
 
         InventoryDTO i1 = o1.getInventoryDTO();
         InventoryDTO i2 = o2.getInventoryDTO();
-        return SortHelper.compareEach(i1.getLocalQuantity(), i2.getLocalQuantity(), o2.getSku(), o1.getSku());
+        return SortHelper.compareEach(i2.getLocalQuantity(), i1.getLocalQuantity(), o2.getSku(), o1.getSku());
     }
 }

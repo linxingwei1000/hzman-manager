@@ -6,7 +6,14 @@ package com.cn.hzm.server.cache.comparator;
  */
 public class SortHelper {
 
-    public static int compareEach(int saleNum1, int saleNum2, String sku1, String sku2) {
+    public static int compareEach(Integer saleNum1, Integer saleNum2, String sku1, String sku2) {
+        if (saleNum1 == null) {
+            saleNum1 = 0;
+        }
+        if (saleNum2 == null) {
+            saleNum2 = 0;
+        }
+
         int result = saleNum1 - saleNum2;
         if (result == 0) {
             result = sku1.compareTo(sku2);

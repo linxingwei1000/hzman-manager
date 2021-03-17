@@ -16,6 +16,6 @@ public class YesterdaySaleDescComparator implements Comparator<ItemDTO> {
 
         SaleInfoDTO s1 = o1.getYesterday();
         SaleInfoDTO s2 = o2.getYesterday();
-        return SortHelper.compareEach(s1.getSaleNum(), s2.getSaleNum(), o1.getSku(), o2.getSku());
+        return SortHelper.compareEach(s2.getSaleNum(), s1.getSaleNum(), o1.getSku(), o2.getSku());
     }
 }

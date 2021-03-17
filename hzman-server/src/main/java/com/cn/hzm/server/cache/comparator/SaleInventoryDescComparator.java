@@ -16,6 +16,6 @@ public class SaleInventoryDescComparator implements Comparator<ItemDTO> {
 
         InventoryDTO i1 = o1.getInventoryDTO();
         InventoryDTO i2 = o2.getInventoryDTO();
-        return SortHelper.compareEach(i1.getAmazonQuantity(), i2.getAmazonQuantity(), o2.getSku(), o1.getSku());
+        return SortHelper.compareEach(i2.getAmazonQuantity(), i1.getAmazonQuantity(), o2.getSku(), o1.getSku());
     }
 }
