@@ -18,6 +18,7 @@ import com.cn.hzm.order.service.SaleInfoService;
 import com.cn.hzm.server.cache.ItemDetailCache;
 import com.cn.hzm.server.cache.comparator.SortHelper;
 import com.cn.hzm.server.dto.*;
+import com.cn.hzm.server.task.ShipmentSpiderTask;
 import com.cn.hzm.server.task.SmartReplenishmentTask;
 import com.cn.hzm.server.util.ConvertUtil;
 import com.cn.hzm.stock.service.InventoryService;
@@ -68,6 +69,9 @@ public class ItemDealService {
 
     @Autowired
     private ItemDetailCache itemDetailCache;
+
+    @Autowired
+    private ShipmentSpiderTask shipmentSpiderTask;
 
     @Autowired
     private SmartReplenishmentTask smartReplenishmentTask;
@@ -134,6 +138,9 @@ public class ItemDealService {
         ItemDTO itemDTO = JSONObject.parseObject(JSONObject.toJSONString(itemDO), ItemDTO.class);
         InventoryDO inventoryDO = inventoryService.getInventoryBySku(itemDO.getSku());
         InventoryDTO inventoryDTO = JSONObject.parseObject(JSONObject.toJSONString(inventoryDO), InventoryDTO.class);
+        if (inventoryDTO == null) {
+            inventoryDTO = new InventoryDTO();
+        }
 
         List<FactoryOrderItemDO> factoryOrderItemDOS = factoryOrderItemService.getOrderBySku(itemDO.getSku());
 
@@ -152,16 +159,16 @@ public class ItemDealService {
         inventoryDTO.setFactoryQuantityInfos(factoryQuantityDTOS);
 
         inventoryDTO.setFactoryQuantity(Math.toIntExact(factoryQuantityDTOS.stream().map(FactoryQuantityDTO::getNum).count()));
-        inventoryDTO.setLocalTotalQuantity(inventoryDTO.getFactoryQuantity() + inventoryDTO.getLocalQuantity());
-        inventoryDTO.setTotalQuantity(inventoryDTO.getLocalTotalQuantity() + inventoryDTO.getAmazonQuantity());
+        inventoryDTO.setLocalTotalQuantity(inventoryDTO.getFactoryQuantity() + (inventoryDTO.getLocalQuantity() == null ? 0 : inventoryDTO.getLocalQuantity()));
+        inventoryDTO.setTotalQuantity(inventoryDTO.getLocalTotalQuantity() + (inventoryDTO.getAmazonQuantity() == null? 0: inventoryDTO.getAmazonQuantity()));
         itemDTO.setInventoryDTO(inventoryDTO);
 
         //销量
-        Date utcDate = TimeUtil.dateFixByDay(new Date(), 0, -8, 0);
-        itemDTO.setToday(getSaleInfoByDate(utcDate, itemDTO.getSku()));
-        itemDTO.setYesterday(getSaleInfoByDate(TimeUtil.dateFixByDay(utcDate, -1, 0, 0), itemDTO.getSku()));
-        itemDTO.setDuration30Day(getSaleInfoByDurationDate(utcDate, itemDTO.getSku()));
-        itemDTO.setLastYearDuration30Day(getSaleInfoByDurationDate(TimeUtil.dateFixByYear(utcDate, -1), itemDTO.getSku()));
+        Date usDate = TimeUtil.transformNowToUsDate();
+        itemDTO.setToday(getSaleInfoByDate(usDate, itemDTO.getSku()));
+        itemDTO.setYesterday(getSaleInfoByDate(TimeUtil.dateFixByDay(usDate, -1, 0, 0), itemDTO.getSku()));
+        itemDTO.setDuration30Day(getSaleInfoByDurationDate(usDate, itemDTO.getSku()));
+        itemDTO.setLastYearDuration30Day(getSaleInfoByDurationDate(TimeUtil.dateFixByYear(usDate, -1), itemDTO.getSku()));
 
         //商品工厂归宿信息
         List<FactoryItemDO> factoryItemDOS = factoryItemService.getInfoBySku(itemDTO.getSku());
@@ -202,7 +209,7 @@ public class ItemDealService {
         return saleInfoDTO;
     }
 
-    private SaleInfoDTO getSaleInfoByDurationDate(Date date, String sku){
+    private SaleInfoDTO getSaleInfoByDurationDate(Date date, String sku) {
         Date beginDate = TimeUtil.dateFixByDay(date, -30, 0, 0);
         String strEndDate = TimeUtil.getSimpleFormat(date);
         String strBeginDate = TimeUtil.getSimpleFormat(beginDate);
@@ -210,8 +217,8 @@ public class ItemDealService {
 
         int saleNum = 0;
         double saleVolume = 0.0;
-        if(!CollectionUtils.isEmpty(compareList)){
-            for(SaleInfoDO saleInfo: compareList){
+        if (!CollectionUtils.isEmpty(compareList)) {
+            for (SaleInfoDO saleInfo : compareList) {
                 saleNum += saleInfo.getSaleNum();
                 saleVolume += saleInfo.getSaleVolume();
             }
@@ -219,10 +226,10 @@ public class ItemDealService {
         SaleInfoDTO saleInfoDTO = new SaleInfoDTO();
         saleInfoDTO.setSaleNum(saleNum);
         saleInfoDTO.setSaleVolume(saleVolume);
-        if(saleNum==0){
+        if (saleNum == 0) {
             saleInfoDTO.setUnitPrice(0.0);
-        }else{
-            saleInfoDTO.setUnitPrice(saleVolume/(double)saleNum);
+        } else {
+            saleInfoDTO.setUnitPrice(saleVolume / (double) saleNum);
         }
         return saleInfoDTO;
     }
@@ -276,5 +283,9 @@ public class ItemDealService {
 
     public List<SmartReplenishmentDTO> querySmartList() {
         return smartReplenishmentTask.getSmartReplenishmentDTOList(null);
+    }
+
+    public String spiderShipment(String shipmentId) {
+        return shipmentSpiderTask.shipmentSpiderTask(shipmentId);
     }
 }

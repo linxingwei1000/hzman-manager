@@ -16,6 +16,8 @@ public enum ExceptionCode {
   USER_ROLE_MUST(10006, "用户角色必选"),
   USER_PASSWORD_MOD_ERROR(10007, "无法修改其他用户密码"),
   USER_ROLE_FACTORY_MUST_CHOOSE_FACTORY(10008, "厂家角色必须选择厂家"),
+  SHIPMENT_ID_NOT_EXIST(10009, "amazon入库货物单号不存在"),
+  SHIPMENT_ID_FAIL_RETRY(10010, "amazon入库货物单号处理失败，请重试"),
 
   /**
    * 业务错误

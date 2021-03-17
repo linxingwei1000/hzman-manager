@@ -92,18 +92,14 @@ public class ItemDetailCache {
         });
 
         //启动程序计算智能补货
-        Set<String> dealSku = smartReplenishmentTask.init();
+        smartReplenishmentTask.init();
 
         executor.submit(() -> {
             List<ItemDO> items = itemService.getListByCondition(Maps.newHashMap(), new String[]{"sku"});
 
             long startTime = System.currentTimeMillis();
             log.info("商品详情缓存加载流程开始，需缓存个数：{}", items.size());
-            items.forEach(itemDO -> {
-                if (!dealSku.contains(itemDO.getSku())) {
-                    cache.put(itemDO.getSku(), installItemDTO(itemDO.getSku()));
-                }
-            });
+            items.forEach(itemDO -> cache.put(itemDO.getSku(), installItemDTO(itemDO.getSku())));
             log.info("商品详情缓存加载流程结束，耗时：{}", System.currentTimeMillis() - startTime);
 
             //本地商品缓存结束，开启商品刷新任务
@@ -129,10 +125,10 @@ public class ItemDetailCache {
                     itemDealService.processSync(sku);
                 } catch (Exception e) {
                     Integer times = newItemMap.getOrDefault(sku, 0);
-                    if(times < 3){
+                    if (times < 3) {
                         newItemSku.offer(sku);
                         newItemMap.put(sku, ++times);
-                    }else{
+                    } else {
                         log.info("获取sku【{}】获取商品详情次数超限", sku);
                     }
                 }

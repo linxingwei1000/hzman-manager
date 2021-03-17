@@ -29,8 +29,9 @@ public class ShipmentItemRecordService {
         shipmentItemRecordMapper.insert(shipmentItemDO);
     }
 
-    public List<ShipmentItemRecordDO> getAllRecord(){
+    public List<ShipmentItemRecordDO> getAllRecordByShipmentId(String shipmentId){
         QueryWrapper<ShipmentItemRecordDO> query = new QueryWrapper<>();
+        query.eq("shipment_id", shipmentId);
         query.select("shipment_id", "seller_sku");
         return shipmentItemRecordMapper.selectList(query);
     }

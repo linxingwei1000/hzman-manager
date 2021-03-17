@@ -66,4 +66,10 @@ public class ItemApi {
     public HzmResponse smart() {
         return HzmResponse.success(itemDealService.querySmartList());
     }
+
+    @ApiOperation("amazon入库订单号爬取接口")
+    @RequestMapping(value = "/shipment", method = RequestMethod.GET)
+    public HzmResponse shipment(@ApiParam(name = "shipmentId") @RequestParam String shipmentId) {
+        return HzmResponse.success(itemDealService.spiderShipment(shipmentId));
+    }
 }

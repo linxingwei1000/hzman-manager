@@ -12,6 +12,8 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.text.ParseException;
+
 /**
  * @author xingweilin@clubfactory.com
  * @date 2020/11/21 1:45 下午
@@ -36,7 +38,7 @@ public class OrderApi {
 
     @ApiOperation("亚马逊订单")
     @RequestMapping(value = "/amazon/list", method = RequestMethod.POST)
-    public HzmResponse listItem(@RequestBody OrderConditionDTO conditionDTO){
+    public HzmResponse listItem(@RequestBody OrderConditionDTO conditionDTO) throws ParseException {
         return HzmResponse.success(amazonOrderService.processListOrder(conditionDTO));
     }
 

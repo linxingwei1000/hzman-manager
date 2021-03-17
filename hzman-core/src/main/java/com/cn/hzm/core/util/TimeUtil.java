@@ -1,7 +1,13 @@
 package com.cn.hzm.core.util;
 
+import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.zone.ZoneRules;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.GregorianCalendar;
@@ -16,6 +22,8 @@ public class TimeUtil {
     private static final SimpleDateFormat SIMPLE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
 
     private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+
+    private static final DateTimeFormatter DATE_DAILY_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
     private static final SimpleDateFormat UTC_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
@@ -48,16 +56,27 @@ public class TimeUtil {
     }
 
     public static Date transformUTCToDate(String utcDate) throws ParseException {
+        UTC_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
         return UTC_FORMAT.parse(utcDate);
     }
 
     public static Date transformMilliSecondUTCToDate(String utcDate) throws ParseException {
+        UTC_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
         return UTC_MILLISECOND_FORMAT.parse(utcDate);
     }
 
     public static Date getDateBySimple(String source) {
         try {
             return SIMPLE_FORMAT.parse(source);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new Date();
+    }
+
+    public static Date getDateByDailyTime(String source) {
+        try {
+            return DATE_FORMAT.parse(source);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -72,7 +91,7 @@ public class TimeUtil {
         return DATE_FORMAT.format(date);
     }
 
-    public static Date transformTimeToUTC(Date date){
+    public static Date transformTimeToUTC(Date date) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.set(Calendar.HOUR_OF_DAY, 8);
@@ -81,13 +100,13 @@ public class TimeUtil {
         return calendar.getTime();
     }
 
-    public static Date getYesterdayZeroUTCDate() {
+    public static Date getZeroUTCDateByDay(Integer day) {
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(new Date());
         calendar.set(Calendar.HOUR_OF_DAY, 0);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
-        calendar.add(Calendar.DATE, -1);
+        calendar.add(Calendar.DATE, day);
         return calendar.getTime();
     }
 
@@ -131,6 +150,32 @@ public class TimeUtil {
         return calendar.getTime();
     }
 
+    /**
+     * 判断是否夏令时间
+     */
+    public static Boolean isSummer(String dailyDate) {
+        ZoneId zoneId = ZoneId.of("America/Los_Angeles");
+        ZoneRules rules = zoneId.getRules();
+        LocalDateTime ldt = LocalDateTime.parse(dailyDate, DATE_DAILY_FORMAT);
+        ZonedDateTime zonedDateTime = ldt.atZone(zoneId);
+        return rules.isDaylightSavings(zonedDateTime.toInstant());
+    }
+
+    /**
+     * 当天美国结束时间对应中国时间
+     *
+     * @return
+     */
+    public static Date transformNowToUsDate() {
+        Date now = new Date();
+        Date date = TimeUtil.getDateBySimple(TimeUtil.getSimpleFormat(now));
+        String strDailyDate = TimeUtil.getDateFormat(date);
+        Boolean isSummer = TimeUtil.isSummer(strDailyDate);
+        Date judge = TimeUtil.dateFixByDay(date, 0, isSummer ? 16 : 15, 0);
+
+        return now.getTime() < judge.getTime() ? TimeUtil.dateFixByDay(date, -1, 0, 0) : date;
+    }
+
     public static long nowMillis() {
         return System.currentTimeMillis();
     }
@@ -140,14 +185,34 @@ public class TimeUtil {
         String strUtc = "2020-11-18T00:00:39.030Z";
         Date milliSecondDate = transformMilliSecondUTCToDate(strUtc);
 
+        TimeZone pstTimeZone = TimeZone.getTimeZone("America/Los_Angeles");
+        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // just date, you might want something else
+        formatter.setTimeZone(pstTimeZone);
+        String formattedDate = formatter.format(getDateBySimple("2021-03-14"));
+        System.out.println(formattedDate);
 
-        System.out.println(getUTC());
-        String source = "2020-11-11";
-        Date beginDate = getDateBySimple(source);
-        Date endDate = dateFixByDay(beginDate, 0, 0, 30);
+        formattedDate = formatter.format(getDateBySimple("2021-03-11"));
+        System.out.println(formattedDate);
 
-        System.out.println(String.format("begin:%s end:%s  endDate:%s", dateToUTC(beginDate), dateToUTC(endDate), getSimpleFormat(endDate)));
+        formattedDate = formatter.format(getDateBySimple("2020-08-11"));
+        System.out.println(formattedDate);
+
+        formattedDate = formatter.format(getDateBySimple("2020-02-11"));
+        System.out.println(formattedDate);
 
 
+        ZoneId zoneId = ZoneId.of("America/Los_Angeles");
+        ZoneRules rules = zoneId.getRules();
+
+        Date today = getDateBySimple("2021-03-14");
+        Date yester = dateFixByDay(today, -1, 0, 0);
+        Date tormorrow = dateFixByDay(today, 1, 0, 0);
+
+        String strToday = getDateFormat(today);
+        String strYester = getDateFormat(yester);
+        String strTormorrow = getDateFormat(tormorrow);
+        System.out.println(isSummer(strToday));
+        System.out.println(isSummer(strYester));
+        System.out.println(isSummer(strTormorrow));
     }
 }

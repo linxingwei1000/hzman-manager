@@ -25,8 +25,10 @@ import javax.annotation.PostConstruct;
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.*;
+import java.util.stream.Collectors;
 
 /**
  * @author xingweilin@clubfactory.com
@@ -57,11 +59,35 @@ public class ShipmentSpiderTask {
     private Boolean spiderSwitch;
 
     /**
-     * 线程任务：无限爬取远端入库订单信息
+     * 收到amazon入库单爬取任务
+     * @param shipmentId
      */
-    @PostConstruct
-    public void initTask() {
+    public String shipmentSpiderTask(String shipmentId){
+        long startTime = System.currentTimeMillis();
+        ListInboundShipmentItemsResponse r = awsClient.getShipmentItems(shipmentId, null, null);
+        if (r == null) {
+            throw new HzmException(ExceptionCode.SHIPMENT_ID_FAIL_RETRY);
+        }
 
+        parseShipmentInfo(r.getListInboundShipmentItemsResult().getItemData().getList());
+        String nextToken = r.getListInboundShipmentItemsResult().getNextToken();
+        while (!StringUtils.isEmpty(nextToken)) {
+            //获取资源
+            ListInboundShipmentItemsByNextTokenResponse tokenResponse = awsClient.getShipmentItemsByNextToken(nextToken);
+            nextToken = tokenResponse.getListInboundShipmentItemsByNextTokenResult().getNextToken();
+
+            parseShipmentInfo(tokenResponse.getListInboundShipmentItemsByNextTokenResult().getItemData().getList());
+        }
+        log.info("货物入库单任务结束，shipmentId：{} 耗时：{}", shipmentId, System.currentTimeMillis() - startTime);
+        return "amazon货物入库单爬取任务执行成功";
+    }
+
+    /**
+     * 线程任务：无限爬取远端入库订单信息
+     * 关闭任务
+     */
+    //@PostConstruct
+    public void initTask() {
         if(!spiderSwitch){
             log.info("测试环境关闭爬虫任务");
             return;
@@ -113,6 +139,8 @@ public class ShipmentSpiderTask {
             Thread.sleep(6 * 60 * 1000);
             return;
         }
+        strBeginDate = "2021-02-28T16:00:00Z";
+        strEndDate = "2021-03-15T16:00:00Z";
 
         //获取资源
         shipmentSemaphore.acquire();
@@ -143,28 +171,32 @@ public class ShipmentSpiderTask {
             return;
         }
 
-        List<ShipmentItemRecordDO> records = shipmentItemRecordService.getAllRecord();
-        Set<String> dealSet = Sets.newHashSet();
-        records.forEach(itemRecord -> dealSet.add(itemRecord.getShipmentId() + itemRecord.getSellerSKU()));
+        Map<String, List<Member>> members = itemMembers.stream().collect(Collectors.groupingBy(Member::getShipmentId));
 
-        itemMembers.forEach(member -> {
-            if (dealSet.contains(member.getShipmentId() + member.getSellerSKU())) {
-                return;
-            }
+        //根据shipment分批处理减库存操作
+        members.forEach((shipmentId, memberValues) ->{
+            List<ShipmentItemRecordDO> records = shipmentItemRecordService.getAllRecordByShipmentId(shipmentId);
+            Set<String> dealSet = Sets.newHashSet();
+            records.forEach(itemRecord -> dealSet.add(itemRecord.getShipmentId() + itemRecord.getSellerSKU()));
 
-            ShipmentItemRecordDO shipmentItemDO = new ShipmentItemRecordDO();
-            shipmentItemDO.setQuantityShipped(member.getQuantityShipped());
-            shipmentItemDO.setShipmentId(member.getShipmentId());
-            shipmentItemDO.setPrepDetailsList(JSONObject.toJSONString(member.getPrepDetailsList()));
-            shipmentItemDO.setFulfillmentNetworkSKU(member.getFulfillmentNetworkSKU());
-            shipmentItemDO.setSellerSKU(member.getSellerSKU());
-            shipmentItemDO.setQuantityReceived(member.getQuantityReceived());
-            shipmentItemDO.setQuantityInCase(member.getQuantityInCase());
-            shipmentItemRecordService.createRecord(shipmentItemDO);
+            memberValues.forEach(member -> {
+                if (dealSet.contains(member.getShipmentId() + member.getSellerSKU())) {
+                    return;
+                }
 
-            //当前库存减去amazon入库
-            itemDealService.dealSkuInventory(member.getSellerSKU(), "mod", -member.getQuantityReceived());
+                ShipmentItemRecordDO shipmentItemDO = new ShipmentItemRecordDO();
+                shipmentItemDO.setQuantityShipped(member.getQuantityShipped());
+                shipmentItemDO.setShipmentId(member.getShipmentId());
+                shipmentItemDO.setPrepDetailsList(JSONObject.toJSONString(member.getPrepDetailsList()));
+                shipmentItemDO.setFulfillmentNetworkSKU(member.getFulfillmentNetworkSKU());
+                shipmentItemDO.setSellerSKU(member.getSellerSKU());
+                shipmentItemDO.setQuantityReceived(member.getQuantityReceived());
+                shipmentItemDO.setQuantityInCase(member.getQuantityInCase());
+                shipmentItemRecordService.createRecord(shipmentItemDO);
+
+                //当前库存减去amazon入库
+                itemDealService.dealSkuInventory(member.getSellerSKU(), "mod", -member.getQuantityShipped());
+            });
         });
-
     }
 }

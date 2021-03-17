@@ -48,9 +48,7 @@ public class DailyStatTask {
         Date date = TimeUtil.getDateBySimple(strDate);
 
         while (num > 0) {
-            Date endDate = TimeUtil.getUTCDayEndTime(date);
-            statDailySaleInfoByDate(date, endDate);
-
+            commonDealDate(date);
             date = TimeUtil.dateFixByDay(date, 1, 0, 0);
             num--;
         }
@@ -72,33 +70,37 @@ public class DailyStatTask {
      */
     public void statSaleInfoChooseDate(String strDate) {
         Date date = TimeUtil.getDateBySimple(strDate);
-        Date endDate = TimeUtil.getUTCDayEndTime(date);
 
         long startTime = System.currentTimeMillis();
-        log.info("【{}】销量信息修复开始", strDate);
-        statDailySaleInfoByDate(date, endDate);
+        commonDealDate(date);
         log.info("【{}】销量信息修复结束，耗时:{}", strDate, System.currentTimeMillis() - startTime);
     }
 
-    @Scheduled(cron = "0 0 9 * * ?")
+    @Scheduled(cron = "0 0 17 * * ?")
     public void statDailySaleData() {
-        Date startDate = TimeUtil.getYesterdayZeroUTCDate();
-        Date endDate = TimeUtil.getUTCDayEndTime(startDate);
-
-        statDailySaleInfoByDate(startDate, endDate);
+        commonDealDate(TimeUtil.getZeroUTCDateByDay(-2));
     }
 
     @Scheduled(cron = "0 */5 * * * ?")
     public void statTodaySaleData() {
-        Date startDate = TimeUtil.getDateBySimple(TimeUtil.getSimpleFormat(new Date()));
-        Date endDate = TimeUtil.getUTCDayEndTime(startDate);
+        commonDealDate(TimeUtil.transformNowToUsDate());
+    }
+
+    private void commonDealDate(Date date) {
+        String strDailyDate = TimeUtil.getDateFormat(date);
+        Boolean isSummer = TimeUtil.isSummer(strDailyDate);
+        Date startDate = TimeUtil.dateFixByDay(date, 0, isSummer ? 7 : 8, 0);
+
+        Date nextDate = TimeUtil.dateFixByDay(date, 1, 0, 0);
+        strDailyDate = TimeUtil.getDateFormat(nextDate);
+        isSummer = TimeUtil.isSummer(strDailyDate);
+        Date endDate = TimeUtil.dateFixByDay(nextDate, 0, isSummer ? 7 : 8, 0);
 
         statDailySaleInfoByDate(startDate, endDate);
     }
 
     private void statDailySaleInfoByDate(Date startDate, Date endDate) {
         String statDate = TimeUtil.getSimpleFormat(startDate);
-
         List<OrderDO> orders = orderService.getOrdersByPurchaseDate(startDate, endDate, null, new String[]{"amazon_order_id"});
 
         //防止mybatis in 搜索优化功能：mybatis使用in搜索时，如果入仓为空，删除in条件，改为全表搜索
@@ -106,6 +108,7 @@ public class DailyStatTask {
         if (orders.size() == 0) {
             return;
         }
+        log.info("销量数据统计时间范围：{}----{}, 订单数量：{}", startDate, endDate, orders.size());
 
         List<String> amazonOrderIds = orders.stream().map(OrderDO::getAmazonOrderId).collect(Collectors.toList());
         List<OrderItemDO> itemList = orderItemService.getOrderByBathAmazonId(amazonOrderIds);

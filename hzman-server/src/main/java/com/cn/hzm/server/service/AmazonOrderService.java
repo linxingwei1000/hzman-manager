@@ -10,6 +10,7 @@ import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.text.ParseException;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -24,7 +25,7 @@ public class AmazonOrderService {
     @Autowired
     private OrderService orderService;
 
-    public JSONObject processListOrder(OrderConditionDTO conditionDTO) {
+    public JSONObject processListOrder(OrderConditionDTO conditionDTO) throws ParseException {
         Map<String, String> conditionMap = Maps.newHashMap();
         conditionMap.put("order_status", ContextConst.AMAZON_STATUS_PENDING);
         List<OrderDO> list = orderService.getListByCondition(conditionMap,

@@ -4,10 +4,12 @@ import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cn.hzm.core.entity.OrderDO;
 import com.cn.hzm.core.util.TimeUtil;
 import com.cn.hzm.order.dao.OrderMapper;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -16,13 +18,14 @@ import java.util.Map;
  * @author xingweilin@clubfactory.com
  * @date 2020/7/11 3:55 下午
  */
+@Slf4j
 @Service
 public class OrderService {
 
     @Autowired
     private OrderMapper orderMapper;
 
-    public List<OrderDO> getListByCondition(Map<String, String> condition, String[] fields) {
+    public List<OrderDO> getListByCondition(Map<String, String> condition, String[] fields) throws ParseException {
         QueryWrapper<OrderDO> query = new QueryWrapper<>();
 
         String purchaseDate = condition.remove("purchaseDate");
@@ -34,13 +37,15 @@ public class OrderService {
 
         String purchaseDateBegin = condition.remove("purchaseDateBegin");
         if (!StringUtils.isEmpty(purchaseDateBegin)) {
-            Date date = TimeUtil.getDateBySimple(purchaseDateBegin);
+            Date date = TimeUtil.transform(purchaseDateBegin);
+            log.info("purchaseDateBegin:{}", date);
             query.ge("purchase_date", date);
         }
 
         String purchaseDateEnd = condition.remove("purchaseDateEnd");
         if (!StringUtils.isEmpty(purchaseDateEnd)) {
-            Date date = TimeUtil.getDateBySimple(purchaseDateEnd);
+            Date date = TimeUtil.transform(purchaseDateEnd);
+            log.info("purchaseDateEnd:{}", date);
             query.le("purchase_date", date);
         }
 
@@ -76,7 +81,7 @@ public class OrderService {
             }
         });
         query.select(fields);
-        query.orderByAsc("ctime");
+        query.orderByAsc("purchase_date");
         return orderMapper.selectList(query);
     }
 

@@ -217,6 +217,11 @@ public class AwsClient {
             if (resp.contains("RequestThrottled")) {
                 throw new HzmException(ExceptionCode.REQUEST_LIMIT);
             }
+
+            //amazon入库货物单号不存在
+            if(resp.contains("Shipment not found")){
+                throw new HzmException(ExceptionCode.SHIPMENT_ID_NOT_EXIST);
+            }
         }
         T t = null;
         try {

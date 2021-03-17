@@ -39,9 +39,6 @@ public class SmartReplenishmentTask {
     @Autowired
     private InventoryService inventoryService;
 
-    @Autowired
-    private ItemDetailCache itemDetailCache;
-
     private Map<String, SmartReplenishmentDTO> replenishmentMap;
 
     @Value("${spider.switch:false}")
@@ -103,9 +100,6 @@ public class SmartReplenishmentTask {
         smartReplenishmentDTO = createReplenishmentInfo("XL7907-18", 500L, ReplenishmentEnum.REPLENISHMENT_ORDER);
         replenishmentMap.put("XL7907-18", smartReplenishmentDTO);
         orderSkus.add("XL7907-18");
-
-        //刷新商品
-        itemDetailCache.getCache(Lists.newArrayList(replenishmentMap.keySet()));
     }
 
 
@@ -166,8 +160,8 @@ public class SmartReplenishmentTask {
         shipSkus = tmpShipList;
         orderSkus = tmpOrderList;
 
-        //刷新商品
-        itemDetailCache.getCache(Lists.newArrayList(replenishmentMap.keySet()));
+        //刷新商品,依赖cache组件定时刷新
+        //itemDetailCache.getCache(Lists.newArrayList(replenishmentMap.keySet()));
     }
 
     private Map<String, List<SaleInfoDO>> dealSaleInfoByDate(Date endDate, Integer duration) {

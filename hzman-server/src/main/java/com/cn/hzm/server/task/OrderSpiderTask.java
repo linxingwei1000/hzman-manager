@@ -19,6 +19,7 @@ import com.cn.hzm.server.service.ItemDealService;
 import com.cn.hzm.server.service.OperateDependService;
 import com.cn.hzm.server.util.ConvertUtil;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -95,7 +96,6 @@ public class OrderSpiderTask {
      */
     @PostConstruct
     public void initTask() {
-
         if (!spiderSwitch) {
             log.info("测试环境关闭爬虫任务");
             return;

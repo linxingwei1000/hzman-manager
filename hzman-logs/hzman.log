@@ -1,64 +1,85 @@
-2021-03-12 11:17:13.719 INFO  [main] c.c.h.s.WebApplication [50] -  Starting WebApplication on linxingweideMacBook-Air.local with PID 31734 (/Users/linxingwei/Documents/us/hzman-manager/hzman-server/target/classes started by linxingwei in /Users/linxingwei/Documents/us/hzman-manager)
-2021-03-12 11:17:13.738 INFO  [main] c.c.h.s.WebApplication [650] -  The following profiles are active: test
-2021-03-12 11:17:16.912 INFO  [main] o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [330] -  Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$b9de3a6a] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2021-03-12 11:17:17.609 INFO  [main] o.s.b.w.e.t.TomcatWebServer [90] -  Tomcat initialized with port(s): 8082 (http)
-2021-03-12 11:17:17.650 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Initializing ProtocolHandler ["http-nio-8082"]
-2021-03-12 11:17:17.669 INFO  [main] o.a.c.c.StandardService [173] -  Starting service [Tomcat]
-2021-03-12 11:17:17.670 INFO  [main] o.a.c.c.StandardEngine [173] -  Starting Servlet engine: [Apache Tomcat/9.0.21]
-2021-03-12 11:17:17.930 INFO  [main] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring embedded WebApplicationContext
-2021-03-12 11:17:17.931 INFO  [main] o.s.w.c.ContextLoader [283] -  Root WebApplicationContext: initialization completed in 4074 ms
-2021-03-12 11:17:18.043 INFO  [main] c.c.h.c.c.MybatisPlusConfig [44] -  ------------- 重载父类 sqlSessionFactory init-------
-2021-03-12 11:17:18.234 INFO  [main] c.z.h.HikariDataSource [110] -  HikariPool-1 - Starting...
-2021-03-12 11:17:18.240 WARN  [main] c.z.h.u.DriverDataSource [68] -  Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2021-03-12 11:17:19.408 INFO  [main] c.z.h.HikariDataSource [123] -  HikariPool-1 - Start completed.
-2021-03-12 11:17:19.961 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService
-2021-03-12 11:17:19.966 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService 'backTaskExecutor'
-2021-03-12 11:17:22.829 INFO  [商品详情缓存线程] c.c.h.s.c.ItemDetailCache [97] -  商品详情缓存加载流程开始，需缓存个数：1848
-2021-03-12 11:19:28.039 WARN  [HikariPool-1 housekeeper] c.z.h.p.HikariPool [766] -  HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=2m8s517ms).
-2021-03-12 11:19:29.035 INFO  [main] c.c.h.s.t.OrderSpiderTask [100] -  测试环境关闭爬虫任务
-2021-03-12 11:19:29.152 INFO  [main] c.c.h.s.t.ShipmentSpiderTask [66] -  测试环境关闭爬虫任务
-2021-03-12 11:19:30.073 INFO  [main] s.d.s.w.PropertySourcedRequestMappingHandlerMapping [69] -  Mapped URL path [/v2/api-docs] onto method [public org.springframework.http.ResponseEntity<springfox.documentation.spring.web.json.Json> springfox.documentation.swagger2.web.Swagger2Controller.getDocumentation(java.lang.String,javax.servlet.http.HttpServletRequest)]
-2021-03-12 11:19:31.132 INFO  [main] o.s.s.c.ThreadPoolTaskScheduler [171] -  Initializing ExecutorService 'taskScheduler'
-2021-03-12 11:19:31.858 INFO  [main] s.d.s.w.p.DocumentationPluginsBootstrapper [160] -  Context refreshed
-2021-03-12 11:19:31.990 INFO  [main] s.d.s.w.p.DocumentationPluginsBootstrapper [163] -  Found 1 custom documentation plugin(s)
-2021-03-12 11:19:32.151 INFO  [main] s.d.s.w.s.ApiListingReferenceScanner [41] -  Scanning for api listing references
-2021-03-12 11:19:33.423 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: payUsingGET_1
-2021-03-12 11:19:33.550 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingGET_1
-2021-03-12 11:19:33.552 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingHEAD_1
-2021-03-12 11:19:33.553 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPOST_1
-2021-03-12 11:19:33.555 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPUT_1
-2021-03-12 11:19:33.557 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPATCH_1
-2021-03-12 11:19:33.559 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingDELETE_1
-2021-03-12 11:19:33.561 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingOPTIONS_1
-2021-03-12 11:19:33.565 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingTRACE_1
-2021-03-12 11:19:33.569 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingGET_2
-2021-03-12 11:19:33.572 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingHEAD_2
-2021-03-12 11:19:33.573 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPOST_2
-2021-03-12 11:19:33.576 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPUT_2
-2021-03-12 11:19:33.577 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPATCH_2
-2021-03-12 11:19:33.579 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingDELETE_2
-2021-03-12 11:19:33.580 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingOPTIONS_2
-2021-03-12 11:19:33.582 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingTRACE_2
-2021-03-12 11:19:33.607 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_1
-2021-03-12 11:19:33.650 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_2
-2021-03-12 11:19:33.654 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_3
-2021-03-12 11:19:33.925 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Starting ProtocolHandler ["http-nio-8082"]
-2021-03-12 11:19:34.016 INFO  [main] o.s.b.w.e.t.TomcatWebServer [202] -  Tomcat started on port(s): 8082 (http) with context path '/hzman'
-2021-03-12 11:19:34.036 INFO  [main] c.c.h.s.WebApplication [59] -  Started WebApplication in 161.873 seconds (JVM running for 170.49)
-2021-03-12 11:21:17.346 INFO  [http-nio-8082-exec-1] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring DispatcherServlet 'dispatcherServlet'
-2021-03-12 11:21:17.348 INFO  [http-nio-8082-exec-1] o.s.w.s.DispatcherServlet [524] -  Initializing Servlet 'dispatcherServlet'
-2021-03-12 11:21:17.374 INFO  [http-nio-8082-exec-1] o.s.w.s.DispatcherServlet [546] -  Completed initialization in 25 ms
-2021-03-12 11:21:17.411 INFO  [http-nio-8082-exec-1] c.c.h.c.c.ContextHandler [34] - 8fffff20911d48ba87e6824968f88ddc uri: /hzman/order/amazon/delete, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b9Ok/dDE1wA//WSf+2VYl0Ki4Hzb7gv+YS1yPWs3FGkYfWubKT2ezrgGafn+fhNDO+rJneNqvyMVmkfnz+nuFdIt6XU4hG91tOZsu76TJiTf#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=1ad3cc41-8632-47af-a721-a7e39658e60f#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive, path param: amazonId=113-0652318-8399449.
-2021-03-12 11:21:17.677 INFO  [http-nio-8082-exec-1] c.c.h.c.c.HzmContext [61] - 8fffff20911d48ba87e6824968f88ddc {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b9Ok/dDE1wA//WSf+2VYl0Ki4Hzb7gv+YS1yPWs3FGkYfWubKT2ezrgGafn+fhNDO+rJneNqvyMVmkfnz+nuFdIt6XU4hG91tOZsu76TJiTf","startTime":1615519277403,"body":"","param":"amazonId\u003d113-0652318-8399449","traceId":"8fffff20911d48ba87e6824968f88ddc","peer":"127.0.0.1","spend":257,"props":{},"roles":["admin"]}
-2021-03-12 11:21:59.526 INFO  [http-nio-8082-exec-2] c.c.h.c.c.ContextHandler [34] - f812d78beb304e75b4fc7ede746bc79a uri: /hzman/order/amazon/delete, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b9Ok/dDE1wA//WSf+2VYl0Ki4Hzb7gv+YS1yPWs3FGkYfWubKT2ezrgGafn+fhNDO+rJneNqvyMVmkfnz+nuFdIt6XU4hG91tOZsu76TJiTf#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=e77fde75-9d1f-453c-8ec8-ebce574e2a7e#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive, path param: null.
-2021-03-12 11:21:59.628 INFO  [http-nio-8082-exec-2] c.c.h.c.c.HzmContext [61] - f812d78beb304e75b4fc7ede746bc79a {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b9Ok/dDE1wA//WSf+2VYl0Ki4Hzb7gv+YS1yPWs3FGkYfWubKT2ezrgGafn+fhNDO+rJneNqvyMVmkfnz+nuFdIt6XU4hG91tOZsu76TJiTf","startTime":1615519319525,"body":"","traceId":"f812d78beb304e75b4fc7ede746bc79a","peer":"127.0.0.1","spend":94,"props":{},"roles":["admin"]}
-2021-03-12 11:22:13.649 INFO  [http-nio-8082-exec-3] c.c.h.c.c.ContextHandler [34] - ca8f710391664d6f9f261fed72792f27 uri: /hzman/order/amazon/delete, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b9Ok/dDE1wA//WSf+2VYl0Ki4Hzb7gv+YS1yPWs3FGkYfWubKT2ezrgGafn+fhNDO+rJneNqvyMVmkfnz+nuFdIt6XU4hG91tOZsu76TJiTf#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=ae1c6adb-198b-47af-bf4b-1fd5db5f902e#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive, path param: amazonId=113-0652318-8399449.
-2021-03-12 11:22:13.692 INFO  [http-nio-8082-exec-3] c.c.h.c.c.HzmContext [61] - ca8f710391664d6f9f261fed72792f27 {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b9Ok/dDE1wA//WSf+2VYl0Ki4Hzb7gv+YS1yPWs3FGkYfWubKT2ezrgGafn+fhNDO+rJneNqvyMVmkfnz+nuFdIt6XU4hG91tOZsu76TJiTf","startTime":1615519333649,"body":"","param":"amazonId\u003d113-0652318-8399449","traceId":"ca8f710391664d6f9f261fed72792f27","peer":"127.0.0.1","spend":39,"props":{},"roles":["admin"]}
-2021-03-12 11:22:55.410 INFO  [http-nio-8082-exec-4] c.c.h.c.c.ContextHandler [34] - 59293fdd2c394b8e89dccdab8d391508 uri: /hzman/order/amazon/delete, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b9Ok/dDE1wA//WSf+2VYl0Ki4Hzb7gv+YS1yPWs3FGkYfWubKT2ezrgGafn+fhNDO+rJneNqvyMVmkfnz+nuFdIt6XU4hG91tOZsu76TJiTf#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=60bd07b6-e3c0-4cec-83a1-0e2202009061#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive, path param: amazonId=113-0652318-8399449.
-2021-03-12 11:23:12.392 INFO  [http-nio-8082-exec-4] c.c.h.c.c.HzmContext [61] - 59293fdd2c394b8e89dccdab8d391508 {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b9Ok/dDE1wA//WSf+2VYl0Ki4Hzb7gv+YS1yPWs3FGkYfWubKT2ezrgGafn+fhNDO+rJneNqvyMVmkfnz+nuFdIt6XU4hG91tOZsu76TJiTf","startTime":1615519375409,"body":"","param":"amazonId\u003d113-0652318-8399449","traceId":"59293fdd2c394b8e89dccdab8d391508","peer":"127.0.0.1","spend":16982,"props":{},"roles":["admin"]}
-2021-03-12 11:23:19.655 INFO  [http-nio-8082-exec-5] c.c.h.c.c.ContextHandler [34] - e0c8819ef01948df92183240889de77b uri: /hzman/order/amazon/delete, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b9Ok/dDE1wA//WSf+2VYl0Ki4Hzb7gv+YS1yPWs3FGkYfWubKT2ezrgGafn+fhNDO+rJneNqvyMVmkfnz+nuFdIt6XU4hG91tOZsu76TJiTf#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=dfc55dfb-fcab-4bdc-8aa5-c540524d5269#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive, path param: amazonId=113-0652318-8399449.
-2021-03-12 11:25:56.479 INFO  [http-nio-8082-exec-5] c.c.h.c.c.HzmContext [61] - e0c8819ef01948df92183240889de77b {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b9Ok/dDE1wA//WSf+2VYl0Ki4Hzb7gv+YS1yPWs3FGkYfWubKT2ezrgGafn+fhNDO+rJneNqvyMVmkfnz+nuFdIt6XU4hG91tOZsu76TJiTf","startTime":1615519399655,"body":"","param":"amazonId\u003d113-0652318-8399449","traceId":"e0c8819ef01948df92183240889de77b","peer":"127.0.0.1","spend":156820,"props":{},"roles":["admin"]}
-2021-03-12 11:25:56.631 INFO  [Thread-78] o.s.s.c.ThreadPoolTaskScheduler [208] -  Shutting down ExecutorService 'taskScheduler'
-2021-03-12 11:25:56.647 INFO  [Thread-78] o.s.s.c.ThreadPoolTaskExecutor [208] -  Shutting down ExecutorService 'backTaskExecutor'
-2021-03-12 11:25:56.650 INFO  [Thread-78] c.z.h.HikariDataSource [350] -  HikariPool-1 - Shutdown initiated...
-2021-03-12 11:25:56.684 INFO  [Thread-78] c.z.h.HikariDataSource [352] -  HikariPool-1 - Shutdown completed.
+2021-03-16 19:39:58.972 INFO  [main] c.c.h.s.WebApplication [50] -  Starting WebApplication on linxingweideMacBook-Air.local with PID 11675 (/Users/linxingwei/Documents/us/hzman-manager/hzman-server/target/classes started by linxingwei in /Users/linxingwei/Documents/us/hzman-manager)
+2021-03-16 19:39:58.985 INFO  [main] c.c.h.s.WebApplication [650] -  The following profiles are active: test
+2021-03-16 19:40:01.692 INFO  [main] o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [330] -  Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$da143b41] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-03-16 19:40:02.277 INFO  [main] o.s.b.w.e.t.TomcatWebServer [90] -  Tomcat initialized with port(s): 8082 (http)
+2021-03-16 19:40:02.316 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Initializing ProtocolHandler ["http-nio-8082"]
+2021-03-16 19:40:02.333 INFO  [main] o.a.c.c.StandardService [173] -  Starting service [Tomcat]
+2021-03-16 19:40:02.334 INFO  [main] o.a.c.c.StandardEngine [173] -  Starting Servlet engine: [Apache Tomcat/9.0.21]
+2021-03-16 19:40:02.558 INFO  [main] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring embedded WebApplicationContext
+2021-03-16 19:40:02.559 INFO  [main] o.s.w.c.ContextLoader [283] -  Root WebApplicationContext: initialization completed in 3465 ms
+2021-03-16 19:40:02.705 INFO  [main] c.c.h.c.c.MybatisPlusConfig [44] -  ------------- 重载父类 sqlSessionFactory init-------
+2021-03-16 19:40:02.933 INFO  [main] c.z.h.HikariDataSource [110] -  HikariPool-1 - Starting...
+2021-03-16 19:40:02.941 WARN  [main] c.z.h.u.DriverDataSource [68] -  Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2021-03-16 19:40:04.112 INFO  [main] c.z.h.HikariDataSource [123] -  HikariPool-1 - Start completed.
+2021-03-16 19:40:04.624 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService
+2021-03-16 19:40:04.627 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService 'backTaskExecutor'
+2021-03-16 19:40:07.478 INFO  [main] c.c.h.s.t.OrderSpiderTask [100] -  测试环境关闭爬虫任务
+2021-03-16 19:40:07.516 INFO  [main] c.c.h.s.t.ShipmentSpiderTask [66] -  测试环境关闭爬虫任务
+2021-03-16 19:40:07.559 INFO  [商品详情缓存线程] c.c.h.s.c.ItemDetailCache [101] -  商品详情缓存加载流程开始，需缓存个数：1848
+2021-03-16 19:41:37.678 WARN  [HikariPool-1 housekeeper] c.z.h.p.HikariPool [766] -  HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=48s894ms).
+2021-03-16 20:12:44.929 INFO  [main] c.c.h.s.WebApplication [50] -  Starting WebApplication on linxingweideMacBook-Air.local with PID 11885 (/Users/linxingwei/Documents/us/hzman-manager/hzman-server/target/classes started by linxingwei in /Users/linxingwei/Documents/us/hzman-manager)
+2021-03-16 20:12:44.937 INFO  [main] c.c.h.s.WebApplication [650] -  The following profiles are active: test
+2021-03-16 20:12:47.584 INFO  [main] o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [330] -  Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$96c8497f] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2021-03-16 20:12:48.187 INFO  [main] o.s.b.w.e.t.TomcatWebServer [90] -  Tomcat initialized with port(s): 8082 (http)
+2021-03-16 20:12:48.224 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Initializing ProtocolHandler ["http-nio-8082"]
+2021-03-16 20:12:48.239 INFO  [main] o.a.c.c.StandardService [173] -  Starting service [Tomcat]
+2021-03-16 20:12:48.240 INFO  [main] o.a.c.c.StandardEngine [173] -  Starting Servlet engine: [Apache Tomcat/9.0.21]
+2021-03-16 20:12:48.489 INFO  [main] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring embedded WebApplicationContext
+2021-03-16 20:12:48.490 INFO  [main] o.s.w.c.ContextLoader [283] -  Root WebApplicationContext: initialization completed in 3471 ms
+2021-03-16 20:12:48.736 INFO  [main] c.c.h.c.c.MybatisPlusConfig [44] -  ------------- 重载父类 sqlSessionFactory init-------
+2021-03-16 20:12:49.054 INFO  [main] c.z.h.HikariDataSource [110] -  HikariPool-1 - Starting...
+2021-03-16 20:12:49.063 WARN  [main] c.z.h.u.DriverDataSource [68] -  Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
+2021-03-16 20:12:50.370 INFO  [main] c.z.h.HikariDataSource [123] -  HikariPool-1 - Start completed.
+2021-03-16 20:12:50.878 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService
+2021-03-16 20:12:50.882 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService 'backTaskExecutor'
+2021-03-16 20:12:53.671 INFO  [商品详情缓存线程] c.c.h.s.c.ItemDetailCache [101] -  商品详情缓存加载流程开始，需缓存个数：1848
+2021-03-16 20:12:59.301 INFO  [main] c.c.h.s.t.OrderSpiderTask [100] -  测试环境关闭爬虫任务
+2021-03-16 20:12:59.699 INFO  [pool-3-thread-1] c.c.h.s.t.ShipmentSpiderTask [101] -  货物入库单爬取开始
+2021-03-16 20:13:03.999 INFO  [main] s.d.s.w.PropertySourcedRequestMappingHandlerMapping [69] -  Mapped URL path [/v2/api-docs] onto method [public org.springframework.http.ResponseEntity<springfox.documentation.spring.web.json.Json> springfox.documentation.swagger2.web.Swagger2Controller.getDocumentation(java.lang.String,javax.servlet.http.HttpServletRequest)]
+2021-03-16 20:13:05.607 INFO  [main] o.s.s.c.ThreadPoolTaskScheduler [171] -  Initializing ExecutorService 'taskScheduler'
+2021-03-16 20:13:05.736 INFO  [main] s.d.s.w.p.DocumentationPluginsBootstrapper [160] -  Context refreshed
+2021-03-16 20:13:05.797 INFO  [main] s.d.s.w.p.DocumentationPluginsBootstrapper [163] -  Found 1 custom documentation plugin(s)
+2021-03-16 20:13:05.947 INFO  [main] s.d.s.w.s.ApiListingReferenceScanner [41] -  Scanning for api listing references
+2021-03-16 20:13:06.527 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: payUsingGET_1
+2021-03-16 20:13:06.576 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingGET_1
+2021-03-16 20:13:06.578 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingHEAD_1
+2021-03-16 20:13:06.581 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPOST_1
+2021-03-16 20:13:06.586 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPUT_1
+2021-03-16 20:13:06.588 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPATCH_1
+2021-03-16 20:13:06.593 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingDELETE_1
+2021-03-16 20:13:06.596 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingOPTIONS_1
+2021-03-16 20:13:06.600 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingTRACE_1
+2021-03-16 20:13:06.604 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingGET_2
+2021-03-16 20:13:06.608 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingHEAD_2
+2021-03-16 20:13:06.610 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPOST_2
+2021-03-16 20:13:06.612 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPUT_2
+2021-03-16 20:13:06.617 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPATCH_2
+2021-03-16 20:13:06.620 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingDELETE_2
+2021-03-16 20:13:06.623 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingOPTIONS_2
+2021-03-16 20:13:06.626 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingTRACE_2
+2021-03-16 20:13:06.651 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_1
+2021-03-16 20:13:06.685 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_2
+2021-03-16 20:13:06.690 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_3
+2021-03-16 20:13:06.927 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Starting ProtocolHandler ["http-nio-8082"]
+2021-03-16 20:13:07.044 INFO  [main] o.s.b.w.e.t.TomcatWebServer [202] -  Tomcat started on port(s): 8082 (http) with context path '/hzman'
+2021-03-16 20:13:07.062 INFO  [main] c.c.h.s.WebApplication [59] -  Started WebApplication in 43.36 seconds (JVM running for 50.429)
+2021-03-16 20:13:46.238 INFO  [pool-3-thread-1] c.c.h.s.t.ShipmentSpiderTask [101] -  货物入库单爬取开始
+2021-03-16 20:14:49.691 WARN  [HikariPool-1 housekeeper] c.z.h.p.HikariPool [766] -  HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=50s979ms).
+2021-03-16 20:15:27.758 INFO  [pool-3-thread-1] c.c.h.s.t.ShipmentSpiderTask [101] -  货物入库单爬取开始
+2021-03-16 20:16:50.564 INFO  [Thread-75] o.s.s.c.ThreadPoolTaskScheduler [208] -  Shutting down ExecutorService 'taskScheduler'
+2021-03-16 20:16:50.576 INFO  [Thread-75] o.s.s.c.ThreadPoolTaskExecutor [208] -  Shutting down ExecutorService 'backTaskExecutor'
+2021-03-16 20:16:50.581 INFO  [Thread-75] c.z.h.HikariDataSource [350] -  HikariPool-1 - Shutdown initiated...
+2021-03-16 20:16:50.619 INFO  [pool-3-thread-1] c.c.h.s.t.ShipmentSpiderTask [101] -  货物入库单爬取开始
+2021-03-16 20:16:50.627 INFO  [Thread-75] c.z.h.HikariDataSource [352] -  HikariPool-1 - Shutdown completed.
+2021-03-16 20:16:50.627 INFO  [pool-3-thread-1] c.c.h.s.t.ShipmentSpiderTask [101] -  货物入库单爬取开始
+2021-03-16 20:16:50.633 INFO  [pool-3-thread-1] c.c.h.s.t.ShipmentSpiderTask [101] -  货物入库单爬取开始
+2021-03-16 20:16:50.637 INFO  [pool-3-thread-1] c.c.h.s.t.ShipmentSpiderTask [101] -  货物入库单爬取开始
+2021-03-16 20:16:50.641 INFO  [pool-3-thread-1] c.c.h.s.t.ShipmentSpiderTask [101] -  货物入库单爬取开始
+2021-03-16 20:16:50.645 INFO  [pool-3-thread-1] c.c.h.s.t.ShipmentSpiderTask [101] -  货物入库单爬取开始
+2021-03-16 20:16:50.649 INFO  [pool-3-thread-1] c.c.h.s.t.ShipmentSpiderTask [101] -  货物入库单爬取开始
+2021-03-16 20:16:50.652 INFO  [pool-3-thread-1] c.c.h.s.t.ShipmentSpiderTask [101] -  货物入库单爬取开始
+2021-03-16 20:16:50.661 INFO  [pool-3-thread-1] c.c.h.s.t.ShipmentSpiderTask [101] -  货物入库单爬取开始
+2021-03-16 20:16:50.664 INFO  [pool-3-thread-1] c.c.h.s.t.ShipmentSpiderTask [101] -  货物入库单爬取开始
+2021-03-16 20:16:50.671 INFO  [pool-3-thread-1] c.c.h.s.t.ShipmentSpiderTask [101] -  货物入库单爬取开始
+2021-03-16 20:16:50.675 INFO  [pool-3-thread-1] c.c.h.s.t.ShipmentSpiderTask [101] -  货物入库单爬取开始
+2021-03-16 20:16:50.677 INFO  [pool-3-thread-1] c.c.h.s.t.ShipmentSpiderTask [101] -  货物入库单爬取开始
