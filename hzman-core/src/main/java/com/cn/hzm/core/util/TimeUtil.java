@@ -171,7 +171,7 @@ public class TimeUtil {
         Date date = TimeUtil.getDateBySimple(TimeUtil.getSimpleFormat(now));
         String strDailyDate = TimeUtil.getDateFormat(date);
         Boolean isSummer = TimeUtil.isSummer(strDailyDate);
-        Date judge = TimeUtil.dateFixByDay(date, 0, isSummer ? 16 : 15, 0);
+        Date judge = TimeUtil.dateFixByDay(date, 0, isSummer ? 15 : 16, 0);
 
         return now.getTime() < judge.getTime() ? TimeUtil.dateFixByDay(date, -1, 0, 0) : date;
     }
