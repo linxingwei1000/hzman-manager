@@ -6,7 +6,6 @@ import com.cn.hzm.core.entity.SaleInfoDO;
 import com.cn.hzm.core.util.TimeUtil;
 import com.cn.hzm.item.service.ItemService;
 import com.cn.hzm.order.service.SaleInfoService;
-import com.cn.hzm.server.cache.ItemDetailCache;
 import com.cn.hzm.server.dto.SmartReplenishmentDTO;
 import com.cn.hzm.stock.enums.ReplenishmentEnum;
 import com.cn.hzm.stock.service.InventoryService;
@@ -103,16 +102,17 @@ public class SmartReplenishmentTask {
     }
 
 
-    @Scheduled(cron = "0 0 9 * * ?")
+    @Scheduled(cron = "0 0 17 * * ?")
     public void statDailySaleData() {
-        //以当前日期-10天开始计算
-        Date compareEndDate = TimeUtil.dateFixByDay(new Date(), -10, 0, 0);
+        Date curDate = TimeUtil.transformNowToUsDate();
+        //以昨天日期开始计算
+        Date compareEndDate = TimeUtil.dateFixByDay(curDate, -1, 0, 0);
         Map<String, List<SaleInfoDO>> compareMap = dealSaleInfoByDate(compareEndDate, -30);
 
         Date lastYearCompareEndDate = TimeUtil.dateFixByYear(compareEndDate, -1);
         Map<String, List<SaleInfoDO>> lastYearCompareMap = dealSaleInfoByDate(lastYearCompareEndDate, -30);
 
-        Date lastYearPredictEndDate = TimeUtil.dateFixByDay(lastYearCompareEndDate, 70, 0, 0);
+        Date lastYearPredictEndDate = TimeUtil.dateFixByDay(lastYearCompareEndDate, 60, 0, 0);
         Map<String, List<SaleInfoDO>> lastYearPredictMap = dealSaleInfoByDate(lastYearPredictEndDate, -30);
 
         List<ItemDO> itemList = itemService.getListByCondition(Maps.newHashMap(), new String[]{"sku"});
