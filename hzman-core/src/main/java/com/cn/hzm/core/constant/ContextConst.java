@@ -74,6 +74,16 @@ public class ContextConst {
     public static final int ITEM_SORT_LOCAL_INVENTORY_ASC = 7;
 
     /**
+     * 30天销量降序
+     */
+    public static final int ITEM_SORT_30_DAY_DESC = 8;
+
+    /**
+     * 30天销量升序
+     */
+    public static final int ITEM_SORT_30_DAY_ASC = 9;
+
+    /**
      * amazon订单状态：Pending
      */
     public static final String AMAZON_STATUS_PENDING = "Pending";

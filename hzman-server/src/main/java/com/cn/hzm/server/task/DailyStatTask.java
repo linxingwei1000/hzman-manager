@@ -1,5 +1,6 @@
 package com.cn.hzm.server.task;
 
+import com.cn.hzm.core.constant.ContextConst;
 import com.cn.hzm.core.entity.OrderDO;
 import com.cn.hzm.core.entity.OrderItemDO;
 import com.cn.hzm.core.entity.SaleInfoDO;
@@ -8,12 +9,14 @@ import com.cn.hzm.order.service.OrderItemService;
 import com.cn.hzm.order.service.OrderService;
 import com.cn.hzm.order.service.SaleInfoService;
 import com.cn.hzm.server.cache.ItemDetailCache;
+import com.cn.hzm.server.dto.ItemDTO;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import java.util.*;
 import java.util.stream.Collectors;
@@ -101,8 +104,14 @@ public class DailyStatTask {
 
     private void statDailySaleInfoByDate(Date startDate, Date endDate) {
         String statDate = TimeUtil.getSimpleFormat(startDate);
-        List<OrderDO> orders = orderService.getOrdersByPurchaseDate(startDate, endDate, null, new String[]{"amazon_order_id"});
+        List<OrderDO> orders = orderService.getOrdersByPurchaseDate(startDate, endDate, null, new String[]{"amazon_order_id", "order_status"});
 
+        //空判断，直接返回
+        if (CollectionUtils.isEmpty(orders)) {
+            return;
+        }
+
+        orders = orders.stream().filter(orderDO -> !ContextConst.AMAZON_STATUS_CANCELED.equals(orderDO.getOrderStatus())).collect(Collectors.toList());
         //防止mybatis in 搜索优化功能：mybatis使用in搜索时，如果入仓为空，删除in条件，改为全表搜索
         //全表搜索，数据库所有数据加入内存，导致OOM
         if (orders.size() == 0) {
@@ -113,6 +122,7 @@ public class DailyStatTask {
         List<String> amazonOrderIds = orders.stream().map(OrderDO::getAmazonOrderId).collect(Collectors.toList());
         List<OrderItemDO> itemList = orderItemService.getOrderByBathAmazonId(amazonOrderIds);
 
+        Map<String, Double> itemPriceMap = Maps.newHashMap();
         Map<String, SaleInfoDO> saleInfoMap = Maps.newHashMap();
         itemList.forEach(orderItem -> {
             //应老板要求，销量统计数量
@@ -120,16 +130,18 @@ public class DailyStatTask {
                 return;
             }
 
-            double itemPrice = orderItem.getItemPriceAmount() == null ? 0.0 : orderItem.getItemPriceAmount();
+            Double itemPrice = getItemPrice(orderItem, itemPriceMap);
             SaleInfoDO saleInfoDO = saleInfoMap.get(orderItem.getSku());
             if (saleInfoDO == null) {
                 saleInfoDO = new SaleInfoDO();
                 saleInfoDO.setSaleNum(orderItem.getQuantityOrdered());
+                saleInfoDO.setOrderNum(1);
                 saleInfoDO.setSaleVolume(itemPrice);
                 saleInfoDO.setStatDate(statDate);
                 saleInfoDO.setConfig("");
             } else {
                 saleInfoDO.setSaleNum(saleInfoDO.getSaleNum() + orderItem.getQuantityOrdered());
+                saleInfoDO.setOrderNum(saleInfoDO.getOrderNum() + 1);
                 saleInfoDO.setSaleVolume(saleInfoDO.getSaleVolume() + itemPrice);
             }
             saleInfoMap.put(orderItem.getSku(), saleInfoDO);
@@ -155,5 +167,20 @@ public class DailyStatTask {
         //刷新本地缓存
         itemDetailCache.refreshCaches(Lists.newArrayList(saleInfoMap.keySet()));
         log.info("【{}】销量数据统计完成 共计{}条数据", statDate, saleInfoMap.size());
+    }
+
+    private Double getItemPrice(OrderItemDO orderItem, Map<String, Double> itemPriceMap){
+        Double itemPrice;
+        if (orderItem.getItemPriceAmount() == null) {
+            itemPrice = itemPriceMap.get(orderItem.getSku());
+            if (itemPrice == null) {
+                ItemDTO itemDTO = itemDetailCache.getSingleCache(orderItem.getSku());
+                itemPrice = itemDTO == null ? 0.0 : itemDTO.getItemPrice();
+                itemPriceMap.put(orderItem.getSku(), itemPrice);
+            }
+        } else {
+            itemPrice = orderItem.getItemPriceAmount();
+        }
+        return itemPrice;
     }
 }

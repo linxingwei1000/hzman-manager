@@ -27,6 +27,9 @@ public class SaleInfoDO {
     @TableField(value = "sale_num")
     private Integer saleNum;
 
+    @TableField(value = "order_num")
+    private Integer orderNum;
+
     @TableField(value = "sale_volume")
     private Double saleVolume;
 

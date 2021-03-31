@@ -15,6 +15,7 @@ import com.cn.hzm.core.util.TimeUtil;
 import com.cn.hzm.item.service.ItemService;
 import com.cn.hzm.order.service.OrderItemService;
 import com.cn.hzm.order.service.OrderService;
+import com.cn.hzm.server.cache.SaleInfoCache;
 import com.cn.hzm.server.service.ItemDealService;
 import com.cn.hzm.server.service.OperateDependService;
 import com.cn.hzm.server.util.ConvertUtil;
@@ -62,6 +63,9 @@ public class OrderSpiderTask {
 
     @Autowired
     private DailyStatTask dailyStatTask;
+
+    @Autowired
+    private SaleInfoCache saleInfoCache;
 
     @Autowired
     private ItemDealService itemDealService;
@@ -163,6 +167,7 @@ public class OrderSpiderTask {
 
                     if (!CollectionUtils.isEmpty(needFixSaleInfoDay)) {
                         dailyStatTask.statSaleInfoByMulchDate(needFixSaleInfoDay);
+                        saleInfoCache.refreshDailySaleInfo(needFixSaleInfoDay);
                     }
                 }
 

@@ -24,4 +24,6 @@ public class Product {
     @XStreamAlias(value="SalesRankings")
     SalesRankings salesRankings;
 
+    @XStreamAlias(value="Offers")
+    Offers offers;
 }

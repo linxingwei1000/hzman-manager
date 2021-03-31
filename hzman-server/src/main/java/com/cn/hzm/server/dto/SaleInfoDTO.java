@@ -13,6 +13,9 @@ import lombok.Data;
 @Data
 public class SaleInfoDTO {
 
+    @ApiModelProperty(value = "订单数量")
+    private Integer orderNum;
+
     @ApiModelProperty(value = "销量")
     private Integer saleNum;
 

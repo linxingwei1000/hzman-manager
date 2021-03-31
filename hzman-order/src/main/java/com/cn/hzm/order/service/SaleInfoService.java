@@ -48,6 +48,12 @@ public class SaleInfoService {
         return saleInfoMapper.selectOne(query);
     }
 
+    public List<SaleInfoDO> getSaleInfoDOByDate(String statDate){
+        QueryWrapper<SaleInfoDO> query = new QueryWrapper<>();
+        query.eq("stat_date", statDate);
+        return saleInfoMapper.selectList(query);
+    }
+
     public List<SaleInfoDO> getSaleInfoByDurationDate(String sku, String statBeginDate, String statEndDate){
         QueryWrapper<SaleInfoDO> query = new QueryWrapper<>();
         query.between("stat_date", statBeginDate, statEndDate);

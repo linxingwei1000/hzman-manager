@@ -14,4 +14,7 @@ public class Identifiers {
 
     @XStreamAlias(value="MarketplaceASIN")
     private MarketplaceASIN marketplaceASIN;
+
+    @XStreamAlias(value="SKUIdentifier")
+    private SKUIdentifier skuIdentifier;
 }

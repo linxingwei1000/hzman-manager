@@ -6,11 +6,13 @@ import com.cn.hzm.core.aws.request.fulfilment.ShipmentItemsRequest;
 import com.cn.hzm.core.aws.request.inventory.ListInventoryRequest;
 import com.cn.hzm.core.aws.request.order.*;
 import com.cn.hzm.core.aws.request.product.GetMatchProductRequest;
+import com.cn.hzm.core.aws.request.product.GetMyPriceForSkuRequest;
 import com.cn.hzm.core.aws.resp.fulfilment.ListInboundShipmentItemsByNextTokenResponse;
 import com.cn.hzm.core.aws.resp.fulfilment.ListInboundShipmentItemsResponse;
 import com.cn.hzm.core.aws.resp.inventory.ListInventorySupplyResponse;
 import com.cn.hzm.core.aws.resp.order.*;
 import com.cn.hzm.core.aws.resp.product.GetMatchingProductForIdResponse;
+import com.cn.hzm.core.aws.resp.product.GetMyPriceForSkuResponse;
 import com.cn.hzm.core.exception.ExceptionCode;
 import com.cn.hzm.core.exception.HzmException;
 import com.cn.hzm.core.util.ConvertUtil;
@@ -46,6 +48,19 @@ public class AwsClient {
         getMatchProductRequest.setIds(Lists.newArrayList(value));
         getMatchProductRequest.setTimestamp(TimeUtil.getUTC());
         return doPost(getMatchProductRequest, GetMatchingProductForIdResponse.class);
+    }
+
+    /**
+     * 根据sku获取商品价格
+     *
+     * @return
+     */
+    public GetMyPriceForSkuResponse getMyPriceForSku(String sku) {
+        GetMyPriceForSkuRequest getMyPriceForSkuRequest = new GetMyPriceForSkuRequest();
+        getMyPriceForSkuRequest.setAction("GetMyPriceForSKU");
+        getMyPriceForSkuRequest.setSkus(Lists.newArrayList(sku));
+        getMyPriceForSkuRequest.setTimestamp(TimeUtil.getUTC());
+        return doPost(getMyPriceForSkuRequest, GetMyPriceForSkuResponse.class);
     }
 
     public ListInventorySupplyResponse getInventoryInfoBySku(String sku) {
@@ -231,5 +246,11 @@ public class AwsClient {
             e.printStackTrace();
         }
         return t;
+    }
+
+    public static void main(String[] args) {
+        AwsClient cliet = new AwsClient();
+        GetMyPriceForSkuResponse response = cliet.getMyPriceForSku("SZ806047");
+        System.out.println(response);
     }
 }

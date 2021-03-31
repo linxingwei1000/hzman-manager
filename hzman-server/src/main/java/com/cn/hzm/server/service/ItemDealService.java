@@ -2,8 +2,12 @@ package com.cn.hzm.server.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cn.hzm.core.aws.AwsClient;
+import com.cn.hzm.core.aws.domain.product.BuyingPrice;
+import com.cn.hzm.core.aws.domain.product.Offer;
+import com.cn.hzm.core.aws.domain.product.Product;
 import com.cn.hzm.core.aws.domain.product.ProductError;
 import com.cn.hzm.core.aws.resp.product.GetMatchingProductForIdResponse;
+import com.cn.hzm.core.aws.resp.product.GetMyPriceForSkuResponse;
 import com.cn.hzm.core.entity.*;
 import com.cn.hzm.core.exception.ExceptionCode;
 import com.cn.hzm.core.exception.HzmException;
@@ -101,6 +105,11 @@ public class ItemDealService {
 
         ItemDO itemDO = ConvertUtil.convertToItemDO(new ItemDO(), resp, sku);
 
+        //获取商品单价
+        Double itemPrice = ConvertUtil.getItemPrice(awsClient.getMyPriceForSku(sku));
+        itemDO.setItemPrice(itemPrice);
+        itemDO.setActive(1);
+
         ItemDO old = itemService.getItemDOBySku(sku);
         if (old != null) {
             itemDO.setId(old.getId());
@@ -111,6 +120,17 @@ public class ItemDealService {
 
         dealSkuInventory(sku, "refresh", 0);
     }
+
+    public void deleteItem(String sku){
+        //逻辑删除
+        ItemDO old = itemService.getItemDOBySku(sku);
+        old.setActive(0);
+        itemService.updateItem(old);
+
+        itemDetailCache.deleteCache(sku);
+    }
+
+
 
     public List<SimpleItemDTO> fuzzyQuery(Integer searchType, String value) {
         String searchKey = "sku";
@@ -160,7 +180,7 @@ public class ItemDealService {
 
         inventoryDTO.setFactoryQuantity(Math.toIntExact(factoryQuantityDTOS.stream().map(FactoryQuantityDTO::getNum).count()));
         inventoryDTO.setLocalTotalQuantity(inventoryDTO.getFactoryQuantity() + (inventoryDTO.getLocalQuantity() == null ? 0 : inventoryDTO.getLocalQuantity()));
-        inventoryDTO.setTotalQuantity(inventoryDTO.getLocalTotalQuantity() + (inventoryDTO.getAmazonQuantity() == null? 0: inventoryDTO.getAmazonQuantity()));
+        inventoryDTO.setTotalQuantity(inventoryDTO.getLocalTotalQuantity() + (inventoryDTO.getAmazonQuantity() == null ? 0 : inventoryDTO.getAmazonQuantity()));
         itemDTO.setInventoryDTO(inventoryDTO);
 
         //销量
@@ -199,10 +219,12 @@ public class ItemDealService {
         SaleInfoDTO saleInfoDTO = new SaleInfoDTO();
         if (saleInfoDO == null) {
             saleInfoDTO.setSaleNum(0);
+            saleInfoDTO.setOrderNum(0);
             saleInfoDTO.setSaleVolume(0.0);
             saleInfoDTO.setUnitPrice(0.0);
         } else {
             saleInfoDTO.setSaleNum(saleInfoDO.getSaleNum());
+            saleInfoDTO.setOrderNum(saleInfoDO.getOrderNum());
             saleInfoDTO.setSaleVolume(saleInfoDO.getSaleVolume());
             saleInfoDTO.setUnitPrice(saleInfoDO.getUnitPrice());
         }
@@ -216,15 +238,18 @@ public class ItemDealService {
         List<SaleInfoDO> compareList = saleInfoService.getSaleInfoByDurationDate(sku, strBeginDate, strEndDate);
 
         int saleNum = 0;
+        int orderNum = 0;
         double saleVolume = 0.0;
         if (!CollectionUtils.isEmpty(compareList)) {
             for (SaleInfoDO saleInfo : compareList) {
                 saleNum += saleInfo.getSaleNum();
+                orderNum += saleInfo.getOrderNum();
                 saleVolume += saleInfo.getSaleVolume();
             }
         }
         SaleInfoDTO saleInfoDTO = new SaleInfoDTO();
         saleInfoDTO.setSaleNum(saleNum);
+        saleInfoDTO.setOrderNum(orderNum);
         saleInfoDTO.setSaleVolume(saleVolume);
         if (saleNum == 0) {
             saleInfoDTO.setUnitPrice(0.0);

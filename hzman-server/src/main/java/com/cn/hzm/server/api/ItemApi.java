@@ -40,6 +40,13 @@ public class ItemApi {
         return HzmResponse.success(true);
     }
 
+    @ApiOperation("删除商品")
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public HzmResponse deleteItem(@ApiParam("商品sku") @RequestParam String sku) {
+        itemDealService.deleteItem(sku);
+        return HzmResponse.success(true);
+    }
+
     @ApiOperation("刷新商品")
     @RequestMapping(value = "/refresh", method = RequestMethod.GET)
     public HzmResponse createItem(@ApiParam("商品sku") @RequestParam String sku) {

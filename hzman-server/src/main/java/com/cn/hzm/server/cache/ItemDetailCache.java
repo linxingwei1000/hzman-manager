@@ -17,7 +17,6 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-
 import javax.annotation.PostConstruct;
 import java.util.*;
 import java.util.concurrent.ExecutorService;
@@ -47,8 +46,6 @@ public class ItemDetailCache {
     @Autowired
     private ItemRefreshTask itemRefreshTask;
 
-    private Map<String, ItemDTO> skuMap;
-
     private Map<Integer, Comparator<ItemDTO>> comparatorMap;
 
     private Queue<String> newItemSku;
@@ -58,10 +55,7 @@ public class ItemDetailCache {
     @PostConstruct
     public void installCacheConfig() {
 
-        skuMap = Maps.newHashMap();
-
         newItemSku = Lists.newLinkedList();
-
         newItemMap = Maps.newHashMap();
 
         comparatorMap = Maps.newHashMap();
@@ -73,6 +67,8 @@ public class ItemDetailCache {
         comparatorMap.put(ContextConst.ITEM_SORT_SALE_INVENTORY_ASC, new SaleInventoryAscComparator());
         comparatorMap.put(ContextConst.ITEM_SORT_LOCAL_INVENTORY_DESC, new LocalInventoryDescComparator());
         comparatorMap.put(ContextConst.ITEM_SORT_LOCAL_INVENTORY_ASC, new LocalInventoryAscComparator());
+        comparatorMap.put(ContextConst.ITEM_SORT_30_DAY_DESC, new Sale30DescComparator());
+        comparatorMap.put(ContextConst.ITEM_SORT_30_DAY_ASC, new Sale30AscComparator());
 
         cache = Caffeine.newBuilder()
                 .maximumSize(10000)
@@ -144,7 +140,7 @@ public class ItemDetailCache {
      */
     public List<ItemDTO> getCacheBySort(Integer searchType, String key, Integer sortType) {
 
-        Collection<ItemDTO> temp = skuMap.values();
+        Collection<ItemDTO> temp = cache.asMap().values();
         switch (searchType) {
             //sku 过滤
             case 1:
@@ -188,6 +184,24 @@ public class ItemDetailCache {
     /**
      * 根据sku获取缓存
      *
+     * @param sku
+     * @return
+     */
+    public ItemDTO getSingleCache(String sku) {
+        return cache.get(sku);
+    }
+
+    /**
+     * 删除缓存
+     * @param sku
+     */
+    public void deleteCache(String sku){
+        cache.invalidate(sku);
+    }
+
+    /**
+     * 根据sku获取缓存
+     *
      * @param skus
      * @return
      */
@@ -212,11 +226,6 @@ public class ItemDetailCache {
             return null;
         }
 
-        ItemDTO itemDTO = itemDealService.buildItemDTO(itemDO);
-
-        //添加或者覆盖
-        skuMap.put(sku, itemDTO);
-
-        return itemDTO;
+        return itemDealService.buildItemDTO(itemDO);
     }
 }

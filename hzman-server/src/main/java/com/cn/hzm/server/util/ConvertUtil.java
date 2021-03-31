@@ -6,12 +6,10 @@ import com.cn.hzm.core.aws.domain.inventory.DetailMember;
 import com.cn.hzm.core.aws.domain.inventory.Member;
 import com.cn.hzm.core.aws.domain.order.Order;
 import com.cn.hzm.core.aws.domain.order.OrderItem;
-import com.cn.hzm.core.aws.domain.product.AttributeSets;
-import com.cn.hzm.core.aws.domain.product.ItemAttributes;
-import com.cn.hzm.core.aws.domain.product.MarketplaceASIN;
-import com.cn.hzm.core.aws.domain.product.Product;
+import com.cn.hzm.core.aws.domain.product.*;
 import com.cn.hzm.core.aws.resp.inventory.ListInventorySupplyResponse;
 import com.cn.hzm.core.aws.resp.product.GetMatchingProductForIdResponse;
+import com.cn.hzm.core.aws.resp.product.GetMyPriceForSkuResponse;
 import com.cn.hzm.core.entity.InventoryDO;
 import com.cn.hzm.core.entity.ItemDO;
 import com.cn.hzm.core.entity.OrderDO;
@@ -42,6 +40,32 @@ public class ConvertUtil {
 
         itemDO.setRelationship(JSONObject.toJSONString(product.getRelationships()));
         return itemDO;
+    }
+
+    public static Double getItemPrice(GetMyPriceForSkuResponse priceResp){
+        Double itemPrice = 0.0;
+        if (priceResp != null && priceResp.getGetMyPriceForSkuResult() != null && priceResp.getGetMyPriceForSkuResult().getProduct() != null) {
+            Product product = priceResp.getGetMyPriceForSkuResult().getProduct();
+
+            if (product.getOffers() != null && product.getOffers().getOffer() != null) {
+                Offer offer = priceResp.getGetMyPriceForSkuResult().getProduct().getOffers().getOffer();
+                if (offer.getRegularPrice() != null) {
+                    itemPrice = offer.getRegularPrice().getAmount();
+                } else {
+                    if (offer.getBuyingPrice() != null) {
+                        BuyingPrice buyingPrice = offer.getBuyingPrice();
+                        if (buyingPrice.getLandedPrice() != null) {
+                            itemPrice = buyingPrice.getLandedPrice().getAmount();
+                        }else if(buyingPrice.getListingPrice() != null){
+                            itemPrice = buyingPrice.getListingPrice().getAmount();
+                        }else{
+                            itemPrice = buyingPrice.getShipping().getAmount();
+                        }
+                    }
+                }
+            }
+        }
+        return itemPrice;
     }
 
 

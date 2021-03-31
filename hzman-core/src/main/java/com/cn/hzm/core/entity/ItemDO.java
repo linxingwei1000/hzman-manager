@@ -27,6 +27,9 @@ public class ItemDO {
 
     private String icon;
 
+    @TableField(value = "item_price")
+    private Double itemPrice;
+
     @TableField(value = "marketplace_id")
     private String marketplaceId;
 
@@ -34,6 +37,8 @@ public class ItemDO {
     private String attributeSet;
 
     private String relationship;
+
+    private Integer active;
 
     private Date ctime;
 

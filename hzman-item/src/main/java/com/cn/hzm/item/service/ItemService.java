@@ -27,6 +27,8 @@ public class ItemService {
                 query.like("sku", condition.get("sku"));
             }
         }
+
+        query.eq("active", 1);
         query.select(fields);
         return itemMapper.selectList(query);
     }

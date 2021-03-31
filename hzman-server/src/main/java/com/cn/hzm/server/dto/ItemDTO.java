@@ -30,6 +30,9 @@ public class ItemDTO extends RespBaseDTO{
     @ApiModelProperty(value = "SKU", example = "N190301")
     private String sku;
 
+    @ApiModelProperty(value = "商品单价")
+    private Double itemPrice;
+
     @ApiModelProperty(value = "商品属性")
     private String attributeSet;
 
