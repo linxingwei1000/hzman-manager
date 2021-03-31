@@ -54,7 +54,7 @@ public class ItemRefreshTask {
             Map<String, Integer> failTimes = Maps.newHashMap();
             refreshItem(skus, 1, failTimes);
             log.info("=============刷新商品任务结束，任务耗时：{} ", System.currentTimeMillis() - curTime);
-                }, 60, 30 * 60, TimeUnit.SECONDS);
+                }, 10, 30 * 60, TimeUnit.SECONDS);
     }
 
     private void refreshItem(List<String> skus, Integer epoch, Map<String, Integer> failTimes) {

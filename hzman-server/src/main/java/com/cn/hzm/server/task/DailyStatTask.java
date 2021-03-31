@@ -111,7 +111,8 @@ public class DailyStatTask {
             return;
         }
 
-        orders = orders.stream().filter(orderDO -> !ContextConst.AMAZON_STATUS_CANCELED.equals(orderDO.getOrderStatus())).collect(Collectors.toList());
+        orders = orders.stream().filter(orderDO -> !ContextConst.AMAZON_STATUS_CANCELED.equals(orderDO.getOrderStatus())
+                && !ContextConst.AMAZON_STATUS_DELETE.equals(orderDO.getOrderStatus())).collect(Collectors.toList());
         //防止mybatis in 搜索优化功能：mybatis使用in搜索时，如果入仓为空，删除in条件，改为全表搜索
         //全表搜索，数据库所有数据加入内存，导致OOM
         if (orders.size() == 0) {

@@ -17,11 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+
 import javax.annotation.PostConstruct;
 import java.util.*;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 import java.util.stream.Collectors;
 
 /**
@@ -48,15 +47,8 @@ public class ItemDetailCache {
 
     private Map<Integer, Comparator<ItemDTO>> comparatorMap;
 
-    private Queue<String> newItemSku;
-
-    private Map<String, Integer> newItemMap;
-
     @PostConstruct
     public void installCacheConfig() {
-
-        newItemSku = Lists.newLinkedList();
-        newItemMap = Maps.newHashMap();
 
         comparatorMap = Maps.newHashMap();
         comparatorMap.put(ContextConst.ITEM_SORT_TODAY_DESC, new TodaySaleDescComparator());
@@ -83,7 +75,7 @@ public class ItemDetailCache {
         //异步加载数据
         ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
             Thread t = new Thread(r);
-            t.setName("商品详情缓存线程");
+            t.setName("商品缓存线程");
             return t;
         });
 
@@ -94,41 +86,37 @@ public class ItemDetailCache {
             List<ItemDO> items = itemService.getListByCondition(Maps.newHashMap(), new String[]{"sku"});
 
             long startTime = System.currentTimeMillis();
-            log.info("商品详情缓存加载流程开始，需缓存个数：{}", items.size());
-            items.forEach(itemDO -> cache.put(itemDO.getSku(), installItemDTO(itemDO.getSku())));
+            int threadNum = items.size() / 500 + (items.size() % 500 == 0 ? 0 : 1);
+            log.info("商品详情缓存加载流程开始，需缓存个数：{} 开启线程数：{}", items.size(), threadNum);
+            ExecutorService executorService = Executors.newFixedThreadPool(threadNum, r -> {
+                Thread t = new Thread(r);
+                t.setName("商品缓存子线程");
+                return t;
+            });
+            CountDownLatch countDownLatch = new CountDownLatch(threadNum);
+
+            for (int i = 0; i < threadNum; i++) {
+                int beginIndex = i * 500;
+                int endIndex = (i + 1) * 500;
+                if (endIndex > items.size()) {
+                    endIndex = items.size();
+                }
+                List<ItemDO> subItems = items.subList(beginIndex, endIndex);
+                executorService.execute(()->{
+                    subItems.forEach(itemDO -> cache.put(itemDO.getSku(), installItemDTO(itemDO.getSku())));
+                    countDownLatch.countDown();
+                });
+            }
+
+            try {
+                countDownLatch.await();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
             log.info("商品详情缓存加载流程结束，耗时：{}", System.currentTimeMillis() - startTime);
 
             //本地商品缓存结束，开启商品刷新任务
             itemRefreshTask.init();
-        });
-
-        //新品爬去线程
-        ExecutorService itemExecutor = Executors.newSingleThreadExecutor(r -> {
-            Thread t = new Thread(r);
-            t.setName("异常商品信息爬取线程");
-            return t;
-        });
-
-        itemExecutor.submit(() -> {
-            while (true) {
-                String sku = newItemSku.poll();
-                if (StringUtils.isEmpty(sku)) {
-                    Thread.sleep(60 * 1000);
-                    continue;
-                }
-                try {
-                    log.info("异常导致商品数据未获取sku【{}】", sku);
-                    itemDealService.processSync(sku);
-                } catch (Exception e) {
-                    Integer times = newItemMap.getOrDefault(sku, 0);
-                    if (times < 3) {
-                        newItemSku.offer(sku);
-                        newItemMap.put(sku, ++times);
-                    } else {
-                        log.info("获取sku【{}】获取商品详情次数超限", sku);
-                    }
-                }
-            }
         });
     }
 
@@ -193,9 +181,10 @@ public class ItemDetailCache {
 
     /**
      * 删除缓存
+     *
      * @param sku
      */
-    public void deleteCache(String sku){
+    public void deleteCache(String sku) {
         cache.invalidate(sku);
     }
 
@@ -220,12 +209,17 @@ public class ItemDetailCache {
 
 
     public ItemDTO installItemDTO(String sku) {
-        ItemDO itemDO = itemService.getItemDOBySku(sku);
-        if (itemDO == null) {
-            newItemSku.offer(sku);
-            return null;
+        ItemDTO itemDTO = null;
+        try {
+            ItemDO itemDO = itemService.getItemDOBySku(sku);
+            if (itemDO == null) {
+                return null;
+            }
+            itemDTO = itemDealService.buildItemDTO(itemDO);
+        } catch (Exception e) {
+            log.error("item缓存对象创建失败，sku:{} e:{}", sku, e.getMessage());
+            e.printStackTrace();
         }
-
-        return itemDealService.buildItemDTO(itemDO);
+        return itemDTO;
     }
 }

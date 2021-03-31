@@ -1,6 +1,7 @@
 package com.cn.hzm.server.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cn.hzm.core.util.RandomUtil;
 import com.cn.hzm.core.util.TimeUtil;
 import com.cn.hzm.server.cache.SaleInfoCache;
 import com.cn.hzm.server.dto.SaleInfoDTO;
@@ -58,6 +59,9 @@ public class SaleInfoDealService {
         } else {
             saleInfoDTO.setUnitPrice(saleInfoDTO.getSaleVolume() / saleInfoDTO.getSaleNum());
         }
+
+        saleInfoDTO.setSaleVolume(RandomUtil.saveDefaultDecimal(saleInfoDTO.getSaleVolume()));
+        saleInfoDTO.setUnitPrice(RandomUtil.saveDefaultDecimal(saleInfoDTO.getUnitPrice()));
         return saleInfoDTO;
     }
 }

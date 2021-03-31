@@ -1,6 +1,7 @@
 package com.cn.hzm.server.cache;
 
 import com.cn.hzm.core.entity.SaleInfoDO;
+import com.cn.hzm.core.util.RandomUtil;
 import com.cn.hzm.core.util.TimeUtil;
 import com.cn.hzm.order.service.SaleInfoService;
 import com.cn.hzm.server.dto.SaleInfoDTO;
@@ -31,14 +32,14 @@ public class SaleInfoCache {
 
     private Map<String, SaleInfoDTO> dailySaleInfoMap;
 
-    private static final Integer DEFAULT_DEAL_DAY_NUM = 30;
+    private static final String BEGIN_DATE = "2020-01-01";
 
     /**
      * 获取每日销量数据
      */
-    public SaleInfoDTO getDailySaleInfo(String strDate){
+    public SaleInfoDTO getDailySaleInfo(String strDate) {
         SaleInfoDTO saleInfoDTO = dailySaleInfoMap.get(strDate);
-        if(saleInfoDTO ==null){
+        if (saleInfoDTO == null) {
             saleInfoDTO = new SaleInfoDTO();
             saleInfoDTO.setOrderNum(0);
             saleInfoDTO.setSaleNum(0);
@@ -48,17 +49,16 @@ public class SaleInfoCache {
         return saleInfoDTO;
     }
 
-    public List<SaleInfoDTO> getSaleInfoByDays(List<String> strDates){
+    public List<SaleInfoDTO> getSaleInfoByDays(List<String> strDates) {
         return strDates.stream().filter(strDate -> dailySaleInfoMap.containsKey(strDate))
                 .map(strDate -> dailySaleInfoMap.get(strDate)).collect(Collectors.toList());
     }
 
 
-
     /**
      * 刷新每日销量缓存数据
      */
-    public void refreshDailySaleInfo(Set<String> strDates){
+    public void refreshDailySaleInfo(Set<String> strDates) {
         strDates.forEach(this::dealDailySaleInfo);
     }
 
@@ -70,6 +70,7 @@ public class SaleInfoCache {
 
         //init latest 30 day saleInfo
         initLatestDaysInfo(usDate);
+        log.info("===================销量数据加载完成");
 
         ScheduledExecutorService executor = new ScheduledThreadPoolExecutor(1, r -> {
             Thread t = new Thread();
@@ -87,39 +88,42 @@ public class SaleInfoCache {
     }
 
     private void initLatestDaysInfo(Date usDate) {
-        int i = 1;
-        while (i > DEFAULT_DEAL_DAY_NUM) {
+        for (; ; ) {
             String strDate = TimeUtil.getSimpleFormat(usDate);
             dealDailySaleInfo(strDate);
 
+            if (strDate.equals(BEGIN_DATE)) {
+                break;
+            }
             usDate = TimeUtil.dateFixByDay(usDate, -1, 0, 0);
-            i++;
-            log.info("{} 当日销量缓存完成", strDate);
         }
     }
 
     private void dealDailySaleInfo(String strDate) {
         List<SaleInfoDO> list = saleInfoService.getSaleInfoDOByDate(strDate);
+        int totalOrderNum = 0;
+        int totalSaleNum = 0;
+        double totalSaleVolume = 0.0;
+        for (SaleInfoDO saleInfo : list) {
+            int orderNum = saleInfo.getOrderNum() == null ? 0 : saleInfo.getOrderNum();
+            int saleNum = saleInfo.getSaleNum() == null ? 0 : saleInfo.getSaleNum();
+            double saleVolume = saleInfo.getSaleVolume() == null ? 0.0 : saleInfo.getSaleVolume();
+
+            totalOrderNum += orderNum;
+            totalSaleNum += saleNum;
+            totalSaleVolume += saleVolume;
+        }
+
+        double unitPrice = totalSaleVolume;
+        if (totalSaleNum != 0) {
+            unitPrice = totalSaleVolume/ totalSaleNum;
+        }
 
         SaleInfoDTO saleInfoDTO = new SaleInfoDTO();
-        saleInfoDTO.setOrderNum(0);
-        saleInfoDTO.setSaleNum(0);
-        saleInfoDTO.setSaleVolume(0.0);
-        list.forEach(saleInfo -> {
-            Integer orderNum = saleInfo.getOrderNum() == null ? 0 : saleInfo.getOrderNum();
-            Integer saleNum = saleInfo.getSaleNum() == null ? 0 : saleInfo.getSaleNum();
-            Double saleVolume = saleInfo.getSaleVolume() == null ? 0.0 : saleInfo.getSaleVolume();
-
-            saleInfoDTO.setOrderNum(orderNum + saleInfoDTO.getOrderNum());
-            saleInfoDTO.setSaleNum(saleNum + saleInfoDTO.getSaleNum());
-            saleInfoDTO.setSaleVolume(saleVolume + saleInfoDTO.getSaleVolume());
-        });
-
-        if (saleInfoDTO.getSaleNum() == 0) {
-            saleInfoDTO.setUnitPrice(saleInfoDTO.getSaleVolume());
-        } else {
-            saleInfoDTO.setUnitPrice(saleInfoDTO.getSaleVolume() / saleInfoDTO.getSaleNum());
-        }
+        saleInfoDTO.setOrderNum(totalOrderNum);
+        saleInfoDTO.setSaleNum(totalSaleNum);
+        saleInfoDTO.setSaleVolume(RandomUtil.saveDefaultDecimal(totalSaleVolume));
+        saleInfoDTO.setUnitPrice(RandomUtil.saveDefaultDecimal(unitPrice));
         dailySaleInfoMap.put(strDate, saleInfoDTO);
     }
 }
