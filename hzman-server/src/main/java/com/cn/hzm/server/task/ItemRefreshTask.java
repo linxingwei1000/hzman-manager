@@ -67,9 +67,10 @@ public class ItemRefreshTask {
                 failSkus.add(sku);
                 Integer times = failTimes.getOrDefault(sku, 0);
                 if(times == FAIL_LIMIT){
-                    log.info("sku【{}】刷新失败次数超限", sku);
                     failTimes.remove(sku);
                     failSkus.remove(sku);
+                    itemDealService.deleteItem(sku);
+                    log.info("sku【{}】刷新失败次数超限 本地逻辑删除", sku);
                 }else{
                     failTimes.put(sku, ++times);
                 }
@@ -77,7 +78,7 @@ public class ItemRefreshTask {
         }
         log.info("=============第{}轮刷新商品，失败需要重新刷新个数：{}", epoch, failSkus.size());
 
-        if(!CollectionUtils.isEmpty(skus)){
+        if(!CollectionUtils.isEmpty(failSkus)){
             refreshItem(failSkus, ++epoch, failTimes);
         }
     }
