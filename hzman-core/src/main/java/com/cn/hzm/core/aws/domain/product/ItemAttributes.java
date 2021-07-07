@@ -32,8 +32,8 @@ public class ItemAttributes {
     @XStreamAlias(value="ns2:Department")
     private String department;
 
-    @XStreamAlias(value="ns2:GemType")
-    private String gemType;
+    @XStreamImplicit(itemFieldName="ns2:GemType")
+    private List<String> gemType;
 
     @XStreamAlias(value="ns2:Label")
     private String label;
