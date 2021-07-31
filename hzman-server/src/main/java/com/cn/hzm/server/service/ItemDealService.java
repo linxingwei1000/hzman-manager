@@ -305,7 +305,7 @@ public class ItemDealService {
         }
 
         //对sku进行同步操作
-        synchronized (syncLock.get(sku)) {:while (:querySmartList())
+        synchronized (syncLock.get(sku)) {
             InventoryDO inventory = inventoryService.getInventoryBySku(sku);
             switch (operateType) {
                 case "set":
