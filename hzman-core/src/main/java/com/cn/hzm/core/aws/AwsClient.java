@@ -1,14 +1,15 @@
 package com.cn.hzm.core.aws;
 
 import com.cn.hzm.core.aws.request.BaseRequest;
+import com.cn.hzm.core.aws.request.fulfilment.ShipmentInfoByNextTokenRequest;
+import com.cn.hzm.core.aws.request.fulfilment.ShipmentInfoRequest;
 import com.cn.hzm.core.aws.request.fulfilment.ShipmentItemsByNextTokenRequest;
 import com.cn.hzm.core.aws.request.fulfilment.ShipmentItemsRequest;
 import com.cn.hzm.core.aws.request.inventory.ListInventoryRequest;
 import com.cn.hzm.core.aws.request.order.*;
 import com.cn.hzm.core.aws.request.product.GetMatchProductRequest;
 import com.cn.hzm.core.aws.request.product.GetMyPriceForSkuRequest;
-import com.cn.hzm.core.aws.resp.fulfilment.ListInboundShipmentItemsByNextTokenResponse;
-import com.cn.hzm.core.aws.resp.fulfilment.ListInboundShipmentItemsResponse;
+import com.cn.hzm.core.aws.resp.fulfilment.*;
 import com.cn.hzm.core.aws.resp.inventory.ListInventorySupplyResponse;
 import com.cn.hzm.core.aws.resp.order.*;
 import com.cn.hzm.core.aws.resp.product.GetMatchingProductForIdResponse;
@@ -23,6 +24,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
 import java.util.List;
@@ -168,6 +170,51 @@ public class AwsClient {
         tokenRequest.setNextToken(nextToken);
         tokenRequest.setTimestamp(TimeUtil.getUTC());
         return doPost(tokenRequest, ListOrderItemsByNextTokenResponse.class);
+    }
+
+    /**
+     * 获取货单信息
+     *
+     * @param shipmentIds
+     * @param beginDate
+     * @param endDate
+     * @return
+     */
+    public ListInboundShipmentsResponse getShipmentInfo(List<String> shipmentStatus, List<String> shipmentIds, String beginDate, String endDate) {
+        ShipmentInfoRequest shipmentInfoRequest = new ShipmentInfoRequest();
+        shipmentInfoRequest.setAction("ListInboundShipments");
+        shipmentInfoRequest.setTimestamp(TimeUtil.getUTC());
+
+        if(!CollectionUtils.isEmpty(shipmentStatus)) {
+            shipmentInfoRequest.setShipmentStatusList(shipmentStatus);
+        }
+
+        if (!CollectionUtils.isEmpty(shipmentIds)) {
+            shipmentInfoRequest.setShipmentIds(shipmentIds);
+        }
+
+        if(!StringUtils.isEmpty(beginDate)) {
+            shipmentInfoRequest.setLastUpdatedAfter(beginDate);
+        }
+
+        if(!StringUtils.isEmpty(endDate)){
+            shipmentInfoRequest.setLastUpdatedBefore(endDate);
+        }
+        return doPost(shipmentInfoRequest, ListInboundShipmentsResponse.class);
+    }
+
+    /**
+     * 获取货单信息nextToken
+     *
+     * @param nextToken
+     * @return
+     */
+    public ListInboundShipmentsByNextTokenResponse getShipmentInfoNextToken(String nextToken) {
+        ShipmentInfoByNextTokenRequest shipmentItemsRequest = new ShipmentInfoByNextTokenRequest();
+        shipmentItemsRequest.setAction("ListInboundShipmentsByNextToken");
+        shipmentItemsRequest.setTimestamp(TimeUtil.getUTC());
+        shipmentItemsRequest.setNextToken(nextToken);
+        return doPost(shipmentItemsRequest, ListInboundShipmentsByNextTokenResponse.class);
     }
 
     /**

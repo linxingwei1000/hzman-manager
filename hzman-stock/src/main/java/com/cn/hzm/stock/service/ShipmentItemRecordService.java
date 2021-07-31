@@ -29,10 +29,26 @@ public class ShipmentItemRecordService {
         shipmentItemRecordMapper.insert(shipmentItemDO);
     }
 
+    /**
+     * 创建amazon入库记录
+     * @param shipmentItemDO
+     */
+    public void updateRecord(ShipmentItemRecordDO shipmentItemDO){
+        shipmentItemDO.setUtime(new Date());
+        shipmentItemRecordMapper.updateById(shipmentItemDO);
+    }
+
+    public List<ShipmentItemRecordDO> getAllRecordBySku(String sku){
+        QueryWrapper<ShipmentItemRecordDO> query = new QueryWrapper<>();
+        query.eq("seller_sku", sku);
+        query.select("shipment_id", "quantity_received");
+        return shipmentItemRecordMapper.selectList(query);
+    }
+
     public List<ShipmentItemRecordDO> getAllRecordByShipmentId(String shipmentId){
         QueryWrapper<ShipmentItemRecordDO> query = new QueryWrapper<>();
         query.eq("shipment_id", shipmentId);
-        query.select("shipment_id", "seller_sku");
+        query.select("id", "shipment_id", "seller_sku");
         return shipmentItemRecordMapper.selectList(query);
     }
 }

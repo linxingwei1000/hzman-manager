@@ -9,6 +9,7 @@ import com.cn.hzm.core.aws.domain.product.ProductError;
 import com.cn.hzm.core.aws.resp.product.GetMatchingProductForIdResponse;
 import com.cn.hzm.core.aws.resp.product.GetMyPriceForSkuResponse;
 import com.cn.hzm.core.entity.*;
+import com.cn.hzm.core.enums.AmazonShipmentStatusEnum;
 import com.cn.hzm.core.exception.ExceptionCode;
 import com.cn.hzm.core.exception.HzmException;
 import com.cn.hzm.core.util.TimeUtil;
@@ -26,6 +27,8 @@ import com.cn.hzm.server.task.ShipmentSpiderTask;
 import com.cn.hzm.server.task.SmartReplenishmentTask;
 import com.cn.hzm.server.util.ConvertUtil;
 import com.cn.hzm.stock.service.InventoryService;
+import com.cn.hzm.stock.service.ShipmentInfoRecordService;
+import com.cn.hzm.stock.service.ShipmentItemRecordService;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
@@ -70,6 +73,12 @@ public class ItemDealService {
 
     @Autowired
     private InventoryService inventoryService;
+
+    @Autowired
+    private ShipmentInfoRecordService shipmentInfoRecordService;
+
+    @Autowired
+    private ShipmentItemRecordService shipmentItemRecordService;
 
     @Autowired
     private ItemDetailCache itemDetailCache;
@@ -121,7 +130,7 @@ public class ItemDealService {
         dealSkuInventory(sku, "refresh", 0);
     }
 
-    public void deleteItem(String sku){
+    public void deleteItem(String sku) {
         //逻辑删除
         ItemDO old = itemService.getItemDOBySku(sku);
         old.setActive(0);
@@ -129,7 +138,6 @@ public class ItemDealService {
 
         itemDetailCache.deleteCache(sku);
     }
-
 
 
     public List<SimpleItemDTO> fuzzyQuery(Integer searchType, String value) {
@@ -162,8 +170,10 @@ public class ItemDealService {
             inventoryDTO = new InventoryDTO();
         }
 
-        List<FactoryOrderItemDO> factoryOrderItemDOS = factoryOrderItemService.getOrderBySku(itemDO.getSku());
+        //计算入库中的数量
+        inventoryDTO.setAmazonInboundQuantity(getInBoundNum(itemDO.getSku()));
 
+        List<FactoryOrderItemDO> factoryOrderItemDOS = factoryOrderItemService.getOrderBySku(itemDO.getSku());
         Map<Integer, FactoryOrderDO> map = Maps.newHashMap();
         List<FactoryQuantityDTO> factoryQuantityDTOS = factoryOrderItemDOS.stream().filter(orderItem -> {
             FactoryOrderDO order = factoryOrderService.getOrderById(orderItem.getFactoryOrderId());
@@ -210,6 +220,27 @@ public class ItemDealService {
         itemDTO.setReplenishmentNum(smart == null ? 0 : smart.getNeedNum().intValue());
 
         return itemDTO;
+    }
+
+    private Integer getInBoundNum(String sku) {
+        List<ShipmentItemRecordDO> records = shipmentItemRecordService.getAllRecordBySku(sku);
+        List<String> shipmentIds = records.stream().map(ShipmentItemRecordDO::getShipmentId).collect(Collectors.toList());
+        List<ShipmentInfoRecordDO> infoRecords = shipmentInfoRecordService.getAllRecordByShipmentIds(shipmentIds);
+        List<String> useShipmentIds = infoRecords.stream().filter(infoRecord -> !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_CLOSED.getCode())
+                && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_CANCELLED.getCode())
+                && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_DELETED.getCode())
+                && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_ERROR.getCode()))
+                .map(ShipmentInfoRecordDO::getShipmentId).collect(Collectors.toList());
+
+        int num = 0;
+        for(ShipmentItemRecordDO record: records){
+            if(useShipmentIds.contains(record.getShipmentId())){
+                if(record.getQuantityReceived()!=null){
+                    num += record.getQuantityReceived();
+                }
+            }
+        }
+        return num;
     }
 
     private SaleInfoDTO getSaleInfoByDate(Date date, String sku) {
@@ -274,7 +305,7 @@ public class ItemDealService {
         }
 
         //对sku进行同步操作
-        synchronized (syncLock.get(sku)) {
+        synchronized (syncLock.get(sku)) {:while (:querySmartList())
             InventoryDO inventory = inventoryService.getInventoryBySku(sku);
             switch (operateType) {
                 case "set":

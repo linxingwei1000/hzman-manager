@@ -1,7 +1,7 @@
 package com.cn.hzm.server.util;
 
 import com.alibaba.fastjson.JSONObject;
-import com.baomidou.mybatisplus.annotation.TableField;
+import com.cn.hzm.core.aws.domain.fulfilment.ShipmentMember;
 import com.cn.hzm.core.aws.domain.inventory.DetailMember;
 import com.cn.hzm.core.aws.domain.inventory.Member;
 import com.cn.hzm.core.aws.domain.order.Order;
@@ -10,10 +10,7 @@ import com.cn.hzm.core.aws.domain.product.*;
 import com.cn.hzm.core.aws.resp.inventory.ListInventorySupplyResponse;
 import com.cn.hzm.core.aws.resp.product.GetMatchingProductForIdResponse;
 import com.cn.hzm.core.aws.resp.product.GetMyPriceForSkuResponse;
-import com.cn.hzm.core.entity.InventoryDO;
-import com.cn.hzm.core.entity.ItemDO;
-import com.cn.hzm.core.entity.OrderDO;
-import com.cn.hzm.core.entity.OrderItemDO;
+import com.cn.hzm.core.entity.*;
 import com.cn.hzm.core.util.TimeUtil;
 import org.springframework.util.StringUtils;
 
@@ -42,7 +39,7 @@ public class ConvertUtil {
         return itemDO;
     }
 
-    public static Double getItemPrice(GetMyPriceForSkuResponse priceResp){
+    public static Double getItemPrice(GetMyPriceForSkuResponse priceResp) {
         Double itemPrice = 0.0;
         if (priceResp != null && priceResp.getGetMyPriceForSkuResult() != null && priceResp.getGetMyPriceForSkuResult().getProduct() != null) {
             Product product = priceResp.getGetMyPriceForSkuResult().getProduct();
@@ -56,9 +53,9 @@ public class ConvertUtil {
                         BuyingPrice buyingPrice = offer.getBuyingPrice();
                         if (buyingPrice.getLandedPrice() != null) {
                             itemPrice = buyingPrice.getLandedPrice().getAmount();
-                        }else if(buyingPrice.getListingPrice() != null){
+                        } else if (buyingPrice.getListingPrice() != null) {
                             itemPrice = buyingPrice.getListingPrice().getAmount();
-                        }else{
+                        } else {
                             itemPrice = buyingPrice.getShipping().getAmount();
                         }
                     }
@@ -225,5 +222,27 @@ public class ConvertUtil {
         orderItemDO.setIsTransparency(Boolean.parseBoolean(orderItem.getIsTransparency()) ? 1 : 0);
 
         return orderItemDO;
+    }
+
+    public static ShipmentInfoRecordDO convertToShipmentInfoDO(ShipmentInfoRecordDO shipmentInfo, ShipmentMember shipmentMember) {
+        shipmentInfo.setFcid(shipmentMember.getDestinationFulfillmentCenterId());
+        shipmentInfo.setLpType(shipmentMember.getLabelPrepType());
+        shipmentInfo.setShipAddress(JSONObject.toJSONString(shipmentMember.getShipFromAddress()));
+        shipmentInfo.setShipmentId(shipmentMember.getShipmentId());
+        shipmentInfo.setShipmentName(shipmentMember.getShipmentName());
+        shipmentInfo.setBoxContentsSource(shipmentMember.getBoxContentsSource() == null ? "" : shipmentMember.getBoxContentsSource());
+        shipmentInfo.setShipmentStatus(shipmentMember.getShipmentStatus());
+        return shipmentInfo;
+    }
+
+    public static ShipmentItemRecordDO convertToShipmentItemDO(ShipmentItemRecordDO shipmentItemDO, com.cn.hzm.core.aws.domain.fulfilment.Member member) {
+        shipmentItemDO.setQuantityShipped(member.getQuantityShipped());
+        shipmentItemDO.setShipmentId(member.getShipmentId());
+        shipmentItemDO.setPrepDetailsList(JSONObject.toJSONString(member.getPrepDetailsList()));
+        shipmentItemDO.setFulfillmentNetworkSKU(member.getFulfillmentNetworkSKU());
+        shipmentItemDO.setSellerSKU(member.getSellerSKU());
+        shipmentItemDO.setQuantityReceived(member.getQuantityReceived());
+        shipmentItemDO.setQuantityInCase(member.getQuantityInCase());
+        return shipmentItemDO;
     }
 }

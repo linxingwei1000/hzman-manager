@@ -366,6 +366,7 @@ public class OrderSpiderTask {
                 if (itemDO == null) {
                     GetMatchingProductForIdResponse resp = awsClient.getProductInfoByAsin("ASIN", orderItem.getAsin());
                     itemDO = ConvertUtil.convertToItemDO(new ItemDO(), resp, orderItem.getSellerSKU());
+                    itemDO.setItemPrice(ConvertUtil.getItemPrice(awsClient.getMyPriceForSku(itemDO.getSku())));
                     itemService.createItem(itemDO);
                 }
 

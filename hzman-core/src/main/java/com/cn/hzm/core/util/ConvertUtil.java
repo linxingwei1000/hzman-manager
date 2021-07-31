@@ -18,7 +18,7 @@ public class ConvertUtil {
         XStream.setupDefaultSecurity(xstream);
 
         xstream.allowTypes(new Class[]{clazz});
-
+        xstream.ignoreUnknownElements();
         xstream.processAnnotations(clazz);
         xstream.autodetectAnnotations(true);
         xmlObject = (T) xstream.fromXML(xml);

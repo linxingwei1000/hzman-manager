@@ -82,6 +82,23 @@ CREATE TABLE hzm.hzm_inventory (
   KEY `idx_asin` (`asin`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='库存表';
 
+drop table hzm.hzm_shipment_info_record;
+CREATE TABLE hzm.hzm_shipment_info_record (
+    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `fcid` varchar(255) not NULL COMMENT 'amazon货运中心编号',
+    `lp_type` varchar(255) not NULL COMMENT '入库货件必需的标签准备的类型',
+    `ship_address` text not NULL COMMENT '货单信息',
+    `shipment_id` varchar(255) not NULL COMMENT '运单单号',
+    `shipment_name` varchar(255) not NULL COMMENT '货运单名字',
+    `box_contents_source` varchar(128) not null comment '隐藏属性',
+    `shipment_status` varchar(128) not null comment '货运单状态',
+    `ctime` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `utime` datetime NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    KEY `idx_shipment_status` (`shipment_status`),
+    KEY `idx_shipment_id` (`shipment_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='amazon货运单信息记录表';
+
 drop table hzm.hzm_shipment_item_record;
 CREATE TABLE hzm.hzm_shipment_item_record (
   `id` int(11) unsigned NOT NULL AUTO_INCREMENT,

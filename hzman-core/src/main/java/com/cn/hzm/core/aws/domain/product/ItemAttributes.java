@@ -107,6 +107,9 @@ public class ItemAttributes {
     @XStreamAlias(value="ns2:Size")
     private String size;
 
+    @XStreamAlias(value="ns2:Edition")
+    private String edition;
+
 
 
 }
