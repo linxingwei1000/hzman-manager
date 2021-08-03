@@ -192,7 +192,7 @@ public class OrderSpiderTask {
         long startTime = System.currentTimeMillis();
         int changeTotal = 0;
 
-        for (int curNum = 0; curNum < dealTimes; curNum++) {
+        for (int curNum = 0; curNum <= dealTimes; curNum++) {
             int start = curNum * limit;
             int end = Math.min(dbOrderNum, (curNum + 1) * limit);
 

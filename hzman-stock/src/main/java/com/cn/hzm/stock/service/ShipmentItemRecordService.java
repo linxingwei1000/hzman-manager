@@ -41,7 +41,7 @@ public class ShipmentItemRecordService {
     public List<ShipmentItemRecordDO> getAllRecordBySku(String sku){
         QueryWrapper<ShipmentItemRecordDO> query = new QueryWrapper<>();
         query.eq("seller_sku", sku);
-        query.select("shipment_id", "quantity_received");
+        query.select("shipment_id", "quantity_shipped", "quantity_received");
         return shipmentItemRecordMapper.selectList(query);
     }
 

@@ -224,19 +224,28 @@ public class ItemDealService {
 
     private Integer getInBoundNum(String sku) {
         List<ShipmentItemRecordDO> records = shipmentItemRecordService.getAllRecordBySku(sku);
+        if(CollectionUtils.isEmpty(records)){
+            return 0;
+        }
+
         List<String> shipmentIds = records.stream().map(ShipmentItemRecordDO::getShipmentId).collect(Collectors.toList());
         List<ShipmentInfoRecordDO> infoRecords = shipmentInfoRecordService.getAllRecordByShipmentIds(shipmentIds);
         List<String> useShipmentIds = infoRecords.stream().filter(infoRecord -> !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_CLOSED.getCode())
                 && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_CANCELLED.getCode())
                 && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_DELETED.getCode())
-                && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_ERROR.getCode()))
+                && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_ERROR.getCode())
+                && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_RECEIVING.getCode()))
                 .map(ShipmentInfoRecordDO::getShipmentId).collect(Collectors.toList());
+
+        if(CollectionUtils.isEmpty(useShipmentIds)){
+            return 0;
+        }
 
         int num = 0;
         for(ShipmentItemRecordDO record: records){
             if(useShipmentIds.contains(record.getShipmentId())){
-                if(record.getQuantityReceived()!=null){
-                    num += record.getQuantityReceived();
+                if(record.getQuantityShipped()!=null){
+                    num += record.getQuantityShipped();
                 }
             }
         }

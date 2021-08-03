@@ -166,6 +166,7 @@ public class ShipmentSpiderTask {
             try {
 
                 List<ShipmentInfoRecordDO> shipments = shipmentInfoRecordService.getAllRecordByShipmentStatus(needSpiderShipmentStatus);
+                log.info("货物入库单待更新总数量：{}", shipments.size());
                 if (!CollectionUtils.isEmpty(shipments)) {
                     doUpdateShipment(shipments);
                 }
@@ -184,11 +185,11 @@ public class ShipmentSpiderTask {
         log.info("货物入库单更新任务开始");
 
         int dbOrderNum = shipments.size();
-        int limit = 50;
-        int dealTimes = dbOrderNum / 50;
+        int limit = 10;
+        int dealTimes = dbOrderNum / limit;
         long startTime = System.currentTimeMillis();
 
-        for (int curNum = 0; curNum < dealTimes; curNum++) {
+        for (int curNum = 0; curNum <= dealTimes; curNum++) {
             int start = curNum * limit;
             int end = Math.min(dbOrderNum, (curNum + 1) * limit);
 
