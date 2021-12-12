@@ -218,6 +218,10 @@ public class OrderSpiderTask {
                     //获取资源
                     orderItemSemaphore.acquire();
                     ListOrderItemsResponse tokenResponse = awsClient.getListOrderItemsByAmazonId(amazonId);
+                    //网络问题引起数据无法获取
+                    if (tokenResponse == null) {
+                        continue;
+                    }
 
                     parseOrderItem(tokenResponse.getListOrderItemsResult().getOrderItems().getList(), amazonId);
 
@@ -362,9 +366,9 @@ public class OrderSpiderTask {
                 orderItemService.createOrderItem(ConvertUtil.convertToOrderItemDO(update, orderItem, amazonId));
 
                 //爬取商品信息
-                ItemDO itemDO = itemService.getItemDOByASIN(orderItem.getAsin());
+                ItemDO itemDO = itemService.getItemDOBySku(orderItem.getSellerSKU());
                 if (itemDO == null) {
-                    GetMatchingProductForIdResponse resp = awsClient.getProductInfoByAsin("ASIN", orderItem.getAsin());
+                    GetMatchingProductForIdResponse resp = awsClient.getProductInfoByAsin("SellerSKU", orderItem.getSellerSKU());
                     itemDO = ConvertUtil.convertToItemDO(new ItemDO(), resp, orderItem.getSellerSKU());
                     itemDO.setItemPrice(ConvertUtil.getItemPrice(awsClient.getMyPriceForSku(itemDO.getSku())));
                     itemService.createItem(itemDO);

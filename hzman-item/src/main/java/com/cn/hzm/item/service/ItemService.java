@@ -43,12 +43,6 @@ public class ItemService {
         return itemMapper.selectOne(query);
     }
 
-    public ItemDO getItemDOByASIN(String asin){
-        QueryWrapper<ItemDO> query = new QueryWrapper<>();
-        query.eq("asin", asin);
-        return itemMapper.selectOne(query);
-    }
-
     public List<ItemDO> fuzzyQuery(String field, String value){
         QueryWrapper<ItemDO> query = new QueryWrapper<>();
         query.like(field, value);

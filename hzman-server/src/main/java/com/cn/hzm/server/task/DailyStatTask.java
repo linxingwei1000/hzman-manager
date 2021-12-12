@@ -84,7 +84,7 @@ public class DailyStatTask {
         commonDealDate(TimeUtil.getZeroUTCDateByDay(-2));
     }
 
-    @Scheduled(cron = "0 */5 * * * ?")
+    @Scheduled(cron = "0 */10 * * * ?")
     public void statTodaySaleData() {
         commonDealDate(TimeUtil.transformNowToUsDate());
     }

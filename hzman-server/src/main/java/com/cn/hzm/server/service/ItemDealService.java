@@ -224,28 +224,39 @@ public class ItemDealService {
 
     private Integer getInBoundNum(String sku) {
         List<ShipmentItemRecordDO> records = shipmentItemRecordService.getAllRecordBySku(sku);
-        if(CollectionUtils.isEmpty(records)){
+        if (CollectionUtils.isEmpty(records)) {
             return 0;
         }
 
         List<String> shipmentIds = records.stream().map(ShipmentItemRecordDO::getShipmentId).collect(Collectors.toList());
         List<ShipmentInfoRecordDO> infoRecords = shipmentInfoRecordService.getAllRecordByShipmentIds(shipmentIds);
-        List<String> useShipmentIds = infoRecords.stream().filter(infoRecord -> !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_CLOSED.getCode())
+        Map<String, String> useMap = infoRecords.stream().filter(infoRecord -> !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_CLOSED.getCode())
                 && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_CANCELLED.getCode())
                 && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_DELETED.getCode())
-                && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_ERROR.getCode())
-                && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_RECEIVING.getCode()))
-                .map(ShipmentInfoRecordDO::getShipmentId).collect(Collectors.toList());
+                && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_ERROR.getCode()))
+                .collect(Collectors.toMap(ShipmentInfoRecordDO::getShipmentId, ShipmentInfoRecordDO::getShipmentStatus));
 
-        if(CollectionUtils.isEmpty(useShipmentIds)){
+
+        if (CollectionUtils.isEmpty(useMap)) {
             return 0;
         }
 
         int num = 0;
-        for(ShipmentItemRecordDO record: records){
-            if(useShipmentIds.contains(record.getShipmentId())){
-                if(record.getQuantityShipped()!=null){
-                    num += record.getQuantityShipped();
+        for (ShipmentItemRecordDO record : records) {
+            if (useMap.containsKey(record.getShipmentId())) {
+                String shipmentStatus = useMap.get(record.getShipmentId());
+                if (shipmentStatus.equals(AmazonShipmentStatusEnum.STATUS_RECEIVING.getCode())) {
+                    int quantityShipped = record.getQuantityShipped() != null ? record.getQuantityShipped() : 0;
+                    int quantityReceived = record.getQuantityReceived() != null ? record.getQuantityReceived() : 0;
+                    int remain = quantityShipped - quantityReceived;
+                    if(remain <0){
+                        remain = 0;
+                    }
+                    num += remain;
+                } else {
+                    if (record.getQuantityShipped() != null) {
+                        num += record.getQuantityShipped();
+                    }
                 }
             }
         }

@@ -217,8 +217,7 @@ public class ItemDetailCache {
             }
             itemDTO = itemDealService.buildItemDTO(itemDO);
         } catch (Exception e) {
-            log.error("item缓存对象创建失败，sku:{} e:{}", sku, e.getMessage());
-            e.printStackTrace();
+            log.error("item缓存对象创建失败，sku:{} e:", sku, e);
         }
         return itemDTO;
     }
