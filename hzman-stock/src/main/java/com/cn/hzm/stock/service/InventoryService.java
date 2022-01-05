@@ -20,21 +20,21 @@ public class InventoryService {
 
     /**
      * 获取库存
-     * @param asin
-     */
-    public InventoryDO getInventoryById(String asin){
-        QueryWrapper<InventoryDO> query = new QueryWrapper<>();
-        query.eq("asin", asin);
-        return inventoryMapper.selectOne(query);
-    }
-
-    /**
-     * 获取库存
      * @param sku
      */
     public InventoryDO getInventoryBySku(String sku){
         QueryWrapper<InventoryDO> query = new QueryWrapper<>();
         query.eq("sku", sku);
+        return inventoryMapper.selectOne(query);
+    }
+
+    /**
+     * 获取库存
+     * @param fnsku
+     */
+    public InventoryDO getInventoryByFnsku(String fnsku){
+        QueryWrapper<InventoryDO> query = new QueryWrapper<>();
+        query.eq("fnsku", fnsku);
         return inventoryMapper.selectOne(query);
     }
 

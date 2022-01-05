@@ -17,6 +17,7 @@ import com.cn.hzm.server.cache.ItemDetailCache;
 import com.cn.hzm.server.dto.*;
 import com.cn.hzm.server.meta.HzmRoleType;
 import com.google.common.collect.Lists;
+import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
@@ -34,6 +35,7 @@ import java.util.stream.Collectors;
  * @author xingweilin@clubfactory.com
  * @date 2020/11/6 4:50 下午
  */
+@Slf4j
 @Service
 public class FactoryDealService {
 
@@ -139,6 +141,17 @@ public class FactoryDealService {
         } else {
             factoryService.updateFactory(factoryDO);
         }
+    }
+
+    public JSONObject factoryItemList(FactoryConditionDTO factoryConditionDTO) {
+        List<FactoryItemDO> factoryItemDOS = factoryItemService.getInfoByFactoryId(factoryConditionDTO.getFactoryId());
+
+        List<ItemDTO> ItemDTOs = factoryConditionDTO.pageResult(factoryItemDOS).stream()
+                .map(factoryItemDO -> itemDetailCache.getSingleCache(factoryItemDO.getSku())).collect(Collectors.toList());
+        JSONObject respJo = new JSONObject();
+        respJo.put("total", factoryItemDOS.size());
+        respJo.put("data", JSONObject.toJSON(ItemDTOs));
+        return respJo;
     }
 
     /**

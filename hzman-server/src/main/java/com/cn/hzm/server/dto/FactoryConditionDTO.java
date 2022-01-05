@@ -10,4 +10,7 @@ import lombok.Data;
 @ApiModel(description = "厂家条件搜索DTO")
 @Data
 public class FactoryConditionDTO extends PageDTO{
+
+    private Integer factoryId;
+
 }

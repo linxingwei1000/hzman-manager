@@ -79,4 +79,10 @@ public class ItemApi {
     public HzmResponse shipment(@ApiParam(name = "shipmentId") @RequestParam String shipmentId) {
         return HzmResponse.success(itemDealService.spiderShipment(shipmentId));
     }
+
+    @ApiOperation("FNSKU映射接口")
+    @RequestMapping(value = "/fnsku", method = RequestMethod.GET)
+    public HzmResponse fnsku(@ApiParam("商品fnsku") @RequestParam String fnsku) {
+        return HzmResponse.success(itemDealService.fnskuQuery(fnsku));
+    }
 }

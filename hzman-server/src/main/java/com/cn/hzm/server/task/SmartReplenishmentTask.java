@@ -13,7 +13,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -39,9 +38,6 @@ public class SmartReplenishmentTask {
     private InventoryService inventoryService;
 
     private Map<String, SmartReplenishmentDTO> replenishmentMap;
-
-    @Value("${spider.switch:false}")
-    private Boolean spiderSwitch;
 
     private List<String> shipSkus;
 
@@ -74,11 +70,7 @@ public class SmartReplenishmentTask {
         statDailySaleData();
 
         //todo 测试数据
-        if (!spiderSwitch) {
-            testData();
-        }
-
-
+        //testData();
         return replenishmentMap.keySet();
     }
 
@@ -102,18 +94,18 @@ public class SmartReplenishmentTask {
     }
 
 
-    @Scheduled(cron = "0 0 17 * * ?")
+    @Scheduled(cron = "0 0 * * * ?")
     public void statDailySaleData() {
         Date curDate = TimeUtil.transformNowToUsDate();
         //以昨天日期开始计算
         Date compareEndDate = TimeUtil.dateFixByDay(curDate, -1, 0, 0);
         Map<String, List<SaleInfoDO>> compareMap = dealSaleInfoByDate(compareEndDate, -30);
 
-        Date lastYearCompareEndDate = TimeUtil.dateFixByYear(compareEndDate, -1);
-        Map<String, List<SaleInfoDO>> lastYearCompareMap = dealSaleInfoByDate(lastYearCompareEndDate, -30);
-
-        Date lastYearPredictEndDate = TimeUtil.dateFixByDay(lastYearCompareEndDate, 60, 0, 0);
-        Map<String, List<SaleInfoDO>> lastYearPredictMap = dealSaleInfoByDate(lastYearPredictEndDate, -30);
+//        Date lastYearCompareEndDate = TimeUtil.dateFixByYear(compareEndDate, -1);
+//        Map<String, List<SaleInfoDO>> lastYearCompareMap = dealSaleInfoByDate(lastYearCompareEndDate, -30);
+//
+//        Date lastYearPredictEndDate = TimeUtil.dateFixByDay(lastYearCompareEndDate, 60, 0, 0);
+//        Map<String, List<SaleInfoDO>> lastYearPredictMap = dealSaleInfoByDate(lastYearPredictEndDate, -30);
 
         List<ItemDO> itemList = itemService.getListByCondition(Maps.newHashMap(), new String[]{"sku"});
 
@@ -122,37 +114,35 @@ public class SmartReplenishmentTask {
         List<String> tmpOrderList = Lists.newArrayList();
         //计算智能补货
         itemList.forEach(item -> {
-            List<SaleInfoDO> saleInfos = lastYearCompareMap.get(item.getSku());
+            List<SaleInfoDO> saleInfos = compareMap.get(item.getSku());
 
-            //新品无序智能补货
+            //新品无销量数据，跳过智能补货
             if (CollectionUtils.isEmpty(saleInfos)) {
                 return;
             }
 
-            long lastYearSaleNum = saleInfos.stream().map(SaleInfoDO::getSaleNum).count();
-            long curYearSaleNum = 0;
-            if (!CollectionUtils.isEmpty(compareMap.get(item.getSku()))) {
-                curYearSaleNum = compareMap.get(item.getSku()).stream().map(SaleInfoDO::getSaleNum).count();
-            }
+            long last30DaySaleNum = saleInfos.stream().map(SaleInfoDO::getSaleNum).count();
+//            long curYearSaleNum = 0;
+//            if (!CollectionUtils.isEmpty(compareMap.get(item.getSku()))) {
+//                curYearSaleNum = compareMap.get(item.getSku()).stream().map(SaleInfoDO::getSaleNum).count();
+//            }
 
-            long lastYearPredictNum = 0;
-            if (!CollectionUtils.isEmpty(lastYearPredictMap.get(item.getSku()))) {
-                lastYearPredictNum = lastYearPredictMap.get(item.getSku()).stream().map(SaleInfoDO::getSaleNum).count();
-            }
-
-            double percentSale = ((double) curYearSaleNum - (double) lastYearSaleNum) / (double) lastYearSaleNum;
-
-            long predictNum = (long) (lastYearPredictNum == 0 ? percentSale * lastYearSaleNum : lastYearPredictNum * (1 + percentSale));
+//            long lastYearPredictNum = 0;
+//            if (!CollectionUtils.isEmpty(lastYearPredictMap.get(item.getSku()))) {
+//                lastYearPredictNum = lastYearPredictMap.get(item.getSku()).stream().map(SaleInfoDO::getSaleNum).count();
+//            }
+//            double percentSale = ((double) curYearSaleNum - (double) lastYearSaleNum) / (double) lastYearSaleNum;
+//            long predictNum = (long) (lastYearPredictNum == 0 ? percentSale * lastYearSaleNum : lastYearPredictNum * (1 + percentSale));
 
             InventoryDO inventoryDO = inventoryService.getInventoryBySku(item.getSku());
 
-            if (inventoryDO.getTotalQuantity() >= predictNum) {
-                if (inventoryDO.getAmazonQuantity() < predictNum) {
-                    tmpMap.put(item.getSku(), createReplenishmentInfo(item.getSku(), predictNum - inventoryDO.getAmazonQuantity(), ReplenishmentEnum.REPLENISHMENT_SHIP));
+            if (inventoryDO.getTotalQuantity() >= last30DaySaleNum) {
+                if (inventoryDO.getAmazonQuantity() < last30DaySaleNum) {
+                    tmpMap.put(item.getSku(), createReplenishmentInfo(item.getSku(), last30DaySaleNum - inventoryDO.getAmazonQuantity(), ReplenishmentEnum.REPLENISHMENT_SHIP));
                     tmpShipList.add(item.getSku());
                 }
             } else {
-                tmpMap.put(item.getSku(), createReplenishmentInfo(item.getSku(), predictNum - inventoryDO.getTotalQuantity(), ReplenishmentEnum.REPLENISHMENT_ORDER));
+                tmpMap.put(item.getSku(), createReplenishmentInfo(item.getSku(), last30DaySaleNum - inventoryDO.getTotalQuantity(), ReplenishmentEnum.REPLENISHMENT_ORDER));
                 tmpOrderList.add(item.getSku());
             }
         });

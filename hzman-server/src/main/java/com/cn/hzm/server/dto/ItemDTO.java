@@ -48,6 +48,9 @@ public class ItemDTO extends RespBaseDTO{
     @ApiModelProperty(value = "最近30天数据")
     private SaleInfoDTO duration30Day;
 
+    @ApiModelProperty(value = "最近30天到60数据")
+    private SaleInfoDTO duration3060Day;
+
     @ApiModelProperty(value = "去年同期30天数据")
     private SaleInfoDTO lastYearDuration30Day;
 

@@ -44,6 +44,12 @@ public class FactoryItemService {
         return factoryItemMapper.selectList(query);
     }
 
+    public List<FactoryItemDO> getInfoByFactoryId(Integer factoryId){
+        QueryWrapper<FactoryItemDO> query = new QueryWrapper<>();
+        query.eq("factory_id", factoryId);
+        return factoryItemMapper.selectList(query);
+    }
+
     public FactoryItemDO getInfoBySkuAndFactoryId(String sku, Integer factoryId){
         QueryWrapper<FactoryItemDO> query = new QueryWrapper<>();
         query.eq("sku", sku);

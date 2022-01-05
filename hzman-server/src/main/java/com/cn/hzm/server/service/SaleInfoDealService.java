@@ -1,14 +1,20 @@
 package com.cn.hzm.server.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cn.hzm.core.entity.SaleInfoDO;
 import com.cn.hzm.core.util.RandomUtil;
 import com.cn.hzm.core.util.TimeUtil;
+import com.cn.hzm.order.service.SaleInfoService;
 import com.cn.hzm.server.cache.SaleInfoCache;
+import com.cn.hzm.server.dto.SaleConditionDTO;
 import com.cn.hzm.server.dto.SaleInfoDTO;
+import com.cn.hzm.server.dto.SaleInfoDescDTO;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -24,6 +30,9 @@ public class SaleInfoDealService {
     @Autowired
     private SaleInfoCache saleInfoCache;
 
+    @Autowired
+    private SaleInfoService saleInfoService;
+
     public JSONObject getCurSaleInfo() {
         Date usDate = TimeUtil.transformNowToUsDate();
         Date yesterday = TimeUtil.dateFixByDay(usDate, -1, 0, 0);
@@ -37,6 +46,71 @@ public class SaleInfoDealService {
         jo.put("recent", dealDurationSaleInfoDTO(recent30Day, 30));
         jo.put("latestYear", dealDurationSaleInfoDTO(latestYearBegin, 30));
 
+        return jo;
+    }
+
+    public JSONObject getSaleInfo(SaleConditionDTO saleConditionDTO) {
+        String endDate;
+        Date eDate;
+        if (StringUtils.isEmpty(saleConditionDTO.getEndDate())) {
+            eDate = TimeUtil.transformNowToUsDate();
+            endDate = TimeUtil.getSimpleFormat(eDate);
+        } else {
+            endDate = saleConditionDTO.getEndDate();
+            eDate = TimeUtil.getDateBySimple(endDate);
+        }
+
+        String beginDate;
+        Date bDate;
+        if (StringUtils.isEmpty(saleConditionDTO.getBeginDate())) {
+            bDate = TimeUtil.dateFixByDay(eDate, -30, 0, 0);
+            beginDate = TimeUtil.getSimpleFormat(bDate);
+        } else {
+            beginDate = saleConditionDTO.getBeginDate();
+            bDate = TimeUtil.getDateBySimple(beginDate);
+        }
+
+        Date nextDate = TimeUtil.dateFixByDay(bDate, 1, 0, 0);
+        List<SaleInfoDescDTO> saleInfos = Lists.newArrayList();
+        if (StringUtils.isEmpty(saleConditionDTO.getSku())) {
+            while (true) {
+                SaleInfoDTO saleInfoDTO = saleInfoCache.getDailySaleInfo(beginDate);
+                SaleInfoDescDTO saleInfoDescDTO = new SaleInfoDescDTO();
+                saleInfoDescDTO.setSaleNum(saleInfoDTO.getSaleNum());
+                saleInfoDescDTO.setOrderNum(saleInfoDTO.getOrderNum());
+                saleInfoDescDTO.setSaleVolume(saleInfoDTO.getSaleVolume());
+                saleInfoDescDTO.setUnitPrice(saleInfoDTO.getUnitPrice());
+                saleInfoDescDTO.setSaleDate(beginDate);
+                saleInfoDescDTO.setSku("all");
+                saleInfos.add(saleInfoDescDTO);
+                if (beginDate.equals(endDate)) {
+                    break;
+                }
+                beginDate = TimeUtil.getSimpleFormat(nextDate);
+                nextDate = TimeUtil.dateFixByDay(nextDate, 1, 0, 0);
+            }
+        } else {
+            List<SaleInfoDO> compareList = saleInfoService.getSaleInfoByDurationDate(saleConditionDTO.getSku(), beginDate, endDate);
+            if (!CollectionUtils.isEmpty(compareList)) {
+                compareList.forEach(saleInfoDO -> {
+                    SaleInfoDescDTO saleInfoDTO = new SaleInfoDescDTO();
+                    saleInfoDTO.setSaleNum(saleInfoDO.getSaleNum());
+                    saleInfoDTO.setOrderNum(saleInfoDO.getOrderNum());
+                    saleInfoDTO.setSaleVolume(saleInfoDO.getSaleVolume());
+                    if (saleInfoDO.getSaleNum() == 0) {
+                        saleInfoDTO.setUnitPrice(0.0);
+                    } else {
+                        saleInfoDTO.setUnitPrice(saleInfoDO.getSaleVolume() / (double) saleInfoDO.getSaleNum());
+                    }
+                    saleInfoDTO.setSaleDate(saleInfoDO.getStatDate());
+                    saleInfoDTO.setSku(saleInfoDO.getSku());
+                    saleInfos.add(saleInfoDTO);
+                });
+            }
+        }
+        JSONObject jo = new JSONObject();
+        jo.put("num", saleInfos.size());
+        jo.put("info", saleInfos);
         return jo;
     }
 

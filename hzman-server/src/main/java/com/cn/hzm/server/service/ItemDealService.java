@@ -198,6 +198,7 @@ public class ItemDealService {
         itemDTO.setToday(getSaleInfoByDate(usDate, itemDTO.getSku()));
         itemDTO.setYesterday(getSaleInfoByDate(TimeUtil.dateFixByDay(usDate, -1, 0, 0), itemDTO.getSku()));
         itemDTO.setDuration30Day(getSaleInfoByDurationDate(usDate, itemDTO.getSku()));
+        itemDTO.setDuration3060Day(getSaleInfoByDurationDate(TimeUtil.dateFixByDay(usDate, -30, 0, 0), itemDTO.getSku()));
         itemDTO.setLastYearDuration30Day(getSaleInfoByDurationDate(TimeUtil.dateFixByYear(usDate, -1), itemDTO.getSku()));
 
         //商品工厂归宿信息
@@ -363,5 +364,13 @@ public class ItemDealService {
 
     public String spiderShipment(String shipmentId) {
         return shipmentSpiderTask.shipmentSpiderTask(shipmentId);
+    }
+
+    public String fnskuQuery(String fnsku) {
+        InventoryDO inventoryDO = inventoryService.getInventoryByFnsku(fnsku);
+        if(inventoryDO!=null){
+            return inventoryDO.getSku();
+        }
+        return null;
     }
 }

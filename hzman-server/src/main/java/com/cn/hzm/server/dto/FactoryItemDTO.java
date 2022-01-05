@@ -26,7 +26,6 @@ public class FactoryItemDTO {
     @ApiModelProperty(value = "订单价")
     private Double factoryPrice;
 
-
     @ApiModelProperty(value = "描述")
     private String desc;
 

@@ -35,7 +35,7 @@ public class FactoryApi {
     @ApiOperation("列厂家")
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     @HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN, HzmRoleType.ROLE_EMPLOYEE, HzmRoleType.ROLE_NEW_EMPLOYEE})
-    public HzmResponse listItem(@RequestBody FactoryConditionDTO factoryConditionDTO) {
+    public HzmResponse list(@RequestBody FactoryConditionDTO factoryConditionDTO) {
         return HzmResponse.success(factoryDealService.processFactoryList(factoryConditionDTO));
     }
 
@@ -53,6 +53,13 @@ public class FactoryApi {
     public HzmResponse modifyItem(@RequestBody FactoryDTO factoryDTO) throws Exception {
         factoryDealService.dealFactory(factoryDTO, false);
         return HzmResponse.success(true);
+    }
+
+    @ApiOperation("列厂家商品")
+    @RequestMapping(value = "/item/list", method = RequestMethod.POST)
+    @HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN, HzmRoleType.ROLE_EMPLOYEE, HzmRoleType.ROLE_NEW_EMPLOYEE})
+    public HzmResponse itemList(@RequestBody FactoryConditionDTO factoryConditionDTO) {
+        return HzmResponse.success(factoryDealService.factoryItemList(factoryConditionDTO));
     }
 
     @ApiOperation("商品厂家认领")

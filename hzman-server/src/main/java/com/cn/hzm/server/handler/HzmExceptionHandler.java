@@ -52,8 +52,7 @@ public class HzmExceptionHandler extends ResponseEntityExceptionHandler {
 
     @ExceptionHandler({Exception.class})
     public ResponseEntity<Object> handlerException(Exception ex, WebRequest request) {
-        logger.error(ex.getMessage());
-        ex.printStackTrace();
+        logger.error("系统内部错误：", ex);
         return ResponseEntity.status(HttpStatus.OK).body(new HzmResponse(ExceptionCode.INTERNAL_SERVER_ERR.code(),ExceptionCode.INTERNAL_SERVER_ERR.desc()));
     }
 }
