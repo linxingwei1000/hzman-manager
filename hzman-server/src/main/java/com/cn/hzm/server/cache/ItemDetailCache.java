@@ -1,7 +1,9 @@
 package com.cn.hzm.server.cache;
 
 import com.cn.hzm.core.constant.ContextConst;
+import com.cn.hzm.core.entity.FactoryItemDO;
 import com.cn.hzm.core.entity.ItemDO;
+import com.cn.hzm.factory.service.FactoryItemService;
 import com.cn.hzm.item.service.ItemService;
 import com.cn.hzm.server.cache.comparator.*;
 import com.cn.hzm.server.dto.ItemDTO;
@@ -38,6 +40,9 @@ public class ItemDetailCache {
 
     @Autowired
     private ItemDealService itemDealService;
+
+    @Autowired
+    private FactoryItemService factoryItemService;
 
     @Autowired
     private SmartReplenishmentTask smartReplenishmentTask;
@@ -127,7 +132,7 @@ public class ItemDetailCache {
      * @return
      */
     public List<ItemDTO> getCacheBySort(Integer searchType, String key, Integer sortType) {
-
+        log.info("---------searchType:{} key:{} type:{}", searchType, key, sortType);
         Collection<ItemDTO> temp = cache.asMap().values();
         switch (searchType) {
             //sku 过滤
@@ -159,6 +164,13 @@ public class ItemDetailCache {
             //发货过滤
             case 4:
                 temp = getCache(smartReplenishmentTask.getShipSkus());
+                break;
+            //厂家过滤
+            case 5:
+                Integer factoryId = Integer.valueOf(key);
+                List<FactoryItemDO> factoryItemDOS = factoryItemService.getInfoByFactoryId(factoryId);
+                List<String> ItemDTOs = factoryItemDOS.stream().map(FactoryItemDO::getSku).collect(Collectors.toList());
+                temp = getCache(ItemDTOs);
                 break;
             default:
         }
