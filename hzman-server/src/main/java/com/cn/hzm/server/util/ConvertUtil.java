@@ -36,6 +36,15 @@ public class ConvertUtil {
         itemDO.setAttributeSet(JSONObject.toJSONString(product.getAttributeSets()));
 
         itemDO.setRelationship(JSONObject.toJSONString(product.getRelationships()));
+
+        //0:子体，1：父体，2：即没有子体也没有父体
+        if (product.getRelationships().getVariationParent() != null) {
+            itemDO.setIsParent(0);
+        } else if (product.getRelationships().getVariationChildrens() != null) {
+            itemDO.setIsParent(1);
+        } else {
+            itemDO.setIsParent(2);
+        }
         return itemDO;
     }
 

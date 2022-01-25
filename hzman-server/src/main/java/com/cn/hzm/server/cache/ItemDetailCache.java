@@ -2,11 +2,16 @@ package com.cn.hzm.server.cache;
 
 import com.cn.hzm.core.constant.ContextConst;
 import com.cn.hzm.core.entity.FactoryItemDO;
+import com.cn.hzm.core.entity.FatherChildRelationDO;
 import com.cn.hzm.core.entity.ItemDO;
+import com.cn.hzm.core.util.TimeUtil;
 import com.cn.hzm.factory.service.FactoryItemService;
+import com.cn.hzm.item.service.FatherChildRelationService;
 import com.cn.hzm.item.service.ItemService;
 import com.cn.hzm.server.cache.comparator.*;
+import com.cn.hzm.server.dto.InventoryDTO;
 import com.cn.hzm.server.dto.ItemDTO;
+import com.cn.hzm.server.dto.SaleInfoDTO;
 import com.cn.hzm.server.service.ItemDealService;
 import com.cn.hzm.server.task.ItemRefreshTask;
 import com.cn.hzm.server.task.SmartReplenishmentTask;
@@ -19,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.util.CollectionUtils;
 
 import javax.annotation.PostConstruct;
 import java.util.*;
@@ -35,11 +41,18 @@ public class ItemDetailCache {
 
     private LoadingCache<String, ItemDTO> cache;
 
+    private LoadingCache<String, ItemDTO> relationCache;
+
+    private LoadingCache<String, List<ItemDTO>> childrenCache;
+
     @Autowired
     private ItemService itemService;
 
     @Autowired
     private ItemDealService itemDealService;
+
+    @Autowired
+    private FatherChildRelationService fatherChildRelationService;
 
     @Autowired
     private FactoryItemService factoryItemService;
@@ -77,6 +90,21 @@ public class ItemDetailCache {
                 .initialCapacity(10000 / 10)
                 .build(this::installItemDTO);
 
+        relationCache = Caffeine.newBuilder()
+                .maximumSize(10000)
+                // 对象超过设定时间没有访问就会过期
+                //.expireAfterAccess(60, TimeUnit.MINUTES)
+                // 定时刷新
+                //.refreshAfterWrite(5, TimeUnit.MINUTES)
+                // 初始化容量
+                .initialCapacity(10000 / 10)
+                .build(this::installRelationItemDTO);
+
+        childrenCache = Caffeine.newBuilder()
+                .maximumSize(10000)
+                .initialCapacity(10000 / 10)
+                .build(this::getChildrenItem);
+
         //异步加载数据
         ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
             Thread t = new Thread(r);
@@ -107,8 +135,13 @@ public class ItemDetailCache {
                     endIndex = items.size();
                 }
                 List<ItemDO> subItems = items.subList(beginIndex, endIndex);
-                executorService.execute(()->{
-                    subItems.forEach(itemDO -> cache.put(itemDO.getSku(), installItemDTO(itemDO.getSku())));
+                executorService.execute(() -> {
+                    subItems.forEach(itemDO -> {
+                        ItemDTO itemDTO = installItemDTO(itemDO.getSku());
+                        if (itemDTO != null) {
+                            cache.put(itemDO.getSku(), itemDTO);
+                        }
+                    });
                     countDownLatch.countDown();
                 });
             }
@@ -122,7 +155,13 @@ public class ItemDetailCache {
 
             //本地商品缓存结束，开启商品刷新任务
             itemRefreshTask.init();
+
+            //5分钟定时刷新父子关系
+            ScheduledThreadPoolExecutor orderScheduledTask = new ScheduledThreadPoolExecutor(1);
+            orderScheduledTask.scheduleWithFixedDelay(this::refreshRelationCache, 10, 300, TimeUnit.SECONDS);
         });
+
+
     }
 
     /**
@@ -131,14 +170,18 @@ public class ItemDetailCache {
      * @param sortType
      * @return
      */
-    public List<ItemDTO> getCacheBySort(Integer searchType, String key, Integer sortType) {
-        log.info("---------searchType:{} key:{} type:{}", searchType, key, sortType);
-        Collection<ItemDTO> temp = cache.asMap().values();
+    public List<ItemDTO> getCacheBySort(Integer searchType, String key, Integer sortType, Integer showType) {
+        log.info("---------searchType:{} key:{} type:{} show:{}", searchType, key, sortType, showType);
+        Collection<ItemDTO> temp = showType == 1 ? cache.asMap().values() : relationCache.asMap().values();
         switch (searchType) {
             //sku 过滤
             case 1:
                 if (!StringUtils.isEmpty(key)) {
-                    temp = temp.stream().filter(item -> item.getSku().contains(key)).collect(Collectors.toList());
+                    if (showType == 1) {
+                        temp = temp.stream().filter(item -> item.getSku().contains(key)).collect(Collectors.toList());
+                    } else {
+                        temp = temp.stream().filter(item -> item.getAsin().contains(key)).collect(Collectors.toList());
+                    }
                 }
                 break;
             //title 过滤
@@ -174,7 +217,6 @@ public class ItemDetailCache {
                 break;
             default:
         }
-
         Comparator<ItemDTO> comparator = comparatorMap.getOrDefault(sortType, new TodaySaleDescComparator());
         Set<ItemDTO> list = Sets.newTreeSet(comparator);
         list.addAll(temp);
@@ -211,6 +253,16 @@ public class ItemDetailCache {
         return Lists.newArrayList(cacheMap.values());
     }
 
+    /**
+     * 获取子体商品
+     *
+     * @param asin
+     * @return
+     */
+    public List<ItemDTO> getChildrenCache(String asin) {
+        return childrenCache.get(asin);
+    }
+
     public void refreshCaches(List<String> skus) {
         skus.forEach(sku -> cache.refresh(sku));
     }
@@ -232,5 +284,92 @@ public class ItemDetailCache {
             log.error("item缓存对象创建失败，sku:{} e:", sku, e);
         }
         return itemDTO;
+    }
+
+    //父类用asin做
+    public ItemDTO installRelationItemDTO(String asin) {
+        ItemDO fatherItem = itemService.getItemDOByAsin(asin, 1);
+        ItemDTO relationItem = itemDealService.buildItemDTO(fatherItem);
+        List<ItemDTO> childItems = getChildrenItem(asin);
+
+        SaleInfoDTO today = new SaleInfoDTO();
+        SaleInfoDTO yesterday = new SaleInfoDTO();
+        SaleInfoDTO duration30Day = new SaleInfoDTO();
+        SaleInfoDTO duration3060Day = new SaleInfoDTO();
+        SaleInfoDTO setLastYearDuration30Day = new SaleInfoDTO();
+        Integer amazonStockQuantity = 0;
+        Integer localQuantity = 0;
+        Integer amazonTransferQuantity = 0;
+        Integer amazonInboundQuantity = 0;
+        for (ItemDTO item : childItems) {
+            addData(today, item.getToday());
+            addData(yesterday, item.getYesterday());
+            addData(duration30Day, item.getDuration30Day());
+            addData(duration3060Day, item.getDuration3060Day());
+            addData(setLastYearDuration30Day, item.getLastYearDuration30Day());
+
+            amazonStockQuantity += item.getInventoryDTO().getAmazonStockQuantity();
+            localQuantity += item.getInventoryDTO().getLocalQuantity();
+            amazonTransferQuantity += item.getInventoryDTO().getAmazonTransferQuantity();
+            amazonInboundQuantity += item.getInventoryDTO().getAmazonInboundQuantity();
+        }
+        relationItem.setToday(today);
+        relationItem.setYesterday(yesterday);
+        relationItem.setDuration30Day(duration30Day);
+        relationItem.setDuration3060Day(duration3060Day);
+        relationItem.setLastYearDuration30Day(setLastYearDuration30Day);
+        relationItem.setChildrenNum(childItems.size());
+        relationItem.setHaveChildren(!CollectionUtils.isEmpty(childItems));
+
+        //库存信息合并
+        InventoryDTO inventoryDTO = new InventoryDTO();
+        inventoryDTO.setAmazonStockQuantity(amazonStockQuantity);
+        inventoryDTO.setLocalQuantity(localQuantity);
+        inventoryDTO.setAmazonTransferQuantity(amazonTransferQuantity);
+        inventoryDTO.setAmazonInboundQuantity(amazonInboundQuantity);
+        relationItem.setInventoryDTO(inventoryDTO);
+        return relationItem;
+    }
+
+    //获取父类子体
+    public List<ItemDTO> getChildrenItem(String asin) {
+        List<FatherChildRelationDO> relations = fatherChildRelationService.getAllRelation(asin);
+        List<ItemDTO> childItems = getCache(relations.stream().map(FatherChildRelationDO::getChildSku).collect(Collectors.toList()));
+        childrenCache.put(asin, childItems);
+        return childItems;
+    }
+
+    private void refreshRelationCache() {
+        List<FatherChildRelationDO> relations = fatherChildRelationService.getAllRelation(null);
+        Map<String, List<FatherChildRelationDO>> relationMap = relations.stream().collect(Collectors.groupingBy(FatherChildRelationDO::getFatherAsin));
+
+        long startTime = System.currentTimeMillis();
+        relationMap.keySet().forEach(fatherAsin -> relationCache.put(fatherAsin, installRelationItemDTO(fatherAsin)));
+        long endTime = System.currentTimeMillis();
+        log.info("==================缓冲父子关系对象结构对：{} 耗时：{}", relationMap.size(), endTime - startTime);
+
+        List<ItemDO> itemDOS = itemService.getItemByParentType(2, new String[]{"sku", "asin"});
+        itemDOS.forEach(itemDO -> {
+            ItemDTO relationItem = getSingleCache(itemDO.getSku());
+            relationCache.put(itemDO.getAsin(), relationItem);
+        });
+        startTime = System.currentTimeMillis();
+        log.info("==================创建虚拟父体对象：{} 耗时：{}", relationMap.size(), startTime - endTime);
+
+    }
+
+    private void addData(SaleInfoDTO saleInfo, SaleInfoDTO addSaleInfo) {
+        Integer orderNum = saleInfo.getOrderNum() == null ? 0 : saleInfo.getOrderNum();
+        Integer saleNum = saleInfo.getSaleNum() == null ? 0 : saleInfo.getSaleNum();
+        Double saleVolume = saleInfo.getSaleVolume() == null ? 0.0 : saleInfo.getSaleVolume();
+
+        saleInfo.setOrderNum(orderNum + addSaleInfo.getOrderNum());
+        saleInfo.setSaleNum(saleNum + addSaleInfo.getSaleNum());
+        saleInfo.setSaleVolume(saleVolume + addSaleInfo.getSaleVolume());
+        if (saleInfo.getSaleNum() == 0) {
+            saleInfo.setUnitPrice(saleInfo.getSaleVolume());
+        } else {
+            saleInfo.setUnitPrice(saleInfo.getSaleVolume() / (double) saleInfo.getSaleNum());
+        }
     }
 }

@@ -25,4 +25,9 @@ public class ItemConditionDTO extends PageDTO{
      * 排序
      */
     private Integer itemSortType;
+
+    /**
+     * 展示类型：1.父类sku，2.子类sku
+     */
+    private Integer showType;
 }

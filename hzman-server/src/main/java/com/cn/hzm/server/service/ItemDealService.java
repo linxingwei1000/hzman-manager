@@ -2,12 +2,8 @@ package com.cn.hzm.server.service;
 
 import com.alibaba.fastjson.JSONObject;
 import com.cn.hzm.core.aws.AwsClient;
-import com.cn.hzm.core.aws.domain.product.BuyingPrice;
-import com.cn.hzm.core.aws.domain.product.Offer;
-import com.cn.hzm.core.aws.domain.product.Product;
-import com.cn.hzm.core.aws.domain.product.ProductError;
+import com.cn.hzm.core.aws.domain.product.*;
 import com.cn.hzm.core.aws.resp.product.GetMatchingProductForIdResponse;
-import com.cn.hzm.core.aws.resp.product.GetMyPriceForSkuResponse;
 import com.cn.hzm.core.entity.*;
 import com.cn.hzm.core.enums.AmazonShipmentStatusEnum;
 import com.cn.hzm.core.exception.ExceptionCode;
@@ -18,10 +14,10 @@ import com.cn.hzm.factory.service.FactoryItemService;
 import com.cn.hzm.factory.service.FactoryOrderItemService;
 import com.cn.hzm.factory.service.FactoryOrderService;
 import com.cn.hzm.factory.service.FactoryService;
+import com.cn.hzm.item.service.FatherChildRelationService;
 import com.cn.hzm.item.service.ItemService;
 import com.cn.hzm.order.service.SaleInfoService;
 import com.cn.hzm.server.cache.ItemDetailCache;
-import com.cn.hzm.server.cache.comparator.SortHelper;
 import com.cn.hzm.server.dto.*;
 import com.cn.hzm.server.task.ShipmentSpiderTask;
 import com.cn.hzm.server.task.SmartReplenishmentTask;
@@ -31,11 +27,11 @@ import com.cn.hzm.stock.service.ShipmentInfoRecordService;
 import com.cn.hzm.stock.service.ShipmentItemRecordService;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -55,6 +51,9 @@ public class ItemDealService {
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private FatherChildRelationService fatherChildRelationService;
 
     @Autowired
     private FactoryService factoryService;
@@ -92,12 +91,17 @@ public class ItemDealService {
     private Map<String, Object> syncLock = Maps.newHashMap();
 
     public JSONObject processListItem(ItemConditionDTO conditionDTO) {
-        List<ItemDTO> itemRespList = itemDetailCache.getCacheBySort(conditionDTO.getSearchType(), conditionDTO.getKey(), conditionDTO.getItemSortType());
+        List<ItemDTO> itemRespList = itemDetailCache.getCacheBySort(conditionDTO.getSearchType(), conditionDTO.getKey(),
+                conditionDTO.getItemSortType(), conditionDTO.getShowType());
 
         JSONObject respJo = new JSONObject();
         respJo.put("total", itemRespList.size());
         respJo.put("data", conditionDTO.pageResult(itemRespList));
         return respJo;
+    }
+
+    public List<ItemDTO> getChildrenItem(String asin){
+        return itemDetailCache.getChildrenCache(asin);
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -115,8 +119,12 @@ public class ItemDealService {
         ItemDO itemDO = ConvertUtil.convertToItemDO(new ItemDO(), resp, sku);
 
         //获取商品单价
-        Double itemPrice = ConvertUtil.getItemPrice(awsClient.getMyPriceForSku(sku));
-        itemDO.setItemPrice(itemPrice);
+        if (itemDO.getIsParent() != 1) {
+            Double itemPrice = ConvertUtil.getItemPrice(awsClient.getMyPriceForSku(sku));
+            itemDO.setItemPrice(itemPrice);
+        } else {
+            itemDO.setItemPrice(0.0);
+        }
         itemDO.setActive(1);
 
         ItemDO old = itemService.getItemDOBySku(sku);
@@ -127,7 +135,14 @@ public class ItemDealService {
             itemService.createItem(itemDO);
         }
 
-        dealSkuInventory(sku, "refresh", 0);
+        //保存父子sku信息
+        processRelationShip(itemDO);
+
+        //子类sku刷新库存信息
+        if (itemDO.getIsParent() != 1) {
+            dealSkuInventory(sku, "refresh", 0);
+        }
+
     }
 
     public void deleteItem(String sku) {
@@ -250,7 +265,7 @@ public class ItemDealService {
                     int quantityShipped = record.getQuantityShipped() != null ? record.getQuantityShipped() : 0;
                     int quantityReceived = record.getQuantityReceived() != null ? record.getQuantityReceived() : 0;
                     int remain = quantityShipped - quantityReceived;
-                    if(remain <0){
+                    if (remain < 0) {
                         remain = 0;
                     }
                     num += remain;
@@ -368,9 +383,62 @@ public class ItemDealService {
 
     public String fnskuQuery(String fnsku) {
         InventoryDO inventoryDO = inventoryService.getInventoryByFnsku(fnsku);
-        if(inventoryDO!=null){
+        if (inventoryDO != null) {
             return inventoryDO.getSku();
         }
         return null;
+    }
+
+    public void processRelationShip(ItemDO itemDO) {
+        Relationships relationships = JSONObject.parseObject(itemDO.getRelationship(), Relationships.class);
+        if (itemDO.getIsParent() == 0) {
+            String fatherAsin = relationships.getVariationParent().getIdentifiers().getMarketplaceASIN().getAsin();
+            ItemDO fatherItem = itemService.getItemDOByAsin(fatherAsin, 1);
+            if (fatherItem == null) {
+                GetMatchingProductForIdResponse fatherResp = awsClient.getProductInfoByAsin("ASIN", fatherAsin);
+                fatherItem = ConvertUtil.convertToItemDO(new ItemDO(), fatherResp, null);
+                fatherItem.setItemPrice(0.0);
+                fatherItem.setSku(StringUtils.isEmpty(fatherItem.getSku()) ? "" : fatherItem.getSku());
+                itemService.createItem(fatherItem);
+                log.info("创建父sku商品：{}", fatherItem.getAsin());
+            }
+
+            //创建对应关系
+            FatherChildRelationDO relationDO = fatherChildRelationService.getRelationByFatherAndChildAsin(fatherItem.getAsin(), itemDO.getAsin());
+            if (relationDO == null) {
+                relationDO = new FatherChildRelationDO();
+                relationDO.setFatherSku(fatherItem.getSku());
+                relationDO.setFatherAsin(fatherItem.getAsin());
+                relationDO.setChildSku(itemDO.getSku());
+                relationDO.setChildAsin(itemDO.getAsin());
+                fatherChildRelationService.createRelation(relationDO);
+            }
+        } else if (itemDO.getIsParent() == 1) {
+            List<String> childAsins = relationships.getVariationChildrens()
+                    .stream().map(child -> child.getIdentifiers().getMarketplaceASIN().getAsin())
+                    .collect(Collectors.toList());
+            childAsins.forEach(childAsin -> {
+                ItemDO childItem = itemService.getItemDOByAsin(childAsin, 0);
+                if (childItem == null) {
+                    GetMatchingProductForIdResponse fatherResp = awsClient.getProductInfoByAsin("ASIN", childAsin);
+                    childItem = ConvertUtil.convertToItemDO(new ItemDO(), fatherResp, null);
+                    itemService.createItem(childItem);
+                    dealSkuInventory(childItem.getSku(), "refresh", 0);
+                }
+
+                //创建对应关系
+                FatherChildRelationDO relationDO = fatherChildRelationService.getRelationByFatherAndChild(itemDO.getAsin(), childItem.getAsin());
+                if (relationDO == null) {
+                    relationDO = new FatherChildRelationDO();
+                    relationDO.setFatherSku(itemDO.getSku());
+                    relationDO.setFatherAsin(itemDO.getAsin());
+                    relationDO.setChildSku(childItem.getSku());
+                    relationDO.setChildAsin(childItem.getAsin());
+                    fatherChildRelationService.createRelation(relationDO);
+                }
+            });
+        } else{
+            log.info("本sku：{} 即没有子体也没有父体", itemDO.getSku());
+        }
     }
 }

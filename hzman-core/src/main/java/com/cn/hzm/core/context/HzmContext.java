@@ -58,7 +58,7 @@ public class HzmContext {
 
     public void printLog() {
         setSpend(TimeUtil.nowMillis() - getStartTime());
-        LOGGER.info(GsonUtil.toJson(this));
+        //LOGGER.info(GsonUtil.toJson(this));
     }
 
     public void unload() {

@@ -1,267 +1,762 @@
-2021-03-31 10:46:20.978 INFO  [main] c.c.h.s.WebApplication [50] -  Starting WebApplication on linxingweideMacBook-Air.local with PID 17937 (/Users/linxingwei/Documents/us/hzman-manager/hzman-server/target/classes started by linxingwei in /Users/linxingwei/Documents/us/hzman-manager)
-2021-03-31 10:46:20.992 INFO  [main] c.c.h.s.WebApplication [650] -  The following profiles are active: test
-2021-03-31 10:46:24.524 INFO  [main] o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [330] -  Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$ee670abc] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2021-03-31 10:46:25.322 INFO  [main] o.s.b.w.e.t.TomcatWebServer [90] -  Tomcat initialized with port(s): 8082 (http)
-2021-03-31 10:46:25.496 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Initializing ProtocolHandler ["http-nio-8082"]
-2021-03-31 10:46:25.520 INFO  [main] o.a.c.c.StandardService [173] -  Starting service [Tomcat]
-2021-03-31 10:46:25.521 INFO  [main] o.a.c.c.StandardEngine [173] -  Starting Servlet engine: [Apache Tomcat/9.0.21]
-2021-03-31 10:46:25.904 INFO  [main] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring embedded WebApplicationContext
-2021-03-31 10:46:25.906 INFO  [main] o.s.w.c.ContextLoader [283] -  Root WebApplicationContext: initialization completed in 4801 ms
-2021-03-31 10:46:26.388 INFO  [main] c.c.h.c.c.MybatisPlusConfig [44] -  ------------- 重载父类 sqlSessionFactory init-------
-2021-03-31 10:46:26.675 INFO  [main] c.z.h.HikariDataSource [110] -  HikariPool-1 - Starting...
-2021-03-31 10:46:26.683 WARN  [main] c.z.h.u.DriverDataSource [68] -  Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2021-03-31 10:46:28.477 INFO  [main] c.z.h.HikariDataSource [123] -  HikariPool-1 - Start completed.
-2021-03-31 10:46:29.443 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService
-2021-03-31 10:46:29.446 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService 'backTaskExecutor'
-2021-03-31 10:46:32.745 INFO  [商品详情缓存线程] c.c.h.s.c.ItemDetailCache [103] -  商品详情缓存加载流程开始，需缓存个数：1848
-2021-03-31 10:46:33.158 INFO  [main] c.c.h.s.t.OrderSpiderTask [104] -  测试环境关闭爬虫任务
-2021-03-31 10:46:33.886 INFO  [main] s.d.s.w.PropertySourcedRequestMappingHandlerMapping [69] -  Mapped URL path [/v2/api-docs] onto method [public org.springframework.http.ResponseEntity<springfox.documentation.spring.web.json.Json> springfox.documentation.swagger2.web.Swagger2Controller.getDocumentation(java.lang.String,javax.servlet.http.HttpServletRequest)]
-2021-03-31 10:46:34.773 INFO  [main] o.s.s.c.ThreadPoolTaskScheduler [171] -  Initializing ExecutorService 'taskScheduler'
-2021-03-31 10:46:35.067 INFO  [main] s.d.s.w.p.DocumentationPluginsBootstrapper [160] -  Context refreshed
-2021-03-31 10:46:35.140 INFO  [main] s.d.s.w.p.DocumentationPluginsBootstrapper [163] -  Found 1 custom documentation plugin(s)
-2021-03-31 10:46:35.273 INFO  [main] s.d.s.w.s.ApiListingReferenceScanner [41] -  Scanning for api listing references
-2021-03-31 10:46:35.888 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: payUsingGET_1
-2021-03-31 10:46:35.950 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingGET_1
-2021-03-31 10:46:35.952 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingHEAD_1
-2021-03-31 10:46:35.953 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPOST_1
-2021-03-31 10:46:35.956 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPUT_1
-2021-03-31 10:46:35.961 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPATCH_1
-2021-03-31 10:46:35.964 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingDELETE_1
-2021-03-31 10:46:35.965 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingOPTIONS_1
-2021-03-31 10:46:35.967 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingTRACE_1
-2021-03-31 10:46:35.970 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingGET_2
-2021-03-31 10:46:35.971 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingHEAD_2
-2021-03-31 10:46:35.976 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPOST_2
-2021-03-31 10:46:35.977 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPUT_2
-2021-03-31 10:46:35.978 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPATCH_2
-2021-03-31 10:46:35.980 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingDELETE_2
-2021-03-31 10:46:35.986 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingOPTIONS_2
-2021-03-31 10:46:36.006 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingTRACE_2
-2021-03-31 10:46:36.428 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_1
-2021-03-31 10:46:36.484 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_2
-2021-03-31 10:46:36.494 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_3
-2021-03-31 10:46:36.846 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Starting ProtocolHandler ["http-nio-8082"]
-2021-03-31 10:46:36.945 INFO  [main] o.s.b.w.e.t.TomcatWebServer [202] -  Tomcat started on port(s): 8082 (http) with context path '/hzman'
-2021-03-31 10:46:36.952 INFO  [main] c.c.h.s.WebApplication [59] -  Started WebApplication in 38.152 seconds (JVM running for 47.028)
-2021-03-31 10:50:31.556 INFO  [商品详情缓存线程] c.c.h.s.c.ItemDetailCache [105] -  商品详情缓存加载流程结束，耗时：238811
-2021-03-31 10:51:31.639 INFO  [pool-2-thread-1] c.c.h.s.t.ItemRefreshTask [51] -  =============刷新商品任务，本次任务需刷新商品个数：1848
-2021-03-31 10:58:13.293 WARN  [HikariPool-1 housekeeper] c.z.h.p.HikariPool [766] -  HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=6m44s656ms).
-2021-03-31 11:01:34.459 INFO  [http-nio-8082-exec-1] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring DispatcherServlet 'dispatcherServlet'
-2021-03-31 11:01:34.464 INFO  [http-nio-8082-exec-1] o.s.w.s.DispatcherServlet [524] -  Initializing Servlet 'dispatcherServlet'
-2021-03-31 11:01:34.534 INFO  [http-nio-8082-exec-1] o.s.w.s.DispatcherServlet [546] -  Completed initialization in 69 ms
-2021-03-31 11:01:34.584 INFO  [http-nio-8082-exec-1] c.c.h.c.c.ContextHandler [34] - 3a22065a169f45a6bb7e21008527077a uri: /hzman/item/delete, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#content-type=application/json#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=2327fb2f-6c9b-4183-931c-089a79ce6591#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive#content-length=57, path param: sku=JZ1903031A-10.
-2021-03-31 11:01:50.681 INFO  [http-nio-8082-exec-1] c.c.h.c.c.HzmContext [61] - 3a22065a169f45a6bb7e21008527077a {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617159694582,"body":"","param":"sku\u003dJZ1903031A-10","traceId":"3a22065a169f45a6bb7e21008527077a","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":true,"requestId":"3a22065a169f45a6bb7e21008527077a"},"spend":16022,"props":{},"roles":["admin"]}
-2021-03-31 11:02:01.680 INFO  [http-nio-8082-exec-2] c.c.h.c.c.ContextHandler [34] - 26b6418d20ea4dd2bfcb6ed0674e2b1a uri: /hzman/item/delete, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#content-type=application/json#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=d150f9fa-2c04-4709-b788-041646b5b2ca#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive#content-length=57, path param: sku=JZ1903031A-10.
-2021-03-31 11:02:08.621 INFO  [http-nio-8082-exec-2] c.c.h.c.c.HzmContext [61] - 26b6418d20ea4dd2bfcb6ed0674e2b1a {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617159721680,"body":"","param":"sku\u003dJZ1903031A-10","traceId":"26b6418d20ea4dd2bfcb6ed0674e2b1a","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":true,"requestId":"26b6418d20ea4dd2bfcb6ed0674e2b1a"},"spend":6931,"props":{},"roles":["admin"]}
-2021-03-31 11:02:13.463 INFO  [http-nio-8082-exec-3] c.c.h.c.c.ContextHandler [34] - eaccab4d91b24880b9a5afdae93451b3 uri: /hzman/item/delete, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#content-type=application/json#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=034a5118-c422-4da1-9700-11c07664ec9a#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive#content-length=57, path param: sku=JZ1903031A-10.
-2021-03-31 11:02:47.171 INFO  [http-nio-8082-exec-3] c.c.h.c.c.HzmContext [61] - eaccab4d91b24880b9a5afdae93451b3 {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617159733463,"body":"","param":"sku\u003dJZ1903031A-10","traceId":"eaccab4d91b24880b9a5afdae93451b3","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":true,"requestId":"eaccab4d91b24880b9a5afdae93451b3"},"spend":33701,"props":{},"roles":["admin"]}
-2021-03-31 11:05:47.541 INFO  [http-nio-8082-exec-5] c.c.h.c.c.ContextHandler [34] - 78b9ab382ba040deb8bffc28f8f9c79c uri: /hzman/item/list, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#content-type=application/json#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=587c787e-ae28-46ad-8fe9-1950833cab3e#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive#content-length=102, path param: null.
-2021-03-31 11:05:47.851 INFO  [http-nio-8082-exec-5] c.c.h.c.c.HzmContext [61] - 78b9ab382ba040deb8bffc28f8f9c79c {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617159947540,"body":"","traceId":"78b9ab382ba040deb8bffc28f8f9c79c","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":{"total":1,"data":[{"id":785,"asin":"B07PP1VJVY","title":"HZMAN Biker Cool Eye Rings for Men Women, Stainless Steel Band Illuminati The All-Seeing-Eye Pyramid/Eye Symbol Ring, Size 8-12 (10)","icon":"https://m.media-amazon.com/images/I/41HTyHCD8zL._SL75_.jpg","sku":"JZ1903031A-10","itemPrice":0.0,"attributeSet":"{\"itemAttributes\":{\"binding\":\"Jewelry\",\"brand\":\"HZMAN\",\"color\":\"Silver\",\"department\":\"boys\",\"label\":\"HZMAN\",\"manufacturer\":\"HZMAN\",\"materialType\":[\"stainless-steel\"],\"metalType\":\"stainless-steel\",\"model\":\"JZ1903031A-10\",\"packageDimensions\":{\"height\":\"0.99999999898\",\"length\":\"3.899999996022\",\"weight\":\"0.05952481074\",\"width\":\"3.099999996838\"},\"partNumber\":\"JZ1903031A-10\",\"productGroup\":\"Jewelry\",\"productTypeName\":\"FASHIONRING\",\"publisher\":\"HZMAN\",\"ringSize\":\"10\",\"smallImage\":{\"height\":\"75\",\"url\":\"https://m.media-amazon.com/images/I/41HTyHCD8zL._SL75_.jpg\",\"width\":\"75\"},\"studio\":\"HZMAN\",\"title\":\"HZMAN Biker Cool Eye Rings for Men Women, Stainless Steel Band Illuminati The All-Seeing-Eye Pyramid/Eye Symbol Ring, Size 8-12 (10)\"}}","relationship":"{\"variationParent\":{\"identifiers\":{\"marketplaceASIN\":{\"asin\":\"B07PSGSF8Q\",\"marketplaceId\":\"ATVPDKIKX0DER\"}}}}","today":{"orderNum":0,"saleNum":0,"saleVolume":0.0,"unitPrice":0.0},"yesterday":{"orderNum":0,"saleNum":0,"saleVolume":0.0,"unitPrice":0.0},"duration30Day":{"orderNum":0,"saleNum":10,"saleVolume":89.9,"unitPrice":8.99},"lastYearDuration30Day":{"orderNum":0,"saleNum":0,"saleVolume":0.0,"unitPrice":0.0},"inventoryDTO":{"id":785,"sku":"JZ1903031A-10","asin":"B07PP1VJVY","fnsku":"X0023DS5OV","totalQuantity":22,"amazonQuantity":0,"amazonStockQuantity":0,"amazonTransferQuantity":0,"amazonInboundQuantity":0,"localTotalQuantity":22,"localQuantity":22,"factoryQuantity":0,"factoryQuantityInfos":[]},"factoryItemDTOS":[{"id":1,"factoryId":2,"factoryName":"篮球工厂1","sku":"JZ1903031A-10","factoryPrice":0.0,"desc":"sadsa"},{"id":2,"factoryId":4,"factoryName":"hehe","sku":"JZ1903031A-10","factoryPrice":0.0,"desc":"10"},{"id":3,"factoryId":1,"factoryName":"篮球场","sku":"JZ1903031A-10","factoryPrice":0.0,"desc":"ssd"},{"id":4,"factoryId":5,"factoryName":"广州HZ","sku":"JZ1903031A-10","factoryPrice":0.0,"desc":"111"}],"replenishmentCode":0,"replenishmentNum":0,"ctime":"Jan 6, 2021 1:17:05 PM","utime":"Mar 31, 2021 9:21:44 AM"}]},"requestId":"78b9ab382ba040deb8bffc28f8f9c79c"},"spend":294,"props":{},"roles":["admin"]}
-2021-03-31 11:15:55.584 INFO  [Thread-81] o.s.s.c.ThreadPoolTaskScheduler [208] -  Shutting down ExecutorService 'taskScheduler'
-2021-03-31 11:15:55.593 INFO  [Thread-81] o.s.s.c.ThreadPoolTaskExecutor [208] -  Shutting down ExecutorService 'backTaskExecutor'
-2021-03-31 11:15:55.595 INFO  [Thread-81] c.z.h.HikariDataSource [350] -  HikariPool-1 - Shutdown initiated...
-2021-03-31 11:15:55.610 INFO  [Thread-81] c.z.h.HikariDataSource [352] -  HikariPool-1 - Shutdown completed.
-2021-03-31 11:16:42.316 INFO  [main] c.c.h.s.WebApplication [50] -  Starting WebApplication on linxingweideMacBook-Air.local with PID 18144 (/Users/linxingwei/Documents/us/hzman-manager/hzman-server/target/classes started by linxingwei in /Users/linxingwei/Documents/us/hzman-manager)
-2021-03-31 11:16:42.328 INFO  [main] c.c.h.s.WebApplication [650] -  The following profiles are active: test
-2021-03-31 11:16:44.743 INFO  [main] o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [330] -  Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$beccd69d] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2021-03-31 11:16:45.234 INFO  [main] o.s.b.w.e.t.TomcatWebServer [90] -  Tomcat initialized with port(s): 8082 (http)
-2021-03-31 11:16:45.258 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Initializing ProtocolHandler ["http-nio-8082"]
-2021-03-31 11:16:45.274 INFO  [main] o.a.c.c.StandardService [173] -  Starting service [Tomcat]
-2021-03-31 11:16:45.274 INFO  [main] o.a.c.c.StandardEngine [173] -  Starting Servlet engine: [Apache Tomcat/9.0.21]
-2021-03-31 11:16:45.471 INFO  [main] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring embedded WebApplicationContext
-2021-03-31 11:16:45.472 INFO  [main] o.s.w.c.ContextLoader [283] -  Root WebApplicationContext: initialization completed in 3067 ms
-2021-03-31 11:16:45.566 INFO  [main] c.c.h.c.c.MybatisPlusConfig [44] -  ------------- 重载父类 sqlSessionFactory init-------
-2021-03-31 11:16:45.690 INFO  [main] c.z.h.HikariDataSource [110] -  HikariPool-1 - Starting...
-2021-03-31 11:16:45.702 WARN  [main] c.z.h.u.DriverDataSource [68] -  Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2021-03-31 11:16:46.744 INFO  [main] c.z.h.HikariDataSource [123] -  HikariPool-1 - Start completed.
-2021-03-31 11:16:47.227 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService
-2021-03-31 11:16:47.232 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService 'backTaskExecutor'
-2021-03-31 11:16:50.516 INFO  [商品详情缓存线程] c.c.h.s.c.ItemDetailCache [97] -  商品详情缓存加载流程开始，需缓存个数：1848
-2021-03-31 11:16:50.815 INFO  [main] c.c.h.s.t.OrderSpiderTask [104] -  测试环境关闭爬虫任务
-2021-03-31 11:16:51.361 INFO  [main] s.d.s.w.PropertySourcedRequestMappingHandlerMapping [69] -  Mapped URL path [/v2/api-docs] onto method [public org.springframework.http.ResponseEntity<springfox.documentation.spring.web.json.Json> springfox.documentation.swagger2.web.Swagger2Controller.getDocumentation(java.lang.String,javax.servlet.http.HttpServletRequest)]
-2021-03-31 11:16:52.116 INFO  [main] o.s.s.c.ThreadPoolTaskScheduler [171] -  Initializing ExecutorService 'taskScheduler'
-2021-03-31 11:16:52.238 INFO  [main] s.d.s.w.p.DocumentationPluginsBootstrapper [160] -  Context refreshed
-2021-03-31 11:16:52.262 INFO  [main] s.d.s.w.p.DocumentationPluginsBootstrapper [163] -  Found 1 custom documentation plugin(s)
-2021-03-31 11:16:52.375 INFO  [main] s.d.s.w.s.ApiListingReferenceScanner [41] -  Scanning for api listing references
-2021-03-31 11:16:52.763 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: payUsingGET_1
-2021-03-31 11:16:52.794 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingGET_1
-2021-03-31 11:16:52.795 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingHEAD_1
-2021-03-31 11:16:52.796 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPOST_1
-2021-03-31 11:16:52.798 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPUT_1
-2021-03-31 11:16:52.799 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPATCH_1
-2021-03-31 11:16:52.800 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingDELETE_1
-2021-03-31 11:16:52.802 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingOPTIONS_1
-2021-03-31 11:16:52.803 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingTRACE_1
-2021-03-31 11:16:52.807 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingGET_2
-2021-03-31 11:16:52.809 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingHEAD_2
-2021-03-31 11:16:52.810 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPOST_2
-2021-03-31 11:16:52.811 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPUT_2
-2021-03-31 11:16:52.813 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPATCH_2
-2021-03-31 11:16:52.814 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingDELETE_2
-2021-03-31 11:16:52.816 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingOPTIONS_2
-2021-03-31 11:16:52.818 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingTRACE_2
-2021-03-31 11:16:52.841 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_1
-2021-03-31 11:16:52.863 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_2
-2021-03-31 11:16:52.866 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_3
-2021-03-31 11:16:52.949 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Starting ProtocolHandler ["http-nio-8082"]
-2021-03-31 11:16:53.025 INFO  [main] o.s.b.w.e.t.TomcatWebServer [202] -  Tomcat started on port(s): 8082 (http) with context path '/hzman'
-2021-03-31 11:16:53.037 INFO  [main] c.c.h.s.WebApplication [59] -  Started WebApplication in 31.662 seconds (JVM running for 38.21)
-2021-03-31 11:17:17.259 INFO  [http-nio-8082-exec-1] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring DispatcherServlet 'dispatcherServlet'
-2021-03-31 11:17:17.263 INFO  [http-nio-8082-exec-1] o.s.w.s.DispatcherServlet [524] -  Initializing Servlet 'dispatcherServlet'
-2021-03-31 11:17:17.281 INFO  [http-nio-8082-exec-1] o.s.w.s.DispatcherServlet [546] -  Completed initialization in 17 ms
-2021-03-31 11:17:17.318 INFO  [http-nio-8082-exec-1] c.c.h.c.c.ContextHandler [34] - 36bd789810e64faab14dbde752a3d9ac uri: /hzman/item/list, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#content-type=application/json#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=ee85fd4e-ec18-4c7c-8e88-ab6a002a87d5#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive#content-length=102, path param: null.
-2021-03-31 11:17:17.800 INFO  [http-nio-8082-exec-1] c.c.h.c.c.HzmContext [61] - 36bd789810e64faab14dbde752a3d9ac {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617160637312,"body":"","traceId":"36bd789810e64faab14dbde752a3d9ac","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":{"total":1,"data":[{"id":785,"asin":"B07PP1VJVY","title":"HZMAN Biker Cool Eye Rings for Men Women, Stainless Steel Band Illuminati The All-Seeing-Eye Pyramid/Eye Symbol Ring, Size 8-12 (10)","icon":"https://m.media-amazon.com/images/I/41HTyHCD8zL._SL75_.jpg","sku":"JZ1903031A-10","itemPrice":0.0,"attributeSet":"{\"itemAttributes\":{\"binding\":\"Jewelry\",\"brand\":\"HZMAN\",\"color\":\"Silver\",\"department\":\"boys\",\"label\":\"HZMAN\",\"manufacturer\":\"HZMAN\",\"materialType\":[\"stainless-steel\"],\"metalType\":\"stainless-steel\",\"model\":\"JZ1903031A-10\",\"packageDimensions\":{\"height\":\"0.99999999898\",\"length\":\"3.899999996022\",\"weight\":\"0.05952481074\",\"width\":\"3.099999996838\"},\"partNumber\":\"JZ1903031A-10\",\"productGroup\":\"Jewelry\",\"productTypeName\":\"FASHIONRING\",\"publisher\":\"HZMAN\",\"ringSize\":\"10\",\"smallImage\":{\"height\":\"75\",\"url\":\"https://m.media-amazon.com/images/I/41HTyHCD8zL._SL75_.jpg\",\"width\":\"75\"},\"studio\":\"HZMAN\",\"title\":\"HZMAN Biker Cool Eye Rings for Men Women, Stainless Steel Band Illuminati The All-Seeing-Eye Pyramid/Eye Symbol Ring, Size 8-12 (10)\"}}","relationship":"{\"variationParent\":{\"identifiers\":{\"marketplaceASIN\":{\"asin\":\"B07PSGSF8Q\",\"marketplaceId\":\"ATVPDKIKX0DER\"}}}}","today":{"orderNum":0,"saleNum":0,"saleVolume":0.0,"unitPrice":0.0},"yesterday":{"orderNum":0,"saleNum":0,"saleVolume":0.0,"unitPrice":0.0},"duration30Day":{"orderNum":0,"saleNum":10,"saleVolume":89.9,"unitPrice":8.99},"lastYearDuration30Day":{"orderNum":0,"saleNum":0,"saleVolume":0.0,"unitPrice":0.0},"inventoryDTO":{"id":785,"sku":"JZ1903031A-10","asin":"B07PP1VJVY","fnsku":"X0023DS5OV","totalQuantity":22,"amazonQuantity":0,"amazonStockQuantity":0,"amazonTransferQuantity":0,"amazonInboundQuantity":0,"localTotalQuantity":22,"localQuantity":22,"factoryQuantity":0,"factoryQuantityInfos":[]},"factoryItemDTOS":[{"id":1,"factoryId":2,"factoryName":"篮球工厂1","sku":"JZ1903031A-10","factoryPrice":0.0,"desc":"sadsa"},{"id":2,"factoryId":4,"factoryName":"hehe","sku":"JZ1903031A-10","factoryPrice":0.0,"desc":"10"},{"id":3,"factoryId":1,"factoryName":"篮球场","sku":"JZ1903031A-10","factoryPrice":0.0,"desc":"ssd"},{"id":4,"factoryId":5,"factoryName":"广州HZ","sku":"JZ1903031A-10","factoryPrice":0.0,"desc":"111"}],"replenishmentCode":0,"replenishmentNum":0,"ctime":"Jan 6, 2021 1:17:05 PM","utime":"Mar 31, 2021 11:02:39 AM"}]},"requestId":"36bd789810e64faab14dbde752a3d9ac"},"spend":464,"props":{},"roles":["admin"]}
-2021-03-31 11:17:38.004 INFO  [http-nio-8082-exec-2] c.c.h.c.c.ContextHandler [34] - af380d0fbb9e40eaaa0a1cdd03882e53 uri: /hzman/item/delete, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=ed8c77c3-84f0-4588-9cf9-aabcfc81e708#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive, path param: sku=JZ1903031A-10.
-2021-03-31 11:17:57.363 INFO  [http-nio-8082-exec-2] c.c.h.c.c.HzmContext [61] - af380d0fbb9e40eaaa0a1cdd03882e53 {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617160658004,"body":"","param":"sku\u003dJZ1903031A-10","traceId":"af380d0fbb9e40eaaa0a1cdd03882e53","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":true,"requestId":"af380d0fbb9e40eaaa0a1cdd03882e53"},"spend":19354,"props":{},"roles":["admin"]}
-2021-03-31 11:18:05.956 INFO  [http-nio-8082-exec-3] c.c.h.c.c.ContextHandler [34] - 6cde0ac050c449dc96d1198bc8eb99c1 uri: /hzman/item/list, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#content-type=application/json#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=3b751d7e-d422-4661-b2de-b536a25f90ec#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive#content-length=102, path param: null.
-2021-03-31 11:18:06.024 INFO  [http-nio-8082-exec-3] c.c.h.c.c.HzmContext [61] - 6cde0ac050c449dc96d1198bc8eb99c1 {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617160685956,"body":"","traceId":"6cde0ac050c449dc96d1198bc8eb99c1","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":{"total":0,"data":[]},"requestId":"6cde0ac050c449dc96d1198bc8eb99c1"},"spend":66,"props":{},"roles":["admin"]}
-2021-03-31 11:18:09.534 INFO  [http-nio-8082-exec-4] c.c.h.c.c.ContextHandler [34] - c41910f75cee44daab368af7904fb1c1 uri: /hzman/item/list, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#content-type=application/json#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=52149b2b-6cd6-4216-92c7-35ce94a47371#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive#content-length=102, path param: null.
-2021-03-31 11:18:09.585 INFO  [http-nio-8082-exec-4] c.c.h.c.c.HzmContext [61] - c41910f75cee44daab368af7904fb1c1 {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617160689534,"body":"","traceId":"c41910f75cee44daab368af7904fb1c1","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":{"total":0,"data":[]},"requestId":"c41910f75cee44daab368af7904fb1c1"},"spend":49,"props":{},"roles":["admin"]}
-2021-03-31 11:18:10.306 INFO  [http-nio-8082-exec-5] c.c.h.c.c.ContextHandler [34] - 022635d3ec594760bf7ae18823fd2c78 uri: /hzman/item/list, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#content-type=application/json#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=3af5ae5a-cf78-4a47-af5d-b85ea2142773#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive#content-length=102, path param: null.
-2021-03-31 11:18:10.396 INFO  [http-nio-8082-exec-5] c.c.h.c.c.HzmContext [61] - 022635d3ec594760bf7ae18823fd2c78 {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617160690306,"body":"","traceId":"022635d3ec594760bf7ae18823fd2c78","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":{"total":0,"data":[]},"requestId":"022635d3ec594760bf7ae18823fd2c78"},"spend":88,"props":{},"roles":["admin"]}
-2021-03-31 11:18:11.028 INFO  [http-nio-8082-exec-6] c.c.h.c.c.ContextHandler [34] - 2dd75f511d52499ca01e9d304190948a uri: /hzman/item/list, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#content-type=application/json#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=fc7ccfc3-8153-48bc-89c2-f7024bf72609#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive#content-length=102, path param: null.
-2021-03-31 11:18:11.096 INFO  [http-nio-8082-exec-6] c.c.h.c.c.HzmContext [61] - 2dd75f511d52499ca01e9d304190948a {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617160691028,"body":"","traceId":"2dd75f511d52499ca01e9d304190948a","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":{"total":0,"data":[]},"requestId":"2dd75f511d52499ca01e9d304190948a"},"spend":65,"props":{},"roles":["admin"]}
-2021-03-31 11:18:11.726 INFO  [http-nio-8082-exec-7] c.c.h.c.c.ContextHandler [34] - dc11a538648e4ed484ef0fe45e91dec8 uri: /hzman/item/list, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#content-type=application/json#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=6ecb359f-7cd8-4c75-a6b5-647a1aa41700#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive#content-length=102, path param: null.
-2021-03-31 11:18:11.780 INFO  [http-nio-8082-exec-7] c.c.h.c.c.HzmContext [61] - dc11a538648e4ed484ef0fe45e91dec8 {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617160691726,"body":"","traceId":"dc11a538648e4ed484ef0fe45e91dec8","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":{"total":0,"data":[]},"requestId":"dc11a538648e4ed484ef0fe45e91dec8"},"spend":53,"props":{},"roles":["admin"]}
-2021-03-31 11:18:12.339 INFO  [http-nio-8082-exec-8] c.c.h.c.c.ContextHandler [34] - 53182ebd5c4b487086baf0d635c85635 uri: /hzman/item/list, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#content-type=application/json#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=0909ff10-e4bf-4671-9b88-26a9c2b914fb#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive#content-length=102, path param: null.
-2021-03-31 11:18:12.405 INFO  [http-nio-8082-exec-8] c.c.h.c.c.HzmContext [61] - 53182ebd5c4b487086baf0d635c85635 {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617160692339,"body":"","traceId":"53182ebd5c4b487086baf0d635c85635","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":{"total":0,"data":[]},"requestId":"53182ebd5c4b487086baf0d635c85635"},"spend":65,"props":{},"roles":["admin"]}
-2021-03-31 11:18:13.016 INFO  [http-nio-8082-exec-9] c.c.h.c.c.ContextHandler [34] - f00e8a0da4784f26b53809734d3867f4 uri: /hzman/item/list, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#content-type=application/json#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=3f0778a7-d513-4941-a81b-80fc595c2060#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive#content-length=102, path param: null.
-2021-03-31 11:18:13.078 INFO  [http-nio-8082-exec-9] c.c.h.c.c.HzmContext [61] - f00e8a0da4784f26b53809734d3867f4 {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617160693015,"body":"","traceId":"f00e8a0da4784f26b53809734d3867f4","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":{"total":0,"data":[]},"requestId":"f00e8a0da4784f26b53809734d3867f4"},"spend":62,"props":{},"roles":["admin"]}
-2021-03-31 11:18:13.642 INFO  [http-nio-8082-exec-10] c.c.h.c.c.ContextHandler [34] - e0ab0b90bc6c41c88168352704eb01f4 uri: /hzman/item/list, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#content-type=application/json#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=7972360b-d1ad-4d73-89fc-4ce0cc7bb7e7#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive#content-length=102, path param: null.
-2021-03-31 11:18:13.695 INFO  [http-nio-8082-exec-10] c.c.h.c.c.HzmContext [61] - e0ab0b90bc6c41c88168352704eb01f4 {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617160693642,"body":"","traceId":"e0ab0b90bc6c41c88168352704eb01f4","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":{"total":0,"data":[]},"requestId":"e0ab0b90bc6c41c88168352704eb01f4"},"spend":52,"props":{},"roles":["admin"]}
-2021-03-31 11:21:16.829 INFO  [商品详情缓存线程] c.c.h.s.c.ItemDetailCache [99] -  商品详情缓存加载流程结束，耗时：266313
-2021-03-31 11:22:16.909 INFO  [pool-2-thread-1] c.c.h.s.t.ItemRefreshTask [51] -  =============刷新商品任务，本次任务需刷新商品个数：1848
-2021-03-31 11:24:37.415 INFO  [Thread-68] o.s.s.c.ThreadPoolTaskScheduler [208] -  Shutting down ExecutorService 'taskScheduler'
-2021-03-31 11:24:37.422 INFO  [Thread-68] o.s.s.c.ThreadPoolTaskExecutor [208] -  Shutting down ExecutorService 'backTaskExecutor'
-2021-03-31 11:24:37.427 INFO  [Thread-68] c.z.h.HikariDataSource [350] -  HikariPool-1 - Shutdown initiated...
-2021-03-31 11:24:37.451 INFO  [Thread-68] c.z.h.HikariDataSource [352] -  HikariPool-1 - Shutdown completed.
-2021-03-31 11:25:30.515 INFO  [main] c.c.h.s.WebApplication [50] -  Starting WebApplication on linxingweideMacBook-Air.local with PID 18224 (/Users/linxingwei/Documents/us/hzman-manager/hzman-server/target/classes started by linxingwei in /Users/linxingwei/Documents/us/hzman-manager)
-2021-03-31 11:25:30.524 INFO  [main] c.c.h.s.WebApplication [650] -  The following profiles are active: test
-2021-03-31 11:25:33.931 INFO  [main] o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [330] -  Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$daacf2d4] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2021-03-31 11:25:34.662 INFO  [main] o.s.b.w.e.t.TomcatWebServer [90] -  Tomcat initialized with port(s): 8082 (http)
-2021-03-31 11:25:34.714 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Initializing ProtocolHandler ["http-nio-8082"]
-2021-03-31 11:25:34.750 INFO  [main] o.a.c.c.StandardService [173] -  Starting service [Tomcat]
-2021-03-31 11:25:34.750 INFO  [main] o.a.c.c.StandardEngine [173] -  Starting Servlet engine: [Apache Tomcat/9.0.21]
-2021-03-31 11:25:35.061 INFO  [main] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring embedded WebApplicationContext
-2021-03-31 11:25:35.062 INFO  [main] o.s.w.c.ContextLoader [283] -  Root WebApplicationContext: initialization completed in 4410 ms
-2021-03-31 11:25:35.191 INFO  [main] c.c.h.c.c.MybatisPlusConfig [44] -  ------------- 重载父类 sqlSessionFactory init-------
-2021-03-31 11:25:35.306 INFO  [main] c.z.h.HikariDataSource [110] -  HikariPool-1 - Starting...
-2021-03-31 11:25:35.311 WARN  [main] c.z.h.u.DriverDataSource [68] -  Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2021-03-31 11:25:36.861 INFO  [main] c.z.h.HikariDataSource [123] -  HikariPool-1 - Start completed.
-2021-03-31 11:25:37.621 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService
-2021-03-31 11:25:37.628 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService 'backTaskExecutor'
-2021-03-31 11:25:42.474 INFO  [商品详情缓存线程] c.c.h.s.c.ItemDetailCache [97] -  商品详情缓存加载流程开始，需缓存个数：1847
-2021-03-31 11:25:42.770 INFO  [main] c.c.h.s.t.OrderSpiderTask [104] -  测试环境关闭爬虫任务
-2021-03-31 11:25:43.750 INFO  [main] s.d.s.w.PropertySourcedRequestMappingHandlerMapping [69] -  Mapped URL path [/v2/api-docs] onto method [public org.springframework.http.ResponseEntity<springfox.documentation.spring.web.json.Json> springfox.documentation.swagger2.web.Swagger2Controller.getDocumentation(java.lang.String,javax.servlet.http.HttpServletRequest)]
-2021-03-31 11:25:44.732 INFO  [main] o.s.s.c.ThreadPoolTaskScheduler [171] -  Initializing ExecutorService 'taskScheduler'
-2021-03-31 11:25:44.855 INFO  [main] s.d.s.w.p.DocumentationPluginsBootstrapper [160] -  Context refreshed
-2021-03-31 11:25:45.031 INFO  [main] s.d.s.w.p.DocumentationPluginsBootstrapper [163] -  Found 1 custom documentation plugin(s)
-2021-03-31 11:25:45.493 INFO  [main] s.d.s.w.s.ApiListingReferenceScanner [41] -  Scanning for api listing references
-2021-03-31 11:25:47.162 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: payUsingGET_1
-2021-03-31 11:25:47.259 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingGET_1
-2021-03-31 11:25:47.261 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingHEAD_1
-2021-03-31 11:25:47.263 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPOST_1
-2021-03-31 11:25:47.268 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPUT_1
-2021-03-31 11:25:47.270 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPATCH_1
-2021-03-31 11:25:47.275 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingDELETE_1
-2021-03-31 11:25:47.278 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingOPTIONS_1
-2021-03-31 11:25:47.300 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingTRACE_1
-2021-03-31 11:25:47.306 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingGET_2
-2021-03-31 11:25:47.308 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingHEAD_2
-2021-03-31 11:25:47.314 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPOST_2
-2021-03-31 11:25:47.316 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPUT_2
-2021-03-31 11:25:47.317 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPATCH_2
-2021-03-31 11:25:47.319 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingDELETE_2
-2021-03-31 11:25:47.321 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingOPTIONS_2
-2021-03-31 11:25:47.322 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingTRACE_2
-2021-03-31 11:25:47.511 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_1
-2021-03-31 11:25:47.581 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_2
-2021-03-31 11:25:47.585 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_3
-2021-03-31 11:25:47.720 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Starting ProtocolHandler ["http-nio-8082"]
-2021-03-31 11:25:47.792 INFO  [main] o.s.b.w.e.t.TomcatWebServer [202] -  Tomcat started on port(s): 8082 (http) with context path '/hzman'
-2021-03-31 11:25:47.801 INFO  [main] c.c.h.s.WebApplication [59] -  Started WebApplication in 39.181 seconds (JVM running for 47.625)
-2021-03-31 11:27:42.637 INFO  [http-nio-8082-exec-1] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring DispatcherServlet 'dispatcherServlet'
-2021-03-31 11:27:42.639 INFO  [http-nio-8082-exec-1] o.s.w.s.DispatcherServlet [524] -  Initializing Servlet 'dispatcherServlet'
-2021-03-31 11:27:42.664 INFO  [http-nio-8082-exec-1] o.s.w.s.DispatcherServlet [546] -  Completed initialization in 21 ms
-2021-03-31 11:27:42.701 INFO  [http-nio-8082-exec-1] c.c.h.c.c.ContextHandler [34] - 9c3d7412c33442d387db9e2b0ab53422 uri: /hzman/item/list, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#content-type=application/json#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=0207b064-9a15-4e86-a2d3-798c9058c6cd#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive#content-length=102, path param: null.
-2021-03-31 11:27:43.097 INFO  [http-nio-8082-exec-1] c.c.h.c.c.HzmContext [61] - 9c3d7412c33442d387db9e2b0ab53422 {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617161262695,"body":"","traceId":"9c3d7412c33442d387db9e2b0ab53422","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":{"total":0,"data":[]},"requestId":"9c3d7412c33442d387db9e2b0ab53422"},"spend":383,"props":{},"roles":["admin"]}
-2021-03-31 11:27:53.551 INFO  [http-nio-8082-exec-2] c.c.h.c.c.ContextHandler [34] - fd00a33e1dc84124a48aa31e8561e5f8 uri: /hzman/item/sync, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=409894d7-8d30-4935-9b48-464b7a4419ad#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive, path param: sku=JZ1903031A-10.
-2021-03-31 11:28:02.571 INFO  [http-nio-8082-exec-2] c.c.h.c.c.HzmContext [61] - fd00a33e1dc84124a48aa31e8561e5f8 {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617161273551,"body":"","param":"sku\u003dJZ1903031A-10","traceId":"fd00a33e1dc84124a48aa31e8561e5f8","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":true,"requestId":"fd00a33e1dc84124a48aa31e8561e5f8"},"spend":9014,"props":{},"roles":["admin"]}
-2021-03-31 11:28:36.842 INFO  [http-nio-8082-exec-3] c.c.h.c.c.ContextHandler [34] - f592f60f887f42408a73c9cedc69729e uri: /hzman/item/sync, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=0115ca84-09b6-4037-bf09-e2d81a2c76eb#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive, path param: sku=JZ1903031A-10.
-2021-03-31 11:29:39.376 INFO  [http-nio-8082-exec-3] c.c.h.c.c.HzmContext [61] - f592f60f887f42408a73c9cedc69729e {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617161316638,"body":"","param":"sku\u003dJZ1903031A-10","traceId":"f592f60f887f42408a73c9cedc69729e","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":true,"requestId":"f592f60f887f42408a73c9cedc69729e"},"spend":62719,"props":{},"roles":["admin"]}
-2021-03-31 11:30:23.457 INFO  [商品详情缓存线程] c.c.h.s.c.ItemDetailCache [99] -  商品详情缓存加载流程结束，耗时：280983
-2021-03-31 11:30:27.975 INFO  [http-nio-8082-exec-4] c.c.h.c.c.ContextHandler [34] - 02e11981fc514131bf55597b85652def uri: /hzman/item/list, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#content-type=application/json#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=123259e9-299a-42f2-8c5f-b08984eaee7c#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive#content-length=102, path param: null.
-2021-03-31 11:30:28.069 INFO  [http-nio-8082-exec-4] c.c.h.c.c.HzmContext [61] - 02e11981fc514131bf55597b85652def {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617161427975,"body":"","traceId":"02e11981fc514131bf55597b85652def","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":{"total":1,"data":[{"id":785,"asin":"B07PP1VJVY","title":"HZMAN Biker Cool Eye Rings for Men Women, Stainless Steel Band Illuminati The All-Seeing-Eye Pyramid/Eye Symbol Ring, Size 8-12 (10)","icon":"https://m.media-amazon.com/images/I/41HTyHCD8zL._SL75_.jpg","sku":"JZ1903031A-10","itemPrice":0.0,"attributeSet":"{\"itemAttributes\":{\"binding\":\"Jewelry\",\"brand\":\"HZMAN\",\"color\":\"Silver\",\"department\":\"boys\",\"label\":\"HZMAN\",\"manufacturer\":\"HZMAN\",\"materialType\":[\"stainless-steel\"],\"metalType\":\"stainless-steel\",\"model\":\"JZ1903031A-10\",\"packageDimensions\":{\"height\":\"0.99999999898\",\"length\":\"3.899999996022\",\"weight\":\"0.05952481074\",\"width\":\"3.099999996838\"},\"partNumber\":\"JZ1903031A-10\",\"productGroup\":\"Jewelry\",\"productTypeName\":\"FASHIONRING\",\"publisher\":\"HZMAN\",\"ringSize\":\"10\",\"smallImage\":{\"height\":\"75\",\"url\":\"https://m.media-amazon.com/images/I/41HTyHCD8zL._SL75_.jpg\",\"width\":\"75\"},\"studio\":\"HZMAN\",\"title\":\"HZMAN Biker Cool Eye Rings for Men Women, Stainless Steel Band Illuminati The All-Seeing-Eye Pyramid/Eye Symbol Ring, Size 8-12 (10)\"}}","relationship":"{\"variationParent\":{\"identifiers\":{\"marketplaceASIN\":{\"asin\":\"B07PSGSF8Q\",\"marketplaceId\":\"ATVPDKIKX0DER\"}}}}","today":{"orderNum":0,"saleNum":0,"saleVolume":0.0,"unitPrice":0.0},"yesterday":{"orderNum":0,"saleNum":0,"saleVolume":0.0,"unitPrice":0.0},"duration30Day":{"orderNum":0,"saleNum":10,"saleVolume":89.9,"unitPrice":8.99},"lastYearDuration30Day":{"orderNum":0,"saleNum":0,"saleVolume":0.0,"unitPrice":0.0},"inventoryDTO":{"id":785,"sku":"JZ1903031A-10","asin":"B07PP1VJVY","fnsku":"X0023DS5OV","totalQuantity":22,"amazonQuantity":0,"amazonStockQuantity":0,"amazonTransferQuantity":0,"amazonInboundQuantity":0,"localTotalQuantity":22,"localQuantity":22,"factoryQuantity":0,"factoryQuantityInfos":[]},"factoryItemDTOS":[{"id":1,"factoryId":2,"factoryName":"篮球工厂1","sku":"JZ1903031A-10","factoryPrice":0.0,"desc":"sadsa"},{"id":2,"factoryId":4,"factoryName":"hehe","sku":"JZ1903031A-10","factoryPrice":0.0,"desc":"10"},{"id":3,"factoryId":1,"factoryName":"篮球场","sku":"JZ1903031A-10","factoryPrice":0.0,"desc":"ssd"},{"id":4,"factoryId":5,"factoryName":"广州HZ","sku":"JZ1903031A-10","factoryPrice":0.0,"desc":"111"}],"replenishmentCode":0,"replenishmentNum":0,"ctime":"Jan 6, 2021 1:17:05 PM","utime":"Mar 31, 2021 11:29:16 AM"}]},"requestId":"02e11981fc514131bf55597b85652def"},"spend":87,"props":{},"roles":["admin"]}
-2021-03-31 11:30:36.671 INFO  [http-nio-8082-exec-5] c.c.h.c.c.ContextHandler [34] - ea817d08b5ef416c826672620bdc0374 uri: /hzman/item/delete, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=a35b2e58-a9c6-4ca3-bc28-0e5f8d866377#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive, path param: sku=JZ1903031A-10.
-2021-03-31 11:30:45.834 INFO  [http-nio-8082-exec-5] c.c.h.c.c.HzmContext [61] - ea817d08b5ef416c826672620bdc0374 {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617161436670,"body":"","param":"sku\u003dJZ1903031A-10","traceId":"ea817d08b5ef416c826672620bdc0374","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":true,"requestId":"ea817d08b5ef416c826672620bdc0374"},"spend":9163,"props":{},"roles":["admin"]}
-2021-03-31 11:30:51.139 INFO  [http-nio-8082-exec-6] c.c.h.c.c.ContextHandler [34] - 1082874ac4824d28a915cbbb5be568f2 uri: /hzman/item/list, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#content-type=application/json#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=5c7f7cb9-d8eb-4e45-9250-48daa71a7ea3#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive#content-length=102, path param: null.
-2021-03-31 11:30:51.198 INFO  [http-nio-8082-exec-6] c.c.h.c.c.HzmContext [61] - 1082874ac4824d28a915cbbb5be568f2 {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617161451139,"body":"","traceId":"1082874ac4824d28a915cbbb5be568f2","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":{"total":0,"data":[]},"requestId":"1082874ac4824d28a915cbbb5be568f2"},"spend":57,"props":{},"roles":["admin"]}
-2021-03-31 11:31:23.643 INFO  [pool-2-thread-1] c.c.h.s.t.ItemRefreshTask [51] -  =============刷新商品任务，本次任务需刷新商品个数：1847
-2021-03-31 11:32:22.393 INFO  [Thread-70] o.s.s.c.ThreadPoolTaskScheduler [208] -  Shutting down ExecutorService 'taskScheduler'
-2021-03-31 11:32:22.408 INFO  [Thread-70] o.s.s.c.ThreadPoolTaskExecutor [208] -  Shutting down ExecutorService 'backTaskExecutor'
-2021-03-31 11:32:22.417 INFO  [Thread-70] c.z.h.HikariDataSource [350] -  HikariPool-1 - Shutdown initiated...
-2021-03-31 11:32:22.462 INFO  [Thread-70] c.z.h.HikariDataSource [352] -  HikariPool-1 - Shutdown completed.
-2021-03-31 11:33:07.500 INFO  [main] c.c.h.s.WebApplication [50] -  Starting WebApplication on linxingweideMacBook-Air.local with PID 18272 (/Users/linxingwei/Documents/us/hzman-manager/hzman-server/target/classes started by linxingwei in /Users/linxingwei/Documents/us/hzman-manager)
-2021-03-31 11:33:07.507 INFO  [main] c.c.h.s.WebApplication [650] -  The following profiles are active: test
-2021-03-31 11:33:09.590 INFO  [main] o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [330] -  Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$4ae399b2] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2021-03-31 11:33:09.996 INFO  [main] o.s.b.w.e.t.TomcatWebServer [90] -  Tomcat initialized with port(s): 8082 (http)
-2021-03-31 11:33:10.016 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Initializing ProtocolHandler ["http-nio-8082"]
-2021-03-31 11:33:10.027 INFO  [main] o.a.c.c.StandardService [173] -  Starting service [Tomcat]
-2021-03-31 11:33:10.028 INFO  [main] o.a.c.c.StandardEngine [173] -  Starting Servlet engine: [Apache Tomcat/9.0.21]
-2021-03-31 11:33:10.204 INFO  [main] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring embedded WebApplicationContext
-2021-03-31 11:33:10.205 INFO  [main] o.s.w.c.ContextLoader [283] -  Root WebApplicationContext: initialization completed in 2636 ms
-2021-03-31 11:33:10.306 INFO  [main] c.c.h.c.c.MybatisPlusConfig [44] -  ------------- 重载父类 sqlSessionFactory init-------
-2021-03-31 11:33:10.410 INFO  [main] c.z.h.HikariDataSource [110] -  HikariPool-1 - Starting...
-2021-03-31 11:33:10.417 WARN  [main] c.z.h.u.DriverDataSource [68] -  Registered driver with driverClassName=com.mysql.jdbc.Driver was not found, trying direct instantiation.
-2021-03-31 11:33:11.313 INFO  [main] c.z.h.HikariDataSource [123] -  HikariPool-1 - Start completed.
-2021-03-31 11:33:11.723 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService
-2021-03-31 11:33:11.727 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService 'backTaskExecutor'
-2021-03-31 11:33:14.472 INFO  [商品详情缓存线程] c.c.h.s.c.ItemDetailCache [97] -  商品详情缓存加载流程开始，需缓存个数：1847
-2021-03-31 11:33:14.603 INFO  [main] c.c.h.s.t.OrderSpiderTask [104] -  测试环境关闭爬虫任务
-2021-03-31 11:33:15.094 INFO  [main] s.d.s.w.PropertySourcedRequestMappingHandlerMapping [69] -  Mapped URL path [/v2/api-docs] onto method [public org.springframework.http.ResponseEntity<springfox.documentation.spring.web.json.Json> springfox.documentation.swagger2.web.Swagger2Controller.getDocumentation(java.lang.String,javax.servlet.http.HttpServletRequest)]
-2021-03-31 11:33:15.626 INFO  [main] o.s.s.c.ThreadPoolTaskScheduler [171] -  Initializing ExecutorService 'taskScheduler'
-2021-03-31 11:33:15.701 INFO  [main] s.d.s.w.p.DocumentationPluginsBootstrapper [160] -  Context refreshed
-2021-03-31 11:33:15.722 INFO  [main] s.d.s.w.p.DocumentationPluginsBootstrapper [163] -  Found 1 custom documentation plugin(s)
-2021-03-31 11:33:15.805 INFO  [main] s.d.s.w.s.ApiListingReferenceScanner [41] -  Scanning for api listing references
-2021-03-31 11:33:16.172 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: payUsingGET_1
-2021-03-31 11:33:16.218 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingGET_1
-2021-03-31 11:33:16.220 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingHEAD_1
-2021-03-31 11:33:16.221 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPOST_1
-2021-03-31 11:33:16.226 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPUT_1
-2021-03-31 11:33:16.229 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPATCH_1
-2021-03-31 11:33:16.231 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingDELETE_1
-2021-03-31 11:33:16.233 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingOPTIONS_1
-2021-03-31 11:33:16.235 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingTRACE_1
-2021-03-31 11:33:16.247 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingGET_2
-2021-03-31 11:33:16.250 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingHEAD_2
-2021-03-31 11:33:16.253 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPOST_2
-2021-03-31 11:33:16.258 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPUT_2
-2021-03-31 11:33:16.260 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPATCH_2
-2021-03-31 11:33:16.262 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingDELETE_2
-2021-03-31 11:33:16.264 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingOPTIONS_2
-2021-03-31 11:33:16.267 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingTRACE_2
-2021-03-31 11:33:16.316 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_1
-2021-03-31 11:33:16.355 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_2
-2021-03-31 11:33:16.360 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_3
-2021-03-31 11:33:16.500 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Starting ProtocolHandler ["http-nio-8082"]
-2021-03-31 11:33:16.551 INFO  [main] o.s.b.w.e.t.TomcatWebServer [202] -  Tomcat started on port(s): 8082 (http) with context path '/hzman'
-2021-03-31 11:33:16.558 INFO  [main] c.c.h.s.WebApplication [59] -  Started WebApplication in 29.983 seconds (JVM running for 36.916)
-2021-03-31 11:33:43.273 INFO  [http-nio-8082-exec-1] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring DispatcherServlet 'dispatcherServlet'
-2021-03-31 11:33:43.275 INFO  [http-nio-8082-exec-1] o.s.w.s.DispatcherServlet [524] -  Initializing Servlet 'dispatcherServlet'
-2021-03-31 11:33:43.301 INFO  [http-nio-8082-exec-1] o.s.w.s.DispatcherServlet [546] -  Completed initialization in 21 ms
-2021-03-31 11:33:43.350 INFO  [http-nio-8082-exec-1] c.c.h.c.c.ContextHandler [34] - 24f3b79ea2d74f279b64bc91fadb8189 uri: /hzman/item/list, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#content-type=application/json#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=dddaf429-a4e2-47aa-bc4c-0ca3404cdbb0#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive#content-length=102, path param: null.
-2021-03-31 11:33:43.934 INFO  [http-nio-8082-exec-1] c.c.h.c.c.HzmContext [61] - 24f3b79ea2d74f279b64bc91fadb8189 {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617161623340,"body":"","traceId":"24f3b79ea2d74f279b64bc91fadb8189","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":{"total":0,"data":[]},"requestId":"24f3b79ea2d74f279b64bc91fadb8189"},"spend":565,"props":{},"roles":["admin"]}
-2021-03-31 11:33:46.557 INFO  [http-nio-8082-exec-2] c.c.h.c.c.ContextHandler [34] - 12a5c58cbc19472d84dadf79346ad1e2 uri: /hzman/item/sync, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=0b402390-2369-4308-96e3-fa0b34f2525b#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive, path param: sku=JZ1903031A-10.
-2021-03-31 11:33:53.314 INFO  [http-nio-8082-exec-2] c.c.h.c.c.HzmContext [61] - 12a5c58cbc19472d84dadf79346ad1e2 {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617161626556,"body":"","param":"sku\u003dJZ1903031A-10","traceId":"12a5c58cbc19472d84dadf79346ad1e2","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":true,"requestId":"12a5c58cbc19472d84dadf79346ad1e2"},"spend":6749,"props":{},"roles":["admin"]}
-2021-03-31 11:33:59.846 INFO  [http-nio-8082-exec-3] c.c.h.c.c.ContextHandler [34] - 6889cba089004c94b30fd11f907d40ae uri: /hzman/item/list, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#content-type=application/json#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=3e82975c-a560-40ac-beaa-1557014fcbff#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive#content-length=102, path param: null.
-2021-03-31 11:33:59.922 INFO  [http-nio-8082-exec-3] c.c.h.c.c.HzmContext [61] - 6889cba089004c94b30fd11f907d40ae {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617161639846,"body":"","traceId":"6889cba089004c94b30fd11f907d40ae","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":{"total":1,"data":[{"id":785,"asin":"B07PP1VJVY","title":"HZMAN Biker Cool Eye Rings for Men Women, Stainless Steel Band Illuminati The All-Seeing-Eye Pyramid/Eye Symbol Ring, Size 8-12 (10)","icon":"https://m.media-amazon.com/images/I/41HTyHCD8zL._SL75_.jpg","sku":"JZ1903031A-10","itemPrice":0.0,"attributeSet":"{\"itemAttributes\":{\"binding\":\"Jewelry\",\"brand\":\"HZMAN\",\"color\":\"Silver\",\"department\":\"boys\",\"label\":\"HZMAN\",\"manufacturer\":\"HZMAN\",\"materialType\":[\"stainless-steel\"],\"metalType\":\"stainless-steel\",\"model\":\"JZ1903031A-10\",\"packageDimensions\":{\"height\":\"0.99999999898\",\"length\":\"3.899999996022\",\"weight\":\"0.05952481074\",\"width\":\"3.099999996838\"},\"partNumber\":\"JZ1903031A-10\",\"productGroup\":\"Jewelry\",\"productTypeName\":\"FASHIONRING\",\"publisher\":\"HZMAN\",\"ringSize\":\"10\",\"smallImage\":{\"height\":\"75\",\"url\":\"https://m.media-amazon.com/images/I/41HTyHCD8zL._SL75_.jpg\",\"width\":\"75\"},\"studio\":\"HZMAN\",\"title\":\"HZMAN Biker Cool Eye Rings for Men Women, Stainless Steel Band Illuminati The All-Seeing-Eye Pyramid/Eye Symbol Ring, Size 8-12 (10)\"}}","relationship":"{\"variationParent\":{\"identifiers\":{\"marketplaceASIN\":{\"asin\":\"B07PSGSF8Q\",\"marketplaceId\":\"ATVPDKIKX0DER\"}}}}","today":{"orderNum":0,"saleNum":0,"saleVolume":0.0,"unitPrice":0.0},"yesterday":{"orderNum":0,"saleNum":0,"saleVolume":0.0,"unitPrice":0.0},"duration30Day":{"orderNum":0,"saleNum":10,"saleVolume":89.9,"unitPrice":8.99},"lastYearDuration30Day":{"orderNum":0,"saleNum":0,"saleVolume":0.0,"unitPrice":0.0},"inventoryDTO":{"id":785,"sku":"JZ1903031A-10","asin":"B07PP1VJVY","fnsku":"X0023DS5OV","totalQuantity":22,"amazonQuantity":0,"amazonStockQuantity":0,"amazonTransferQuantity":0,"amazonInboundQuantity":0,"localTotalQuantity":22,"localQuantity":22,"factoryQuantity":0,"factoryQuantityInfos":[]},"factoryItemDTOS":[{"id":1,"factoryId":2,"factoryName":"篮球工厂1","sku":"JZ1903031A-10","factoryPrice":0.0,"desc":"sadsa"},{"id":2,"factoryId":4,"factoryName":"hehe","sku":"JZ1903031A-10","factoryPrice":0.0,"desc":"10"},{"id":3,"factoryId":1,"factoryName":"篮球场","sku":"JZ1903031A-10","factoryPrice":0.0,"desc":"ssd"},{"id":4,"factoryId":5,"factoryName":"广州HZ","sku":"JZ1903031A-10","factoryPrice":0.0,"desc":"111"}],"replenishmentCode":0,"replenishmentNum":0,"ctime":"Jan 6, 2021 1:17:05 PM","utime":"Mar 31, 2021 11:33:52 AM"}]},"requestId":"6889cba089004c94b30fd11f907d40ae"},"spend":66,"props":{},"roles":["admin"]}
-2021-03-31 11:34:07.064 INFO  [http-nio-8082-exec-4] c.c.h.c.c.ContextHandler [34] - 54012e9571e04736afcac1cb6d8a5cde uri: /hzman/item/delete, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=5633fde6-a69a-4e0c-803f-58c6a9cbe847#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive, path param: sku=JZ1903031A-10.
-2021-03-31 11:34:07.155 INFO  [http-nio-8082-exec-4] c.c.h.c.c.HzmContext [61] - 54012e9571e04736afcac1cb6d8a5cde {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617161647064,"body":"","param":"sku\u003dJZ1903031A-10","traceId":"54012e9571e04736afcac1cb6d8a5cde","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":true,"requestId":"54012e9571e04736afcac1cb6d8a5cde"},"spend":86,"props":{},"roles":["admin"]}
-2021-03-31 11:34:09.206 INFO  [http-nio-8082-exec-5] c.c.h.c.c.ContextHandler [34] - 7bc6e5029c0d4eb187a62bc72506016b uri: /hzman/item/list, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#content-type=application/json#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=17420f08-4d45-45c6-8194-ec593b8d7c7b#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive#content-length=102, path param: null.
-2021-03-31 11:34:09.247 INFO  [http-nio-8082-exec-5] c.c.h.c.c.HzmContext [61] - 7bc6e5029c0d4eb187a62bc72506016b {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617161649206,"body":"","traceId":"7bc6e5029c0d4eb187a62bc72506016b","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":{"total":0,"data":[]},"requestId":"7bc6e5029c0d4eb187a62bc72506016b"},"spend":37,"props":{},"roles":["admin"]}
-2021-03-31 11:34:21.622 INFO  [http-nio-8082-exec-6] c.c.h.c.c.ContextHandler [34] - 0b2816eff9f04bbcb8cdf1a93a6efe73 uri: /hzman/item/sync, original request body: , header: authorization=291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu#user-agent=PostmanRuntime/7.26.8#accept=*/*#cache-control=no-cache#postman-token=182124da-1228-4e09-bcd3-d341299939a2#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive, path param: sku=JZ1903031A-10.
-2021-03-31 11:34:27.226 INFO  [http-nio-8082-exec-6] c.c.h.c.c.HzmContext [61] - 0b2816eff9f04bbcb8cdf1a93a6efe73 {"accountId":2,"accountToken":"291XcVzscU2n+sr0uwr/b8NljDZsEGq7suDKerik+LbjbOhuZc/zOlxD2HpVsBovXzrGYKOAun7TiI7JOXoUwAIL/93c6uaVOydxvdx5Xd/MOY14roLF6AvlcLAtRbiu","startTime":1617161661622,"body":"","param":"sku\u003dJZ1903031A-10","traceId":"0b2816eff9f04bbcb8cdf1a93a6efe73","peer":"127.0.0.1","response":{"code":200,"msg":"ok","result":true,"requestId":"0b2816eff9f04bbcb8cdf1a93a6efe73"},"spend":5603,"props":{},"roles":["admin"]}
-2021-03-31 11:35:05.117 INFO  [Thread-65] o.s.s.c.ThreadPoolTaskScheduler [208] -  Shutting down ExecutorService 'taskScheduler'
-2021-03-31 11:35:05.131 INFO  [Thread-65] o.s.s.c.ThreadPoolTaskExecutor [208] -  Shutting down ExecutorService 'backTaskExecutor'
-2021-03-31 11:35:05.142 INFO  [Thread-65] c.z.h.HikariDataSource [350] -  HikariPool-1 - Shutdown initiated...
-2021-03-31 11:35:05.194 INFO  [Thread-65] c.z.h.HikariDataSource [352] -  HikariPool-1 - Shutdown completed.
+2022-01-19 21:23:15.656 INFO  [main] c.c.h.s.WebApplication [50] -  Starting WebApplication on admindeMacBook-Pro.local with PID 48282 (/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes started by admin in /Users/admin/Documents/us/hzman-manager)
+2022-01-19 21:23:15.665 INFO  [main] c.c.h.s.WebApplication [650] -  The following profiles are active: test
+2022-01-19 21:23:17.216 INFO  [main] o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [330] -  Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$2e2a97a5] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-19 21:23:17.534 INFO  [main] o.s.b.w.e.t.TomcatWebServer [90] -  Tomcat initialized with port(s): 8082 (http)
+2022-01-19 21:23:17.557 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Initializing ProtocolHandler ["http-nio-8082"]
+2022-01-19 21:23:17.569 INFO  [main] o.a.c.c.StandardService [173] -  Starting service [Tomcat]
+2022-01-19 21:23:17.569 INFO  [main] o.a.c.c.StandardEngine [173] -  Starting Servlet engine: [Apache Tomcat/9.0.21]
+2022-01-19 21:23:17.706 INFO  [main] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring embedded WebApplicationContext
+2022-01-19 21:23:17.706 INFO  [main] o.s.w.c.ContextLoader [283] -  Root WebApplicationContext: initialization completed in 1989 ms
+2022-01-19 21:23:17.787 INFO  [main] c.c.h.c.c.MybatisPlusConfig [44] -  ------------- 重载父类 sqlSessionFactory init-------
+2022-01-19 21:23:17.874 INFO  [main] c.z.h.HikariDataSource [110] -  HikariPool-1 - Starting...
+2022-01-19 21:23:19.290 ERROR [main] c.z.h.p.HikariPool [574] -  HikariPool-1 - Exception during pool initialization.
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:174)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:835)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:455)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:240)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:199)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:136)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:369)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:198)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:467)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:541)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
+	at com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean.buildSqlSessionFactory(MybatisSqlSessionFactoryBean.java:599)
+	at com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean.afterPropertiesSet(MybatisSqlSessionFactoryBean.java:386)
+	at com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean.getObject(MybatisSqlSessionFactoryBean.java:683)
+	at com.cn.hzm.core.configure.MybatisPlusConfig.sqlSessionFactories(MybatisPlusConfig.java:50)
+	at com.cn.hzm.core.configure.MybatisPlusConfig$$EnhancerBySpringCGLIB$$7cfd050b.CGLIB$sqlSessionFactories$1(<generated>)
+	at com.cn.hzm.core.configure.MybatisPlusConfig$$EnhancerBySpringCGLIB$$7cfd050b$$FastClassBySpringCGLIB$$2e281c39.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:244)
+	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:363)
+	at com.cn.hzm.core.configure.MybatisPlusConfig$$EnhancerBySpringCGLIB$$7cfd050b.sqlSessionFactories(<generated>)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:622)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:456)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1321)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1160)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:555)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1251)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1171)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireByType(AbstractAutowireCapableBeanFactory.java:1500)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1395)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1251)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1171)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:520)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:496)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor$ResourceElement.getResourceToInject(CommonAnnotationBeanPostProcessor.java:636)
+	at org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement.inject(InjectionMetadata.java:180)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:321)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1411)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1251)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1171)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:520)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:496)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor$ResourceElement.getResourceToInject(CommonAnnotationBeanPostProcessor.java:636)
+	at org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement.inject(InjectionMetadata.java:180)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:321)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1411)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:204)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.resolveBeanByName(AbstractAutowireCapableBeanFactory.java:452)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:526)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:496)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor$ResourceElement.getResourceToInject(CommonAnnotationBeanPostProcessor.java:636)
+	at org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement.inject(InjectionMetadata.java:180)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:321)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1411)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:392)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1321)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1160)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:555)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:204)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:211)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:202)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addServletContextInitializerBeans(ServletContextInitializerBeans.java:96)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:85)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:252)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:226)
+	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:53)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5132)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1384)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1374)
+	at java.util.concurrent.FutureTask.run$$$capture(FutureTask.java:266)
+	at java.util.concurrent.FutureTask.run(FutureTask.java)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:134)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:909)
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:841)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1384)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1374)
+	at java.util.concurrent.FutureTask.run$$$capture(FutureTask.java:266)
+	at java.util.concurrent.FutureTask.run(FutureTask.java)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:134)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:909)
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:262)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:421)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:932)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:456)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:105)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:86)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:414)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:178)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:179)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:152)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:140)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:742)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:389)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:311)
+	at com.cn.hzm.server.WebApplication.main(WebApplication.java:15)
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:61)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:151)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:167)
+	at com.mysql.cj.protocol.a.NativeProtocol.negotiateSSLConnection(NativeProtocol.java:361)
+	at com.mysql.cj.protocol.a.NativeAuthenticationProvider.negotiateSSLConnection(NativeAuthenticationProvider.java:777)
+	at com.mysql.cj.protocol.a.NativeAuthenticationProvider.proceedHandshakeWithPluggableAuthentication(NativeAuthenticationProvider.java:486)
+	at com.mysql.cj.protocol.a.NativeAuthenticationProvider.connect(NativeAuthenticationProvider.java:202)
+	at com.mysql.cj.protocol.a.NativeProtocol.connect(NativeProtocol.java:1452)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:165)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:955)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825)
+	... 144 common frames omitted
+Caused by: javax.net.ssl.SSLHandshakeException: No appropriate protocol (protocol is disabled or cipher suites are inappropriate)
+	at sun.security.ssl.HandshakeContext.<init>(HandshakeContext.java:171)
+	at sun.security.ssl.ClientHandshakeContext.<init>(ClientHandshakeContext.java:101)
+	at sun.security.ssl.TransportContext.kickstart(TransportContext.java:238)
+	at sun.security.ssl.SSLSocketImpl.startHandshake(SSLSocketImpl.java:394)
+	at sun.security.ssl.SSLSocketImpl.startHandshake(SSLSocketImpl.java:373)
+	at com.mysql.cj.protocol.ExportControlled.performTlsHandshake(ExportControlled.java:316)
+	at com.mysql.cj.protocol.StandardSocketFactory.performTlsHandshake(StandardSocketFactory.java:188)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.performTlsHandshake(NativeSocketConnection.java:99)
+	at com.mysql.cj.protocol.a.NativeProtocol.negotiateSSLConnection(NativeProtocol.java:352)
+	... 151 common frames omitted
+2022-01-19 21:23:19.299 ERROR [main] o.s.b.w.e.t.TomcatStarter [61] -  Error starting Tomcat context. Exception: org.springframework.beans.factory.BeanCreationException. Message: Error creating bean with name 'hzmWebConfig': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'hzmAuthTokenInterceptor': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'passportServiceImpl': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'hzmPassportDao' defined in file [/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes/com/cn/hzm/server/dao/HzmPassportDao.class]: Unsatisfied dependency expressed through bean property 'sqlSessionFactory'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactories' defined in class path resource [com/cn/hzm/core/configure/MybatisPlusConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactories' threw exception; nested exception is com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+2022-01-19 21:23:19.335 INFO  [main] o.a.c.c.StandardService [173] -  Stopping service [Tomcat]
+2022-01-19 21:23:19.339 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [logback-3] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
+ java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
+ java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1088)
+ java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:809)
+ java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
+ java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
+ java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+ java.lang.Thread.run(Thread.java:748)
+2022-01-19 21:23:19.343 WARN  [main] o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext [557] -  Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat
+2022-01-19 21:23:19.352 INFO  [main] o.s.b.a.l.ConditionEvaluationReportLoggingListener [135] -  
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2022-01-19 21:23:19.363 ERROR [main] o.s.b.SpringApplication [821] -  Application run failed
+org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:155)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:140)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:742)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:389)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:311)
+	at com.cn.hzm.server.WebApplication.main(WebApplication.java:15)
+Caused by: org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:124)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:86)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:414)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:178)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:179)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:152)
+	... 6 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'hzmWebConfig': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'hzmAuthTokenInterceptor': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'passportServiceImpl': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'hzmPassportDao' defined in file [/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes/com/cn/hzm/server/dao/HzmPassportDao.class]: Unsatisfied dependency expressed through bean property 'sqlSessionFactory'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactories' defined in class path resource [com/cn/hzm/core/configure/MybatisPlusConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactories' threw exception; nested exception is com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:324)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1411)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:392)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1321)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1160)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:555)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:204)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:211)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:202)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addServletContextInitializerBeans(ServletContextInitializerBeans.java:96)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:85)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:252)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:226)
+	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:53)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5132)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1384)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1374)
+	at java.util.concurrent.FutureTask.run$$$capture(FutureTask.java:266)
+	at java.util.concurrent.FutureTask.run(FutureTask.java)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:134)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:909)
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:841)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1384)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1374)
+	at java.util.concurrent.FutureTask.run$$$capture(FutureTask.java:266)
+	at java.util.concurrent.FutureTask.run(FutureTask.java)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:134)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:909)
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:262)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:421)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:932)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:456)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:105)
+	... 11 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'hzmAuthTokenInterceptor': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'passportServiceImpl': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'hzmPassportDao' defined in file [/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes/com/cn/hzm/server/dao/HzmPassportDao.class]: Unsatisfied dependency expressed through bean property 'sqlSessionFactory'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactories' defined in class path resource [com/cn/hzm/core/configure/MybatisPlusConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactories' threw exception; nested exception is com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:324)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1411)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:204)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.resolveBeanByName(AbstractAutowireCapableBeanFactory.java:452)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:526)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:496)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor$ResourceElement.getResourceToInject(CommonAnnotationBeanPostProcessor.java:636)
+	at org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement.inject(InjectionMetadata.java:180)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:321)
+	... 60 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'passportServiceImpl': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'hzmPassportDao' defined in file [/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes/com/cn/hzm/server/dao/HzmPassportDao.class]: Unsatisfied dependency expressed through bean property 'sqlSessionFactory'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactories' defined in class path resource [com/cn/hzm/core/configure/MybatisPlusConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactories' threw exception; nested exception is com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:324)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1411)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1251)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1171)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:520)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:496)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor$ResourceElement.getResourceToInject(CommonAnnotationBeanPostProcessor.java:636)
+	at org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement.inject(InjectionMetadata.java:180)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:321)
+	... 74 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'hzmPassportDao' defined in file [/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes/com/cn/hzm/server/dao/HzmPassportDao.class]: Unsatisfied dependency expressed through bean property 'sqlSessionFactory'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactories' defined in class path resource [com/cn/hzm/core/configure/MybatisPlusConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactories' threw exception; nested exception is com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireByType(AbstractAutowireCapableBeanFactory.java:1515)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1395)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1251)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1171)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:520)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:496)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor$ResourceElement.getResourceToInject(CommonAnnotationBeanPostProcessor.java:636)
+	at org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement.inject(InjectionMetadata.java:180)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:321)
+	... 90 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactories' defined in class path resource [com/cn/hzm/core/configure/MybatisPlusConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactories' threw exception; nested exception is com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:627)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:456)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1321)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1160)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:555)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1251)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1171)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireByType(AbstractAutowireCapableBeanFactory.java:1500)
+	... 106 common frames omitted
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactories' threw exception; nested exception is com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:185)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:622)
+	... 119 common frames omitted
+Caused by: com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.baomidou.mybatisplus.core.toolkit.ExceptionUtils.mpe(ExceptionUtils.java:51)
+	at com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean.buildSqlSessionFactory(MybatisSqlSessionFactoryBean.java:602)
+	at com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean.afterPropertiesSet(MybatisSqlSessionFactoryBean.java:386)
+	at com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean.getObject(MybatisSqlSessionFactoryBean.java:683)
+	at com.cn.hzm.core.configure.MybatisPlusConfig.sqlSessionFactories(MybatisPlusConfig.java:50)
+	at com.cn.hzm.core.configure.MybatisPlusConfig$$EnhancerBySpringCGLIB$$7cfd050b.CGLIB$sqlSessionFactories$1(<generated>)
+	at com.cn.hzm.core.configure.MybatisPlusConfig$$EnhancerBySpringCGLIB$$7cfd050b$$FastClassBySpringCGLIB$$2e281c39.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:244)
+	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:363)
+	at com.cn.hzm.core.configure.MybatisPlusConfig$$EnhancerBySpringCGLIB$$7cfd050b.sqlSessionFactories(<generated>)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154)
+	... 120 common frames omitted
+2022-01-19 21:25:19.350 INFO  [main] c.c.h.s.WebApplication [50] -  Starting WebApplication on admindeMacBook-Pro.local with PID 48374 (/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes started by admin in /Users/admin/Documents/us/hzman-manager)
+2022-01-19 21:25:19.357 INFO  [main] c.c.h.s.WebApplication [650] -  The following profiles are active: test
+2022-01-19 21:25:20.729 INFO  [main] o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [330] -  Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$e40ce2e1] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2022-01-19 21:25:21.032 INFO  [main] o.s.b.w.e.t.TomcatWebServer [90] -  Tomcat initialized with port(s): 8082 (http)
+2022-01-19 21:25:21.047 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Initializing ProtocolHandler ["http-nio-8082"]
+2022-01-19 21:25:21.057 INFO  [main] o.a.c.c.StandardService [173] -  Starting service [Tomcat]
+2022-01-19 21:25:21.057 INFO  [main] o.a.c.c.StandardEngine [173] -  Starting Servlet engine: [Apache Tomcat/9.0.21]
+2022-01-19 21:25:21.177 INFO  [main] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring embedded WebApplicationContext
+2022-01-19 21:25:21.177 INFO  [main] o.s.w.c.ContextLoader [283] -  Root WebApplicationContext: initialization completed in 1763 ms
+2022-01-19 21:25:21.247 INFO  [main] c.c.h.c.c.MybatisPlusConfig [44] -  ------------- 重载父类 sqlSessionFactory init-------
+2022-01-19 21:25:21.329 INFO  [main] c.z.h.HikariDataSource [110] -  HikariPool-1 - Starting...
+2022-01-19 21:25:22.734 ERROR [main] c.z.h.p.HikariPool [574] -  HikariPool-1 - Exception during pool initialization.
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:174)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:835)
+	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:455)
+	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:240)
+	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:199)
+	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:136)
+	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:369)
+	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:198)
+	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:467)
+	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:541)
+	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115)
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
+	at com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean.buildSqlSessionFactory(MybatisSqlSessionFactoryBean.java:599)
+	at com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean.afterPropertiesSet(MybatisSqlSessionFactoryBean.java:386)
+	at com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean.getObject(MybatisSqlSessionFactoryBean.java:683)
+	at com.cn.hzm.core.configure.MybatisPlusConfig.sqlSessionFactories(MybatisPlusConfig.java:50)
+	at com.cn.hzm.core.configure.MybatisPlusConfig$$EnhancerBySpringCGLIB$$32df5047.CGLIB$sqlSessionFactories$1(<generated>)
+	at com.cn.hzm.core.configure.MybatisPlusConfig$$EnhancerBySpringCGLIB$$32df5047$$FastClassBySpringCGLIB$$6b46c277.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:244)
+	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:363)
+	at com.cn.hzm.core.configure.MybatisPlusConfig$$EnhancerBySpringCGLIB$$32df5047.sqlSessionFactories(<generated>)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:622)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:456)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1321)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1160)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:555)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1251)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1171)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireByType(AbstractAutowireCapableBeanFactory.java:1500)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1395)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1251)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1171)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:520)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:496)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor$ResourceElement.getResourceToInject(CommonAnnotationBeanPostProcessor.java:636)
+	at org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement.inject(InjectionMetadata.java:180)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:321)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1411)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1251)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1171)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:520)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:496)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor$ResourceElement.getResourceToInject(CommonAnnotationBeanPostProcessor.java:636)
+	at org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement.inject(InjectionMetadata.java:180)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:321)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1411)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:204)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.resolveBeanByName(AbstractAutowireCapableBeanFactory.java:452)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:526)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:496)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor$ResourceElement.getResourceToInject(CommonAnnotationBeanPostProcessor.java:636)
+	at org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement.inject(InjectionMetadata.java:180)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:321)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1411)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:392)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1321)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1160)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:555)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:204)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:211)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:202)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addServletContextInitializerBeans(ServletContextInitializerBeans.java:96)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:85)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:252)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:226)
+	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:53)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5132)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1384)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1374)
+	at java.util.concurrent.FutureTask.run$$$capture(FutureTask.java:266)
+	at java.util.concurrent.FutureTask.run(FutureTask.java)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:134)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:909)
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:841)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1384)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1374)
+	at java.util.concurrent.FutureTask.run$$$capture(FutureTask.java:266)
+	at java.util.concurrent.FutureTask.run(FutureTask.java)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:134)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:909)
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:262)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:421)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:932)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:456)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:105)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:86)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:414)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:178)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:179)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:152)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:140)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:742)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:389)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:311)
+	at com.cn.hzm.server.WebApplication.main(WebApplication.java:15)
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:61)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:151)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:167)
+	at com.mysql.cj.protocol.a.NativeProtocol.negotiateSSLConnection(NativeProtocol.java:361)
+	at com.mysql.cj.protocol.a.NativeAuthenticationProvider.negotiateSSLConnection(NativeAuthenticationProvider.java:777)
+	at com.mysql.cj.protocol.a.NativeAuthenticationProvider.proceedHandshakeWithPluggableAuthentication(NativeAuthenticationProvider.java:486)
+	at com.mysql.cj.protocol.a.NativeAuthenticationProvider.connect(NativeAuthenticationProvider.java:202)
+	at com.mysql.cj.protocol.a.NativeProtocol.connect(NativeProtocol.java:1452)
+	at com.mysql.cj.NativeSession.connect(NativeSession.java:165)
+	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:955)
+	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825)
+	... 144 common frames omitted
+Caused by: javax.net.ssl.SSLHandshakeException: No appropriate protocol (protocol is disabled or cipher suites are inappropriate)
+	at sun.security.ssl.HandshakeContext.<init>(HandshakeContext.java:171)
+	at sun.security.ssl.ClientHandshakeContext.<init>(ClientHandshakeContext.java:101)
+	at sun.security.ssl.TransportContext.kickstart(TransportContext.java:238)
+	at sun.security.ssl.SSLSocketImpl.startHandshake(SSLSocketImpl.java:394)
+	at sun.security.ssl.SSLSocketImpl.startHandshake(SSLSocketImpl.java:373)
+	at com.mysql.cj.protocol.ExportControlled.performTlsHandshake(ExportControlled.java:316)
+	at com.mysql.cj.protocol.StandardSocketFactory.performTlsHandshake(StandardSocketFactory.java:188)
+	at com.mysql.cj.protocol.a.NativeSocketConnection.performTlsHandshake(NativeSocketConnection.java:99)
+	at com.mysql.cj.protocol.a.NativeProtocol.negotiateSSLConnection(NativeProtocol.java:352)
+	... 151 common frames omitted
+2022-01-19 21:25:22.741 ERROR [main] o.s.b.w.e.t.TomcatStarter [61] -  Error starting Tomcat context. Exception: org.springframework.beans.factory.BeanCreationException. Message: Error creating bean with name 'hzmWebConfig': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'hzmAuthTokenInterceptor': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'passportServiceImpl': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'hzmPassportDao' defined in file [/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes/com/cn/hzm/server/dao/HzmPassportDao.class]: Unsatisfied dependency expressed through bean property 'sqlSessionFactory'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactories' defined in class path resource [com/cn/hzm/core/configure/MybatisPlusConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactories' threw exception; nested exception is com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+2022-01-19 21:25:22.773 INFO  [main] o.a.c.c.StandardService [173] -  Stopping service [Tomcat]
+2022-01-19 21:25:22.779 WARN  [main] o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext [557] -  Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat
+2022-01-19 21:25:22.788 INFO  [main] o.s.b.a.l.ConditionEvaluationReportLoggingListener [135] -  
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2022-01-19 21:25:22.798 ERROR [main] o.s.b.SpringApplication [821] -  Application run failed
+org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:155)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:140)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:742)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:389)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:311)
+	at com.cn.hzm.server.WebApplication.main(WebApplication.java:15)
+Caused by: org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:124)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:86)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:414)
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:178)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:179)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:152)
+	... 6 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'hzmWebConfig': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'hzmAuthTokenInterceptor': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'passportServiceImpl': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'hzmPassportDao' defined in file [/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes/com/cn/hzm/server/dao/HzmPassportDao.class]: Unsatisfied dependency expressed through bean property 'sqlSessionFactory'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactories' defined in class path resource [com/cn/hzm/core/configure/MybatisPlusConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactories' threw exception; nested exception is com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:324)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1411)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:392)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1321)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1160)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:555)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:204)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:211)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:202)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addServletContextInitializerBeans(ServletContextInitializerBeans.java:96)
+	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:85)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:252)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:226)
+	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:53)
+	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5132)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1384)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1374)
+	at java.util.concurrent.FutureTask.run$$$capture(FutureTask.java:266)
+	at java.util.concurrent.FutureTask.run(FutureTask.java)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:134)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:909)
+	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:841)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1384)
+	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1374)
+	at java.util.concurrent.FutureTask.run$$$capture(FutureTask.java:266)
+	at java.util.concurrent.FutureTask.run(FutureTask.java)
+	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
+	at java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:134)
+	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:909)
+	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:262)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:421)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:932)
+	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
+	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:456)
+	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:105)
+	... 11 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'hzmAuthTokenInterceptor': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'passportServiceImpl': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'hzmPassportDao' defined in file [/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes/com/cn/hzm/server/dao/HzmPassportDao.class]: Unsatisfied dependency expressed through bean property 'sqlSessionFactory'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactories' defined in class path resource [com/cn/hzm/core/configure/MybatisPlusConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactories' threw exception; nested exception is com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:324)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1411)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:204)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.resolveBeanByName(AbstractAutowireCapableBeanFactory.java:452)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:526)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:496)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor$ResourceElement.getResourceToInject(CommonAnnotationBeanPostProcessor.java:636)
+	at org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement.inject(InjectionMetadata.java:180)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:321)
+	... 60 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'passportServiceImpl': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'hzmPassportDao' defined in file [/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes/com/cn/hzm/server/dao/HzmPassportDao.class]: Unsatisfied dependency expressed through bean property 'sqlSessionFactory'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactories' defined in class path resource [com/cn/hzm/core/configure/MybatisPlusConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactories' threw exception; nested exception is com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:324)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1411)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1251)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1171)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:520)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:496)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor$ResourceElement.getResourceToInject(CommonAnnotationBeanPostProcessor.java:636)
+	at org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement.inject(InjectionMetadata.java:180)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:321)
+	... 74 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'hzmPassportDao' defined in file [/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes/com/cn/hzm/server/dao/HzmPassportDao.class]: Unsatisfied dependency expressed through bean property 'sqlSessionFactory'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactories' defined in class path resource [com/cn/hzm/core/configure/MybatisPlusConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactories' threw exception; nested exception is com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireByType(AbstractAutowireCapableBeanFactory.java:1515)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1395)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1251)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1171)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:520)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:496)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor$ResourceElement.getResourceToInject(CommonAnnotationBeanPostProcessor.java:636)
+	at org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement.inject(InjectionMetadata.java:180)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:321)
+	... 90 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactories' defined in class path resource [com/cn/hzm/core/configure/MybatisPlusConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactories' threw exception; nested exception is com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:627)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:456)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1321)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1160)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:555)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1251)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1171)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireByType(AbstractAutowireCapableBeanFactory.java:1500)
+	... 106 common frames omitted
+Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactories' threw exception; nested exception is com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:185)
+	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:622)
+	... 119 common frames omitted
+Caused by: com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+	at com.baomidou.mybatisplus.core.toolkit.ExceptionUtils.mpe(ExceptionUtils.java:51)
+	at com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean.buildSqlSessionFactory(MybatisSqlSessionFactoryBean.java:602)
+	at com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean.afterPropertiesSet(MybatisSqlSessionFactoryBean.java:386)
+	at com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean.getObject(MybatisSqlSessionFactoryBean.java:683)
+	at com.cn.hzm.core.configure.MybatisPlusConfig.sqlSessionFactories(MybatisPlusConfig.java:50)
+	at com.cn.hzm.core.configure.MybatisPlusConfig$$EnhancerBySpringCGLIB$$32df5047.CGLIB$sqlSessionFactories$1(<generated>)
+	at com.cn.hzm.core.configure.MybatisPlusConfig$$EnhancerBySpringCGLIB$$32df5047$$FastClassBySpringCGLIB$$6b46c277.invoke(<generated>)
+	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:244)
+	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:363)
+	at com.cn.hzm.core.configure.MybatisPlusConfig$$EnhancerBySpringCGLIB$$32df5047.sqlSessionFactories(<generated>)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154)
+	... 120 common frames omitted

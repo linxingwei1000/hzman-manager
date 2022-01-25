@@ -71,4 +71,10 @@ public class ItemDTO extends RespBaseDTO{
 
     @ApiModelProperty("更新时间")
     private Date utime;
+
+    @ApiModelProperty(value = "子体个数")
+    private Integer childrenNum;
+
+    @ApiModelProperty(value = "是否有子体")
+    private Boolean haveChildren;
 }

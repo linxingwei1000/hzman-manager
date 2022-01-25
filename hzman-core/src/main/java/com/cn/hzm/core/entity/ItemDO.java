@@ -38,6 +38,9 @@ public class ItemDO {
 
     private String relationship;
 
+    @TableField(value = "is_parent")
+    private Integer isParent;
+
     private Integer active;
 
     private Date ctime;

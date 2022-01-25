@@ -3,6 +3,7 @@ package com.cn.hzm.item.service;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cn.hzm.core.entity.ItemDO;
 import com.cn.hzm.item.dao.ItemMapper;
+import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -20,10 +21,10 @@ public class ItemService {
     @Autowired
     private ItemMapper itemMapper;
 
-    public List<ItemDO> getListByCondition(Map<String, String> condition, String[] fields){
+    public List<ItemDO> getListByCondition(Map<String, String> condition, String[] fields) {
         QueryWrapper<ItemDO> query = new QueryWrapper<>();
-        if(condition.size()!=0){
-            if(condition.containsKey("sku")){
+        if (condition.size() != 0) {
+            if (condition.containsKey("sku")) {
                 query.like("sku", condition.get("sku"));
             }
         }
@@ -33,17 +34,39 @@ public class ItemService {
         return itemMapper.selectList(query);
     }
 
-    public ItemDO getById(Integer id){
+    public List<ItemDO> getItemByParentType(Integer isParent, String[] fields) {
+        QueryWrapper<ItemDO> query = new QueryWrapper<>();
+        query.eq("is_parent", isParent);
+        query.eq("active", 1);
+        query.select(fields);
+        return itemMapper.selectList(query);
+    }
+
+    public ItemDO getById(Integer id) {
         return itemMapper.selectById(id);
     }
 
-    public ItemDO getItemDOBySku(String sku){
+    /**
+     * sku只处理子体
+     *
+     * @param sku
+     * @return
+     */
+    public ItemDO getItemDOBySku(String sku) {
         QueryWrapper<ItemDO> query = new QueryWrapper<>();
         query.eq("sku", sku);
+        query.in("is_parent", Lists.newArrayList(0, 2));
         return itemMapper.selectOne(query);
     }
 
-    public List<ItemDO> fuzzyQuery(String field, String value){
+    public ItemDO getItemDOByAsin(String asin, Integer isParent) {
+        QueryWrapper<ItemDO> query = new QueryWrapper<>();
+        query.eq("asin", asin);
+        query.eq("is_parent", isParent);
+        return itemMapper.selectOne(query);
+    }
+
+    public List<ItemDO> fuzzyQuery(String field, String value) {
         QueryWrapper<ItemDO> query = new QueryWrapper<>();
         query.like(field, value);
         return itemMapper.selectList(query);
@@ -51,9 +74,10 @@ public class ItemService {
 
     /**
      * 创建商品
+     *
      * @param itemDO
      */
-    public void createItem(ItemDO itemDO){
+    public void createItem(ItemDO itemDO) {
         itemDO.setUtime(new Date());
         itemDO.setCtime(new Date());
         itemMapper.insert(itemDO);
@@ -61,9 +85,10 @@ public class ItemService {
 
     /**
      * 更新商品
+     *
      * @param itemDO
      */
-    public void updateItem(ItemDO itemDO){
+    public void updateItem(ItemDO itemDO) {
         itemDO.setUtime(new Date());
         itemMapper.updateById(itemDO);
     }

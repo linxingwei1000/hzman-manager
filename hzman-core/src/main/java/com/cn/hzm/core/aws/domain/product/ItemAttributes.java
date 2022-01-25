@@ -110,6 +110,7 @@ public class ItemAttributes {
     @XStreamAlias(value="ns2:Edition")
     private String edition;
 
-
+    @XStreamAlias(value="ns2:Warranty")
+    private String warranty;
 
 }

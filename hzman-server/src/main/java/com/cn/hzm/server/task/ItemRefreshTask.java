@@ -63,7 +63,8 @@ public class ItemRefreshTask {
             try {
                 itemDealService.processSync(sku);
                 Thread.sleep(100);
-            } catch (Exception ignored) {
+            } catch (Exception e) {
+                log.error("刷新商品错误, {}：", sku, e);
                 failSkus.add(sku);
                 Integer times = failTimes.getOrDefault(sku, 0);
                 if(times == FAIL_LIMIT){

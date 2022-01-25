@@ -297,7 +297,7 @@ public class AwsClient {
 
     public static void main(String[] args) {
         AwsClient cliet = new AwsClient();
-        GetMyPriceForSkuResponse response = cliet.getMyPriceForSku("SZ806047");
+        GetMatchingProductForIdResponse response = cliet.getProductInfoByAsin("ASIN", "B07ZQHVGKX");
         System.out.println(response);
     }
 }

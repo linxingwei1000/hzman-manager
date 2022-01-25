@@ -85,4 +85,10 @@ public class ItemApi {
     public HzmResponse fnsku(@ApiParam("商品fnsku") @RequestParam String fnsku) {
         return HzmResponse.success(itemDealService.fnskuQuery(fnsku));
     }
+
+    @ApiOperation("子体列表接口")
+    @RequestMapping(value = "/children", method = RequestMethod.GET)
+    public HzmResponse childrenItem(@ApiParam("商品asin") @RequestParam String asin) {
+        return HzmResponse.success(itemDealService.getChildrenItem(asin));
+    }
 }
