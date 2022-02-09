@@ -171,7 +171,6 @@ public class ItemDetailCache {
      * @return
      */
     public List<ItemDTO> getCacheBySort(Integer searchType, String key, Integer sortType, Integer showType) {
-        log.info("---------searchType:{} key:{} type:{} show:{}", searchType, key, sortType, showType);
         Collection<ItemDTO> temp = showType == 1 ? cache.asMap().values() : relationCache.asMap().values();
         switch (searchType) {
             //sku 过滤
@@ -354,7 +353,7 @@ public class ItemDetailCache {
             relationCache.put(itemDO.getAsin(), relationItem);
         });
         startTime = System.currentTimeMillis();
-        log.info("==================创建虚拟父体对象：{} 耗时：{}", relationMap.size(), startTime - endTime);
+        log.info("==================创建虚拟父体对象：{} 耗时：{}", itemDOS.size(), startTime - endTime);
 
     }
 
