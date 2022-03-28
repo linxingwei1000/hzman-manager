@@ -41,9 +41,9 @@ public class ItemDetailCache {
 
     private LoadingCache<String, ItemDTO> cache;
 
-    private LoadingCache<String, ItemDTO> relationCache;
+    private Map<String, ItemDTO> relationCacheMap;
 
-    private LoadingCache<String, List<ItemDTO>> childrenCache;
+    private Map<String, List<ItemDTO>> childrenCacheMap;
 
     @Autowired
     private ItemService itemService;
@@ -90,20 +90,8 @@ public class ItemDetailCache {
                 .initialCapacity(10000 / 10)
                 .build(this::installItemDTO);
 
-        relationCache = Caffeine.newBuilder()
-                .maximumSize(10000)
-                // 对象超过设定时间没有访问就会过期
-                //.expireAfterAccess(60, TimeUnit.MINUTES)
-                // 定时刷新
-                //.refreshAfterWrite(5, TimeUnit.MINUTES)
-                // 初始化容量
-                .initialCapacity(10000 / 10)
-                .build(this::installRelationItemDTO);
-
-        childrenCache = Caffeine.newBuilder()
-                .maximumSize(10000)
-                .initialCapacity(10000 / 10)
-                .build(this::getChildrenItem);
+        relationCacheMap = Maps.newHashMap();
+        childrenCacheMap = Maps.newHashMap();
 
         //异步加载数据
         ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
@@ -171,7 +159,7 @@ public class ItemDetailCache {
      * @return
      */
     public List<ItemDTO> getCacheBySort(Integer searchType, String key, Integer sortType, Integer showType) {
-        Collection<ItemDTO> temp = showType == 1 ? cache.asMap().values() : relationCache.asMap().values();
+        Collection<ItemDTO> temp = showType == 1 ? cache.asMap().values() : relationCacheMap.values();
         switch (searchType) {
             //sku 过滤
             case 1:
@@ -259,7 +247,7 @@ public class ItemDetailCache {
      * @return
      */
     public List<ItemDTO> getChildrenCache(String asin) {
-        return childrenCache.get(asin);
+        return childrenCacheMap.get(asin);
     }
 
     public void refreshCaches(List<String> skus) {
@@ -334,7 +322,7 @@ public class ItemDetailCache {
     public List<ItemDTO> getChildrenItem(String asin) {
         List<FatherChildRelationDO> relations = fatherChildRelationService.getAllRelation(asin);
         List<ItemDTO> childItems = getCache(relations.stream().map(FatherChildRelationDO::getChildSku).collect(Collectors.toList()));
-        childrenCache.put(asin, childItems);
+        childrenCacheMap.put(asin, childItems);
         return childItems;
     }
 
@@ -343,14 +331,26 @@ public class ItemDetailCache {
         Map<String, List<FatherChildRelationDO>> relationMap = relations.stream().collect(Collectors.groupingBy(FatherChildRelationDO::getFatherAsin));
 
         long startTime = System.currentTimeMillis();
-        relationMap.keySet().forEach(fatherAsin -> relationCache.put(fatherAsin, installRelationItemDTO(fatherAsin)));
+        relationMap.keySet().forEach(fatherAsin -> {
+            ItemDTO itemDTO = null;
+            try {
+                itemDTO = installRelationItemDTO(fatherAsin);
+            } catch (Exception e) {
+                log.error("{} 刷新父子关系缓存错误：", fatherAsin, e);
+            }
+            if (itemDTO != null) {
+                relationCacheMap.put(fatherAsin, itemDTO);
+            }
+        });
         long endTime = System.currentTimeMillis();
         log.info("==================缓冲父子关系对象结构对：{} 耗时：{}", relationMap.size(), endTime - startTime);
 
         List<ItemDO> itemDOS = itemService.getItemByParentType(2, new String[]{"sku", "asin"});
         itemDOS.forEach(itemDO -> {
             ItemDTO relationItem = getSingleCache(itemDO.getSku());
-            relationCache.put(itemDO.getAsin(), relationItem);
+            if (relationItem != null) {
+                relationCacheMap.put(itemDO.getAsin(), relationItem);
+            }
         });
         startTime = System.currentTimeMillis();
         log.info("==================创建虚拟父体对象：{} 耗时：{}", itemDOS.size(), startTime - endTime);

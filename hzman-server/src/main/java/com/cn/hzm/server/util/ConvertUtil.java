@@ -12,6 +12,7 @@ import com.cn.hzm.core.aws.resp.product.GetMatchingProductForIdResponse;
 import com.cn.hzm.core.aws.resp.product.GetMyPriceForSkuResponse;
 import com.cn.hzm.core.entity.*;
 import com.cn.hzm.core.util.TimeUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.StringUtils;
 
 import java.text.ParseException;
@@ -20,6 +21,7 @@ import java.text.ParseException;
  * @author xingweilin@clubfactory.com
  * @date 2020/7/25 3:00 下午
  */
+@Slf4j
 public class ConvertUtil {
 
 
@@ -75,7 +77,7 @@ public class ConvertUtil {
     }
 
 
-    public static InventoryDO convertToInventoryDO(ListInventorySupplyResponse inventory, InventoryDO inventoryDO) {
+    public static void convertToInventoryDO(ListInventorySupplyResponse inventory, InventoryDO inventoryDO) {
         Member member = inventory.getListInventorySupplyResult().getInventorySupplyList().getMembers().get(0);
         inventoryDO.setSku(member.getSellerSKU());
         inventoryDO.setAsin(member.getAsin() == null ? "" : member.getAsin());
@@ -106,7 +108,6 @@ public class ConvertUtil {
             inventoryDO.setLocalQuantity(0);
         }
         inventoryDO.calculateTotalQuantity();
-        return inventoryDO;
     }
 
     public static OrderDO convertToOrderDO(OrderDO orderDO, Order order) throws ParseException {

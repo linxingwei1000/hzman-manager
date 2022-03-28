@@ -3,6 +3,7 @@ package com.cn.hzm.server.service;
 import com.alibaba.fastjson.JSONObject;
 import com.cn.hzm.core.aws.AwsClient;
 import com.cn.hzm.core.aws.domain.product.*;
+import com.cn.hzm.core.aws.resp.inventory.ListInventorySupplyResponse;
 import com.cn.hzm.core.aws.resp.product.GetMatchingProductForIdResponse;
 import com.cn.hzm.core.entity.*;
 import com.cn.hzm.core.enums.AmazonShipmentStatusEnum;
@@ -100,7 +101,7 @@ public class ItemDealService {
         return respJo;
     }
 
-    public List<ItemDTO> getChildrenItem(String asin){
+    public List<ItemDTO> getChildrenItem(String asin) {
         return itemDetailCache.getChildrenCache(asin);
     }
 
@@ -109,6 +110,10 @@ public class ItemDealService {
 
         //asin取aws数据：商品信息
         GetMatchingProductForIdResponse resp = awsClient.getProductInfoByAsin("SellerSKU", sku);
+        if (resp == null) {
+            log.info("商品【{}】aws请求为空，等待下次刷新", sku);
+            throw new HzmException(ExceptionCode.REQUEST_SKU_REQUEST_ERROR, "返回结果为空");
+        }
 
         //判断错误
         if (resp.getGetMatchingProductForIdResult().getError() != null) {
@@ -357,13 +362,19 @@ public class ItemDealService {
                     inventoryService.updateInventory(inventory);
                     break;
                 case "refresh":
+                    ListInventorySupplyResponse inventorySupplyResponse = awsClient.getInventoryInfoBySku(sku);
+                    if(inventorySupplyResponse == null){
+                        log.info("商品【{}】库存aws请求为空，等待下次刷新", sku);
+                        throw new HzmException(ExceptionCode.REQUEST_SKU_REQUEST_ERROR, "返回结果为空");
+                    }
+
                     //存在就更新
                     if (inventory == null) {
                         inventory = new InventoryDO();
-                        ConvertUtil.convertToInventoryDO(awsClient.getInventoryInfoBySku(sku), inventory);
+                        ConvertUtil.convertToInventoryDO(inventorySupplyResponse, inventory);
                         inventoryService.createInventory(inventory);
                     } else {
-                        ConvertUtil.convertToInventoryDO(awsClient.getInventoryInfoBySku(sku), inventory);
+                        ConvertUtil.convertToInventoryDO(inventorySupplyResponse, inventory);
                         inventoryService.updateInventory(inventory);
                     }
                     break;
@@ -437,7 +448,7 @@ public class ItemDealService {
                     fatherChildRelationService.createRelation(relationDO);
                 }
             });
-        } else{
+        } else {
             log.info("本sku：{} 即没有子体也没有父体", itemDO.getSku());
         }
     }
