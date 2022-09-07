@@ -366,13 +366,7 @@ public class OrderSpiderTask {
                 orderItemService.createOrderItem(ConvertUtil.convertToOrderItemDO(update, orderItem, amazonId));
 
                 //爬取商品信息
-                ItemDO itemDO = itemService.getItemDOBySku(orderItem.getSellerSKU());
-                if (itemDO == null) {
-                    GetMatchingProductForIdResponse resp = awsClient.getProductInfoByAsin("SellerSKU", orderItem.getSellerSKU());
-                    itemDO = ConvertUtil.convertToItemDO(new ItemDO(), resp, orderItem.getSellerSKU());
-                    itemDO.setItemPrice(ConvertUtil.getItemPrice(awsClient.getMyPriceForSku(itemDO.getSku())));
-                    itemService.createItem(itemDO);
-                }
+                itemDealService.processSync(orderItem.getSellerSKU());
 
                 //刷新库存
                 log.info("amazonOrderId【{}】 sku【{}】刷新库存", amazonId, orderItem.getSellerSKU());

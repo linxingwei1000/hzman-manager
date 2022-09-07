@@ -70,8 +70,8 @@ public class ItemRefreshTask {
                 if(times == FAIL_LIMIT){
                     failTimes.remove(sku);
                     failSkus.remove(sku);
-                    itemDealService.deleteItem(sku);
-                    log.info("sku【{}】刷新失败次数超限 本地逻辑删除", sku);
+                    //itemDealService.deleteItem(sku);
+                    log.info("sku【{}】刷新失败次数超限，请查看商品状态", sku);
                 }else{
                     failTimes.put(sku, ++times);
                 }

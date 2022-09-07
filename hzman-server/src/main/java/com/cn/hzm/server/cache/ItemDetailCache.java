@@ -15,6 +15,7 @@ import com.cn.hzm.server.dto.SaleInfoDTO;
 import com.cn.hzm.server.service.ItemDealService;
 import com.cn.hzm.server.task.ItemRefreshTask;
 import com.cn.hzm.server.task.SmartReplenishmentTask;
+import com.github.benmanes.caffeine.cache.CacheLoader;
 import com.github.benmanes.caffeine.cache.Caffeine;
 import com.github.benmanes.caffeine.cache.LoadingCache;
 import com.google.common.collect.Lists;
@@ -22,6 +23,8 @@ import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
+import org.checkerframework.checker.nullness.qual.NonNull;
+import org.checkerframework.checker.nullness.qual.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -88,7 +91,13 @@ public class ItemDetailCache {
                 .refreshAfterWrite(5, TimeUnit.MINUTES)
                 // 初始化容量
                 .initialCapacity(10000 / 10)
-                .build(this::installItemDTO);
+                .build(new CacheLoader<String, ItemDTO>() {
+                    @Override
+                    public @Nullable ItemDTO load(@NonNull String sku) {
+                        Date usDate = TimeUtil.transformNowToUsDate();
+                        return installItemDTO(sku, usDate);
+                    }
+                });
 
         relationCacheMap = Maps.newHashMap();
         childrenCacheMap = Maps.newHashMap();
@@ -115,7 +124,7 @@ public class ItemDetailCache {
                 return t;
             });
             CountDownLatch countDownLatch = new CountDownLatch(threadNum);
-
+            Date usDate = TimeUtil.transformNowToUsDate();
             for (int i = 0; i < threadNum; i++) {
                 int beginIndex = i * 500;
                 int endIndex = (i + 1) * 500;
@@ -125,7 +134,7 @@ public class ItemDetailCache {
                 List<ItemDO> subItems = items.subList(beginIndex, endIndex);
                 executorService.execute(() -> {
                     subItems.forEach(itemDO -> {
-                        ItemDTO itemDTO = installItemDTO(itemDO.getSku());
+                        ItemDTO itemDTO = installItemDTO(itemDO.getSku(), usDate);
                         if (itemDTO != null) {
                             cache.put(itemDO.getSku(), itemDTO);
                         }
@@ -259,14 +268,14 @@ public class ItemDetailCache {
     }
 
 
-    public ItemDTO installItemDTO(String sku) {
+    public ItemDTO installItemDTO(String sku, Date usDate) {
         ItemDTO itemDTO = null;
         try {
             ItemDO itemDO = itemService.getItemDOBySku(sku);
             if (itemDO == null) {
                 return null;
             }
-            itemDTO = itemDealService.buildItemDTO(itemDO);
+            itemDTO = itemDealService.buildItemDTO(itemDO, usDate);
         } catch (Exception e) {
             log.error("item缓存对象创建失败，sku:{} e:", sku, e);
         }
@@ -274,9 +283,9 @@ public class ItemDetailCache {
     }
 
     //父类用asin做
-    public ItemDTO installRelationItemDTO(String asin) {
+    public ItemDTO installRelationItemDTO(String asin, Date usDate) {
         ItemDO fatherItem = itemService.getItemDOByAsin(asin, 1);
-        ItemDTO relationItem = itemDealService.buildItemDTO(fatherItem);
+        ItemDTO relationItem = itemDealService.buildItemDTO(fatherItem, usDate);
         List<ItemDTO> childItems = getChildrenItem(asin);
 
         SaleInfoDTO today = new SaleInfoDTO();
@@ -330,11 +339,12 @@ public class ItemDetailCache {
         List<FatherChildRelationDO> relations = fatherChildRelationService.getAllRelation(null);
         Map<String, List<FatherChildRelationDO>> relationMap = relations.stream().collect(Collectors.groupingBy(FatherChildRelationDO::getFatherAsin));
 
+        Date usDate = TimeUtil.transformNowToUsDate();
         long startTime = System.currentTimeMillis();
         relationMap.keySet().forEach(fatherAsin -> {
             ItemDTO itemDTO = null;
             try {
-                itemDTO = installRelationItemDTO(fatherAsin);
+                itemDTO = installRelationItemDTO(fatherAsin, usDate);
             } catch (Exception e) {
                 log.error("{} 刷新父子关系缓存错误：", fatherAsin, e);
             }

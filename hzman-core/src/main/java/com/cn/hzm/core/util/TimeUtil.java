@@ -27,12 +27,19 @@ public class TimeUtil {
 
     private static final SimpleDateFormat UTC_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
 
+    private static final SimpleDateFormat UTC_SIMPLE_FORMAT = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
+
     private static final SimpleDateFormat UTC_MILLISECOND_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
 
 
     public static String getUTC() {
         UTC_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
         return UTC_FORMAT.format(new Date());
+    }
+
+    public static String getSimpleUTC() {
+        UTC_SIMPLE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return UTC_SIMPLE_FORMAT.format(new Date());
     }
 
     /**

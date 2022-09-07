@@ -42,8 +42,8 @@ public class ItemApi {
 
     @ApiOperation("删除商品")
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
-    public HzmResponse deleteItem(@ApiParam("商品sku") @RequestParam String sku) {
-        itemDealService.deleteItem(sku);
+    public HzmResponse deleteItem(@ApiParam("商品sku") @RequestParam String asin, @ApiParam("商品sku") @RequestParam String sku) {
+        itemDealService.deleteItem(asin, sku);
         return HzmResponse.success(true);
     }
 

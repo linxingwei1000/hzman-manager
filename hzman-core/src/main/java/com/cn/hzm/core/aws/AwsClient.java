@@ -14,6 +14,7 @@ import com.cn.hzm.core.aws.resp.inventory.ListInventorySupplyResponse;
 import com.cn.hzm.core.aws.resp.order.*;
 import com.cn.hzm.core.aws.resp.product.GetMatchingProductForIdResponse;
 import com.cn.hzm.core.aws.resp.product.GetMyPriceForSkuResponse;
+import com.cn.hzm.core.entity.ItemDO;
 import com.cn.hzm.core.exception.ExceptionCode;
 import com.cn.hzm.core.exception.HzmException;
 import com.cn.hzm.core.util.ConvertUtil;
@@ -297,7 +298,8 @@ public class AwsClient {
 
     public static void main(String[] args) {
         AwsClient cliet = new AwsClient();
-        ListInventorySupplyResponse response = cliet.getInventoryInfoBySku("S67710B");
+        GetMatchingProductForIdResponse response = cliet.getProductInfoByAsin("SellerSKU", "XL22-0521-02");
+        //ItemDO itemDO = ConvertUtil.convertToItemDO(new ItemDO(), response, "XL22-0521-02");
         System.out.println(response);
     }
 }

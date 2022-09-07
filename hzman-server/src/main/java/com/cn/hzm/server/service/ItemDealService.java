@@ -112,7 +112,8 @@ public class ItemDealService {
         GetMatchingProductForIdResponse resp = awsClient.getProductInfoByAsin("SellerSKU", sku);
         if (resp == null) {
             log.info("商品【{}】aws请求为空，等待下次刷新", sku);
-            throw new HzmException(ExceptionCode.REQUEST_SKU_REQUEST_ERROR, "返回结果为空");
+            return;
+            //throw new HzmException(ExceptionCode.REQUEST_SKU_REQUEST_ERROR, "返回结果为空");
         }
 
         //判断错误
@@ -132,7 +133,7 @@ public class ItemDealService {
         }
         itemDO.setActive(1);
 
-        ItemDO old = itemService.getItemDOBySku(sku);
+        ItemDO old = itemService.getSingleItemDOByAsin(itemDO.getAsin(), itemDO.getSku());
         if (old != null) {
             itemDO.setId(old.getId());
             itemService.updateItem(itemDO);
@@ -150,13 +151,17 @@ public class ItemDealService {
 
     }
 
-    public void deleteItem(String sku) {
+    /**
+     * @param asin
+     */
+    public void deleteItem(String asin, String sku) {
         //逻辑删除
-        ItemDO old = itemService.getItemDOBySku(sku);
-        old.setActive(0);
-        itemService.updateItem(old);
-
-        itemDetailCache.deleteCache(sku);
+        ItemDO old = itemService.getSingleItemDOByAsin(asin, sku);
+        if (old != null) {
+            old.setActive(0);
+            itemService.updateItem(old);
+            itemDetailCache.deleteCache(old.getSku());
+        }
     }
 
 
@@ -182,7 +187,7 @@ public class ItemDealService {
         return true;
     }
 
-    public ItemDTO buildItemDTO(ItemDO itemDO) {
+    public ItemDTO buildItemDTO(ItemDO itemDO, Date usDate) {
         ItemDTO itemDTO = JSONObject.parseObject(JSONObject.toJSONString(itemDO), ItemDTO.class);
         InventoryDO inventoryDO = inventoryService.getInventoryBySku(itemDO.getSku());
         InventoryDTO inventoryDTO = JSONObject.parseObject(JSONObject.toJSONString(inventoryDO), InventoryDTO.class);
@@ -214,7 +219,6 @@ public class ItemDealService {
         itemDTO.setInventoryDTO(inventoryDTO);
 
         //销量
-        Date usDate = TimeUtil.transformNowToUsDate();
         itemDTO.setToday(getSaleInfoByDate(usDate, itemDTO.getSku()));
         itemDTO.setYesterday(getSaleInfoByDate(TimeUtil.dateFixByDay(usDate, -1, 0, 0), itemDTO.getSku()));
         itemDTO.setDuration30Day(getSaleInfoByDurationDate(usDate, itemDTO.getSku()));
@@ -363,9 +367,10 @@ public class ItemDealService {
                     break;
                 case "refresh":
                     ListInventorySupplyResponse inventorySupplyResponse = awsClient.getInventoryInfoBySku(sku);
-                    if(inventorySupplyResponse == null){
+                    if (inventorySupplyResponse == null) {
                         log.info("商品【{}】库存aws请求为空，等待下次刷新", sku);
-                        throw new HzmException(ExceptionCode.REQUEST_SKU_REQUEST_ERROR, "返回结果为空");
+                        return;
+                        //throw new HzmException(ExceptionCode.REQUEST_SKU_REQUEST_ERROR, "返回结果为空");
                     }
 
                     //存在就更新
@@ -433,12 +438,19 @@ public class ItemDealService {
                 if (childItem == null) {
                     GetMatchingProductForIdResponse fatherResp = awsClient.getProductInfoByAsin("ASIN", childAsin);
                     childItem = ConvertUtil.convertToItemDO(new ItemDO(), fatherResp, null);
+
+                    //获取商品价格
+                    Double itemPrice = ConvertUtil.getItemPrice(awsClient.getMyPriceForSku(childItem.getSku()));
+                    childItem.setItemPrice(itemPrice);
+
+                    childItem.setActive(1);
                     itemService.createItem(childItem);
+
                     dealSkuInventory(childItem.getSku(), "refresh", 0);
                 }
 
                 //创建对应关系
-                FatherChildRelationDO relationDO = fatherChildRelationService.getRelationByFatherAndChild(itemDO.getAsin(), childItem.getAsin());
+                FatherChildRelationDO relationDO = fatherChildRelationService.getRelationByFatherAndChildAsin(itemDO.getAsin(), childItem.getAsin());
                 if (relationDO == null) {
                     relationDO = new FatherChildRelationDO();
                     relationDO.setFatherSku(itemDO.getSku());
@@ -451,5 +463,12 @@ public class ItemDealService {
         } else {
             log.info("本sku：{} 即没有子体也没有父体", itemDO.getSku());
         }
+    }
+
+    public static void main(String[] args) {
+        AwsClient cliet = new AwsClient();
+        GetMatchingProductForIdResponse response = cliet.getProductInfoByAsin("SellerSKU", "P20-410-14A");
+        ItemDO itemDO = ConvertUtil.convertToItemDO(new ItemDO(), response, null);
+        System.out.println(response);
     }
 }
