@@ -48,6 +48,16 @@ public class InventoryService {
         return inventoryMapper.selectOne(query);
     }
 
+    /**
+     * 获取库存
+     * @param sku
+     */
+    public InventoryDO getInventoryBySkuAndAsin(String sku, String asin){
+        QueryWrapper<InventoryDO> query = new QueryWrapper<>();
+        query.eq("sku", sku);
+        query.eq("asin", asin);
+        return inventoryMapper.selectOne(query);
+    }
 
     /**
      * 创建库存
@@ -66,5 +76,9 @@ public class InventoryService {
     public void updateInventory(InventoryDO inventoryDO){
         inventoryDO.setUtime(new Date());
         inventoryMapper.updateById(inventoryDO);
+    }
+
+    public Integer deleteInventory(Integer id){
+        return inventoryMapper.deleteById(id);
     }
 }

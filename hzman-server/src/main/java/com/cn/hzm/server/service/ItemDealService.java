@@ -155,13 +155,20 @@ public class ItemDealService {
      * @param asin
      */
     public void deleteItem(String asin, String sku) {
-        //逻辑删除
+        //删除商品
         ItemDO old = itemService.getSingleItemDOByAsin(asin, sku);
         if (old != null) {
-            old.setActive(0);
-            itemService.updateItem(old);
-            itemDetailCache.deleteCache(old.getSku());
+            itemService.deleteItem(old.getId());
         }
+
+        //删除库存
+        InventoryDO inventoryDO = inventoryService.getInventoryBySkuAndAsin(sku, asin);
+        if (inventoryDO != null) {
+            inventoryService.deleteInventory(inventoryDO.getId());
+        }
+
+        //删除缓存
+        itemDetailCache.deleteCache(sku);
     }
 
 

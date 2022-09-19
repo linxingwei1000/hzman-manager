@@ -25,6 +25,9 @@ public class VariationChild {
     @XStreamAlias(value="ns2:MetalType")
     private String metalType;
 
+    @XStreamAlias(value="ns2:MaterialType")
+    private String materialType;
+
     @XStreamAlias(value="ns2:ItemDimensions")
     private String itemDimensions;
 

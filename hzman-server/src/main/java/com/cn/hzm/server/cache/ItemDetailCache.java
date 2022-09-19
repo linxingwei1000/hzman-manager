@@ -341,6 +341,7 @@ public class ItemDetailCache {
 
         Date usDate = TimeUtil.transformNowToUsDate();
         long startTime = System.currentTimeMillis();
+        Map<String, ItemDTO> tmpMap = Maps.newHashMap();
         relationMap.keySet().forEach(fatherAsin -> {
             ItemDTO itemDTO = null;
             try {
@@ -349,7 +350,8 @@ public class ItemDetailCache {
                 log.error("{} 刷新父子关系缓存错误：", fatherAsin, e);
             }
             if (itemDTO != null) {
-                relationCacheMap.put(fatherAsin, itemDTO);
+                tmpMap.put(fatherAsin, itemDTO);
+                //relationCacheMap.put(fatherAsin, itemDTO);
             }
         });
         long endTime = System.currentTimeMillis();
@@ -359,12 +361,16 @@ public class ItemDetailCache {
         itemDOS.forEach(itemDO -> {
             ItemDTO relationItem = getSingleCache(itemDO.getSku());
             if (relationItem != null) {
-                relationCacheMap.put(itemDO.getAsin(), relationItem);
+                tmpMap.put(itemDO.getAsin(), relationItem);
+                //relationCacheMap.put(itemDO.getAsin(), relationItem);
             }
         });
         startTime = System.currentTimeMillis();
         log.info("==================创建虚拟父体对象：{} 耗时：{}", itemDOS.size(), startTime - endTime);
 
+        //全局替换
+        relationCacheMap.clear();
+        relationCacheMap.putAll(tmpMap);
     }
 
     private void addData(SaleInfoDTO saleInfo, SaleInfoDTO addSaleInfo) {

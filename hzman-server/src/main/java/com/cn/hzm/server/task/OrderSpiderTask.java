@@ -9,6 +9,7 @@ import com.cn.hzm.core.constant.ContextConst;
 import com.cn.hzm.core.entity.ItemDO;
 import com.cn.hzm.core.entity.OrderDO;
 import com.cn.hzm.core.entity.OrderItemDO;
+import com.cn.hzm.core.entity.thread.UpdateRecordFuture;
 import com.cn.hzm.core.exception.ExceptionCode;
 import com.cn.hzm.core.exception.HzmException;
 import com.cn.hzm.core.util.TimeUtil;
@@ -76,6 +77,8 @@ public class OrderSpiderTask {
 
     private Semaphore orderItemSemaphore;
 
+    private ExecutorService updateThreadExecutor;
+
     @Value("${spider.switch:false}")
     private Boolean spiderSwitch;
 
@@ -131,6 +134,12 @@ public class OrderSpiderTask {
                 orderItemSemaphore.release(1);
             }
         }, 60, 2, TimeUnit.SECONDS);
+
+        //批量更新订单线程
+        // 等待队列
+        BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(1000);
+        updateThreadExecutor = new ThreadPoolExecutor(3, 3, 60L, TimeUnit.SECONDS,
+                workQueue, r -> new Thread(r, "update-order-thread"));
 
 
         //爬取订单任务
@@ -190,69 +199,88 @@ public class OrderSpiderTask {
         int limit = 50;
         int dealTimes = dbOrderNum / 50;
         long startTime = System.currentTimeMillis();
-        int changeTotal = 0;
 
+        List<Callable<UpdateRecordFuture>> callables = Lists.newArrayList();
         for (int curNum = 0; curNum <= dealTimes; curNum++) {
             int start = curNum * limit;
             int end = Math.min(dbOrderNum, (curNum + 1) * limit);
-
-            log.info("处理更新订单 start【{}】 end【{}】", start, end);
             List<OrderDO> subOrders = totalOrders.subList(start, end);
+            callables.add(() -> {
+                //获取资源
+                log.info("处理更新订单 start【{}】 end【{}】", start, end);
+                Set<String> threadFixSaleInfoDay = Sets.newHashSet();
+                int updateCount = 0;
+                try {
+                    List<String> subIds = subOrders.stream().map(OrderDO::getAmazonOrderId).collect(Collectors.toList());
+                    getOrderSemaphore.acquire();
+                    GetOrderResponse orderResponse = awsClient.getOrder(subIds);
 
-            //获取资源
-            try {
-                List<String> subIds = subOrders.stream().map(OrderDO::getAmazonOrderId).collect(Collectors.toList());
+                    //剔除Pending状态订单
+                    List<Order> tmp = orderResponse.getGetOrderResult().getOrders().getList().stream()
+                            .filter(order -> !ContextConst.AMAZON_STATUS_PENDING.equals(order.getOrderStatus()))
+                            .collect(Collectors.toList());
 
-                getOrderSemaphore.acquire();
-                GetOrderResponse orderResponse = awsClient.getOrder(subIds);
-
-                //剔除Pending状态订单
-                List<Order> tmp = orderResponse.getGetOrderResult().getOrders().getList().stream()
-                        .filter(order -> !ContextConst.AMAZON_STATUS_PENDING.equals(order.getOrderStatus()))
-                        .collect(Collectors.toList());
-
-                Map<String, OrderDO> orderMap = subOrders.stream().collect(Collectors.toMap(OrderDO::getAmazonOrderId, orderDO -> orderDO));
-                for (Order order : tmp) {
-                    String amazonId = order.getAmazonOrderId();
-
-                    //获取资源
-                    orderItemSemaphore.acquire();
-                    ListOrderItemsResponse tokenResponse = awsClient.getListOrderItemsByAmazonId(amazonId);
-                    //网络问题引起数据无法获取
-                    if (tokenResponse == null) {
-                        continue;
-                    }
-
-                    parseOrderItem(tokenResponse.getListOrderItemsResult().getOrderItems().getList(), amazonId);
-
-                    String nextToken = tokenResponse.getListOrderItemsResult().getNextToken();
-                    while (!StringUtils.isEmpty(nextToken)) {
+                    Map<String, OrderDO> orderMap = subOrders.stream().collect(Collectors.toMap(OrderDO::getAmazonOrderId, orderDO -> orderDO));
+                    for (Order order : tmp) {
+                        String amazonId = order.getAmazonOrderId();
 
                         //获取资源
                         orderItemSemaphore.acquire();
-                        ListOrderItemsByNextTokenResponse response = awsClient.getListOrderItemByAmazonIds(nextToken);
+                        ListOrderItemsResponse tokenResponse = awsClient.getListOrderItemsByAmazonId(amazonId);
+                        //网络问题引起数据无法获取
+                        if (tokenResponse == null) {
+                            continue;
+                        }
 
-                        nextToken = response.getListOrderItemsByNextTokenResult().getNextToken();
-                        parseOrderItem(response.getListOrderItemsByNextTokenResult().getOrderItems().getList(), amazonId);
+                        parseOrderItem(tokenResponse.getListOrderItemsResult().getOrderItems().getList(), amazonId);
+
+                        String nextToken = tokenResponse.getListOrderItemsResult().getNextToken();
+                        while (!StringUtils.isEmpty(nextToken)) {
+
+                            //获取资源
+                            orderItemSemaphore.acquire();
+                            ListOrderItemsByNextTokenResponse response = awsClient.getListOrderItemByAmazonIds(nextToken);
+
+                            nextToken = response.getListOrderItemsByNextTokenResult().getNextToken();
+                            parseOrderItem(response.getListOrderItemsByNextTokenResult().getOrderItems().getList(), amazonId);
+                        }
+
+                        //最后处理，保证订单商品更新完成
+                        OrderDO old = orderMap.get(amazonId);
+                        OrderDO update = new OrderDO();
+                        update.setId(old.getId());
+                        update.setOtherConfig(old.getOtherConfig());
+                        ConvertUtil.convertToOrderDO(update, order);
+                        orderService.updateOrder(update);
+
+                        log.info("更新订单状态 amazonOrderId【{}】purchaseTime:【{}】", amazonId, update.getPurchaseDate());
+                        threadFixSaleInfoDay.add(TimeUtil.getSimpleFormat(TimeUtil.transform(order.getPurchaseDate())));
+                        updateCount++;
                     }
-
-                    //最后处理，保证订单商品更新完成
-                    OrderDO old = orderMap.get(amazonId);
-                    OrderDO update = new OrderDO();
-                    update.setId(old.getId());
-                    update.setOtherConfig(old.getOtherConfig());
-                    ConvertUtil.convertToOrderDO(update, order);
-                    orderService.updateOrder(update);
-                    changeTotal++;
-
-                    log.info("更新订单状态 amazonOrderId【{}】purchaseTime:【{}】", amazonId, update.getPurchaseDate());
-                    needFixSaleInfoDay.add(TimeUtil.getSimpleFormat(TimeUtil.transform(order.getPurchaseDate())));
+                } catch (Exception e) {
+                    log.error("更新订单错误：{}", e.getMessage(), e);
                 }
-            } catch (Exception e) {
-                log.error("更新订单错误：{}", e.getMessage(), e);
-            }
+                return new UpdateRecordFuture(threadFixSaleInfoDay, updateCount);
+            });
         }
-        log.info("更新订单任务结束，本次任务耗时：{}, 共更新订单【{}】条", System.currentTimeMillis() - startTime, changeTotal);
+
+        try {
+            List<Future<UpdateRecordFuture>> returnFutures = updateThreadExecutor.invokeAll(callables);
+            int updateAll = 0;
+            for (Future<UpdateRecordFuture> future : returnFutures) {
+                UpdateRecordFuture facade;
+                try {
+                    facade = future.get();
+                    needFixSaleInfoDay.addAll(facade.getThreadFixSaleInfoDay());
+                    updateAll += facade.getCount();
+                } catch (Exception e) {
+                    log.error("error:", e);
+                }
+            }
+            log.info("更新订单任务结束，本次任务耗时：{}, 共更新订单【{}】条", System.currentTimeMillis() - startTime, updateAll);
+        } catch (Exception e) {
+            log.error("更新订单错误：{}", e.getMessage(), e);
+        }
     }
 
     private void doSpiderOrder() throws ParseException, InterruptedException {

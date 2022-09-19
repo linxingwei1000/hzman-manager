@@ -175,12 +175,12 @@ public class TimeUtil {
      */
     public static Date transformNowToUsDate() {
         Date now = new Date();
-        Date date = TimeUtil.getDateBySimple(TimeUtil.getSimpleFormat(now));
-        String strDailyDate = TimeUtil.getDateFormat(date);
-        Boolean isSummer = TimeUtil.isSummer(strDailyDate);
-        Date judge = TimeUtil.dateFixByDay(date, 0, isSummer ? 15 : 16, 0);
+        Date date = getDateBySimple(getSimpleFormat(now));
+        String strDailyDate = getDateFormat(date);
+        Boolean isSummer = isSummer(strDailyDate);
+        Date judge = dateFixByDay(date, 0, isSummer ? 15 : 16, 0);
 
-        return now.getTime() < judge.getTime() ? TimeUtil.dateFixByDay(date, -1, 0, 0) : date;
+        return now.getTime() < judge.getTime() ? dateFixByDay(date, -1, 0, 0) : date;
     }
 
     public static long nowMillis() {

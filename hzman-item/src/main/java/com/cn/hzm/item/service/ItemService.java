@@ -105,4 +105,8 @@ public class ItemService {
         itemDO.setUtime(new Date());
         itemMapper.updateById(itemDO);
     }
+
+    public Integer deleteItem(Integer id){
+        return itemMapper.deleteById(id);
+    }
 }
