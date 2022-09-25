@@ -46,7 +46,7 @@ public class ItemRefreshTask {
 
     public void init() {
         ScheduledThreadPoolExecutor orderScheduledTask = new ScheduledThreadPoolExecutor(1);
-        orderScheduledTask.scheduleWithFixedDelay(()->{
+        orderScheduledTask.scheduleWithFixedDelay(() -> {
             List<String> skus = itemService.getListByCondition(Maps.newHashMap(), new String[]{"sku"}).stream().map(ItemDO::getSku).collect(Collectors.toList());
             log.info("=============刷新商品任务，本次任务需刷新商品个数：{}", skus.size());
             long curTime = System.currentTimeMillis();
@@ -54,7 +54,7 @@ public class ItemRefreshTask {
             Map<String, Integer> failTimes = Maps.newHashMap();
             refreshItem(skus, 1, failTimes);
             log.info("=============刷新商品任务结束，任务耗时：{} ", System.currentTimeMillis() - curTime);
-                }, 10, 30 * 60, TimeUnit.SECONDS);
+        }, 10, 30 * 60, TimeUnit.SECONDS);
     }
 
     private void refreshItem(List<String> skus, Integer epoch, Map<String, Integer> failTimes) {
@@ -65,21 +65,27 @@ public class ItemRefreshTask {
                 Thread.sleep(100);
             } catch (Exception e) {
                 log.error("刷新商品错误, {}：", sku, e);
+
+                //亚马逊后台删除商品
+                if (e.getMessage().contains("invalid SellerSKU")) {
+                    itemDealService.deleteItem(sku);
+                    continue;
+                }
+
                 failSkus.add(sku);
                 Integer times = failTimes.getOrDefault(sku, 0);
-                if(times == FAIL_LIMIT){
+                if (times == FAIL_LIMIT) {
                     failTimes.remove(sku);
                     failSkus.remove(sku);
-                    //itemDealService.deleteItem(sku);
                     log.info("sku【{}】刷新失败次数超限，请查看商品状态", sku);
-                }else{
+                } else {
                     failTimes.put(sku, ++times);
                 }
             }
         }
         log.info("=============第{}轮刷新商品，失败需要重新刷新个数：{}", epoch, failSkus.size());
 
-        if(!CollectionUtils.isEmpty(failSkus)){
+        if (!CollectionUtils.isEmpty(failSkus)) {
             refreshItem(failSkus, ++epoch, failTimes);
         }
     }

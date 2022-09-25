@@ -113,4 +113,7 @@ public class ItemAttributes {
     @XStreamAlias(value="ns2:Warranty")
     private String warranty;
 
+    @XStreamAlias(value="ns2:SizePerPearl")
+    private String sizePerPearl;
+
 }

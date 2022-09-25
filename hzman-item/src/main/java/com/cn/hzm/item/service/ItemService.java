@@ -72,6 +72,18 @@ public class ItemService {
         return itemMapper.selectOne(query);
     }
 
+    /**
+     * sku 数据库判断
+     *
+     * @param sku
+     * @return
+     */
+    public List<ItemDO> getItemDOSBySku(String sku) {
+        QueryWrapper<ItemDO> query = new QueryWrapper<>();
+        query.eq("sku", sku);
+        return itemMapper.selectList(query);
+    }
+
     public ItemDO getItemDOByAsin(String asin, Integer isParent) {
         QueryWrapper<ItemDO> query = new QueryWrapper<>();
         query.eq("asin", asin);

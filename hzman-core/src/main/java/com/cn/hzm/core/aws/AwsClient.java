@@ -298,7 +298,7 @@ public class AwsClient {
 
     public static void main(String[] args) {
         AwsClient cliet = new AwsClient();
-        GetMatchingProductForIdResponse response = cliet.getProductInfoByAsin("SellerSKU", "XL22-0521-02");
+        GetMatchingProductForIdResponse response = cliet.getProductInfoByAsin("SellerSKU", "JZ20-623-03AB-10");
         //ItemDO itemDO = ConvertUtil.convertToItemDO(new ItemDO(), response, "XL22-0521-02");
         System.out.println(response);
     }

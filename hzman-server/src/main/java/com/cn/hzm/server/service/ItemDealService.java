@@ -171,6 +171,28 @@ public class ItemDealService {
         itemDetailCache.deleteCache(sku);
     }
 
+    /**
+     * @param sku
+     */
+    public void deleteItem(String sku) {
+        //删除商品
+        List<ItemDO> olds = itemService.getItemDOSBySku(sku);
+        if (!CollectionUtils.isEmpty(olds)) {
+            olds.forEach(itemDO -> {
+                itemService.deleteItem(itemDO.getId());
+
+                //删除库存
+                InventoryDO inventoryDO = inventoryService.getInventoryBySkuAndAsin(sku, itemDO.getAsin());
+                if (inventoryDO != null) {
+                    inventoryService.deleteInventory(inventoryDO.getId());
+                }
+
+                //删除缓存
+                itemDetailCache.deleteCache(sku);
+            });
+        }
+    }
+
 
     public List<SimpleItemDTO> fuzzyQuery(Integer searchType, String value) {
         String searchKey = "sku";

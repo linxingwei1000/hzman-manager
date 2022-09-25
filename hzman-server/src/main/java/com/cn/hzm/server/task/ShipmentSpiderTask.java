@@ -192,6 +192,10 @@ public class ShipmentSpiderTask {
         for (int curNum = 0; curNum <= dealTimes; curNum++) {
             int start = curNum * limit;
             int end = Math.min(dbOrderNum, (curNum + 1) * limit);
+            //如果相等，直接跳出循环
+            if(start == end){
+                break;
+            }
 
             log.info("处理更新货物单 start【{}】 end【{}】", start, end);
             List<ShipmentInfoRecordDO> subShipments = shipments.subList(start, end);
@@ -217,7 +221,6 @@ public class ShipmentSpiderTask {
         }
 
         log.info("货物入库单更新任务结束，耗时：{}", System.currentTimeMillis() - startTime);
-
     }
 
     private void doShipmentSpider() throws ParseException, InterruptedException {
