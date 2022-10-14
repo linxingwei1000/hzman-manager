@@ -33,10 +33,22 @@ public class ItemDO {
     @TableField(value = "marketplace_id")
     private String marketplaceId;
 
+    @TableField(value = "package_dimension")
+    private String packageDimension;
+
+    @TableField(value = "sale_rank")
+    private String saleRank;
+
+    @TableField(value = "item_type")
+    private String itemType;
+
     @TableField(value = "attribute_set")
     private String attributeSet;
 
     private String relationship;
+
+    @TableField(value = "item_remark")
+    private String itemRemark;
 
     @TableField(value = "is_parent")
     private Integer isParent;

@@ -98,6 +98,15 @@ public class ItemService {
     }
 
     /**
+     * 获取商品类型
+     */
+    public List<ItemDO> getItemType() {
+        QueryWrapper<ItemDO> query = new QueryWrapper<>();
+        query.select(" DISTINCT item_type ").lambda();
+        return itemMapper.selectList(query);
+    }
+
+    /**
      * 创建商品
      *
      * @param itemDO

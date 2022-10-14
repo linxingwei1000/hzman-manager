@@ -189,9 +189,18 @@ public class TimeUtil {
 //        }
 //        calendar.set(Calendar.HOUR_OF_DAY, 0);
 //        return calendar.getTime();
+
+//        Date now = new Date();
+//        Date date = getDateBySimple(getSimpleFormat(now));
+//        String strDailyDate = getDateFormat(date);
+//        Boolean isSummer = isSummer(strDailyDate);
+//        Date judge = dateFixByDay(date, 0, isSummer ? 15 : 16, 0);
+//        return now.getTime() < judge.getTime() ? dateFixByDay(date, -1, 0, 0) : date;
+
         Date now = new Date();
-        Date date = getDateBySimple(getSimpleFormat(now));
-        String strDailyDate = getDateFormat(date);
+        String nowStrDate = getDateFormat(now);
+        Date date = getDateBySimple(nowStrDate.substring(0, 10));
+        String strDailyDate = nowStrDate.substring(0, 10) + " 00:00:00";
         Boolean isSummer = isSummer(strDailyDate);
         Date judge = dateFixByDay(date, 0, isSummer ? 15 : 16, 0);
         return now.getTime() < judge.getTime() ? dateFixByDay(date, -1, 0, 0) : date;
@@ -202,9 +211,20 @@ public class TimeUtil {
     }
 
     public static void main(String[] args) throws ParseException {
-        String strTime = "2022-09-23T06:30:00Z";
-        System.out.println(transformUTCToDate(strTime));
-        System.out.println(transformNowToUsDate());
+//        String strTime = "2022-09-23T06:30:00Z";
+//        System.out.println(transformUTCToDate(strTime));
+//        System.out.println(transformNowToUsDate());
+
+//        Date now = new Date();
+//        Date date = getDateBySimple(getSimpleFormat(now));
+//        String strDailyDate = getDateFormat(date);
+//        System.out.println("date :" + date + "str: "+ strDailyDate + "now:" + getDateFormat(now));
+
+        Date now = new Date();
+        String nowStrDate = getDateFormat(now);
+        Date date = getDateBySimple(nowStrDate.substring(0, 10));
+        String strDailyDate = nowStrDate.substring(0, 10) + " 00:00:00";
+        System.out.println("date :" + date + "str: "+ strDailyDate + "now:" + getDateFormat(now));
 
 //
 //                String strUtc = "2020-11-18T00:00:39.030Z";

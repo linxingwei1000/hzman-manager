@@ -1,5 +1,6 @@
 package com.cn.hzm.core.aws;
 
+import com.alibaba.fastjson.JSONObject;
 import com.cn.hzm.core.aws.request.BaseRequest;
 import com.cn.hzm.core.aws.request.fulfilment.ShipmentInfoByNextTokenRequest;
 import com.cn.hzm.core.aws.request.fulfilment.ShipmentInfoRequest;
@@ -9,11 +10,13 @@ import com.cn.hzm.core.aws.request.inventory.ListInventoryRequest;
 import com.cn.hzm.core.aws.request.order.*;
 import com.cn.hzm.core.aws.request.product.GetMatchProductRequest;
 import com.cn.hzm.core.aws.request.product.GetMyPriceForSkuRequest;
+import com.cn.hzm.core.aws.request.product.GetProductCategoriesForSKURequest;
 import com.cn.hzm.core.aws.resp.fulfilment.*;
 import com.cn.hzm.core.aws.resp.inventory.ListInventorySupplyResponse;
 import com.cn.hzm.core.aws.resp.order.*;
 import com.cn.hzm.core.aws.resp.product.GetMatchingProductForIdResponse;
 import com.cn.hzm.core.aws.resp.product.GetMyPriceForSkuResponse;
+import com.cn.hzm.core.aws.resp.product.GetProductCategoriesForSKUResponse;
 import com.cn.hzm.core.entity.ItemDO;
 import com.cn.hzm.core.exception.ExceptionCode;
 import com.cn.hzm.core.exception.HzmException;
@@ -64,6 +67,19 @@ public class AwsClient {
         getMyPriceForSkuRequest.setSkus(Lists.newArrayList(sku));
         getMyPriceForSkuRequest.setTimestamp(TimeUtil.getUTC());
         return doPost(getMyPriceForSkuRequest, GetMyPriceForSkuResponse.class);
+    }
+
+    /**
+     * 根据sku获取类目
+     *
+     * @return
+     */
+    public GetProductCategoriesForSKUResponse getProductCategoriesForSku(String sku) {
+        GetProductCategoriesForSKURequest getProductCategoriesForSKURequest = new GetProductCategoriesForSKURequest();
+        getProductCategoriesForSKURequest.setAction("GetProductCategoriesForSKU");
+        getProductCategoriesForSKURequest.setSellerSKU(sku);
+        getProductCategoriesForSKURequest.setTimestamp(TimeUtil.getUTC());
+        return doPost(getProductCategoriesForSKURequest, GetProductCategoriesForSKUResponse.class);
     }
 
     public ListInventorySupplyResponse getInventoryInfoBySku(String sku) {
@@ -298,8 +314,9 @@ public class AwsClient {
 
     public static void main(String[] args) {
         AwsClient cliet = new AwsClient();
-        GetMatchingProductForIdResponse response = cliet.getProductInfoByAsin("SellerSKU", "JZ20-623-03AB-10");
+        GetMatchingProductForIdResponse response = cliet.getProductInfoByAsin("SellerSKU", "PHW671104");
+        //GetProductCategoriesForSKUResponse response = cliet.getProductCategoriesForSku("XL7907B7-20");
         //ItemDO itemDO = ConvertUtil.convertToItemDO(new ItemDO(), response, "XL22-0521-02");
-        System.out.println(response);
+        System.out.println(JSONObject.toJSONString(response));
     }
 }

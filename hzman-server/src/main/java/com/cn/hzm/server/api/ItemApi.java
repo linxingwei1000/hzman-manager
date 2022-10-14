@@ -1,7 +1,10 @@
 package com.cn.hzm.server.api;
 
 import com.cn.hzm.core.common.HzmResponse;
+import com.cn.hzm.core.enums.ItemTypeEnum;
+import com.cn.hzm.server.dto.FactoryClaimDTO;
 import com.cn.hzm.server.dto.ItemConditionDTO;
+import com.cn.hzm.server.dto.MultiDeleteDTO;
 import com.cn.hzm.server.interceptor.permission.HzmAuthPermission;
 import com.cn.hzm.server.interceptor.permission.HzmAuthToken;
 import com.cn.hzm.server.meta.HzmRoleType;
@@ -12,6 +15,7 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import java.util.List;
 
 /**
  * @author xingweilin@clubfactory.com
@@ -44,6 +48,13 @@ public class ItemApi {
     @RequestMapping(value = "/delete", method = RequestMethod.GET)
     public HzmResponse deleteItem(@ApiParam("商品sku") @RequestParam String asin, @ApiParam("商品sku") @RequestParam String sku) {
         itemDealService.deleteItem(asin, sku);
+        return HzmResponse.success(true);
+    }
+
+    @ApiOperation("批量删除商品")
+    @RequestMapping(value = "/multi/delete", method = RequestMethod.POST)
+    public HzmResponse deleteItems(@RequestBody List<MultiDeleteDTO> multiDeleteDTOS) {
+        multiDeleteDTOS.forEach(md -> itemDealService.deleteItem(md.getAsin(), md.getSku()));
         return HzmResponse.success(true);
     }
 
@@ -90,5 +101,18 @@ public class ItemApi {
     @RequestMapping(value = "/children", method = RequestMethod.GET)
     public HzmResponse childrenItem(@ApiParam("商品asin") @RequestParam String asin) {
         return HzmResponse.success(itemDealService.getChildrenItem(asin));
+    }
+
+    @ApiOperation("商品类型接口")
+    @RequestMapping(value = "/type", method = RequestMethod.GET)
+    public HzmResponse itemType() {
+        return HzmResponse.success(itemDealService.getItemType());
+    }
+
+    @ApiOperation("商品备注修改")
+    @RequestMapping(value = "/remark", method = RequestMethod.GET)
+    public HzmResponse modRemark(@ApiParam(name = "数据库id") @RequestParam Integer id,
+                                      @ApiParam("备注") @RequestParam String remark) {
+        return HzmResponse.success(itemDealService.modRemark(id, remark));
     }
 }

@@ -1,10 +1,12 @@
 package com.cn.hzm.server.service;
 
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cn.hzm.core.aws.AwsClient;
 import com.cn.hzm.core.aws.domain.product.*;
 import com.cn.hzm.core.aws.resp.inventory.ListInventorySupplyResponse;
 import com.cn.hzm.core.aws.resp.product.GetMatchingProductForIdResponse;
+import com.cn.hzm.core.aws.resp.product.GetProductCategoriesForSKUResponse;
 import com.cn.hzm.core.entity.*;
 import com.cn.hzm.core.enums.AmazonShipmentStatusEnum;
 import com.cn.hzm.core.exception.ExceptionCode;
@@ -16,6 +18,7 @@ import com.cn.hzm.factory.service.FactoryOrderItemService;
 import com.cn.hzm.factory.service.FactoryOrderService;
 import com.cn.hzm.factory.service.FactoryService;
 import com.cn.hzm.item.service.FatherChildRelationService;
+import com.cn.hzm.item.service.ItemCategoryService;
 import com.cn.hzm.item.service.ItemService;
 import com.cn.hzm.order.service.SaleInfoService;
 import com.cn.hzm.server.cache.ItemDetailCache;
@@ -26,6 +29,7 @@ import com.cn.hzm.server.util.ConvertUtil;
 import com.cn.hzm.stock.service.InventoryService;
 import com.cn.hzm.stock.service.ShipmentInfoRecordService;
 import com.cn.hzm.stock.service.ShipmentItemRecordService;
+import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -34,9 +38,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
-import java.util.Date;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -52,6 +54,9 @@ public class ItemDealService {
 
     @Autowired
     private ItemService itemService;
+
+    @Autowired
+    private ItemCategoryService itemCategoryService;
 
     @Autowired
     private FatherChildRelationService fatherChildRelationService;
@@ -92,8 +97,10 @@ public class ItemDealService {
     private Map<String, Object> syncLock = Maps.newHashMap();
 
     public JSONObject processListItem(ItemConditionDTO conditionDTO) {
-        List<ItemDTO> itemRespList = itemDetailCache.getCacheBySort(conditionDTO.getSearchType(), conditionDTO.getKey(),
-                conditionDTO.getItemSortType(), conditionDTO.getShowType());
+
+        List<ItemDTO> itemRespList = itemDetailCache.getCacheBySort(conditionDTO.getShowType(), conditionDTO.getItemStatusType(),
+                conditionDTO.getFactoryId(), conditionDTO.getKey(), conditionDTO.getTitle(), conditionDTO.getItemType(),
+                conditionDTO.getItemSortType());
 
         JSONObject respJo = new JSONObject();
         respJo.put("total", itemRespList.size());
@@ -103,6 +110,20 @@ public class ItemDealService {
 
     public List<ItemDTO> getChildrenItem(String asin) {
         return itemDetailCache.getChildrenCache(asin);
+    }
+
+    public List<String> getItemType() {
+        List<ItemDO> itemDOS = itemService.getItemType();
+        return itemDOS.stream().map(ItemDO::getItemType)
+                .filter(itemType -> !StringUtils.isEmpty(itemType)).collect(Collectors.toList());
+    }
+
+    public boolean modRemark(Integer id, String remark) {
+        ItemDO itemDO = itemService.getById(id);
+        itemDO.setItemRemark(remark);
+        itemService.updateItem(itemDO);
+        itemDetailCache.refreshCache(itemDO.getSku());
+        return true;
     }
 
     @Transactional(rollbackFor = Exception.class)
@@ -140,6 +161,9 @@ public class ItemDealService {
         } else {
             itemService.createItem(itemDO);
         }
+
+        //刷新排名信息
+        //processSaleRankInfo(itemDO);
 
         //保存父子sku信息
         processRelationShip(itemDO);
@@ -218,6 +242,25 @@ public class ItemDealService {
 
     public ItemDTO buildItemDTO(ItemDO itemDO, Date usDate) {
         ItemDTO itemDTO = JSONObject.parseObject(JSONObject.toJSONString(itemDO), ItemDTO.class);
+
+        //设置尺寸
+        itemDTO.setDimension(JSONObject.parseObject(itemDO.getPackageDimension(), PackageDimensionDTO.class));
+
+        //设置类目排名
+        ItemCategoryDO itemCategoryDO = itemCategoryService.getItemCategoryByItemId(itemDO.getId());
+        if (itemCategoryDO != null) {
+            itemDTO.setCategoryRankDTOS(JSONArray.parseArray(itemCategoryDO.getCategoryTreeInfo(), CategoryRankDTO.class));
+        }
+
+        //设置最小排名
+        if (!StringUtils.isEmpty(itemDO.getSaleRank().trim())) {
+            SalesRankings salesRankings = JSONArray.parseObject(itemDO.getSaleRank(), SalesRankings.class);
+            if (salesRankings.getSalesRanks() != null) {
+                Optional<Integer> maxOptional = salesRankings.getSalesRanks().stream().map(SalesRank::getRank).min(Comparator.comparing(Integer::intValue));
+                itemDTO.setMaxRank(maxOptional.get());
+            }
+        }
+
         InventoryDO inventoryDO = inventoryService.getInventoryBySku(itemDO.getSku());
         InventoryDTO inventoryDTO = JSONObject.parseObject(JSONObject.toJSONString(inventoryDO), InventoryDTO.class);
         if (inventoryDTO == null) {
@@ -434,6 +477,84 @@ public class ItemDealService {
         return null;
     }
 
+    //处理类目排名
+    public void processSaleRankInfo(ItemDO itemDO) {
+        if (StringUtils.isEmpty(itemDO.getSaleRank().trim())) {
+            return;
+        }
+
+        SalesRankings salesRankings = JSONArray.parseObject(itemDO.getSaleRank(), SalesRankings.class);
+        if (salesRankings.getSalesRanks() == null) {
+            return;
+        }
+
+        GetProductCategoriesForSKUResponse response = awsClient.getProductCategoriesForSku(itemDO.getSku());
+        if (response != null) {
+
+            Map<String, Integer> rankMap = Maps.newHashMap();
+            salesRankings.getSalesRanks().forEach(salesRank -> rankMap.put(salesRank.getProductCategoryId(), salesRank.getRank()));
+
+            List<CategoryParent> categoryParents = response.getGetProductCategoriesForSKUResult().getCategoryParents();
+            Map<String, CategoryRankDTO> categoryMap = Maps.newHashMap();
+            for (CategoryParent categoryParent : categoryParents) {
+                dealParentCategory(categoryParent, rankMap, categoryMap);
+            }
+            String categoryTreeInfo = JSONObject.toJSONString(categoryMap.values());
+
+            ItemCategoryDO old = itemCategoryService.getItemCategoryByItemId(itemDO.getId());
+            if (old == null) {
+                old = new ItemCategoryDO();
+                old.setItemId(itemDO.getId());
+                old.setCategoryTreeInfo(categoryTreeInfo);
+                itemCategoryService.createItemCategory(old);
+            } else {
+                old.setCategoryTreeInfo(categoryTreeInfo);
+                itemCategoryService.updateItemCategory(old);
+            }
+        }
+    }
+
+    private CategoryRankDTO dealParentCategory(CategoryParent categoryParent, Map<String, Integer> rankMap, Map<String, CategoryRankDTO> categoryMap) {
+        if (categoryParent.getCategoryParent() != null) {
+            CategoryRankDTO categoryRankDTO = dealParentCategory(categoryParent.getCategoryParent(), rankMap, categoryMap);
+
+            Map<String, CategoryRankDTO> children = categoryRankDTO.getChildCategoryMap();
+            if (children == null) {
+                children = Maps.newHashMap();
+                categoryRankDTO.setChildCategory(Lists.newArrayList());
+            }
+
+            CategoryRankDTO childCategory = children.get(categoryParent.getProductCategoryId());
+            if (childCategory == null) {
+                //组装子类目
+                childCategory = new CategoryRankDTO();
+                childCategory.setProductCategoryId(categoryParent.getProductCategoryId());
+                childCategory.setProductCategoryName(categoryParent.getProductCategoryName());
+                if (rankMap.containsKey(categoryParent.getProductCategoryId())) {
+                    childCategory.setRank(rankMap.get(categoryParent.getProductCategoryId()));
+                }
+
+                children.put(categoryParent.getProductCategoryId(), childCategory);
+                categoryRankDTO.getChildCategory().add(childCategory);
+                categoryRankDTO.setChildCategoryMap(children);
+            }
+            return childCategory;
+        }
+
+        //保留父类类目
+        CategoryRankDTO categoryRankDTO = categoryMap.get(categoryParent.getProductCategoryId());
+        if (categoryRankDTO == null) {
+            categoryRankDTO = new CategoryRankDTO();
+            categoryMap.put(categoryParent.getProductCategoryId(), categoryRankDTO);
+        }
+        categoryRankDTO.setProductCategoryId(categoryParent.getProductCategoryId());
+        categoryRankDTO.setProductCategoryName(categoryParent.getProductCategoryName());
+        if (rankMap.containsKey(categoryParent.getProductCategoryId())) {
+            categoryRankDTO.setRank(rankMap.get(categoryParent.getProductCategoryId()));
+        }
+        return categoryRankDTO;
+    }
+
     public void processRelationShip(ItemDO itemDO) {
         Relationships relationships = JSONObject.parseObject(itemDO.getRelationship(), Relationships.class);
         if (itemDO.getIsParent() == 0) {
@@ -494,10 +615,14 @@ public class ItemDealService {
         }
     }
 
-    public static void main(String[] args) {
-        AwsClient cliet = new AwsClient();
-        GetMatchingProductForIdResponse response = cliet.getProductInfoByAsin("SellerSKU", "P20-410-14A");
-        ItemDO itemDO = ConvertUtil.convertToItemDO(new ItemDO(), response, null);
-        System.out.println(response);
-    }
+//    public static void main(String[] args) {
+//        AwsClient cliet = new AwsClient();
+//        GetProductCategoriesForSKUResponse response = cliet.getProductCategoriesForSku("XL7907B7-20");
+//        List<CategoryParent> categoryParents = response.getGetProductCategoriesForSKUResult().getCategoryParents();
+//        Map<String, CategoryRankDTO> categoryMap = Maps.newHashMap();
+//        for (CategoryParent categoryParent : categoryParents) {
+//            dealParentCategory(categoryParent, Maps.newHashMap(), categoryMap);
+//        }
+//        System.out.println(categoryMap);
+//    }
 }

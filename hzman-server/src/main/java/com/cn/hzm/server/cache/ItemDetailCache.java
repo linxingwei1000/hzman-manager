@@ -167,25 +167,20 @@ public class ItemDetailCache {
      * @param sortType
      * @return
      */
-    public List<ItemDTO> getCacheBySort(Integer searchType, String key, Integer sortType, Integer showType) {
-        Collection<ItemDTO> temp = showType == 1 ? cache.asMap().values() : relationCacheMap.values();
-        switch (searchType) {
-            //sku 过滤
-            case 1:
-                if (!StringUtils.isEmpty(key)) {
-                    if (showType == 1) {
-                        temp = temp.stream().filter(item -> item.getSku().contains(key)).collect(Collectors.toList());
-                    } else {
-                        temp = temp.stream().filter(item -> item.getAsin().contains(key)).collect(Collectors.toList());
-                    }
-                }
-                break;
-            //title 过滤
-            case 2:
-                //关键字段为空，直接跳过筛选
-                if (StringUtils.isEmpty(key)) {
-                    break;
-                }
+    public List<ItemDTO> getCacheBySort(Integer showType, Integer itemStatusType, Integer factoryId,
+                                        String key, String title, String itemType, Integer sortType) {
+        Collection<ItemDTO> temp;
+        if (showType == 2) {
+            //展示父子体
+            temp = relationCacheMap.values();
+
+            //父子体asin过滤
+            if (!StringUtils.isEmpty(key)) {
+                temp = temp.stream().filter(item -> item.getAsin().contains(key)).collect(Collectors.toList());
+            }
+
+            //title过滤
+            if (!StringUtils.isEmpty(title)) {
                 String[] keys = key.split(" ");
                 temp = temp.stream().filter(item -> {
                     for (String subKey : keys) {
@@ -195,24 +190,49 @@ public class ItemDetailCache {
                     }
                     return true;
                 }).collect(Collectors.toList());
-                break;
-            //订货过滤
-            case 3:
-                temp = getCache(smartReplenishmentTask.getOrderSkus());
-                break;
-            //发货过滤
-            case 4:
+            }
+        } else {
+            //展示全商品
+            //dataType:0.全部商品，1.补货，2.订货
+            if (itemStatusType == null || itemStatusType == 0) {
+                temp = cache.asMap().values();
+            } else if (itemStatusType == 1) {
                 temp = getCache(smartReplenishmentTask.getShipSkus());
-                break;
+            } else {
+                temp = getCache(smartReplenishmentTask.getOrderSkus());
+            }
+
             //厂家过滤
-            case 5:
-                Integer factoryId = Integer.valueOf(key);
+            if (factoryId != null) {
                 List<FactoryItemDO> factoryItemDOS = factoryItemService.getInfoByFactoryId(factoryId);
                 List<String> ItemDTOs = factoryItemDOS.stream().map(FactoryItemDO::getSku).collect(Collectors.toList());
-                temp = getCache(ItemDTOs);
-                break;
-            default:
+                temp = temp.stream().filter(itemDTO -> ItemDTOs.contains(itemDTO.getSku())).collect(Collectors.toList());
+            }
+
+            //sku过滤
+            if (!StringUtils.isEmpty(key)) {
+                temp = temp.stream().filter(item -> item.getSku().contains(key)).collect(Collectors.toList());
+            }
+
+            //title过滤
+            if (!StringUtils.isEmpty(title)) {
+                String[] keys = key.split(" ");
+                temp = temp.stream().filter(item -> {
+                    for (String subKey : keys) {
+                        if (!item.getTitle().toLowerCase().contains(subKey.toLowerCase())) {
+                            return false;
+                        }
+                    }
+                    return true;
+                }).collect(Collectors.toList());
+            }
+
+            //商品类型过滤
+            if (!StringUtils.isEmpty(itemType)) {
+                temp = temp.stream().filter(item -> item.getItemType().equals(itemType)).collect(Collectors.toList());
+            }
         }
+
         Comparator<ItemDTO> comparator = comparatorMap.getOrDefault(sortType, new TodaySaleDescComparator());
         Set<ItemDTO> list = Sets.newTreeSet(comparator);
         list.addAll(temp);

@@ -39,6 +39,21 @@ public class ItemDTO extends RespBaseDTO{
     @ApiModelProperty(value = "商品相关属性")
     private String relationship;
 
+    @ApiModelProperty(value = "商品尺寸")
+    private PackageDimensionDTO dimension;
+
+    @ApiModelProperty(value = "商品类型")
+    private String itemType;
+
+    @ApiModelProperty(value = "商品备注")
+    private String itemRemark;
+
+    @ApiModelProperty(value = "商品类目排名")
+    private List<CategoryRankDTO> categoryRankDTOS;
+
+    @ApiModelProperty(value = "最高排名")
+    private Integer maxRank;
+
     @ApiModelProperty(value = "今日销量数据")
     private SaleInfoDTO today;
 

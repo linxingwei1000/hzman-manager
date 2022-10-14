@@ -35,6 +35,18 @@ public class ConvertUtil {
         itemDO.setSku(!StringUtils.isEmpty(sku) ? sku : itemAttributes.getModel());
         itemDO.setTitle(itemAttributes.getTitle());
         itemDO.setIcon(itemAttributes.getSmallImage().getUrl());
+
+        //添加尺寸
+        itemDO.setPackageDimension(JSONObject.toJSONString(itemAttributes.getPackageDimensions()));
+
+        //添加商品类型
+        itemDO.setItemType(itemAttributes.getProductTypeName());
+
+        //添加排名
+        if (product.getSalesRankings() != null) {
+            itemDO.setSaleRank(JSONObject.toJSONString(product.getSalesRankings()));
+        }
+
         itemDO.setAttributeSet(JSONObject.toJSONString(product.getAttributeSets()));
 
         itemDO.setRelationship(JSONObject.toJSONString(product.getRelationships()));

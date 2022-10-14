@@ -14,5 +14,5 @@ public class SalesRank {
     private String productCategoryId;
 
     @XStreamAlias(value="Rank")
-    private String rank;
+    private Integer rank;
 }
