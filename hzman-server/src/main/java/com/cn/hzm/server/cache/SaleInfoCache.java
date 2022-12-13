@@ -104,14 +104,24 @@ public class SaleInfoCache {
         int totalOrderNum = 0;
         int totalSaleNum = 0;
         double totalSaleVolume = 0.0;
+        double totalTaxFee = 0.0;
+        double totalFbaFulfillmentFee = 0.0;
+        double totalCommission = 0.0;
+
         for (SaleInfoDO saleInfo : list) {
             int orderNum = saleInfo.getOrderNum() == null ? 0 : saleInfo.getOrderNum();
             int saleNum = saleInfo.getSaleNum() == null ? 0 : saleInfo.getSaleNum();
             double saleVolume = saleInfo.getSaleVolume() == null ? 0.0 : saleInfo.getSaleVolume();
+            double taxFee = saleInfo.getSaleTax() == null ? 0.0 : saleInfo.getSaleTax();
+            double fbaFulfillmentFee = saleInfo.getFbaFulfillmentFee() == null ? 0.0 : saleInfo.getFbaFulfillmentFee();
+            double commission = saleInfo.getCommission() == null ? 0.0 : saleInfo.getCommission();
 
             totalOrderNum += orderNum;
             totalSaleNum += saleNum;
             totalSaleVolume += saleVolume;
+            totalTaxFee += taxFee;
+            totalFbaFulfillmentFee += fbaFulfillmentFee;
+            totalCommission += commission;
         }
 
         double unitPrice = totalSaleVolume;
@@ -123,7 +133,14 @@ public class SaleInfoCache {
         saleInfoDTO.setOrderNum(totalOrderNum);
         saleInfoDTO.setSaleNum(totalSaleNum);
         saleInfoDTO.setSaleVolume(RandomUtil.saveDefaultDecimal(totalSaleVolume));
+        saleInfoDTO.setSaleTax(RandomUtil.saveDefaultDecimal(totalTaxFee));
+        saleInfoDTO.setFbaFulfillmentFee(RandomUtil.saveDefaultDecimal(totalFbaFulfillmentFee));
+        saleInfoDTO.setCommission(RandomUtil.saveDefaultDecimal(totalCommission));
         saleInfoDTO.setUnitPrice(RandomUtil.saveDefaultDecimal(unitPrice));
+
+        //计算净收入
+        double income = totalSaleVolume - totalTaxFee - totalFbaFulfillmentFee - totalCommission;
+        saleInfoDTO.setIncome(RandomUtil.saveDefaultDecimal(income));
         dailySaleInfoMap.put(strDate, saleInfoDTO);
     }
 }

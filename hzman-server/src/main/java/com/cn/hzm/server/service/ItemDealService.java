@@ -11,6 +11,7 @@ import com.cn.hzm.core.entity.*;
 import com.cn.hzm.core.enums.AmazonShipmentStatusEnum;
 import com.cn.hzm.core.exception.ExceptionCode;
 import com.cn.hzm.core.exception.HzmException;
+import com.cn.hzm.core.util.RandomUtil;
 import com.cn.hzm.core.util.TimeUtil;
 import com.cn.hzm.factory.enums.OrderStatusEnum;
 import com.cn.hzm.factory.service.FactoryItemService;
@@ -370,12 +371,22 @@ public class ItemDealService {
             saleInfoDTO.setOrderNum(0);
             saleInfoDTO.setSaleVolume(0.0);
             saleInfoDTO.setUnitPrice(0.0);
+            saleInfoDTO.setSaleTax(0.0);
+            saleInfoDTO.setFbaFulfillmentFee(0.0);
+            saleInfoDTO.setCommission(0.0);
         } else {
             saleInfoDTO.setSaleNum(saleInfoDO.getSaleNum());
             saleInfoDTO.setOrderNum(saleInfoDO.getOrderNum());
-            saleInfoDTO.setSaleVolume(saleInfoDO.getSaleVolume());
-            saleInfoDTO.setUnitPrice(saleInfoDO.getUnitPrice());
+            saleInfoDTO.setSaleVolume(RandomUtil.saveDefaultDecimal(saleInfoDO.getSaleVolume()));
+            saleInfoDTO.setUnitPrice(RandomUtil.saveDefaultDecimal(saleInfoDO.getUnitPrice()));
+            saleInfoDTO.setSaleTax(RandomUtil.saveDefaultDecimal(saleInfoDO.getSaleTax()));
+            saleInfoDTO.setFbaFulfillmentFee(RandomUtil.saveDefaultDecimal(saleInfoDO.getFbaFulfillmentFee()));
+            saleInfoDTO.setCommission(RandomUtil.saveDefaultDecimal(saleInfoDO.getCommission()));
         }
+
+        //计算净收入
+        double income = saleInfoDTO.getSaleVolume() - saleInfoDTO.getSaleTax() - saleInfoDTO.getFbaFulfillmentFee() - saleInfoDTO.getCommission();
+        saleInfoDTO.setIncome(RandomUtil.saveDefaultDecimal(income));
         return saleInfoDTO;
     }
 
@@ -388,22 +399,35 @@ public class ItemDealService {
         int saleNum = 0;
         int orderNum = 0;
         double saleVolume = 0.0;
+        double taxFee = 0.0;
+        double fbaFulfillmentFee = 0.0;
+        double commission = 0.0;
         if (!CollectionUtils.isEmpty(compareList)) {
             for (SaleInfoDO saleInfo : compareList) {
                 saleNum += saleInfo.getSaleNum();
                 orderNum += saleInfo.getOrderNum();
                 saleVolume += saleInfo.getSaleVolume();
+                taxFee += saleInfo.getSaleTax();
+                fbaFulfillmentFee += saleInfo.getFbaFulfillmentFee();
+                commission += saleInfo.getCommission();
             }
         }
         SaleInfoDTO saleInfoDTO = new SaleInfoDTO();
         saleInfoDTO.setSaleNum(saleNum);
         saleInfoDTO.setOrderNum(orderNum);
-        saleInfoDTO.setSaleVolume(saleVolume);
+        saleInfoDTO.setSaleVolume(RandomUtil.saveDefaultDecimal(saleVolume));
         if (saleNum == 0) {
             saleInfoDTO.setUnitPrice(0.0);
         } else {
             saleInfoDTO.setUnitPrice(saleVolume / (double) saleNum);
         }
+
+        saleInfoDTO.setSaleTax(RandomUtil.saveDefaultDecimal(taxFee));
+        saleInfoDTO.setFbaFulfillmentFee(RandomUtil.saveDefaultDecimal(fbaFulfillmentFee));
+        saleInfoDTO.setCommission(RandomUtil.saveDefaultDecimal(commission));
+        //计算净收入
+        double income = saleVolume - taxFee - fbaFulfillmentFee - commission;
+        saleInfoDTO.setIncome(RandomUtil.saveDefaultDecimal(income));
         return saleInfoDTO;
     }
 
@@ -416,7 +440,6 @@ public class ItemDealService {
      * @param dealNum
      */
     public void dealSkuInventory(String sku, String operateType, Integer dealNum) {
-
         if (!syncLock.containsKey(sku)) {
             syncLock.put(sku, new Object());
         }
@@ -495,6 +518,12 @@ public class ItemDealService {
             salesRankings.getSalesRanks().forEach(salesRank -> rankMap.put(salesRank.getProductCategoryId(), salesRank.getRank()));
 
             List<CategoryParent> categoryParents = response.getGetProductCategoriesForSKUResult().getCategoryParents();
+
+            //未获取类目信息，停止刷新类目信息
+            if (categoryParents == null) {
+                return;
+            }
+
             Map<String, CategoryRankDTO> categoryMap = Maps.newHashMap();
             for (CategoryParent categoryParent : categoryParents) {
                 dealParentCategory(categoryParent, rankMap, categoryMap);
@@ -614,15 +643,4 @@ public class ItemDealService {
             log.info("本sku：{} 即没有子体也没有父体", itemDO.getSku());
         }
     }
-
-//    public static void main(String[] args) {
-//        AwsClient cliet = new AwsClient();
-//        GetProductCategoriesForSKUResponse response = cliet.getProductCategoriesForSku("XL7907B7-20");
-//        List<CategoryParent> categoryParents = response.getGetProductCategoriesForSKUResult().getCategoryParents();
-//        Map<String, CategoryRankDTO> categoryMap = Maps.newHashMap();
-//        for (CategoryParent categoryParent : categoryParents) {
-//            dealParentCategory(categoryParent, Maps.newHashMap(), categoryMap);
-//        }
-//        System.out.println(categoryMap);
-//    }
 }

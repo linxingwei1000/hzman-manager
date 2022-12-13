@@ -4,7 +4,10 @@ import com.cn.hzm.core.common.HzmResponse;
 import com.cn.hzm.core.exception.ExceptionCode;
 import com.cn.hzm.core.exception.HzmException;
 import com.cn.hzm.core.util.FtpFileUtil;
+import com.cn.hzm.server.dto.FixOrderDTO;
+import com.cn.hzm.server.dto.ItemConditionDTO;
 import com.cn.hzm.server.task.DailyStatTask;
+import com.cn.hzm.server.task.OrderSpiderTask;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -29,6 +32,9 @@ public class ToolApi {
     @Autowired
     private DailyStatTask dailyStatTask;
 
+    @Autowired
+    private OrderSpiderTask orderSpiderTask;
+
     @ApiOperation("修复某一天销量统计")
     @RequestMapping(value = "/sale/fix/daily", method = RequestMethod.GET)
     public HzmResponse fixDaily(@ApiParam("修复日期") @RequestParam String statDate) {
@@ -41,6 +47,13 @@ public class ToolApi {
     public HzmResponse fixDuration(@ApiParam("修复开始日期") @RequestParam String statDate,
                                    @ApiParam("修复天数") @RequestParam Integer dayNum) {
         dailyStatTask.statSaleInfoDurationDay(statDate, dayNum);
+        return HzmResponse.success("true");
+    }
+
+    @ApiOperation("修复订单数据")
+    @RequestMapping(value = "/order/fix", method = RequestMethod.POST)
+    public HzmResponse fixOrder(@RequestBody FixOrderDTO fixOrderDTO) {
+        orderSpiderTask.updateAmazonOrder(fixOrderDTO.getOrderIds());
         return HzmResponse.success("true");
     }
 

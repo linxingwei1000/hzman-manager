@@ -127,6 +127,9 @@ public class OrderDO {
     @TableField(value="other_config")
     private String otherConfig;
 
+    @TableField(value="is_finance")
+    private Integer isFinance;
+
     private Date ctime;
 
     private Date utime;

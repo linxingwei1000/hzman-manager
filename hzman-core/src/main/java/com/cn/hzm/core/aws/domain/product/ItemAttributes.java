@@ -116,4 +116,7 @@ public class ItemAttributes {
     @XStreamAlias(value="ns2:SizePerPearl")
     private String sizePerPearl;
 
+    @XStreamAlias(value="ns2:HandOrientation")
+    private String handOrientation;
+
 }

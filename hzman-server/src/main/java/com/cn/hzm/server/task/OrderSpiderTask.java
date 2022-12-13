@@ -54,9 +54,6 @@ public class OrderSpiderTask {
     private AwsClient awsClient;
 
     @Autowired
-    private ItemService itemService;
-
-    @Autowired
     private OrderService orderService;
 
     @Autowired
@@ -88,14 +85,22 @@ public class OrderSpiderTask {
     /**
      * 单个amazonId爬取任务
      *
-     * @param amazonId
-     * @throws ParseException
-     * @throws InterruptedException
      */
-    public void amazonIdSpiderTask(String amazonId) throws ParseException, InterruptedException {
-        GetOrderResponse orderResponse = awsClient.getListOrderByAmazonIds(Lists.newArrayList(amazonId));
-        List<String> amazonIds = parseOrderResp(orderResponse.getGetOrderResult().getOrders().getList());
-        getOrderItems(amazonIds);
+    public void updateAmazonOrder(List<String> amazonIds) {
+        List<OrderDO> orders = orderService.getOrdersByAmazonIds(amazonIds);
+        if (!CollectionUtils.isEmpty(orders)) {
+
+            log.info("修复亚马逊订单错误数据：{}", orders.size());
+            long bTime = System.currentTimeMillis();
+            Set<String> needFixSaleInfoDay = Sets.newHashSet();
+            doUpdateOrder(needFixSaleInfoDay, orders);
+
+            if (!CollectionUtils.isEmpty(needFixSaleInfoDay)) {
+                dailyStatTask.statSaleInfoByMulchDate(needFixSaleInfoDay);
+                saleInfoCache.refreshDailySaleInfo(needFixSaleInfoDay);
+            }
+            log.info("修复亚马逊订单错误数据完成，耗时：{}", System.currentTimeMillis() - bTime);
+        }
     }
 
     /**

@@ -1,6 +1,5 @@
 package com.cn.hzm.core.util;
 
-import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -19,27 +18,28 @@ import java.util.TimeZone;
  */
 public class TimeUtil {
 
-    private static final SimpleDateFormat SIMPLE_FORMAT = new SimpleDateFormat("yyyy-MM-dd");
+    private static final String SIMPLE_FORMAT = "yyyy-MM-dd";
 
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+    private static final String DATE_FORMAT = "yyyy-MM-dd HH:mm:ss";
+
+    private static final String UTC_FORMAT = "yyyy-MM-dd'T'HH:mm:ss'Z'";
+
+    private static final String UTC_SIMPLE_FORMAT = "yyyyMMdd'T'HHmmss'Z'";
+
+    private static final String UTC_MILLISECOND_FORMAT = "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'";
 
     private static final DateTimeFormatter DATE_DAILY_FORMAT = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 
-    private static final SimpleDateFormat UTC_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss'Z'");
-
-    private static final SimpleDateFormat UTC_SIMPLE_FORMAT = new SimpleDateFormat("yyyyMMdd'T'HHmmss'Z'");
-
-    private static final SimpleDateFormat UTC_MILLISECOND_FORMAT = new SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'");
-
-
     public static String getUTC() {
-        UTC_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return UTC_FORMAT.format(new Date());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(UTC_FORMAT);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return simpleDateFormat.format(new Date());
     }
 
     public static String getSimpleUTC() {
-        UTC_SIMPLE_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return UTC_SIMPLE_FORMAT.format(new Date());
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(UTC_SIMPLE_FORMAT);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return simpleDateFormat.format(new Date());
     }
 
     /**
@@ -49,8 +49,9 @@ public class TimeUtil {
      * @return
      */
     public static String dateToUTC(Date date) {
-        UTC_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return UTC_FORMAT.format(date);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(UTC_FORMAT);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return simpleDateFormat.format(date);
     }
 
 
@@ -63,27 +64,20 @@ public class TimeUtil {
     }
 
     public static Date transformUTCToDate(String utcDate) throws ParseException {
-        UTC_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return UTC_FORMAT.parse(utcDate);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(UTC_FORMAT);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return simpleDateFormat.parse(utcDate);
     }
 
     public static Date transformMilliSecondUTCToDate(String utcDate) throws ParseException {
-        UTC_FORMAT.setTimeZone(TimeZone.getTimeZone("UTC"));
-        return UTC_MILLISECOND_FORMAT.parse(utcDate);
+        SimpleDateFormat simpleDateFormat = new SimpleDateFormat(UTC_MILLISECOND_FORMAT);
+        simpleDateFormat.setTimeZone(TimeZone.getTimeZone("UTC"));
+        return simpleDateFormat.parse(utcDate);
     }
 
     public static Date getDateBySimple(String source) {
         try {
-            return SIMPLE_FORMAT.parse(source);
-        } catch (ParseException e) {
-            e.printStackTrace();
-        }
-        return new Date();
-    }
-
-    public static Date getDateByDailyTime(String source) {
-        try {
-            return DATE_FORMAT.parse(source);
+            return new SimpleDateFormat(SIMPLE_FORMAT).parse(source);
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -91,11 +85,11 @@ public class TimeUtil {
     }
 
     public static String getSimpleFormat(Date date) {
-        return SIMPLE_FORMAT.format(date);
+        return new SimpleDateFormat(SIMPLE_FORMAT).format(date);
     }
 
     public static String getDateFormat(Date date) {
-        return DATE_FORMAT.format(date);
+        return new SimpleDateFormat(DATE_FORMAT).format(date);
     }
 
     public static Date transformTimeToUTC(Date date) {
@@ -211,6 +205,25 @@ public class TimeUtil {
     }
 
     public static void main(String[] args) throws ParseException {
+
+        System.out.println(TimeUtil.getZeroUTCDateByDay(-2));
+
+        Date date = transformNowToUsDate();
+        System.out.println(date);
+
+        String strDailyDate = TimeUtil.getDateFormat(date);
+        Boolean isSummer = TimeUtil.isSummer(strDailyDate);
+        Date startDate = TimeUtil.dateFixByDay(date, 0, isSummer ? 15 : 16, 0);
+
+        Date nextDate = TimeUtil.dateFixByDay(date, 1, 0, 0);
+        strDailyDate = TimeUtil.getDateFormat(nextDate);
+        isSummer = TimeUtil.isSummer(strDailyDate);
+        Date endDate = TimeUtil.dateFixByDay(nextDate, 0, isSummer ? 15 : 16, 0);
+
+        System.out.println(startDate);
+        System.out.println(endDate);
+
+
 //        String strTime = "2022-09-23T06:30:00Z";
 //        System.out.println(transformUTCToDate(strTime));
 //        System.out.println(transformNowToUsDate());
@@ -220,11 +233,11 @@ public class TimeUtil {
 //        String strDailyDate = getDateFormat(date);
 //        System.out.println("date :" + date + "str: "+ strDailyDate + "now:" + getDateFormat(now));
 
-        Date now = new Date();
-        String nowStrDate = getDateFormat(now);
-        Date date = getDateBySimple(nowStrDate.substring(0, 10));
-        String strDailyDate = nowStrDate.substring(0, 10) + " 00:00:00";
-        System.out.println("date :" + date + "str: "+ strDailyDate + "now:" + getDateFormat(now));
+//        Date now = new Date();
+//        String nowStrDate = getDateFormat(now);
+//        Date date = getDateBySimple(nowStrDate.substring(0, 10));
+//        String strDailyDate = nowStrDate.substring(0, 10) + " 00:00:00";
+//        System.out.println("date :" + date + "str: "+ strDailyDate + "now:" + getDateFormat(now));
 
 //
 //                String strUtc = "2020-11-18T00:00:39.030Z";

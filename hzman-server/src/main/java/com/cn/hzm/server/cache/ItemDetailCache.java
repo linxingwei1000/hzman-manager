@@ -4,6 +4,7 @@ import com.cn.hzm.core.constant.ContextConst;
 import com.cn.hzm.core.entity.FactoryItemDO;
 import com.cn.hzm.core.entity.FatherChildRelationDO;
 import com.cn.hzm.core.entity.ItemDO;
+import com.cn.hzm.core.util.RandomUtil;
 import com.cn.hzm.core.util.TimeUtil;
 import com.cn.hzm.factory.service.FactoryItemService;
 import com.cn.hzm.item.service.FatherChildRelationService;
@@ -397,14 +398,25 @@ public class ItemDetailCache {
         Integer orderNum = saleInfo.getOrderNum() == null ? 0 : saleInfo.getOrderNum();
         Integer saleNum = saleInfo.getSaleNum() == null ? 0 : saleInfo.getSaleNum();
         Double saleVolume = saleInfo.getSaleVolume() == null ? 0.0 : saleInfo.getSaleVolume();
+        Double taxFee = saleInfo.getSaleTax() == null ? 0.0 : saleInfo.getSaleTax();
+        Double fbaFulfillmentFee = saleInfo.getFbaFulfillmentFee() == null ? 0.0 : saleInfo.getFbaFulfillmentFee();
+        Double commission = saleInfo.getCommission() == null ? 0.0 : saleInfo.getCommission();
 
         saleInfo.setOrderNum(orderNum + addSaleInfo.getOrderNum());
         saleInfo.setSaleNum(saleNum + addSaleInfo.getSaleNum());
-        saleInfo.setSaleVolume(saleVolume + addSaleInfo.getSaleVolume());
+        saleInfo.setSaleVolume(RandomUtil.saveDefaultDecimal(saleVolume + addSaleInfo.getSaleVolume()));
         if (saleInfo.getSaleNum() == 0) {
             saleInfo.setUnitPrice(saleInfo.getSaleVolume());
         } else {
             saleInfo.setUnitPrice(saleInfo.getSaleVolume() / (double) saleInfo.getSaleNum());
         }
+
+        saleInfo.setSaleTax(RandomUtil.saveDefaultDecimal(taxFee + addSaleInfo.getSaleTax()));
+        saleInfo.setFbaFulfillmentFee(RandomUtil.saveDefaultDecimal(fbaFulfillmentFee + addSaleInfo.getFbaFulfillmentFee()));
+        saleInfo.setCommission(RandomUtil.saveDefaultDecimal(commission + addSaleInfo.getCommission()));
+
+        //计算净收入
+        double income = saleVolume - taxFee - fbaFulfillmentFee - commission;
+        saleInfo.setIncome(RandomUtil.saveDefaultDecimal(income));
     }
 }

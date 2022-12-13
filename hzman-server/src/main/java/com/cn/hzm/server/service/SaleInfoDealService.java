@@ -80,7 +80,14 @@ public class SaleInfoDealService {
                 saleInfoDescDTO.setOrderNum(saleInfoDTO.getOrderNum());
                 saleInfoDescDTO.setSaleVolume(saleInfoDTO.getSaleVolume());
                 saleInfoDescDTO.setUnitPrice(saleInfoDTO.getUnitPrice());
+                saleInfoDescDTO.setSaleTax(saleInfoDTO.getSaleTax());
+                saleInfoDescDTO.setFbaFulfillmentFee(saleInfoDTO.getFbaFulfillmentFee());
+                saleInfoDescDTO.setCommission(saleInfoDTO.getCommission());
                 saleInfoDescDTO.setSaleDate(beginDate);
+
+                //计算净收入
+                double income = saleInfoDescDTO.getSaleVolume() - saleInfoDescDTO.getSaleTax() - saleInfoDescDTO.getFbaFulfillmentFee() - saleInfoDescDTO.getCommission();
+                saleInfoDescDTO.setIncome(RandomUtil.saveDefaultDecimal(income));
                 saleInfoDescDTO.setSku("all");
                 saleInfos.add(saleInfoDescDTO);
                 if (beginDate.equals(endDate)) {
@@ -104,6 +111,12 @@ public class SaleInfoDealService {
                     }
                     saleInfoDTO.setSaleDate(saleInfoDO.getStatDate());
                     saleInfoDTO.setSku(saleInfoDO.getSku());
+                    saleInfoDTO.setSaleTax(saleInfoDO.getSaleTax());
+                    saleInfoDTO.setFbaFulfillmentFee(saleInfoDO.getFbaFulfillmentFee());
+                    saleInfoDTO.setCommission(saleInfoDO.getCommission());
+                    double income = saleInfoDTO.getSaleVolume() - saleInfoDTO.getSaleTax() - saleInfoDTO.getFbaFulfillmentFee() - saleInfoDTO.getCommission();
+                    saleInfoDTO.setIncome(RandomUtil.saveDefaultDecimal(income));
+
                     saleInfos.add(saleInfoDTO);
                 });
             }
@@ -124,6 +137,9 @@ public class SaleInfoDealService {
             saleInfoDTO.setOrderNum(nextSale.getOrderNum() + saleInfoDTO.getOrderNum());
             saleInfoDTO.setSaleNum(nextSale.getSaleNum() + saleInfoDTO.getSaleNum());
             saleInfoDTO.setSaleVolume(nextSale.getSaleVolume() + saleInfoDTO.getSaleVolume());
+            saleInfoDTO.setSaleTax(nextSale.getSaleTax() + saleInfoDTO.getSaleTax());
+            saleInfoDTO.setFbaFulfillmentFee(nextSale.getFbaFulfillmentFee() + saleInfoDTO.getFbaFulfillmentFee());
+            saleInfoDTO.setCommission(nextSale.getCommission() + saleInfoDTO.getCommission());
 
             nextDate = TimeUtil.dateFixByDay(nextDate, 1, 0, 0);
         }
@@ -136,6 +152,13 @@ public class SaleInfoDealService {
 
         saleInfoDTO.setSaleVolume(RandomUtil.saveDefaultDecimal(saleInfoDTO.getSaleVolume()));
         saleInfoDTO.setUnitPrice(RandomUtil.saveDefaultDecimal(saleInfoDTO.getUnitPrice()));
+        saleInfoDTO.setSaleTax(RandomUtil.saveDefaultDecimal(saleInfoDTO.getSaleTax()));
+        saleInfoDTO.setFbaFulfillmentFee(RandomUtil.saveDefaultDecimal(saleInfoDTO.getFbaFulfillmentFee()));
+        saleInfoDTO.setCommission(RandomUtil.saveDefaultDecimal(saleInfoDTO.getCommission()));
+
+        //计算净收入
+        double income = saleInfoDTO.getSaleVolume() - saleInfoDTO.getSaleTax() - saleInfoDTO.getFbaFulfillmentFee() - saleInfoDTO.getCommission();
+        saleInfoDTO.setIncome(RandomUtil.saveDefaultDecimal(income));
         return saleInfoDTO;
     }
 }

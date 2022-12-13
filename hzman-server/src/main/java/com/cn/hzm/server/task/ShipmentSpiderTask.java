@@ -8,6 +8,7 @@ import com.cn.hzm.core.aws.resp.fulfilment.ListInboundShipmentItemsResponse;
 import com.cn.hzm.core.aws.resp.fulfilment.ListInboundShipmentsByNextTokenResponse;
 import com.cn.hzm.core.aws.resp.fulfilment.ListInboundShipmentsResponse;
 import com.cn.hzm.core.constant.ContextConst;
+import com.cn.hzm.core.entity.SaleInfoDO;
 import com.cn.hzm.core.entity.ShipmentInfoRecordDO;
 import com.cn.hzm.core.entity.ShipmentItemRecordDO;
 import com.cn.hzm.core.enums.AmazonShipmentStatusEnum;
@@ -21,6 +22,7 @@ import com.cn.hzm.stock.service.ShipmentInfoRecordService;
 import com.cn.hzm.stock.service.ShipmentItemRecordService;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import lombok.Synchronized;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -34,6 +36,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
+import java.util.concurrent.locks.ReentrantLock;
 import java.util.stream.Collectors;
 
 /**
@@ -79,8 +82,8 @@ public class ShipmentSpiderTask {
     public String shipmentSpiderTask(String shipmentId) {
         long startTime = System.currentTimeMillis();
         ShipmentInfoRecordDO shipmentInfoRecordDO = shipmentInfoRecordService.getByShipmentId(shipmentId);
-        if(shipmentInfoRecordDO!=null){
-            return "货物单【"+ shipmentId +"】已入库";
+        if (shipmentInfoRecordDO != null) {
+            return "货物单【" + shipmentId + "】已入库";
         }
 
         ListInboundShipmentsResponse r = awsClient.getShipmentInfo(null, Lists.newArrayList(shipmentId), null, null);
@@ -193,7 +196,7 @@ public class ShipmentSpiderTask {
             int start = curNum * limit;
             int end = Math.min(dbOrderNum, (curNum + 1) * limit);
             //如果相等，直接跳出循环
-            if(start == end){
+            if (start == end) {
                 break;
             }
 
@@ -273,7 +276,7 @@ public class ShipmentSpiderTask {
             if (shipmentInfo != null) {
                 ConvertUtil.convertToShipmentInfoDO(shipmentInfo, shipmentMember);
                 shipmentInfoRecordService.updateRecord(shipmentInfo);
-            }else{
+            } else {
                 shipmentInfoRecordService.createRecord(ConvertUtil.convertToShipmentInfoDO(new ShipmentInfoRecordDO(), shipmentMember));
             }
             //爬去货物单商品列表
@@ -296,9 +299,8 @@ public class ShipmentSpiderTask {
                 parseShipmentItemInfo(tokenResponse.getListInboundShipmentItemsByNextTokenResult().getItemData().getList());
             }
         } catch (InterruptedException e) {
-            e.printStackTrace();
+            log.error("货运单【{}】爬取失败：", shipmentId, e);
         }
-
     }
 
     private void parseShipmentItemInfo(List<Member> itemMembers) {
@@ -320,12 +322,61 @@ public class ShipmentSpiderTask {
                 if (dataMap.containsKey(member.getShipmentId() + member.getSellerSKU())) {
                     shipmentItemDO.setId(dataMap.get(member.getShipmentId() + member.getSellerSKU()));
                     shipmentItemRecordService.updateRecord(shipmentItemDO);
-                }else{
+                } else {
                     shipmentItemRecordService.createRecord(shipmentItemDO);
                     //当前库存减去amazon入库
-                    itemDealService.dealSkuInventory(member.getSellerSKU(), "mod", -member.getQuantityShipped());
+                    try{
+                        itemDealService.dealSkuInventory(member.getSellerSKU(), "mod", -member.getQuantityShipped());
+                    }catch (Exception e){
+                        log.error("FBA订单刷新库存失败，sku：{} 可能为新产品  ",member.getSellerSKU(), e);
+                        //自动创建商品
+                        itemDealService.processSync(member.getSellerSKU());
+                    }
                 }
             });
         });
     }
+//
+//    public static void main(String[] args) throws InterruptedException {
+//        ConcurrentHashMap<String, Object> lockMap = new ConcurrentHashMap<>();
+//        Integer baseNum = 123;
+//        int cycle=0;
+//        while(true) {
+//            String strBaseNum = String.valueOf(baseNum);
+//            String threadNum = cycle + strBaseNum;
+//            System.out.println("新建线程：" + threadNum);
+//
+//            Thread t = new Thread(() -> {
+//                lockMap.putIfAbsent(strBaseNum, new Object());
+//                synchronized (lockMap.get(strBaseNum)) {
+//                    System.out.println("执行线程：" + threadNum);
+//                    try {
+//                        Thread.sleep(5000);
+//                        System.out.println("释放" + strBaseNum + "线程：" +threadNum);
+//                    } catch (InterruptedException e) {
+//                        e.printStackTrace();
+//                    }finally {
+//                        lockMap.remove(strBaseNum);
+//                    }
+//                }
+//
+//            });
+//            t.start();
+//
+//            baseNum += 1;
+//            if (baseNum > 125) {
+//                baseNum = 123;
+//                cycle++;
+//            }
+//            if(cycle==5){
+//                break;
+//            }
+//
+//            Thread.sleep(10);
+//        }
+//
+//        while(true){
+//
+//        }
+//    }
 }

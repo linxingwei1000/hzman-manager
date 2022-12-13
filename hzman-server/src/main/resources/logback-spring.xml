@@ -46,7 +46,7 @@
 
     <!--以下包 不打印日志-->
 
-    <springProfile name="local">
+    <springProfile name="dev">
         <root level="DEBUG">
             <appender-ref ref="file" />
             <appender-ref ref="FILE_ERROR" />

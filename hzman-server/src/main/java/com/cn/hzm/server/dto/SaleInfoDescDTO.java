@@ -28,6 +28,18 @@ public class SaleInfoDescDTO {
     @ApiModelProperty(value = "销售额")
     private Double saleVolume;
 
+    @ApiModelProperty(value = "税费")
+    private Double saleTax;
+
+    @ApiModelProperty(value = "仓储服务费")
+    private Double fbaFulfillmentFee;
+
+    @ApiModelProperty(value = "佣金")
+    private Double commission;
+
     @ApiModelProperty(value = "均价")
     private Double unitPrice;
+
+    @ApiModelProperty(value = "净收入")
+    private Double income;
 }

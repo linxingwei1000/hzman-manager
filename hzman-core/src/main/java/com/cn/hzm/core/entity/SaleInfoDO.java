@@ -33,6 +33,15 @@ public class SaleInfoDO {
     @TableField(value = "sale_volume")
     private Double saleVolume;
 
+    @TableField(value = "sale_tax")
+    private Double saleTax;
+
+    @TableField(value = "fba_fulfillment_fee")
+    private Double fbaFulfillmentFee;
+
+    @TableField(value = "commission")
+    private Double commission;
+
     @TableField(value = "unit_price")
     private Double unitPrice;
 

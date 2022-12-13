@@ -93,6 +93,15 @@ public class OrderService {
         return orderMapper.selectList(query);
     }
 
+    public List<OrderDO> getOrdersByOrderStatusAndFinanceStatus(String orderStatus, Integer financeStatus, Integer limit ) {
+        QueryWrapper<OrderDO> query = new QueryWrapper<>();
+        query.eq("order_status", orderStatus);
+        query.eq("is_finance", financeStatus);
+        query.orderByAsc("id");
+        query.last(String.format("limit %d", limit));
+        return orderMapper.selectList(query);
+    }
+
     public List<OrderDO> getOrdersByAmazonIds(List<String> amazonOrderIds) {
         QueryWrapper<OrderDO> query = new QueryWrapper<>();
         query.in("amazon_order_id", amazonOrderIds);
