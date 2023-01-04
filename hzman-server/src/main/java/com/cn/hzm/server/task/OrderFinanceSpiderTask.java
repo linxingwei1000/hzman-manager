@@ -80,7 +80,7 @@ public class OrderFinanceSpiderTask {
         //批量更新订单线程
         // 等待队列
         BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(1000);
-        updateThreadExecutor = new ThreadPoolExecutor(3, 3, 60L, TimeUnit.SECONDS,
+        updateThreadExecutor = new ThreadPoolExecutor(2, 2, 60L, TimeUnit.SECONDS,
                 workQueue, r -> new Thread(r, "update-order-thread"));
 
 

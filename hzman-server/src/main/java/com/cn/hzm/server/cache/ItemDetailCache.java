@@ -182,7 +182,7 @@ public class ItemDetailCache {
 
             //title过滤
             if (!StringUtils.isEmpty(title)) {
-                String[] keys = key.split(" ");
+                String[] keys = title.split(" ");
                 temp = temp.stream().filter(item -> {
                     for (String subKey : keys) {
                         if (!item.getTitle().toLowerCase().contains(subKey.toLowerCase())) {
@@ -217,7 +217,7 @@ public class ItemDetailCache {
 
             //title过滤
             if (!StringUtils.isEmpty(title)) {
-                String[] keys = key.split(" ");
+                String[] keys = title.split(" ");
                 temp = temp.stream().filter(item -> {
                     for (String subKey : keys) {
                         if (!item.getTitle().toLowerCase().contains(subKey.toLowerCase())) {
