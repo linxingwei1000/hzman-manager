@@ -34,7 +34,7 @@
 
         <mybatis.spring.boot.version>1.3.2</mybatis.spring.boot.version>
         <mybatis-plus-starter-version>3.0.5</mybatis-plus-starter-version>
-        <mysql-version>8.0.16</mysql-version>
+        <mysql-version>8.0.28</mysql-version>
 
         <lombok.version>1.18.2</lombok.version>
         <xstream.version>1.4.11</xstream.version>
