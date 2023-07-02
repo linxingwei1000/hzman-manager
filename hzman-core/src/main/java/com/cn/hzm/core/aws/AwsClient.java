@@ -1,11 +1,8 @@
 package com.cn.hzm.core.aws;
 
 import com.alibaba.fastjson.JSONObject;
-import com.cn.hzm.core.aws.domain.finance.event.ShipmentEventList;
-import com.cn.hzm.core.aws.domain.finance.event.ShipmentItem;
 import com.cn.hzm.core.aws.domain.fulfilment.Member;
 import com.cn.hzm.core.aws.domain.fulfilment.ShipmentMember;
-import com.cn.hzm.core.aws.domain.product.CategoryParent;
 import com.cn.hzm.core.aws.request.BaseRequest;
 import com.cn.hzm.core.aws.request.finance.ListFinancialEventsRequest;
 import com.cn.hzm.core.aws.request.fulfilment.ShipmentInfoByNextTokenRequest;
@@ -24,10 +21,6 @@ import com.cn.hzm.core.aws.resp.order.*;
 import com.cn.hzm.core.aws.resp.product.GetMatchingProductForIdResponse;
 import com.cn.hzm.core.aws.resp.product.GetMyPriceForSkuResponse;
 import com.cn.hzm.core.aws.resp.product.GetProductCategoriesForSKUResponse;
-import com.cn.hzm.core.entity.ItemDO;
-import com.cn.hzm.core.entity.OrderFinanceDO;
-import com.cn.hzm.core.entity.ShipmentInfoRecordDO;
-import com.cn.hzm.core.entity.ShipmentItemRecordDO;
 import com.cn.hzm.core.exception.ExceptionCode;
 import com.cn.hzm.core.exception.HzmException;
 import com.cn.hzm.core.util.ConvertUtil;
@@ -338,75 +331,6 @@ public class AwsClient {
 
     public static void main(String[] args) {
         AwsClient client = new AwsClient();
-
         ListInboundShipmentsResponse r = client.getShipmentInfo(null, Lists.newArrayList("FBA16ZGLHX9N"), null, null);
-        if (r == null) {
-            throw new HzmException(ExceptionCode.SHIPMENT_ID_FAIL_RETRY);
-        }
-        parseShipmentInfo(r.getListInboundShipmentsResult().getShipmentData().getList(), client);
-        String nextToken = r.getListInboundShipmentsResult().getNextToken();
-        while (!StringUtils.isEmpty(nextToken)) {
-            //获取资源
-            ListInboundShipmentsByNextTokenResponse tokenResponse = client.getShipmentInfoNextToken(nextToken);
-            nextToken = tokenResponse.getListInboundShipmentsByNextTokenResult().getNextToken();
-
-            parseShipmentInfo(tokenResponse.getListInboundShipmentsByNextTokenResult().getShipmentData().getList(), client);
-        }
-    }
-
-    private static void parseShipmentInfo(List<ShipmentMember> shipmentMembers,AwsClient client) {
-        //说明这个时间段内未发生货物入库
-        if (CollectionUtils.isEmpty(shipmentMembers)) {
-            return;
-        }
-
-        shipmentMembers.forEach(shipmentMember -> spiderShipmentItem(shipmentMember.getShipmentId(), client));
-    }
-
-    private static void spiderShipmentItem(String shipmentId,AwsClient client) {
-        try {
-            ListInboundShipmentItemsResponse r = client.getShipmentItems(shipmentId, null, null);
-            parseShipmentItemInfo(r.getListInboundShipmentItemsResult().getItemData().getList());
-            String nextToken = r.getListInboundShipmentItemsResult().getNextToken();
-            while (!StringUtils.isEmpty(nextToken)) {
-                //获取资源
-                ListInboundShipmentItemsByNextTokenResponse tokenResponse = client.getShipmentItemsByNextToken(nextToken);
-                nextToken = tokenResponse.getListInboundShipmentItemsByNextTokenResult().getNextToken();
-
-                parseShipmentItemInfo(tokenResponse.getListInboundShipmentItemsByNextTokenResult().getItemData().getList());
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
-
-    private static void parseShipmentItemInfo(List<Member> itemMembers) {
-        //说明这个时间段内未发生货物入库
-        if (CollectionUtils.isEmpty(itemMembers)) {
-            return;
-        }
-
-        Map<String, List<Member>> members = itemMembers.stream().collect(Collectors.groupingBy(Member::getShipmentId));
-
-        //根据shipment分批处理减库存操作
-        members.forEach((shipmentId, memberValues) -> {
-            List<ShipmentItemRecordDO> list = Lists.newArrayList();
-            memberValues.forEach(member -> {
-                ShipmentItemRecordDO shipmentItemDO = convertToShipmentItemDO(new ShipmentItemRecordDO(), member);
-                list.add(shipmentItemDO);
-            });
-            System.out.println("size:" + list.size());
-        });
-    }
-
-    public static ShipmentItemRecordDO convertToShipmentItemDO(ShipmentItemRecordDO shipmentItemDO, com.cn.hzm.core.aws.domain.fulfilment.Member member) {
-        shipmentItemDO.setQuantityShipped(member.getQuantityShipped());
-        shipmentItemDO.setShipmentId(member.getShipmentId());
-        shipmentItemDO.setPrepDetailsList(JSONObject.toJSONString(member.getPrepDetailsList()));
-        shipmentItemDO.setFulfillmentNetworkSKU(member.getFulfillmentNetworkSKU());
-        shipmentItemDO.setSellerSKU(member.getSellerSKU());
-        shipmentItemDO.setQuantityReceived(member.getQuantityReceived());
-        shipmentItemDO.setQuantityInCase(member.getQuantityInCase());
-        return shipmentItemDO;
     }
 }

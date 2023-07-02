@@ -9,19 +9,15 @@
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
-        <module>hzman-item</module>
         <module>hzman-core</module>
-        <module>hzman-order</module>
-        <module>hzman-stock</module>
-        <module>hzman-admin</module>
-        <module>hzman-factory</module>
         <module>hzman-server</module>
+        <module>hzman-api</module>
     </modules>
 
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>2.1.6.RELEASE</version>
+        <version>2.1.13.RELEASE</version>
         <relativePath/>
     </parent>
 
@@ -29,8 +25,12 @@
         <java.version>1.8</java.version>
 
         <swagger.version>2.9.2</swagger.version>
+        <swagger-core-version>1.5.18</swagger-core-version>
+        <okhttp-version>2.7.5</okhttp-version>
+        <gson-fire-version>1.8.0</gson-fire-version>
+        <threetenbp-version>1.3.5</threetenbp-version>
 
-        <spring.boot.version>2.1.6.RELEASE</spring.boot.version>
+        <spring.boot.version>2.1.13.RELEASE</spring.boot.version>
 
         <mybatis.spring.boot.version>1.3.2</mybatis.spring.boot.version>
         <mybatis-plus-starter-version>3.0.5</mybatis-plus-starter-version>
@@ -42,40 +42,34 @@
         <commons-codec-version>1.10</commons-codec-version>
         <commons-net-version>3.3</commons-net-version>
         <guava-version>29.0-jre</guava-version>
-        <httpclient-version>4.5.2</httpclient-version>
-        <httpcore-version>4.4.4</httpcore-version>
         <gson.version>2.8.5</gson.version>
         <commons-lang3.version>3.4</commons-lang3.version>
         <caffeine.version>2.8.0</caffeine.version>
         <seller-api.version>1.0</seller-api.version>
+        <poi-excel-version>3.17</poi-excel-version>
     </properties>
 
     <dependencyManagement>
         <dependencies>
             <dependency>
                 <groupId>com.cn.hzm</groupId>
+                <artifactId>hzman-api</artifactId>
+                <version>1.0-SNAPSHOT</version>
+            </dependency>
+            <dependency>
+                <groupId>com.cn.hzm</groupId>
                 <artifactId>hzman-core</artifactId>
                 <version>1.0-SNAPSHOT</version>
             </dependency>
             <dependency>
-                <groupId>com.cn.hzm</groupId>
-                <artifactId>hzman-factory</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-databind</artifactId>
+                <version>2.9.10</version>
             </dependency>
             <dependency>
-                <groupId>com.cn.hzm</groupId>
-                <artifactId>hzman-item</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.cn.hzm</groupId>
-                <artifactId>hzman-order</artifactId>
-                <version>1.0-SNAPSHOT</version>
-            </dependency>
-            <dependency>
-                <groupId>com.cn.hzm</groupId>
-                <artifactId>hzman-stock</artifactId>
-                <version>1.0-SNAPSHOT</version>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-core</artifactId>
+                <version>2.9.10</version>
             </dependency>
 
             <dependency>
@@ -142,16 +136,6 @@
                 <version>${guava-version}</version>
             </dependency>
             <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpclient</artifactId>
-                <version>${httpclient-version}</version>
-            </dependency>
-            <dependency>
-                <groupId>org.apache.httpcomponents</groupId>
-                <artifactId>httpcore</artifactId>
-                <version>${httpcore-version}</version>
-            </dependency>
-            <dependency>
                 <groupId>com.google.code.gson</groupId>
                 <artifactId>gson</artifactId>
                 <version>${gson.version}</version>
@@ -170,6 +154,46 @@
                 <groupId>com.amazon.sellingpartnerapi</groupId>
                 <artifactId>sellingpartnerapi-aa-java</artifactId>
                 <version>1.0</version>
+            </dependency>
+            <dependency>
+                <groupId>io.swagger</groupId>
+                <artifactId>swagger-annotations</artifactId>
+                <version>${swagger-core-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp</groupId>
+                <artifactId>okhttp</artifactId>
+                <version>${okhttp-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>com.squareup.okhttp</groupId>
+                <artifactId>logging-interceptor</artifactId>
+                <version>${okhttp-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>io.gsonfire</groupId>
+                <artifactId>gson-fire</artifactId>
+                <version>${gson-fire-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.threeten</groupId>
+                <artifactId>threetenbp</artifactId>
+                <version>${threetenbp-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi</artifactId>
+                <version>${poi-excel-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-ooxml</artifactId>
+                <version>${poi-excel-version}</version>
+            </dependency>
+            <dependency>
+                <groupId>org.apache.poi</groupId>
+                <artifactId>poi-scratchpad</artifactId>
+                <version>${poi-excel-version}</version>
             </dependency>
         </dependencies>
     </dependencyManagement>

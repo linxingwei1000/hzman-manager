@@ -1,8 +1,10 @@
 package com.cn.hzm.core.constant;
 
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author xingweilin@clubfactory.com
@@ -107,4 +109,13 @@ public class ContextConst {
      * 收货地址列表
      */
     public static final List<String> RECEIVE_ADDRESS = Lists.newArrayList("杭州市滨江区江虹南路316号京安创业园3幢3楼305，李裕平收，15381111258");
+
+
+    public static final Map<String, String> REGION_MAP = Maps.newHashMap();
+    static{
+        REGION_MAP.put("us-east-1", "北美");
+        REGION_MAP.put("eu-west-1", "欧洲");
+        REGION_MAP.put("us-west-2", "亚洲");
+    }
+
 }

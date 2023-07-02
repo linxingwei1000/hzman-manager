@@ -15,22 +15,6 @@
     <dependencies>
         <dependency>
             <groupId>com.cn.hzm</groupId>
-            <artifactId>hzman-factory</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.cn.hzm</groupId>
-            <artifactId>hzman-item</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.cn.hzm</groupId>
-            <artifactId>hzman-order</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.cn.hzm</groupId>
-            <artifactId>hzman-stock</artifactId>
-        </dependency>
-        <dependency>
-            <groupId>com.cn.hzm</groupId>
             <artifactId>hzman-core</artifactId>
         </dependency>
 
@@ -41,11 +25,6 @@
         <dependency>
             <groupId>io.springfox</groupId>
             <artifactId>springfox-swagger-ui</artifactId>
-        </dependency>
-
-        <dependency>
-            <groupId>com.github.ben-manes.caffeine</groupId>
-            <artifactId>caffeine</artifactId>
         </dependency>
 
     </dependencies>

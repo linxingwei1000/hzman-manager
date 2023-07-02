@@ -32,7 +32,12 @@ public enum ExceptionCode {
   FACTORY_ORDER_ITEM_DUPLICATE(20007, "订单添加重复商品"),
   FACTORY_ORDER_ILLEGAL(20008, "当前订单状态不能修改"),
   FACTORY_ORDER_CONFIRM_DATE_MUST(20009, "厂家交货日期必填"),
+  TEMPLATE_EXCEL_DOWNLOAD_ERROR(20010, "模版文件下载失败"),
+  TEMPLATE_EXCEL_DEAL_ERROR(20011, "批量操作文件处理失败"),
 
+  AWS_USER_INFO_ERROR(20100, "亚马逊账号错误："),
+  AWS_MARKET_ERROR(20101, "亚马逊市场关联操作错误："),
+  AWS_SPIDER_TASK_ERROR(20102, "亚马逊爬取任务错误："),
   ;
 
 

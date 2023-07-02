@@ -1,11 +1,11 @@
 package com.cn.hzm.server.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cn.hzm.core.cache.ThreadLocalCache;
 import com.cn.hzm.core.constant.ContextConst;
-import com.cn.hzm.core.entity.OrderDO;
-import com.cn.hzm.order.service.OrderService;
-import com.cn.hzm.server.dto.OrderConditionDTO;
-import com.cn.hzm.server.dto.OrderDTO;
+import com.cn.hzm.core.repository.dao.AmazonOrderDao;
+import com.cn.hzm.core.repository.entity.AmazonOrderDo;
+import com.cn.hzm.api.dto.OrderConditionDto;
 import com.google.common.collect.Maps;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,16 +23,16 @@ import java.util.stream.Collectors;
 public class AmazonOrderService {
 
     @Autowired
-    private OrderService orderService;
+    private AmazonOrderDao amazonOrderDao;
 
-    public JSONObject processListOrder(OrderConditionDTO conditionDTO) throws ParseException {
+    public JSONObject processListOrder(OrderConditionDto conditionDTO) throws ParseException {
         Map<String, String> conditionMap = Maps.newHashMap();
         conditionMap.put("order_status", ContextConst.AMAZON_STATUS_PENDING);
-        List<OrderDO> list = orderService.getListByCondition(conditionMap,
+        List<AmazonOrderDo> list = amazonOrderDao.getListByCondition(ThreadLocalCache.getUser().getUserMarketId(), conditionMap,
                new String[]{"id", "amazon_order_id", "purchase_date", "order_status"});
 
-        List<OrderDTO> orderDTOS = conditionDTO.pageResult(list).stream().map(
-                orderDO -> JSONObject.parseObject(JSONObject.toJSONString(orderDO), OrderDTO.class))
+        List<AmazonOrderDo> orderDTOS = conditionDTO.pageResult(list).stream().map(
+                orderDO -> JSONObject.parseObject(JSONObject.toJSONString(orderDO), AmazonOrderDo.class))
                 .collect(Collectors.toList());
 
         JSONObject respJo = new JSONObject();
@@ -42,9 +42,9 @@ public class AmazonOrderService {
     }
 
     public Boolean localDeleteAmazonOrder(String amazonOrderDbId){
-        OrderDO old = orderService.getOrderByAmazonId(amazonOrderDbId);
+        AmazonOrderDo old = amazonOrderDao.getOrderByAmazonId(ThreadLocalCache.getUser().getUserMarketId(), amazonOrderDbId);
 
         old.setOrderStatus(ContextConst.AMAZON_STATUS_DELETE);
-        return orderService.updateOrder(old);
+        return amazonOrderDao.updateOrder(old);
     }
 }

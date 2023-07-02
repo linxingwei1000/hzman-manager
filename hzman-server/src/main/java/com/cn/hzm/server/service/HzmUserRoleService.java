@@ -1,6 +1,6 @@
 package com.cn.hzm.server.service;
 
-import com.cn.hzm.server.meta.HzmUserRoleValidType;
+import com.cn.hzm.api.meta.HzmUserRoleValidType;
 import org.springframework.stereotype.Service;
 import javax.annotation.Resource;
 import java.util.List;

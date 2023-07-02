@@ -1,11 +1,11 @@
 package com.cn.hzm.server.api;
 
+import com.cn.hzm.api.dto.FactoryConditionDto;
 import com.cn.hzm.core.common.HzmResponse;
-import com.cn.hzm.server.dto.FactoryOrderConditionDTO;
-import com.cn.hzm.server.dto.OrderConditionDTO;
+import com.cn.hzm.api.dto.OrderConditionDto;
 import com.cn.hzm.server.interceptor.permission.HzmAuthToken;
 import com.cn.hzm.server.service.AmazonOrderService;
-import com.cn.hzm.server.service.FactoryDealService;
+import com.cn.hzm.core.misc.FactoryService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -25,20 +25,20 @@ import java.text.ParseException;
 public class OrderApi {
 
     @Autowired
-    private FactoryDealService orderDealService;
+    private FactoryService factoryService;
 
     @Autowired
     private AmazonOrderService amazonOrderService;
 
     @ApiOperation("列订单")
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    public HzmResponse listItem(@RequestBody FactoryOrderConditionDTO conditionDTO){
-        return HzmResponse.success(orderDealService.htmlOrderList(conditionDTO));
+    public HzmResponse listItem(@RequestBody FactoryConditionDto conditionDTO){
+        return HzmResponse.success(factoryService.htmlOrderList(conditionDTO));
     }
 
     @ApiOperation("亚马逊订单")
     @RequestMapping(value = "/amazon/list", method = RequestMethod.POST)
-    public HzmResponse listItem(@RequestBody OrderConditionDTO conditionDTO) throws ParseException {
+    public HzmResponse listItem(@RequestBody OrderConditionDto conditionDTO) throws ParseException {
         return HzmResponse.success(amazonOrderService.processListOrder(conditionDTO));
     }
 

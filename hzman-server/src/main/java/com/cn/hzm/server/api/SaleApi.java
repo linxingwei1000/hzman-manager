@@ -1,12 +1,11 @@
 package com.cn.hzm.server.api;
 
 import com.cn.hzm.core.common.HzmResponse;
-import com.cn.hzm.server.dto.ItemConditionDTO;
-import com.cn.hzm.server.dto.SaleConditionDTO;
+import com.cn.hzm.api.dto.SaleConditionDto;
 import com.cn.hzm.server.interceptor.permission.HzmAuthPermission;
 import com.cn.hzm.server.interceptor.permission.HzmAuthToken;
-import com.cn.hzm.server.meta.HzmRoleType;
-import com.cn.hzm.server.service.SaleInfoDealService;
+import com.cn.hzm.api.meta.HzmRoleType;
+import com.cn.hzm.server.service.SaleInfoService;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,18 +26,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class SaleApi {
 
     @Autowired
-    private SaleInfoDealService saleInfoDealService;
+    private SaleInfoService saleInfoService;
 
     @ApiOperation("当日销量")
     @RequestMapping(value = "/curdate", method = RequestMethod.GET)
     public HzmResponse curDate() {
-        return HzmResponse.success(saleInfoDealService.getCurSaleInfo());
+        return HzmResponse.success(saleInfoService.getCurSaleInfo());
     }
 
 
     @ApiOperation("销量数据")
     @RequestMapping(value = "/info", method = RequestMethod.POST)
-    public HzmResponse listItem(@RequestBody SaleConditionDTO saleConditionDTO) {
-        return HzmResponse.success(saleInfoDealService.getSaleInfo(saleConditionDTO));
+    public HzmResponse listItem(@RequestBody SaleConditionDto saleConditionDTO) {
+        return HzmResponse.success(saleInfoService.getSaleInfo(saleConditionDTO));
     }
 }

@@ -1,0 +1,32 @@
+package com.cn.hzm.api.dto;
+
+import io.swagger.annotations.ApiModel;
+import io.swagger.annotations.ApiModelProperty;
+import lombok.Data;
+
+
+/**
+ * @author xingweilin@clubfactory.com
+ * @date 2021/1/17 3:44 下午
+ */
+@Data
+@ApiModel(description = "工厂商品DTO")
+public class FactoryItemDto {
+
+    private Integer id;
+
+    @ApiModelProperty(value = "订单id")
+    private Integer factoryId;
+
+    @ApiModelProperty(value = "工厂名")
+    private String factoryName;
+
+    private String sku;
+
+    @ApiModelProperty(value = "订单价")
+    private Double factoryPrice;
+
+    @ApiModelProperty(value = "描述")
+    private String desc;
+
+}

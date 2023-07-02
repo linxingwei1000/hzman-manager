@@ -1,18 +1,19 @@
 package com.cn.hzm.server.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cn.hzm.api.dto.UserConditionDto;
 import com.cn.hzm.core.context.HzmContext;
-import com.cn.hzm.core.entity.FactoryDO;
+import com.cn.hzm.core.repository.entity.FactoryDo;
 import com.cn.hzm.core.exception.ExceptionCode;
 import com.cn.hzm.core.exception.HzmException;
 import com.cn.hzm.core.util.MD5Util;
-import com.cn.hzm.factory.service.FactoryService;
+import com.cn.hzm.core.repository.dao.FactoryDao;
 import com.cn.hzm.server.domain.HzmPassport;
 import com.cn.hzm.server.domain.HzmUserRole;
 import com.cn.hzm.server.dto.*;
-import com.cn.hzm.server.meta.HzmPassportStatus;
-import com.cn.hzm.server.meta.HzmRoleType;
-import com.cn.hzm.server.meta.HzmUserRoleValidType;
+import com.cn.hzm.api.meta.HzmPassportStatus;
+import com.cn.hzm.api.meta.HzmRoleType;
+import com.cn.hzm.api.meta.HzmUserRoleValidType;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -34,7 +35,7 @@ public class UserDealService {
     private PassportService passportService;
 
     @Autowired
-    private FactoryService factoryService;
+    private FactoryDao factoryDao;
 
     @Autowired
     private HzmUserRoleService hzmUserRoleService;
@@ -44,7 +45,7 @@ public class UserDealService {
     /**
      * 获取用户列表
      */
-    public JSONObject getUserList(UserConditionDTO userConditionDTO) {
+    public JSONObject getUserList(UserConditionDto userConditionDTO) {
         String username = null;
         if (!StringUtils.isEmpty(userConditionDTO.getUsername())) {
             username = "%" + userConditionDTO.getUsername() + "%";
@@ -167,7 +168,7 @@ public class UserDealService {
         if (user.getCompanyId() == null || user.getCompanyId() == 0) {
             hzmUserDTO.setCompanyName("hzm");
         } else {
-            FactoryDO factoryDO = factoryService.getByFid(user.getCompanyId());
+            FactoryDo factoryDO = factoryDao.getByFid(user.getCompanyId());
             hzmUserDTO.setCompanyName(factoryDO.getFactoryName());
         }
 
@@ -197,7 +198,7 @@ public class UserDealService {
         }
 
         if (hzmUserDTO.getCompanyId() != 0) {
-            if (factoryService.getByFid(hzmUserDTO.getCompanyId()) == null) {
+            if (factoryDao.getByFid(hzmUserDTO.getCompanyId()) == null) {
                 throw new HzmException(ExceptionCode.FACTORY_NO_EXIST);
             }
         }

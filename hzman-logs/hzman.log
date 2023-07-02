@@ -1,168 +1,826 @@
-2022-12-06 17:08:38.898 INFO  [main] c.c.h.s.WebApplication [50] -  Starting WebApplication on admindeMacBook-Pro.local with PID 48766 (/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes started by admin in /Users/admin/Documents/us/hzman-manager)
-2022-12-06 17:08:38.906 INFO  [main] c.c.h.s.WebApplication [650] -  The following profiles are active: test
-2022-12-06 17:08:40.866 INFO  [main] o.s.c.s.PostProcessorRegistrationDelegate$BeanPostProcessorChecker [330] -  Bean 'org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration' of type [org.springframework.transaction.annotation.ProxyTransactionManagementConfiguration$$EnhancerBySpringCGLIB$$79bc034f] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
-2022-12-06 17:08:41.320 INFO  [main] o.s.b.w.e.t.TomcatWebServer [90] -  Tomcat initialized with port(s): 8082 (http)
-2022-12-06 17:08:41.342 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Initializing ProtocolHandler ["http-nio-8082"]
-2022-12-06 17:08:41.353 INFO  [main] o.a.c.c.StandardService [173] -  Starting service [Tomcat]
-2022-12-06 17:08:41.353 INFO  [main] o.a.c.c.StandardEngine [173] -  Starting Servlet engine: [Apache Tomcat/9.0.21]
-2022-12-06 17:08:41.506 INFO  [main] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring embedded WebApplicationContext
-2022-12-06 17:08:41.506 INFO  [main] o.s.w.c.ContextLoader [283] -  Root WebApplicationContext: initialization completed in 2524 ms
-2022-12-06 17:08:41.624 INFO  [main] c.c.h.c.c.MybatisPlusConfig [44] -  ------------- 重载父类 sqlSessionFactory init-------
-2022-12-06 17:08:41.745 INFO  [main] c.z.h.HikariDataSource [110] -  HikariPool-1 - Starting...
-2022-12-06 17:08:42.964 ERROR [main] c.z.h.p.HikariPool [574] -  HikariPool-1 - Exception during pool initialization.
-com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+2023-07-02 20:41:24.916 INFO  [main] c.c.h.s.WebApplication [50] -  Starting WebApplication on admindeMacBook-Pro.local with PID 22796 (/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes started by admin in /Users/admin/Documents/us/hzman-manager)
+2023-07-02 20:41:24.927 INFO  [main] c.c.h.s.WebApplication [652] -  The following profiles are active: dev
+2023-07-02 20:41:27.233 INFO  [main] o.s.b.w.e.t.TomcatWebServer [90] -  Tomcat initialized with port(s): 8082 (http)
+2023-07-02 20:41:27.255 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Initializing ProtocolHandler ["http-nio-8082"]
+2023-07-02 20:41:27.267 INFO  [main] o.a.c.c.StandardService [173] -  Starting service [Tomcat]
+2023-07-02 20:41:27.267 INFO  [main] o.a.c.c.StandardEngine [173] -  Starting Servlet engine: [Apache Tomcat/9.0.31]
+2023-07-02 20:41:27.406 INFO  [main] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring embedded WebApplicationContext
+2023-07-02 20:41:27.406 INFO  [main] o.s.w.c.ContextLoader [284] -  Root WebApplicationContext: initialization completed in 2429 ms
+2023-07-02 20:41:27.480 INFO  [main] c.c.h.c.c.MybatisPlusConfig [45] -  ------------- 重载父类 sqlSessionFactory init-------
+2023-07-02 20:41:27.564 INFO  [main] c.z.h.HikariDataSource [110] -  HikariPool-1 - Starting...
+2023-07-02 20:41:27.991 INFO  [main] c.z.h.HikariDataSource [123] -  HikariPool-1 - Start completed.
+2023-07-02 20:41:29.070 INFO  [main] c.c.h.c.s.SpaManager [333] -  初始化[大号] sellersApi
+2023-07-02 20:41:29.073 INFO  [main] c.c.h.c.s.SpaManager [341] -  初始化[大号] ordersV0Api
+2023-07-02 20:41:29.075 INFO  [main] c.c.h.c.s.SpaManager [349] -  初始化[大号] shipmentApi
+2023-07-02 20:41:29.077 INFO  [main] c.c.h.c.s.SpaManager [357] -  初始化[大号] catalogApi
+2023-07-02 20:41:29.080 INFO  [main] c.c.h.c.s.SpaManager [365] -  初始化[大号] fbaInventoryApi
+2023-07-02 20:41:29.083 INFO  [main] c.c.h.c.s.SpaManager [373] -  初始化[大号] fbaInboundApi
+2023-07-02 20:41:29.085 INFO  [main] c.c.h.c.s.SpaManager [381] -  初始化[大号] financeApi
+2023-07-02 20:41:29.129 WARN  [main] o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext [557] -  Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'awsUserApi': Unsatisfied dependency expressed through field 'awsService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'awsService': Unsatisfied dependency expressed through field 'awsUserManager'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'awsUserManager': Invocation of init method failed; nested exception is java.lang.NullPointerException
+2023-07-02 20:41:29.130 INFO  [main] c.z.h.HikariDataSource [350] -  HikariPool-1 - Shutdown initiated...
+2023-07-02 20:41:29.142 INFO  [main] c.z.h.HikariDataSource [352] -  HikariPool-1 - Shutdown completed.
+2023-07-02 20:41:29.145 INFO  [main] o.a.c.c.StandardService [173] -  Stopping service [Tomcat]
+2023-07-02 20:41:29.150 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-1] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:41:29.150 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-2] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:41:29.150 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-3] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:41:29.151 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-4] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:41:29.151 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-5] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:41:29.152 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-6] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:41:29.152 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-7] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:41:29.161 INFO  [main] o.s.b.a.l.ConditionEvaluationReportLoggingListener [136] -  
 
-The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
-	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:174)
-	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64)
-	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:835)
-	at com.mysql.cj.jdbc.ConnectionImpl.<init>(ConnectionImpl.java:455)
-	at com.mysql.cj.jdbc.ConnectionImpl.getInstance(ConnectionImpl.java:240)
-	at com.mysql.cj.jdbc.NonRegisteringDriver.connect(NonRegisteringDriver.java:199)
-	at com.zaxxer.hikari.util.DriverDataSource.getConnection(DriverDataSource.java:136)
-	at com.zaxxer.hikari.pool.PoolBase.newConnection(PoolBase.java:369)
-	at com.zaxxer.hikari.pool.PoolBase.newPoolEntry(PoolBase.java:198)
-	at com.zaxxer.hikari.pool.HikariPool.createPoolEntry(HikariPool.java:467)
-	at com.zaxxer.hikari.pool.HikariPool.checkFailFast(HikariPool.java:541)
-	at com.zaxxer.hikari.pool.HikariPool.<init>(HikariPool.java:115)
-	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:112)
-	at com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean.buildSqlSessionFactory(MybatisSqlSessionFactoryBean.java:599)
-	at com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean.afterPropertiesSet(MybatisSqlSessionFactoryBean.java:386)
-	at com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean.getObject(MybatisSqlSessionFactoryBean.java:683)
-	at com.cn.hzm.core.configure.MybatisPlusConfig.sqlSessionFactories(MybatisPlusConfig.java:50)
-	at com.cn.hzm.core.configure.MybatisPlusConfig$$EnhancerBySpringCGLIB$$c88e70b5.CGLIB$sqlSessionFactories$1(<generated>)
-	at com.cn.hzm.core.configure.MybatisPlusConfig$$EnhancerBySpringCGLIB$$c88e70b5$$FastClassBySpringCGLIB$$d7c22b46.invoke(<generated>)
-	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:244)
-	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:363)
-	at com.cn.hzm.core.configure.MybatisPlusConfig$$EnhancerBySpringCGLIB$$c88e70b5.sqlSessionFactories(<generated>)
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2023-07-02 20:41:29.176 ERROR [main] o.s.b.SpringApplication [823] -  Application run failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'awsUserApi': Unsatisfied dependency expressed through field 'awsService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'awsService': Unsatisfied dependency expressed through field 'awsUserManager'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'awsUserManager': Invocation of init method failed; nested exception is java.lang.NullPointerException
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:598)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:376)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1404)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:847)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:877)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:549)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:141)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:744)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:391)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:312)
+	at com.cn.hzm.server.WebApplication.main(WebApplication.java:15)
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'awsService': Unsatisfied dependency expressed through field 'awsUserManager'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'awsUserManager': Invocation of init method failed; nested exception is java.lang.NullPointerException
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:598)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:376)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1404)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1255)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1175)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:595)
+	... 17 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'awsUserManager': Invocation of init method failed; nested exception is java.lang.NullPointerException
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:139)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:414)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1763)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:593)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1255)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1175)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:595)
+	... 30 common frames omitted
+Caused by: java.lang.NullPointerException: null
+	at com.cn.hzm.core.spa.SpaManager.<init>(SpaManager.java:304)
+	at com.cn.hzm.core.manager.AwsUserManager.processAdd(AwsUserManager.java:92)
+	at java.util.ArrayList.forEach(ArrayList.java:1259)
+	at com.cn.hzm.core.manager.AwsUserManager._init(AwsUserManager.java:43)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
 	at java.lang.reflect.Method.invoke(Method.java:498)
-	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154)
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:622)
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:456)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1321)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1160)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:555)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
-	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1251)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1171)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireByType(AbstractAutowireCapableBeanFactory.java:1500)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1395)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
-	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1251)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1171)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:520)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:496)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor$ResourceElement.getResourceToInject(CommonAnnotationBeanPostProcessor.java:636)
-	at org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement.inject(InjectionMetadata.java:180)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleElement.invoke(InitDestroyAnnotationBeanPostProcessor.java:363)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMetadata.invokeInitMethods(InitDestroyAnnotationBeanPostProcessor.java:307)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:136)
+	... 42 common frames omitted
+2023-07-02 20:42:51.273 INFO  [main] c.c.h.s.WebApplication [50] -  Starting WebApplication on admindeMacBook-Pro.local with PID 23124 (/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes started by admin in /Users/admin/Documents/us/hzman-manager)
+2023-07-02 20:42:51.281 INFO  [main] c.c.h.s.WebApplication [652] -  The following profiles are active: dev
+2023-07-02 20:42:53.472 INFO  [main] o.s.b.w.e.t.TomcatWebServer [90] -  Tomcat initialized with port(s): 8082 (http)
+2023-07-02 20:42:53.492 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Initializing ProtocolHandler ["http-nio-8082"]
+2023-07-02 20:42:53.503 INFO  [main] o.a.c.c.StandardService [173] -  Starting service [Tomcat]
+2023-07-02 20:42:53.503 INFO  [main] o.a.c.c.StandardEngine [173] -  Starting Servlet engine: [Apache Tomcat/9.0.31]
+2023-07-02 20:42:53.653 INFO  [main] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring embedded WebApplicationContext
+2023-07-02 20:42:53.653 INFO  [main] o.s.w.c.ContextLoader [284] -  Root WebApplicationContext: initialization completed in 2302 ms
+2023-07-02 20:42:53.725 INFO  [main] c.c.h.c.c.MybatisPlusConfig [45] -  ------------- 重载父类 sqlSessionFactory init-------
+2023-07-02 20:42:53.797 INFO  [main] c.z.h.HikariDataSource [110] -  HikariPool-1 - Starting...
+2023-07-02 20:42:54.236 INFO  [main] c.z.h.HikariDataSource [123] -  HikariPool-1 - Start completed.
+2023-07-02 20:43:09.457 INFO  [main] c.c.h.c.s.SpaManager [333] -  初始化[大号] sellersApi
+2023-07-02 20:43:09.479 INFO  [main] c.c.h.c.s.SpaManager [341] -  初始化[大号] ordersV0Api
+2023-07-02 20:43:09.502 INFO  [main] c.c.h.c.s.SpaManager [349] -  初始化[大号] shipmentApi
+2023-07-02 20:43:09.522 INFO  [main] c.c.h.c.s.SpaManager [357] -  初始化[大号] catalogApi
+2023-07-02 20:43:09.542 INFO  [main] c.c.h.c.s.SpaManager [365] -  初始化[大号] fbaInventoryApi
+2023-07-02 20:43:09.563 INFO  [main] c.c.h.c.s.SpaManager [373] -  初始化[大号] fbaInboundApi
+2023-07-02 20:43:09.583 INFO  [main] c.c.h.c.s.SpaManager [381] -  初始化[大号] financeApi
+2023-07-02 20:44:20.845 WARN  [HikariPool-1 housekeeper] c.z.h.p.HikariPool [766] -  HikariPool-1 - Thread starvation or clock leap detected (housekeeper delta=1m26s505ms).
+2023-07-02 20:44:20.851 WARN  [main] o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext [557] -  Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'awsUserApi': Unsatisfied dependency expressed through field 'awsService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'awsService': Unsatisfied dependency expressed through field 'awsUserManager'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'awsUserManager': Invocation of init method failed; nested exception is java.lang.NullPointerException
+2023-07-02 20:44:20.853 INFO  [main] c.z.h.HikariDataSource [350] -  HikariPool-1 - Shutdown initiated...
+2023-07-02 20:44:20.863 INFO  [main] c.z.h.HikariDataSource [352] -  HikariPool-1 - Shutdown completed.
+2023-07-02 20:44:20.867 INFO  [main] o.a.c.c.StandardService [173] -  Stopping service [Tomcat]
+2023-07-02 20:44:20.871 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-1] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:44:20.872 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-2] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:44:20.883 INFO  [main] o.s.b.a.l.ConditionEvaluationReportLoggingListener [136] -  
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2023-07-02 20:44:20.900 ERROR [main] o.s.b.SpringApplication [823] -  Application run failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'awsUserApi': Unsatisfied dependency expressed through field 'awsService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'awsService': Unsatisfied dependency expressed through field 'awsUserManager'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'awsUserManager': Invocation of init method failed; nested exception is java.lang.NullPointerException
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:598)
 	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:321)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1411)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:376)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1404)
 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
 	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
 	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
 	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
 	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
 	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
-	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1251)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1171)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:520)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:496)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor$ResourceElement.getResourceToInject(CommonAnnotationBeanPostProcessor.java:636)
-	at org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement.inject(InjectionMetadata.java:180)
-	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:321)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1411)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:204)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.resolveBeanByName(AbstractAutowireCapableBeanFactory.java:452)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:526)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:496)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor$ResourceElement.getResourceToInject(CommonAnnotationBeanPostProcessor.java:636)
-	at org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement.inject(InjectionMetadata.java:180)
-	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:321)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1411)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:392)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1321)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1160)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:555)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:204)
-	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:211)
-	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:202)
-	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addServletContextInitializerBeans(ServletContextInitializerBeans.java:96)
-	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:85)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:252)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:226)
-	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:53)
-	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5132)
-	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
-	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1384)
-	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1374)
-	at java.util.concurrent.FutureTask.run$$$capture(FutureTask.java:266)
-	at java.util.concurrent.FutureTask.run(FutureTask.java)
-	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
-	at java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:134)
-	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:909)
-	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:841)
-	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
-	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1384)
-	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1374)
-	at java.util.concurrent.FutureTask.run$$$capture(FutureTask.java:266)
-	at java.util.concurrent.FutureTask.run(FutureTask.java)
-	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
-	at java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:134)
-	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:909)
-	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:262)
-	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
-	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:421)
-	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
-	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:932)
-	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
-	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:456)
-	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:105)
-	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:86)
-	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:414)
-	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:178)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:179)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:152)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:140)
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:742)
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:389)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:311)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:847)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:877)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:549)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:141)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:744)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:391)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:312)
 	at com.cn.hzm.server.WebApplication.main(WebApplication.java:15)
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'awsService': Unsatisfied dependency expressed through field 'awsUserManager'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'awsUserManager': Invocation of init method failed; nested exception is java.lang.NullPointerException
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:598)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:376)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1404)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1255)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1175)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:595)
+	... 17 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'awsUserManager': Invocation of init method failed; nested exception is java.lang.NullPointerException
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:139)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:414)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1763)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:593)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1255)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1175)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:595)
+	... 30 common frames omitted
+Caused by: java.lang.NullPointerException: null
+	at com.cn.hzm.core.spa.SpaManager.<init>(SpaManager.java:304)
+	at com.cn.hzm.core.manager.AwsUserManager.processAdd(AwsUserManager.java:92)
+	at java.util.ArrayList.forEach(ArrayList.java:1259)
+	at com.cn.hzm.core.manager.AwsUserManager._init(AwsUserManager.java:43)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleElement.invoke(InitDestroyAnnotationBeanPostProcessor.java:363)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMetadata.invokeInitMethods(InitDestroyAnnotationBeanPostProcessor.java:307)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:136)
+	... 42 common frames omitted
+2023-07-02 20:48:27.355 INFO  [main] c.c.h.s.WebApplication [50] -  Starting WebApplication on admindeMacBook-Pro.local with PID 24424 (/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes started by admin in /Users/admin/Documents/us/hzman-manager)
+2023-07-02 20:48:27.363 INFO  [main] c.c.h.s.WebApplication [652] -  The following profiles are active: dev
+2023-07-02 20:48:29.563 INFO  [main] o.s.b.w.e.t.TomcatWebServer [90] -  Tomcat initialized with port(s): 8082 (http)
+2023-07-02 20:48:29.583 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Initializing ProtocolHandler ["http-nio-8082"]
+2023-07-02 20:48:29.592 INFO  [main] o.a.c.c.StandardService [173] -  Starting service [Tomcat]
+2023-07-02 20:48:29.593 INFO  [main] o.a.c.c.StandardEngine [173] -  Starting Servlet engine: [Apache Tomcat/9.0.31]
+2023-07-02 20:48:29.720 INFO  [main] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring embedded WebApplicationContext
+2023-07-02 20:48:29.720 INFO  [main] o.s.w.c.ContextLoader [284] -  Root WebApplicationContext: initialization completed in 2293 ms
+2023-07-02 20:48:29.792 INFO  [main] c.c.h.c.c.MybatisPlusConfig [45] -  ------------- 重载父类 sqlSessionFactory init-------
+2023-07-02 20:48:29.871 INFO  [main] c.z.h.HikariDataSource [110] -  HikariPool-1 - Starting...
+2023-07-02 20:48:30.305 INFO  [main] c.z.h.HikariDataSource [123] -  HikariPool-1 - Start completed.
+2023-07-02 20:48:31.280 INFO  [main] c.c.h.c.s.SpaManager [333] -  初始化[大号] sellersApi
+2023-07-02 20:48:31.284 INFO  [main] c.c.h.c.s.SpaManager [341] -  初始化[大号] ordersV0Api
+2023-07-02 20:48:31.286 INFO  [main] c.c.h.c.s.SpaManager [349] -  初始化[大号] shipmentApi
+2023-07-02 20:48:31.289 INFO  [main] c.c.h.c.s.SpaManager [357] -  初始化[大号] catalogApi
+2023-07-02 20:48:31.292 INFO  [main] c.c.h.c.s.SpaManager [365] -  初始化[大号] fbaInventoryApi
+2023-07-02 20:48:31.295 INFO  [main] c.c.h.c.s.SpaManager [373] -  初始化[大号] fbaInboundApi
+2023-07-02 20:48:31.298 INFO  [main] c.c.h.c.s.SpaManager [381] -  初始化[大号] financeApi
+2023-07-02 20:48:31.799 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService
+2023-07-02 20:48:31.801 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService 'backTaskExecutor'
+2023-07-02 20:48:32.129 WARN  [main] o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext [557] -  Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'awsUserApi': Unsatisfied dependency expressed through field 'awsService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'awsService': Unsatisfied dependency expressed through field 'taskManager'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'taskManager': Unsatisfied dependency expressed through field 'itemService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'itemService': Unsatisfied dependency expressed through field 'factoryService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'factoryService': Unsatisfied dependency expressed through field 'itemDetailCache'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'itemDetailCache': Invocation of init method failed; nested exception is org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown error 1146
+### The error may exist in com/cn/hzm/core/repository/mapper/ItemInventoryMapper.java (best guess)
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: SELECT  id,user_market_id,sku,asin,fnsku,item_condition,total_quantity,amazon_quantity,fulfillable_quantity,inbound_working_quantity,inbound_shipped_quantity,inbound_receiving_quantity,reserved_quantity,researching_quantity,unfulfillable_quantity,last_updated_time,local_quantity,ctime,utime  FROM hzm_item_inventory    WHERE  user_market_id = ? AND sku = ?
+### Cause: java.sql.SQLSyntaxErrorException: Unknown error 1146
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Unknown error 1146
+2023-07-02 20:48:32.130 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [208] -  Shutting down ExecutorService 'backTaskExecutor'
+2023-07-02 20:48:32.131 INFO  [main] c.z.h.HikariDataSource [350] -  HikariPool-1 - Shutdown initiated...
+2023-07-02 20:48:32.140 INFO  [main] c.z.h.HikariDataSource [352] -  HikariPool-1 - Shutdown completed.
+2023-07-02 20:48:32.143 INFO  [main] o.a.c.c.StandardService [173] -  Stopping service [Tomcat]
+2023-07-02 20:48:32.146 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-1] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:48:32.147 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-2] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:48:32.148 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-3] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:48:32.148 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-4] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:48:32.148 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-5] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:48:32.149 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-6] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:48:32.149 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-7] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:48:32.157 INFO  [main] o.s.b.a.l.ConditionEvaluationReportLoggingListener [136] -  
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2023-07-02 20:48:32.167 ERROR [main] o.s.b.SpringApplication [823] -  Application run failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'awsUserApi': Unsatisfied dependency expressed through field 'awsService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'awsService': Unsatisfied dependency expressed through field 'taskManager'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'taskManager': Unsatisfied dependency expressed through field 'itemService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'itemService': Unsatisfied dependency expressed through field 'factoryService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'factoryService': Unsatisfied dependency expressed through field 'itemDetailCache'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'itemDetailCache': Invocation of init method failed; nested exception is org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown error 1146
+### The error may exist in com/cn/hzm/core/repository/mapper/ItemInventoryMapper.java (best guess)
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: SELECT  id,user_market_id,sku,asin,fnsku,item_condition,total_quantity,amazon_quantity,fulfillable_quantity,inbound_working_quantity,inbound_shipped_quantity,inbound_receiving_quantity,reserved_quantity,researching_quantity,unfulfillable_quantity,last_updated_time,local_quantity,ctime,utime  FROM hzm_item_inventory    WHERE  user_market_id = ? AND sku = ?
+### Cause: java.sql.SQLSyntaxErrorException: Unknown error 1146
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Unknown error 1146
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:598)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:376)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1404)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:847)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:877)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:549)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:141)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:744)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:391)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:312)
+	at com.cn.hzm.server.WebApplication.main(WebApplication.java:15)
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'awsService': Unsatisfied dependency expressed through field 'taskManager'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'taskManager': Unsatisfied dependency expressed through field 'itemService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'itemService': Unsatisfied dependency expressed through field 'factoryService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'factoryService': Unsatisfied dependency expressed through field 'itemDetailCache'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'itemDetailCache': Invocation of init method failed; nested exception is org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown error 1146
+### The error may exist in com/cn/hzm/core/repository/mapper/ItemInventoryMapper.java (best guess)
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: SELECT  id,user_market_id,sku,asin,fnsku,item_condition,total_quantity,amazon_quantity,fulfillable_quantity,inbound_working_quantity,inbound_shipped_quantity,inbound_receiving_quantity,reserved_quantity,researching_quantity,unfulfillable_quantity,last_updated_time,local_quantity,ctime,utime  FROM hzm_item_inventory    WHERE  user_market_id = ? AND sku = ?
+### Cause: java.sql.SQLSyntaxErrorException: Unknown error 1146
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Unknown error 1146
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:598)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:376)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1404)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1255)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1175)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:595)
+	... 17 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'taskManager': Unsatisfied dependency expressed through field 'itemService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'itemService': Unsatisfied dependency expressed through field 'factoryService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'factoryService': Unsatisfied dependency expressed through field 'itemDetailCache'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'itemDetailCache': Invocation of init method failed; nested exception is org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown error 1146
+### The error may exist in com/cn/hzm/core/repository/mapper/ItemInventoryMapper.java (best guess)
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: SELECT  id,user_market_id,sku,asin,fnsku,item_condition,total_quantity,amazon_quantity,fulfillable_quantity,inbound_working_quantity,inbound_shipped_quantity,inbound_receiving_quantity,reserved_quantity,researching_quantity,unfulfillable_quantity,last_updated_time,local_quantity,ctime,utime  FROM hzm_item_inventory    WHERE  user_market_id = ? AND sku = ?
+### Cause: java.sql.SQLSyntaxErrorException: Unknown error 1146
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Unknown error 1146
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:598)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:376)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1404)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1255)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1175)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:595)
+	... 30 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'itemService': Unsatisfied dependency expressed through field 'factoryService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'factoryService': Unsatisfied dependency expressed through field 'itemDetailCache'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'itemDetailCache': Invocation of init method failed; nested exception is org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown error 1146
+### The error may exist in com/cn/hzm/core/repository/mapper/ItemInventoryMapper.java (best guess)
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: SELECT  id,user_market_id,sku,asin,fnsku,item_condition,total_quantity,amazon_quantity,fulfillable_quantity,inbound_working_quantity,inbound_shipped_quantity,inbound_receiving_quantity,reserved_quantity,researching_quantity,unfulfillable_quantity,last_updated_time,local_quantity,ctime,utime  FROM hzm_item_inventory    WHERE  user_market_id = ? AND sku = ?
+### Cause: java.sql.SQLSyntaxErrorException: Unknown error 1146
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Unknown error 1146
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:598)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:376)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1404)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1255)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1175)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:595)
+	... 43 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'factoryService': Unsatisfied dependency expressed through field 'itemDetailCache'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'itemDetailCache': Invocation of init method failed; nested exception is org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown error 1146
+### The error may exist in com/cn/hzm/core/repository/mapper/ItemInventoryMapper.java (best guess)
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: SELECT  id,user_market_id,sku,asin,fnsku,item_condition,total_quantity,amazon_quantity,fulfillable_quantity,inbound_working_quantity,inbound_shipped_quantity,inbound_receiving_quantity,reserved_quantity,researching_quantity,unfulfillable_quantity,last_updated_time,local_quantity,ctime,utime  FROM hzm_item_inventory    WHERE  user_market_id = ? AND sku = ?
+### Cause: java.sql.SQLSyntaxErrorException: Unknown error 1146
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Unknown error 1146
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:598)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:376)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1404)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1255)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1175)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:595)
+	... 56 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'itemDetailCache': Invocation of init method failed; nested exception is org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown error 1146
+### The error may exist in com/cn/hzm/core/repository/mapper/ItemInventoryMapper.java (best guess)
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: SELECT  id,user_market_id,sku,asin,fnsku,item_condition,total_quantity,amazon_quantity,fulfillable_quantity,inbound_working_quantity,inbound_shipped_quantity,inbound_receiving_quantity,reserved_quantity,researching_quantity,unfulfillable_quantity,last_updated_time,local_quantity,ctime,utime  FROM hzm_item_inventory    WHERE  user_market_id = ? AND sku = ?
+### Cause: java.sql.SQLSyntaxErrorException: Unknown error 1146
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Unknown error 1146
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:139)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:414)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1763)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:593)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1255)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1175)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:595)
+	... 69 common frames omitted
+Caused by: org.springframework.jdbc.BadSqlGrammarException: 
+### Error querying database.  Cause: java.sql.SQLSyntaxErrorException: Unknown error 1146
+### The error may exist in com/cn/hzm/core/repository/mapper/ItemInventoryMapper.java (best guess)
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: SELECT  id,user_market_id,sku,asin,fnsku,item_condition,total_quantity,amazon_quantity,fulfillable_quantity,inbound_working_quantity,inbound_shipped_quantity,inbound_receiving_quantity,reserved_quantity,researching_quantity,unfulfillable_quantity,last_updated_time,local_quantity,ctime,utime  FROM hzm_item_inventory    WHERE  user_market_id = ? AND sku = ?
+### Cause: java.sql.SQLSyntaxErrorException: Unknown error 1146
+; bad SQL grammar []; nested exception is java.sql.SQLSyntaxErrorException: Unknown error 1146
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.doTranslate(SQLErrorCodeSQLExceptionTranslator.java:235)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:72)
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:73)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:446)
+	at com.sun.proxy.$Proxy73.selectOne(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.selectOne(SqlSessionTemplate.java:166)
+	at com.baomidou.mybatisplus.core.override.PageMapperMethod.execute(PageMapperMethod.java:101)
+	at com.baomidou.mybatisplus.core.override.PageMapperProxy.invoke(PageMapperProxy.java:64)
+	at com.sun.proxy.$Proxy98.selectOne(Unknown Source)
+	at com.cn.hzm.core.repository.dao.ItemInventoryDao.getInventoryBySku(ItemInventoryDao.java:29)
+	at com.cn.hzm.core.processor.SmartReplenishmentProcessor.lambda$statDailySaleData$1(SmartReplenishmentProcessor.java:124)
+	at java.util.ArrayList.forEach(ArrayList.java:1259)
+	at com.cn.hzm.core.processor.SmartReplenishmentProcessor.statDailySaleData(SmartReplenishmentProcessor.java:103)
+	at com.cn.hzm.core.processor.SmartReplenishmentProcessor.init(SmartReplenishmentProcessor.java:79)
+	at com.cn.hzm.core.cache.ItemDetailCache.installCacheConfig(ItemDetailCache.java:120)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleElement.invoke(InitDestroyAnnotationBeanPostProcessor.java:363)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMetadata.invokeInitMethods(InitDestroyAnnotationBeanPostProcessor.java:307)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:136)
+	... 81 common frames omitted
+Caused by: java.sql.SQLSyntaxErrorException: Unknown error 1146
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:120)
+	at com.mysql.cj.jdbc.exceptions.SQLError.createSQLException(SQLError.java:97)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:122)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:955)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:372)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java)
+	at org.apache.ibatis.executor.statement.PreparedStatementHandler.query(PreparedStatementHandler.java:63)
+	at org.apache.ibatis.executor.statement.RoutingStatementHandler.query(RoutingStatementHandler.java:79)
+	at org.apache.ibatis.executor.SimpleExecutor.doQuery(SimpleExecutor.java:63)
+	at org.apache.ibatis.executor.BaseExecutor.queryFromDatabase(BaseExecutor.java:326)
+	at org.apache.ibatis.executor.BaseExecutor.query(BaseExecutor.java:156)
+	at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:109)
+	at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:83)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:148)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:141)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectOne(DefaultSqlSession.java:77)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:433)
+	... 99 common frames omitted
+2023-07-02 20:51:08.558 INFO  [main] c.c.h.s.WebApplication [50] -  Starting WebApplication on admindeMacBook-Pro.local with PID 25054 (/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes started by admin in /Users/admin/Documents/us/hzman-manager)
+2023-07-02 20:51:08.563 INFO  [main] c.c.h.s.WebApplication [652] -  The following profiles are active: dev
+2023-07-02 20:51:10.700 INFO  [main] o.s.b.w.e.t.TomcatWebServer [90] -  Tomcat initialized with port(s): 8082 (http)
+2023-07-02 20:51:10.720 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Initializing ProtocolHandler ["http-nio-8082"]
+2023-07-02 20:51:10.730 INFO  [main] o.a.c.c.StandardService [173] -  Starting service [Tomcat]
+2023-07-02 20:51:10.731 INFO  [main] o.a.c.c.StandardEngine [173] -  Starting Servlet engine: [Apache Tomcat/9.0.31]
+2023-07-02 20:51:10.862 INFO  [main] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring embedded WebApplicationContext
+2023-07-02 20:51:10.863 INFO  [main] o.s.w.c.ContextLoader [284] -  Root WebApplicationContext: initialization completed in 2240 ms
+2023-07-02 20:51:10.936 INFO  [main] c.c.h.c.c.MybatisPlusConfig [45] -  ------------- 重载父类 sqlSessionFactory init-------
+2023-07-02 20:51:11.008 INFO  [main] c.z.h.HikariDataSource [110] -  HikariPool-1 - Starting...
+2023-07-02 20:51:11.412 INFO  [main] c.z.h.HikariDataSource [123] -  HikariPool-1 - Start completed.
+2023-07-02 20:51:12.401 INFO  [main] c.c.h.c.s.SpaManager [333] -  初始化[大号] sellersApi
+2023-07-02 20:51:12.404 INFO  [main] c.c.h.c.s.SpaManager [341] -  初始化[大号] ordersV0Api
+2023-07-02 20:51:12.408 INFO  [main] c.c.h.c.s.SpaManager [349] -  初始化[大号] shipmentApi
+2023-07-02 20:51:12.410 INFO  [main] c.c.h.c.s.SpaManager [357] -  初始化[大号] catalogApi
+2023-07-02 20:51:12.412 INFO  [main] c.c.h.c.s.SpaManager [365] -  初始化[大号] fbaInventoryApi
+2023-07-02 20:51:12.415 INFO  [main] c.c.h.c.s.SpaManager [373] -  初始化[大号] fbaInboundApi
+2023-07-02 20:51:12.418 INFO  [main] c.c.h.c.s.SpaManager [381] -  初始化[大号] financeApi
+2023-07-02 20:51:12.821 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService
+2023-07-02 20:51:12.823 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService 'backTaskExecutor'
+2023-07-02 20:51:13.093 WARN  [main] o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext [557] -  Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'awsUserApi': Unsatisfied dependency expressed through field 'awsService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'awsService': Unsatisfied dependency expressed through field 'taskManager'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'taskManager': Unsatisfied dependency expressed through field 'itemService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'itemService': Unsatisfied dependency expressed through field 'factoryService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'factoryService': Unsatisfied dependency expressed through field 'itemDetailCache'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'itemDetailCache': Invocation of init method failed; nested exception is java.lang.NullPointerException
+2023-07-02 20:51:13.094 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [208] -  Shutting down ExecutorService 'backTaskExecutor'
+2023-07-02 20:51:13.095 INFO  [main] c.z.h.HikariDataSource [350] -  HikariPool-1 - Shutdown initiated...
+2023-07-02 20:51:13.162 INFO  [main] c.z.h.HikariDataSource [352] -  HikariPool-1 - Shutdown completed.
+2023-07-02 20:51:13.168 INFO  [main] o.a.c.c.StandardService [173] -  Stopping service [Tomcat]
+2023-07-02 20:51:13.173 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-1] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:51:13.174 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-2] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:51:13.175 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-3] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:51:13.176 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-4] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:51:13.177 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-5] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:51:13.177 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-6] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:51:13.178 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [ForkJoinPool.commonPool-worker-7] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
+ sun.misc.Unsafe.park(Native Method)
+ java.util.concurrent.ForkJoinPool.awaitWork(ForkJoinPool.java:1835)
+ java.util.concurrent.ForkJoinPool.runWorker(ForkJoinPool.java:1704)
+ java.util.concurrent.ForkJoinWorkerThread.run(ForkJoinWorkerThread.java:172)
+2023-07-02 20:51:13.191 INFO  [main] o.s.b.a.l.ConditionEvaluationReportLoggingListener [136] -  
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2023-07-02 20:51:13.208 ERROR [main] o.s.b.SpringApplication [823] -  Application run failed
+org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'awsUserApi': Unsatisfied dependency expressed through field 'awsService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'awsService': Unsatisfied dependency expressed through field 'taskManager'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'taskManager': Unsatisfied dependency expressed through field 'itemService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'itemService': Unsatisfied dependency expressed through field 'factoryService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'factoryService': Unsatisfied dependency expressed through field 'itemDetailCache'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'itemDetailCache': Invocation of init method failed; nested exception is java.lang.NullPointerException
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:598)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:376)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1404)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.preInstantiateSingletons(DefaultListableBeanFactory.java:847)
+	at org.springframework.context.support.AbstractApplicationContext.finishBeanFactoryInitialization(AbstractApplicationContext.java:877)
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:549)
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:141)
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:744)
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:391)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:312)
+	at com.cn.hzm.server.WebApplication.main(WebApplication.java:15)
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'awsService': Unsatisfied dependency expressed through field 'taskManager'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'taskManager': Unsatisfied dependency expressed through field 'itemService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'itemService': Unsatisfied dependency expressed through field 'factoryService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'factoryService': Unsatisfied dependency expressed through field 'itemDetailCache'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'itemDetailCache': Invocation of init method failed; nested exception is java.lang.NullPointerException
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:598)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:376)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1404)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1255)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1175)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:595)
+	... 17 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'taskManager': Unsatisfied dependency expressed through field 'itemService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'itemService': Unsatisfied dependency expressed through field 'factoryService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'factoryService': Unsatisfied dependency expressed through field 'itemDetailCache'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'itemDetailCache': Invocation of init method failed; nested exception is java.lang.NullPointerException
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:598)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:376)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1404)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1255)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1175)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:595)
+	... 30 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'itemService': Unsatisfied dependency expressed through field 'factoryService'; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'factoryService': Unsatisfied dependency expressed through field 'itemDetailCache'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'itemDetailCache': Invocation of init method failed; nested exception is java.lang.NullPointerException
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:598)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:376)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1404)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1255)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1175)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:595)
+	... 43 common frames omitted
+Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'factoryService': Unsatisfied dependency expressed through field 'itemDetailCache'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'itemDetailCache': Invocation of init method failed; nested exception is java.lang.NullPointerException
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:598)
+	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor.postProcessProperties(AutowiredAnnotationBeanPostProcessor.java:376)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1404)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1255)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1175)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:595)
+	... 56 common frames omitted
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'itemDetailCache': Invocation of init method failed; nested exception is java.lang.NullPointerException
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:139)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.applyBeanPostProcessorsBeforeInitialization(AbstractAutowireCapableBeanFactory.java:414)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.initializeBean(AbstractAutowireCapableBeanFactory.java:1763)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:593)
+	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
+	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
+	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
+	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1255)
+	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1175)
+	at org.springframework.beans.factory.annotation.AutowiredAnnotationBeanPostProcessor$AutowiredFieldElement.inject(AutowiredAnnotationBeanPostProcessor.java:595)
+	... 69 common frames omitted
+Caused by: java.lang.NullPointerException: null
+	at com.cn.hzm.core.processor.SmartReplenishmentProcessor.lambda$statDailySaleData$1(SmartReplenishmentProcessor.java:126)
+	at java.util.ArrayList.forEach(ArrayList.java:1259)
+	at com.cn.hzm.core.processor.SmartReplenishmentProcessor.statDailySaleData(SmartReplenishmentProcessor.java:103)
+	at com.cn.hzm.core.processor.SmartReplenishmentProcessor.init(SmartReplenishmentProcessor.java:79)
+	at com.cn.hzm.core.cache.ItemDetailCache.installCacheConfig(ItemDetailCache.java:120)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleElement.invoke(InitDestroyAnnotationBeanPostProcessor.java:363)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor$LifecycleMetadata.invokeInitMethods(InitDestroyAnnotationBeanPostProcessor.java:307)
+	at org.springframework.beans.factory.annotation.InitDestroyAnnotationBeanPostProcessor.postProcessBeforeInitialization(InitDestroyAnnotationBeanPostProcessor.java:136)
+	... 81 common frames omitted
+2023-07-02 20:54:01.898 INFO  [main] c.c.h.s.WebApplication [50] -  Starting WebApplication on admindeMacBook-Pro.local with PID 25745 (/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes started by admin in /Users/admin/Documents/us/hzman-manager)
+2023-07-02 20:54:01.905 INFO  [main] c.c.h.s.WebApplication [652] -  The following profiles are active: dev
+2023-07-02 20:54:04.087 INFO  [main] o.s.b.w.e.t.TomcatWebServer [90] -  Tomcat initialized with port(s): 8082 (http)
+2023-07-02 20:54:04.107 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Initializing ProtocolHandler ["http-nio-8082"]
+2023-07-02 20:54:04.117 INFO  [main] o.a.c.c.StandardService [173] -  Starting service [Tomcat]
+2023-07-02 20:54:04.117 INFO  [main] o.a.c.c.StandardEngine [173] -  Starting Servlet engine: [Apache Tomcat/9.0.31]
+2023-07-02 20:54:04.266 INFO  [main] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring embedded WebApplicationContext
+2023-07-02 20:54:04.266 INFO  [main] o.s.w.c.ContextLoader [284] -  Root WebApplicationContext: initialization completed in 2296 ms
+2023-07-02 20:54:04.343 INFO  [main] c.c.h.c.c.MybatisPlusConfig [45] -  ------------- 重载父类 sqlSessionFactory init-------
+2023-07-02 20:54:04.414 INFO  [main] c.z.h.HikariDataSource [110] -  HikariPool-1 - Starting...
+2023-07-02 20:54:04.847 INFO  [main] c.z.h.HikariDataSource [123] -  HikariPool-1 - Start completed.
+2023-07-02 20:54:05.998 INFO  [main] c.c.h.c.s.SpaManager [333] -  初始化[大号] sellersApi
+2023-07-02 20:54:06.001 INFO  [main] c.c.h.c.s.SpaManager [341] -  初始化[大号] ordersV0Api
+2023-07-02 20:54:06.004 INFO  [main] c.c.h.c.s.SpaManager [349] -  初始化[大号] shipmentApi
+2023-07-02 20:54:06.008 INFO  [main] c.c.h.c.s.SpaManager [357] -  初始化[大号] catalogApi
+2023-07-02 20:54:06.011 INFO  [main] c.c.h.c.s.SpaManager [365] -  初始化[大号] fbaInventoryApi
+2023-07-02 20:54:06.014 INFO  [main] c.c.h.c.s.SpaManager [373] -  初始化[大号] fbaInboundApi
+2023-07-02 20:54:06.017 INFO  [main] c.c.h.c.s.SpaManager [381] -  初始化[大号] financeApi
+2023-07-02 20:54:06.484 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService
+2023-07-02 20:54:06.487 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService 'backTaskExecutor'
+2023-07-02 20:54:06.865 INFO  [商品缓存线程] c.c.h.c.c.ItemDetailCache [124] -  开发环境关闭商品缓存任务
+2023-07-02 20:54:06.878 INFO  [main] c.c.h.c.c.SaleInfoCache [70] -  开发环境关闭商品缓存任务
+2023-07-02 20:54:07.315 INFO  [main] s.d.s.w.PropertySourcedRequestMappingHandlerMapping [69] -  Mapped URL path [/v2/api-docs] onto method [public org.springframework.http.ResponseEntity<springfox.documentation.spring.web.json.Json> springfox.documentation.swagger2.web.Swagger2Controller.getDocumentation(java.lang.String,javax.servlet.http.HttpServletRequest)]
+2023-07-02 20:54:07.704 INFO  [main] o.s.s.c.ThreadPoolTaskScheduler [171] -  Initializing ExecutorService 'taskScheduler'
+2023-07-02 20:54:07.760 INFO  [main] s.d.s.w.p.DocumentationPluginsBootstrapper [160] -  Context refreshed
+2023-07-02 20:54:07.781 INFO  [main] s.d.s.w.p.DocumentationPluginsBootstrapper [163] -  Found 1 custom documentation plugin(s)
+2023-07-02 20:54:07.845 INFO  [main] s.d.s.w.s.ApiListingReferenceScanner [41] -  Scanning for api listing references
+2023-07-02 20:54:08.079 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: payUsingGET_1
+2023-07-02 20:54:08.086 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingGET_1
+2023-07-02 20:54:08.087 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingHEAD_1
+2023-07-02 20:54:08.087 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPOST_1
+2023-07-02 20:54:08.088 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPUT_1
+2023-07-02 20:54:08.089 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPATCH_1
+2023-07-02 20:54:08.089 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingDELETE_1
+2023-07-02 20:54:08.090 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingOPTIONS_1
+2023-07-02 20:54:08.090 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingTRACE_1
+2023-07-02 20:54:08.091 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingGET_2
+2023-07-02 20:54:08.092 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingHEAD_2
+2023-07-02 20:54:08.093 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPOST_2
+2023-07-02 20:54:08.093 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPUT_2
+2023-07-02 20:54:08.094 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPATCH_2
+2023-07-02 20:54:08.095 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingDELETE_2
+2023-07-02 20:54:08.095 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingOPTIONS_2
+2023-07-02 20:54:08.096 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingTRACE_2
+2023-07-02 20:54:08.131 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_1
+2023-07-02 20:54:08.132 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_2
+2023-07-02 20:54:08.137 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_3
+2023-07-02 20:54:08.185 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Starting ProtocolHandler ["http-nio-8082"]
+2023-07-02 20:54:08.225 INFO  [main] o.s.b.w.e.t.TomcatWebServer [202] -  Tomcat started on port(s): 8082 (http) with context path '/hzman'
+2023-07-02 20:54:08.229 INFO  [main] c.c.h.s.WebApplication [59] -  Started WebApplication in 26.907 seconds (JVM running for 32.648)
+2023-07-02 20:54:17.210 INFO  [http-nio-8082-exec-1] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-07-02 20:54:17.211 INFO  [http-nio-8082-exec-1] o.s.w.s.DispatcherServlet [525] -  Initializing Servlet 'dispatcherServlet'
+2023-07-02 20:54:17.224 INFO  [http-nio-8082-exec-1] o.s.w.s.DispatcherServlet [547] -  Completed initialization in 13 ms
+2023-07-02 20:54:17.242 INFO  [http-nio-8082-exec-1] c.c.h.c.c.ContextHandler [34] - 83cb2fdf286d4eaf8c65e5b04a147518 uri: /hzman/aws/user/market/list, original request body: , header: user-agent=PostmanRuntime/7.32.3#accept=*/*#cache-control=no-cache#postman-token=0bb4d310-e73b-4725-bcb1-ebba9df8e149#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive, path param: null.
+2023-07-02 20:54:26.646 INFO  [Thread-57] o.s.s.c.ThreadPoolTaskScheduler [208] -  Shutting down ExecutorService 'taskScheduler'
+2023-07-02 20:54:26.651 INFO  [Thread-57] o.s.s.c.ThreadPoolTaskExecutor [208] -  Shutting down ExecutorService 'backTaskExecutor'
+2023-07-02 20:54:26.653 INFO  [Thread-57] c.z.h.HikariDataSource [350] -  HikariPool-1 - Shutdown initiated...
+2023-07-02 20:54:26.666 INFO  [Thread-57] c.z.h.HikariDataSource [352] -  HikariPool-1 - Shutdown completed.
+2023-07-02 20:54:26.675 WARN  [http-nio-8082-exec-1] c.z.h.p.ProxyConnection [153] - 83cb2fdf286d4eaf8c65e5b04a147518 HikariPool-1 - Connection com.mysql.cj.jdbc.ConnectionImpl@3f09ee1e marked as broken because of SQLSTATE(08S01), ErrorCode(0)
+com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet successfully received from the server was 22 milliseconds ago.  The last packet sent successfully to the server was 40 milliseconds ago.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:174)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:955)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:372)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java)
+	at org.apache.ibatis.executor.statement.PreparedStatementHandler.query(PreparedStatementHandler.java:63)
+	at org.apache.ibatis.executor.statement.RoutingStatementHandler.query(RoutingStatementHandler.java:79)
+	at org.apache.ibatis.executor.SimpleExecutor.doQuery(SimpleExecutor.java:63)
+	at org.apache.ibatis.executor.BaseExecutor.queryFromDatabase(BaseExecutor.java:326)
+	at org.apache.ibatis.executor.BaseExecutor.query(BaseExecutor.java:156)
+	at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:109)
+	at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:83)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:148)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:141)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:433)
+	at com.sun.proxy.$Proxy73.selectList(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.selectList(SqlSessionTemplate.java:230)
+	at com.baomidou.mybatisplus.core.override.PageMapperMethod.executeForMany(PageMapperMethod.java:173)
+	at com.baomidou.mybatisplus.core.override.PageMapperMethod.execute(PageMapperMethod.java:86)
+	at com.baomidou.mybatisplus.core.override.PageMapperProxy.invoke(PageMapperProxy.java:64)
+	at com.sun.proxy.$Proxy77.selectList(Unknown Source)
+	at com.cn.hzm.core.repository.dao.AwsUserMarketDao.getByUserId(AwsUserMarketDao.java:44)
+	at com.cn.hzm.server.service.AwsService.lambda$marketList$5(AwsService.java:129)
+	at java.util.ArrayList.forEach(ArrayList.java:1259)
+	at com.cn.hzm.server.service.AwsService.marketList(AwsService.java:128)
+	at com.cn.hzm.server.api.AwsUserApi.relationMarket(AwsUserApi.java:61)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:190)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:138)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:105)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:893)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:798)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1040)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:943)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:634)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:741)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:97)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at com.cn.hzm.core.context.HzmRequestFilter.doFilter(HzmRequestFilter.java:38)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:94)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:202)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:541)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:139)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:367)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:868)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1639)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
 Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
 
-The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
+The last packet successfully received from the server was 22 milliseconds ago.  The last packet sent successfully to the server was 40 milliseconds ago.
 	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
 	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
 	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
@@ -172,15 +830,16 @@ The last packet sent successfully to the server was 0 milliseconds ago. The driv
 	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:151)
 	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:167)
 	at com.mysql.cj.protocol.a.NativeProtocol.readMessage(NativeProtocol.java:562)
-	at com.mysql.cj.protocol.a.NativeProtocol.readServerCapabilities(NativeProtocol.java:514)
-	at com.mysql.cj.protocol.a.NativeProtocol.beforeHandshake(NativeProtocol.java:404)
-	at com.mysql.cj.protocol.a.NativeProtocol.connect(NativeProtocol.java:1450)
-	at com.mysql.cj.NativeSession.connect(NativeSession.java:165)
-	at com.mysql.cj.jdbc.ConnectionImpl.connectOneTryOnly(ConnectionImpl.java:955)
-	at com.mysql.cj.jdbc.ConnectionImpl.createNewIO(ConnectionImpl.java:825)
-	... 144 common frames omitted
-Caused by: java.net.SocketException: Connection reset
-	at java.net.SocketInputStream.read(SocketInputStream.java:210)
+	at com.mysql.cj.protocol.a.NativeProtocol.checkErrorMessage(NativeProtocol.java:732)
+	at com.mysql.cj.protocol.a.NativeProtocol.sendCommand(NativeProtocol.java:671)
+	at com.mysql.cj.protocol.a.NativeProtocol.sendQueryPacket(NativeProtocol.java:986)
+	at com.mysql.cj.NativeSession.execSQL(NativeSession.java:1168)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:932)
+	... 89 common frames omitted
+Caused by: java.net.SocketException: Socket closed
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.socketRead(SocketInputStream.java:116)
+	at java.net.SocketInputStream.read(SocketInputStream.java:171)
 	at java.net.SocketInputStream.read(SocketInputStream.java:141)
 	at com.mysql.cj.protocol.ReadAheadInputStream.fill(ReadAheadInputStream.java:107)
 	at com.mysql.cj.protocol.ReadAheadInputStream.readFromUnderlyingStreamIfNecessary(ReadAheadInputStream.java:150)
@@ -189,198 +848,371 @@ Caused by: java.net.SocketException: Connection reset
 	at com.mysql.cj.protocol.FullReadInputStream.readFully(FullReadInputStream.java:64)
 	at com.mysql.cj.protocol.a.SimplePacketReader.readHeader(SimplePacketReader.java:63)
 	at com.mysql.cj.protocol.a.SimplePacketReader.readHeader(SimplePacketReader.java:45)
+	at com.mysql.cj.protocol.a.TimeTrackingPacketReader.readHeader(TimeTrackingPacketReader.java:52)
+	at com.mysql.cj.protocol.a.TimeTrackingPacketReader.readHeader(TimeTrackingPacketReader.java:41)
+	at com.mysql.cj.protocol.a.MultiPacketReader.readHeader(MultiPacketReader.java:54)
+	at com.mysql.cj.protocol.a.MultiPacketReader.readHeader(MultiPacketReader.java:44)
 	at com.mysql.cj.protocol.a.NativeProtocol.readMessage(NativeProtocol.java:556)
-	... 150 common frames omitted
-2022-12-06 17:08:42.974 ERROR [main] o.s.b.w.e.t.TomcatStarter [61] -  Error starting Tomcat context. Exception: org.springframework.beans.factory.BeanCreationException. Message: Error creating bean with name 'hzmWebConfig': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'hzmAuthTokenInterceptor': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'passportServiceImpl': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'hzmPassportDao' defined in file [/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes/com/cn/hzm/server/dao/HzmPassportDao.class]: Unsatisfied dependency expressed through bean property 'sqlSessionFactory'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactories' defined in class path resource [com/cn/hzm/core/configure/MybatisPlusConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactories' threw exception; nested exception is com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
-
-The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
-2022-12-06 17:08:43.020 INFO  [main] o.a.c.c.StandardService [173] -  Stopping service [Tomcat]
-2022-12-06 17:08:43.027 WARN  [main] o.a.c.l.WebappClassLoaderBase [173] -  The web application [hzman] appears to have started a thread named [logback-3] but has failed to stop it. This is very likely to create a memory leak. Stack trace of thread:
- sun.misc.Unsafe.park(Native Method)
- java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)
- java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)
- java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:1088)
- java.util.concurrent.ScheduledThreadPoolExecutor$DelayedWorkQueue.take(ScheduledThreadPoolExecutor.java:809)
- java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1074)
- java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1134)
- java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
- java.lang.Thread.run(Thread.java:748)
-2022-12-06 17:08:43.033 WARN  [main] o.s.b.w.s.c.AnnotationConfigServletWebServerApplicationContext [557] -  Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat
-2022-12-06 17:08:43.050 INFO  [main] o.s.b.a.l.ConditionEvaluationReportLoggingListener [135] -  
-
-Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
-2022-12-06 17:08:43.072 ERROR [main] o.s.b.SpringApplication [821] -  Application run failed
-org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:155)
-	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:543)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:140)
-	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:742)
-	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:389)
-	at org.springframework.boot.SpringApplication.run(SpringApplication.java:311)
-	at com.cn.hzm.server.WebApplication.main(WebApplication.java:15)
-Caused by: org.springframework.boot.web.server.WebServerException: Unable to start embedded Tomcat
-	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:124)
-	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.<init>(TomcatWebServer.java:86)
-	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getTomcatWebServer(TomcatServletWebServerFactory.java:414)
-	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:178)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:179)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:152)
-	... 6 common frames omitted
-Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'hzmWebConfig': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'hzmAuthTokenInterceptor': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'passportServiceImpl': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'hzmPassportDao' defined in file [/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes/com/cn/hzm/server/dao/HzmPassportDao.class]: Unsatisfied dependency expressed through bean property 'sqlSessionFactory'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactories' defined in class path resource [com/cn/hzm/core/configure/MybatisPlusConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactories' threw exception; nested exception is com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
-
-The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:324)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1411)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:392)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1321)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1160)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:555)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:204)
-	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:211)
-	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.getOrderedBeansOfType(ServletContextInitializerBeans.java:202)
-	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.addServletContextInitializerBeans(ServletContextInitializerBeans.java:96)
-	at org.springframework.boot.web.servlet.ServletContextInitializerBeans.<init>(ServletContextInitializerBeans.java:85)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.getServletContextInitializerBeans(ServletWebServerApplicationContext.java:252)
-	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.selfInitialize(ServletWebServerApplicationContext.java:226)
-	at org.springframework.boot.web.embedded.tomcat.TomcatStarter.onStartup(TomcatStarter.java:53)
-	at org.apache.catalina.core.StandardContext.startInternal(StandardContext.java:5132)
-	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
-	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1384)
-	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1374)
-	at java.util.concurrent.FutureTask.run$$$capture(FutureTask.java:266)
-	at java.util.concurrent.FutureTask.run(FutureTask.java)
-	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
-	at java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:134)
-	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:909)
-	at org.apache.catalina.core.StandardHost.startInternal(StandardHost.java:841)
-	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
-	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1384)
-	at org.apache.catalina.core.ContainerBase$StartChild.call(ContainerBase.java:1374)
-	at java.util.concurrent.FutureTask.run$$$capture(FutureTask.java:266)
-	at java.util.concurrent.FutureTask.run(FutureTask.java)
-	at org.apache.tomcat.util.threads.InlineExecutorService.execute(InlineExecutorService.java:75)
-	at java.util.concurrent.AbstractExecutorService.submit(AbstractExecutorService.java:134)
-	at org.apache.catalina.core.ContainerBase.startInternal(ContainerBase.java:909)
-	at org.apache.catalina.core.StandardEngine.startInternal(StandardEngine.java:262)
-	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
-	at org.apache.catalina.core.StandardService.startInternal(StandardService.java:421)
-	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
-	at org.apache.catalina.core.StandardServer.startInternal(StandardServer.java:932)
-	at org.apache.catalina.util.LifecycleBase.start(LifecycleBase.java:183)
-	at org.apache.catalina.startup.Tomcat.start(Tomcat.java:456)
-	at org.springframework.boot.web.embedded.tomcat.TomcatWebServer.initialize(TomcatWebServer.java:105)
-	... 11 common frames omitted
-Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'hzmAuthTokenInterceptor': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'passportServiceImpl': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'hzmPassportDao' defined in file [/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes/com/cn/hzm/server/dao/HzmPassportDao.class]: Unsatisfied dependency expressed through bean property 'sqlSessionFactory'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactories' defined in class path resource [com/cn/hzm/core/configure/MybatisPlusConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactories' threw exception; nested exception is com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
-
-The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:324)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1411)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:204)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.resolveBeanByName(AbstractAutowireCapableBeanFactory.java:452)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:526)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:496)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor$ResourceElement.getResourceToInject(CommonAnnotationBeanPostProcessor.java:636)
-	at org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement.inject(InjectionMetadata.java:180)
-	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:321)
-	... 60 common frames omitted
-Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'passportServiceImpl': Injection of resource dependencies failed; nested exception is org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'hzmPassportDao' defined in file [/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes/com/cn/hzm/server/dao/HzmPassportDao.class]: Unsatisfied dependency expressed through bean property 'sqlSessionFactory'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactories' defined in class path resource [com/cn/hzm/core/configure/MybatisPlusConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactories' threw exception; nested exception is com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
-
-The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:324)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1411)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
-	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1251)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1171)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:520)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:496)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor$ResourceElement.getResourceToInject(CommonAnnotationBeanPostProcessor.java:636)
-	at org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement.inject(InjectionMetadata.java:180)
-	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:321)
-	... 74 common frames omitted
-Caused by: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'hzmPassportDao' defined in file [/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes/com/cn/hzm/server/dao/HzmPassportDao.class]: Unsatisfied dependency expressed through bean property 'sqlSessionFactory'; nested exception is org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactories' defined in class path resource [com/cn/hzm/core/configure/MybatisPlusConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactories' threw exception; nested exception is com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
-
-The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireByType(AbstractAutowireCapableBeanFactory.java:1515)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.populateBean(AbstractAutowireCapableBeanFactory.java:1395)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:592)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
-	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1251)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1171)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.autowireResource(CommonAnnotationBeanPostProcessor.java:520)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.getResource(CommonAnnotationBeanPostProcessor.java:496)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor$ResourceElement.getResourceToInject(CommonAnnotationBeanPostProcessor.java:636)
-	at org.springframework.beans.factory.annotation.InjectionMetadata$InjectedElement.inject(InjectionMetadata.java:180)
-	at org.springframework.beans.factory.annotation.InjectionMetadata.inject(InjectionMetadata.java:90)
-	at org.springframework.context.annotation.CommonAnnotationBeanPostProcessor.postProcessProperties(CommonAnnotationBeanPostProcessor.java:321)
-	... 90 common frames omitted
-Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'sqlSessionFactories' defined in class path resource [com/cn/hzm/core/configure/MybatisPlusConfig.class]: Bean instantiation via factory method failed; nested exception is org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactories' threw exception; nested exception is com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
-
-The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:627)
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiateUsingFactoryMethod(ConstructorResolver.java:456)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.instantiateUsingFactoryMethod(AbstractAutowireCapableBeanFactory.java:1321)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBeanInstance(AbstractAutowireCapableBeanFactory.java:1160)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.doCreateBean(AbstractAutowireCapableBeanFactory.java:555)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.createBean(AbstractAutowireCapableBeanFactory.java:515)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.lambda$doGetBean$0(AbstractBeanFactory.java:320)
-	at org.springframework.beans.factory.support.DefaultSingletonBeanRegistry.getSingleton(DefaultSingletonBeanRegistry.java:222)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.doGetBean(AbstractBeanFactory.java:318)
-	at org.springframework.beans.factory.support.AbstractBeanFactory.getBean(AbstractBeanFactory.java:199)
-	at org.springframework.beans.factory.config.DependencyDescriptor.resolveCandidate(DependencyDescriptor.java:277)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.doResolveDependency(DefaultListableBeanFactory.java:1251)
-	at org.springframework.beans.factory.support.DefaultListableBeanFactory.resolveDependency(DefaultListableBeanFactory.java:1171)
-	at org.springframework.beans.factory.support.AbstractAutowireCapableBeanFactory.autowireByType(AbstractAutowireCapableBeanFactory.java:1500)
-	... 106 common frames omitted
-Caused by: org.springframework.beans.BeanInstantiationException: Failed to instantiate [org.apache.ibatis.session.SqlSessionFactory]: Factory method 'sqlSessionFactories' threw exception; nested exception is com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
-
-The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
-	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:185)
-	at org.springframework.beans.factory.support.ConstructorResolver.instantiate(ConstructorResolver.java:622)
-	... 119 common frames omitted
-Caused by: com.baomidou.mybatisplus.core.exceptions.MybatisPlusException: Error: GlobalConfigUtils setMetaData Fail !  Cause:com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
-
-The last packet sent successfully to the server was 0 milliseconds ago. The driver has not received any packets from the server.
-	at com.baomidou.mybatisplus.core.toolkit.ExceptionUtils.mpe(ExceptionUtils.java:51)
-	at com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean.buildSqlSessionFactory(MybatisSqlSessionFactoryBean.java:602)
-	at com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean.afterPropertiesSet(MybatisSqlSessionFactoryBean.java:386)
-	at com.baomidou.mybatisplus.extension.spring.MybatisSqlSessionFactoryBean.getObject(MybatisSqlSessionFactoryBean.java:683)
-	at com.cn.hzm.core.configure.MybatisPlusConfig.sqlSessionFactories(MybatisPlusConfig.java:50)
-	at com.cn.hzm.core.configure.MybatisPlusConfig$$EnhancerBySpringCGLIB$$c88e70b5.CGLIB$sqlSessionFactories$1(<generated>)
-	at com.cn.hzm.core.configure.MybatisPlusConfig$$EnhancerBySpringCGLIB$$c88e70b5$$FastClassBySpringCGLIB$$d7c22b46.invoke(<generated>)
-	at org.springframework.cglib.proxy.MethodProxy.invokeSuper(MethodProxy.java:244)
-	at org.springframework.context.annotation.ConfigurationClassEnhancer$BeanMethodInterceptor.intercept(ConfigurationClassEnhancer.java:363)
-	at com.cn.hzm.core.configure.MybatisPlusConfig$$EnhancerBySpringCGLIB$$c88e70b5.sqlSessionFactories(<generated>)
+	... 94 common frames omitted
+2023-07-02 20:54:26.728 WARN  [http-nio-8082-exec-1] o.s.j.s.SQLErrorCodesFactory [221] - 83cb2fdf286d4eaf8c65e5b04a147518 Error while extracting database name - falling back to empty error codes
+org.springframework.jdbc.support.MetaDataAccessException: Could not get Connection for extracting meta-data; nested exception is org.springframework.jdbc.CannotGetJdbcConnectionException: Failed to obtain JDBC Connection; nested exception is java.sql.SQLException: HikariDataSource HikariDataSource (HikariPool-1) has been closed.
+	at org.springframework.jdbc.support.JdbcUtils.extractDatabaseMetaData(JdbcUtils.java:329)
+	at org.springframework.jdbc.support.JdbcUtils.extractDatabaseMetaData(JdbcUtils.java:357)
+	at org.springframework.jdbc.support.SQLErrorCodesFactory.getErrorCodes(SQLErrorCodesFactory.java:215)
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.setDataSource(SQLErrorCodeSQLExceptionTranslator.java:137)
+	at org.springframework.jdbc.support.SQLErrorCodeSQLExceptionTranslator.<init>(SQLErrorCodeSQLExceptionTranslator.java:100)
+	at org.mybatis.spring.MyBatisExceptionTranslator.initExceptionTranslator(MyBatisExceptionTranslator.java:87)
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:72)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:446)
+	at com.sun.proxy.$Proxy73.selectList(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.selectList(SqlSessionTemplate.java:230)
+	at com.baomidou.mybatisplus.core.override.PageMapperMethod.executeForMany(PageMapperMethod.java:173)
+	at com.baomidou.mybatisplus.core.override.PageMapperMethod.execute(PageMapperMethod.java:86)
+	at com.baomidou.mybatisplus.core.override.PageMapperProxy.invoke(PageMapperProxy.java:64)
+	at com.sun.proxy.$Proxy77.selectList(Unknown Source)
+	at com.cn.hzm.core.repository.dao.AwsUserMarketDao.getByUserId(AwsUserMarketDao.java:44)
+	at com.cn.hzm.server.service.AwsService.lambda$marketList$5(AwsService.java:129)
+	at java.util.ArrayList.forEach(ArrayList.java:1259)
+	at com.cn.hzm.server.service.AwsService.marketList(AwsService.java:128)
+	at com.cn.hzm.server.api.AwsUserApi.relationMarket(AwsUserApi.java:61)
 	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
 	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
 	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
 	at java.lang.reflect.Method.invoke(Method.java:498)
-	at org.springframework.beans.factory.support.SimpleInstantiationStrategy.instantiate(SimpleInstantiationStrategy.java:154)
-	... 120 common frames omitted
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:190)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:138)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:105)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:893)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:798)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1040)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:943)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:634)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:741)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:97)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at com.cn.hzm.core.context.HzmRequestFilter.doFilter(HzmRequestFilter.java:38)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:94)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:202)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:541)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:139)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:367)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:868)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1639)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: org.springframework.jdbc.CannotGetJdbcConnectionException: Failed to obtain JDBC Connection; nested exception is java.sql.SQLException: HikariDataSource HikariDataSource (HikariPool-1) has been closed.
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:82)
+	at org.springframework.jdbc.support.JdbcUtils.extractDatabaseMetaData(JdbcUtils.java:320)
+	... 79 common frames omitted
+Caused by: java.sql.SQLException: HikariDataSource HikariDataSource (HikariPool-1) has been closed.
+	at com.zaxxer.hikari.HikariDataSource.getConnection(HikariDataSource.java:96)
+	at org.springframework.jdbc.datasource.DataSourceUtils.fetchConnection(DataSourceUtils.java:158)
+	at org.springframework.jdbc.datasource.DataSourceUtils.doGetConnection(DataSourceUtils.java:116)
+	at org.springframework.jdbc.datasource.DataSourceUtils.getConnection(DataSourceUtils.java:79)
+	... 80 common frames omitted
+2023-07-02 20:54:26.733 ERROR [http-nio-8082-exec-1] c.c.h.s.h.HzmExceptionHandler [55] - 83cb2fdf286d4eaf8c65e5b04a147518 系统内部错误：
+org.springframework.dao.RecoverableDataAccessException: 
+### Error querying database.  Cause: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet successfully received from the server was 22 milliseconds ago.  The last packet sent successfully to the server was 40 milliseconds ago.
+### The error may exist in com/cn/hzm/core/repository/mapper/AwsUserMarketMapper.java (best guess)
+### The error may involve defaultParameterMap
+### The error occurred while setting parameters
+### SQL: SELECT  id,aws_user_id,market_id,ctime,utime  FROM hzm_aws_user_market    WHERE  aws_user_id = ?
+### Cause: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet successfully received from the server was 22 milliseconds ago.  The last packet sent successfully to the server was 40 milliseconds ago.
+; Communications link failure
+
+The last packet successfully received from the server was 22 milliseconds ago.  The last packet sent successfully to the server was 40 milliseconds ago.; nested exception is com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet successfully received from the server was 22 milliseconds ago.  The last packet sent successfully to the server was 40 milliseconds ago.
+	at org.springframework.jdbc.support.SQLExceptionSubclassTranslator.doTranslate(SQLExceptionSubclassTranslator.java:100)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:72)
+	at org.springframework.jdbc.support.AbstractFallbackSQLExceptionTranslator.translate(AbstractFallbackSQLExceptionTranslator.java:81)
+	at org.mybatis.spring.MyBatisExceptionTranslator.translateExceptionIfPossible(MyBatisExceptionTranslator.java:73)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:446)
+	at com.sun.proxy.$Proxy73.selectList(Unknown Source)
+	at org.mybatis.spring.SqlSessionTemplate.selectList(SqlSessionTemplate.java:230)
+	at com.baomidou.mybatisplus.core.override.PageMapperMethod.executeForMany(PageMapperMethod.java:173)
+	at com.baomidou.mybatisplus.core.override.PageMapperMethod.execute(PageMapperMethod.java:86)
+	at com.baomidou.mybatisplus.core.override.PageMapperProxy.invoke(PageMapperProxy.java:64)
+	at com.sun.proxy.$Proxy77.selectList(Unknown Source)
+	at com.cn.hzm.core.repository.dao.AwsUserMarketDao.getByUserId(AwsUserMarketDao.java:44)
+	at com.cn.hzm.server.service.AwsService.lambda$marketList$5(AwsService.java:129)
+	at java.util.ArrayList.forEach(ArrayList.java:1259)
+	at com.cn.hzm.server.service.AwsService.marketList(AwsService.java:128)
+	at com.cn.hzm.server.api.AwsUserApi.relationMarket(AwsUserApi.java:61)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.springframework.web.method.support.InvocableHandlerMethod.doInvoke(InvocableHandlerMethod.java:190)
+	at org.springframework.web.method.support.InvocableHandlerMethod.invokeForRequest(InvocableHandlerMethod.java:138)
+	at org.springframework.web.servlet.mvc.method.annotation.ServletInvocableHandlerMethod.invokeAndHandle(ServletInvocableHandlerMethod.java:105)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.invokeHandlerMethod(RequestMappingHandlerAdapter.java:893)
+	at org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerAdapter.handleInternal(RequestMappingHandlerAdapter.java:798)
+	at org.springframework.web.servlet.mvc.method.AbstractHandlerMethodAdapter.handle(AbstractHandlerMethodAdapter.java:87)
+	at org.springframework.web.servlet.DispatcherServlet.doDispatch(DispatcherServlet.java:1040)
+	at org.springframework.web.servlet.DispatcherServlet.doService(DispatcherServlet.java:943)
+	at org.springframework.web.servlet.FrameworkServlet.processRequest(FrameworkServlet.java:1006)
+	at org.springframework.web.servlet.FrameworkServlet.doGet(FrameworkServlet.java:898)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:634)
+	at org.springframework.web.servlet.FrameworkServlet.service(FrameworkServlet.java:883)
+	at javax.servlet.http.HttpServlet.service(HttpServlet.java:741)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:231)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.tomcat.websocket.server.WsFilter.doFilter(WsFilter.java:53)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.CorsFilter.doFilterInternal(CorsFilter.java:97)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at com.cn.hzm.core.context.HzmRequestFilter.doFilter(HzmRequestFilter.java:38)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.RequestContextFilter.doFilterInternal(RequestContextFilter.java:100)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.FormContentFilter.doFilterInternal(FormContentFilter.java:93)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.HiddenHttpMethodFilter.doFilterInternal(HiddenHttpMethodFilter.java:94)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.springframework.web.filter.CharacterEncodingFilter.doFilterInternal(CharacterEncodingFilter.java:201)
+	at org.springframework.web.filter.OncePerRequestFilter.doFilter(OncePerRequestFilter.java:119)
+	at org.apache.catalina.core.ApplicationFilterChain.internalDoFilter(ApplicationFilterChain.java:193)
+	at org.apache.catalina.core.ApplicationFilterChain.doFilter(ApplicationFilterChain.java:166)
+	at org.apache.catalina.core.StandardWrapperValve.invoke(StandardWrapperValve.java:202)
+	at org.apache.catalina.core.StandardContextValve.invoke(StandardContextValve.java:96)
+	at org.apache.catalina.authenticator.AuthenticatorBase.invoke(AuthenticatorBase.java:541)
+	at org.apache.catalina.core.StandardHostValve.invoke(StandardHostValve.java:139)
+	at org.apache.catalina.valves.ErrorReportValve.invoke(ErrorReportValve.java:92)
+	at org.apache.catalina.core.StandardEngineValve.invoke(StandardEngineValve.java:74)
+	at org.apache.catalina.connector.CoyoteAdapter.service(CoyoteAdapter.java:343)
+	at org.apache.coyote.http11.Http11Processor.service(Http11Processor.java:367)
+	at org.apache.coyote.AbstractProcessorLight.process(AbstractProcessorLight.java:65)
+	at org.apache.coyote.AbstractProtocol$ConnectionHandler.process(AbstractProtocol.java:868)
+	at org.apache.tomcat.util.net.NioEndpoint$SocketProcessor.doRun(NioEndpoint.java:1639)
+	at org.apache.tomcat.util.net.SocketProcessorBase.run(SocketProcessorBase.java:49)
+	at java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1149)
+	at java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:624)
+	at org.apache.tomcat.util.threads.TaskThread$WrappingRunnable.run(TaskThread.java:61)
+	at java.lang.Thread.run(Thread.java:748)
+Caused by: com.mysql.cj.jdbc.exceptions.CommunicationsException: Communications link failure
+
+The last packet successfully received from the server was 22 milliseconds ago.  The last packet sent successfully to the server was 40 milliseconds ago.
+	at com.mysql.cj.jdbc.exceptions.SQLError.createCommunicationsException(SQLError.java:174)
+	at com.mysql.cj.jdbc.exceptions.SQLExceptionsMapping.translateException(SQLExceptionsMapping.java:64)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:955)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.execute(ClientPreparedStatement.java:372)
+	at com.zaxxer.hikari.pool.ProxyPreparedStatement.execute(ProxyPreparedStatement.java:44)
+	at com.zaxxer.hikari.pool.HikariProxyPreparedStatement.execute(HikariProxyPreparedStatement.java)
+	at org.apache.ibatis.executor.statement.PreparedStatementHandler.query(PreparedStatementHandler.java:63)
+	at org.apache.ibatis.executor.statement.RoutingStatementHandler.query(RoutingStatementHandler.java:79)
+	at org.apache.ibatis.executor.SimpleExecutor.doQuery(SimpleExecutor.java:63)
+	at org.apache.ibatis.executor.BaseExecutor.queryFromDatabase(BaseExecutor.java:326)
+	at org.apache.ibatis.executor.BaseExecutor.query(BaseExecutor.java:156)
+	at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:109)
+	at org.apache.ibatis.executor.CachingExecutor.query(CachingExecutor.java:83)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:148)
+	at org.apache.ibatis.session.defaults.DefaultSqlSession.selectList(DefaultSqlSession.java:141)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.mybatis.spring.SqlSessionTemplate$SqlSessionInterceptor.invoke(SqlSessionTemplate.java:433)
+	... 72 common frames omitted
+Caused by: com.mysql.cj.exceptions.CJCommunicationsException: Communications link failure
+
+The last packet successfully received from the server was 22 milliseconds ago.  The last packet sent successfully to the server was 40 milliseconds ago.
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance0(Native Method)
+	at sun.reflect.NativeConstructorAccessorImpl.newInstance(NativeConstructorAccessorImpl.java:62)
+	at sun.reflect.DelegatingConstructorAccessorImpl.newInstance(DelegatingConstructorAccessorImpl.java:45)
+	at java.lang.reflect.Constructor.newInstance(Constructor.java:423)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:61)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:105)
+	at com.mysql.cj.exceptions.ExceptionFactory.createException(ExceptionFactory.java:151)
+	at com.mysql.cj.exceptions.ExceptionFactory.createCommunicationsException(ExceptionFactory.java:167)
+	at com.mysql.cj.protocol.a.NativeProtocol.readMessage(NativeProtocol.java:562)
+	at com.mysql.cj.protocol.a.NativeProtocol.checkErrorMessage(NativeProtocol.java:732)
+	at com.mysql.cj.protocol.a.NativeProtocol.sendCommand(NativeProtocol.java:671)
+	at com.mysql.cj.protocol.a.NativeProtocol.sendQueryPacket(NativeProtocol.java:986)
+	at com.mysql.cj.NativeSession.execSQL(NativeSession.java:1168)
+	at com.mysql.cj.jdbc.ClientPreparedStatement.executeInternal(ClientPreparedStatement.java:932)
+	... 89 common frames omitted
+Caused by: java.net.SocketException: Socket closed
+	at java.net.SocketInputStream.socketRead0(Native Method)
+	at java.net.SocketInputStream.socketRead(SocketInputStream.java:116)
+	at java.net.SocketInputStream.read(SocketInputStream.java:171)
+	at java.net.SocketInputStream.read(SocketInputStream.java:141)
+	at com.mysql.cj.protocol.ReadAheadInputStream.fill(ReadAheadInputStream.java:107)
+	at com.mysql.cj.protocol.ReadAheadInputStream.readFromUnderlyingStreamIfNecessary(ReadAheadInputStream.java:150)
+	at com.mysql.cj.protocol.ReadAheadInputStream.read(ReadAheadInputStream.java:180)
+	at java.io.FilterInputStream.read(FilterInputStream.java:133)
+	at com.mysql.cj.protocol.FullReadInputStream.readFully(FullReadInputStream.java:64)
+	at com.mysql.cj.protocol.a.SimplePacketReader.readHeader(SimplePacketReader.java:63)
+	at com.mysql.cj.protocol.a.SimplePacketReader.readHeader(SimplePacketReader.java:45)
+	at com.mysql.cj.protocol.a.TimeTrackingPacketReader.readHeader(TimeTrackingPacketReader.java:52)
+	at com.mysql.cj.protocol.a.TimeTrackingPacketReader.readHeader(TimeTrackingPacketReader.java:41)
+	at com.mysql.cj.protocol.a.MultiPacketReader.readHeader(MultiPacketReader.java:54)
+	at com.mysql.cj.protocol.a.MultiPacketReader.readHeader(MultiPacketReader.java:44)
+	at com.mysql.cj.protocol.a.NativeProtocol.readMessage(NativeProtocol.java:556)
+	... 94 common frames omitted
+2023-07-02 20:56:04.925 INFO  [main] c.c.h.s.WebApplication [50] -  Starting WebApplication on admindeMacBook-Pro.local with PID 26219 (/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes started by admin in /Users/admin/Documents/us/hzman-manager)
+2023-07-02 20:56:04.931 INFO  [main] c.c.h.s.WebApplication [652] -  The following profiles are active: dev
+2023-07-02 20:56:07.535 INFO  [main] o.s.b.w.e.t.TomcatWebServer [90] -  Tomcat initialized with port(s): 8082 (http)
+2023-07-02 20:56:07.561 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Initializing ProtocolHandler ["http-nio-8082"]
+2023-07-02 20:56:07.572 INFO  [main] o.a.c.c.StandardService [173] -  Starting service [Tomcat]
+2023-07-02 20:56:07.573 INFO  [main] o.a.c.c.StandardEngine [173] -  Starting Servlet engine: [Apache Tomcat/9.0.31]
+2023-07-02 20:56:07.698 INFO  [main] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring embedded WebApplicationContext
+2023-07-02 20:56:07.699 INFO  [main] o.s.w.c.ContextLoader [284] -  Root WebApplicationContext: initialization completed in 2710 ms
+2023-07-02 20:56:07.784 INFO  [main] c.c.h.c.c.MybatisPlusConfig [45] -  ------------- 重载父类 sqlSessionFactory init-------
+2023-07-02 20:56:07.876 INFO  [main] c.z.h.HikariDataSource [110] -  HikariPool-1 - Starting...
+2023-07-02 20:56:08.300 INFO  [main] c.z.h.HikariDataSource [123] -  HikariPool-1 - Start completed.
+2023-07-02 20:56:09.522 INFO  [main] c.c.h.c.s.SpaManager [333] -  初始化[大号] sellersApi
+2023-07-02 20:56:09.528 INFO  [main] c.c.h.c.s.SpaManager [341] -  初始化[大号] ordersV0Api
+2023-07-02 20:56:09.531 INFO  [main] c.c.h.c.s.SpaManager [349] -  初始化[大号] shipmentApi
+2023-07-02 20:56:09.534 INFO  [main] c.c.h.c.s.SpaManager [357] -  初始化[大号] catalogApi
+2023-07-02 20:56:09.539 INFO  [main] c.c.h.c.s.SpaManager [365] -  初始化[大号] fbaInventoryApi
+2023-07-02 20:56:09.548 INFO  [main] c.c.h.c.s.SpaManager [373] -  初始化[大号] fbaInboundApi
+2023-07-02 20:56:09.553 INFO  [main] c.c.h.c.s.SpaManager [381] -  初始化[大号] financeApi
+2023-07-02 20:56:10.301 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService
+2023-07-02 20:56:10.306 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService 'backTaskExecutor'
+2023-07-02 20:56:10.715 INFO  [商品缓存线程] c.c.h.c.c.ItemDetailCache [124] -  开发环境关闭商品缓存任务
+2023-07-02 20:56:10.730 INFO  [main] c.c.h.c.c.SaleInfoCache [70] -  开发环境关闭商品缓存任务
+2023-07-02 20:56:11.538 INFO  [main] s.d.s.w.PropertySourcedRequestMappingHandlerMapping [69] -  Mapped URL path [/v2/api-docs] onto method [public org.springframework.http.ResponseEntity<springfox.documentation.spring.web.json.Json> springfox.documentation.swagger2.web.Swagger2Controller.getDocumentation(java.lang.String,javax.servlet.http.HttpServletRequest)]
+2023-07-02 20:56:12.077 INFO  [main] o.s.s.c.ThreadPoolTaskScheduler [171] -  Initializing ExecutorService 'taskScheduler'
+2023-07-02 20:56:12.155 INFO  [main] s.d.s.w.p.DocumentationPluginsBootstrapper [160] -  Context refreshed
+2023-07-02 20:56:12.184 INFO  [main] s.d.s.w.p.DocumentationPluginsBootstrapper [163] -  Found 1 custom documentation plugin(s)
+2023-07-02 20:56:12.240 INFO  [main] s.d.s.w.s.ApiListingReferenceScanner [41] -  Scanning for api listing references
+2023-07-02 20:56:12.486 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: payUsingGET_1
+2023-07-02 20:56:12.493 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingGET_1
+2023-07-02 20:56:12.494 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingHEAD_1
+2023-07-02 20:56:12.495 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPOST_1
+2023-07-02 20:56:12.496 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPUT_1
+2023-07-02 20:56:12.497 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPATCH_1
+2023-07-02 20:56:12.499 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingDELETE_1
+2023-07-02 20:56:12.501 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingOPTIONS_1
+2023-07-02 20:56:12.503 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingTRACE_1
+2023-07-02 20:56:12.504 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingGET_2
+2023-07-02 20:56:12.505 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingHEAD_2
+2023-07-02 20:56:12.506 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPOST_2
+2023-07-02 20:56:12.506 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPUT_2
+2023-07-02 20:56:12.507 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPATCH_2
+2023-07-02 20:56:12.508 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingDELETE_2
+2023-07-02 20:56:12.510 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingOPTIONS_2
+2023-07-02 20:56:12.510 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingTRACE_2
+2023-07-02 20:56:12.550 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_1
+2023-07-02 20:56:12.552 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_2
+2023-07-02 20:56:12.557 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_3
+2023-07-02 20:56:12.611 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Starting ProtocolHandler ["http-nio-8082"]
+2023-07-02 20:56:12.657 INFO  [main] o.s.b.w.e.t.TomcatWebServer [202] -  Tomcat started on port(s): 8082 (http) with context path '/hzman'
+2023-07-02 20:56:12.662 INFO  [main] c.c.h.s.WebApplication [59] -  Started WebApplication in 28.236 seconds (JVM running for 33.843)
+2023-07-02 20:56:16.608 INFO  [http-nio-8082-exec-1] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-07-02 20:56:16.608 INFO  [http-nio-8082-exec-1] o.s.w.s.DispatcherServlet [525] -  Initializing Servlet 'dispatcherServlet'
+2023-07-02 20:56:16.617 INFO  [http-nio-8082-exec-1] o.s.w.s.DispatcherServlet [547] -  Completed initialization in 9 ms
+2023-07-02 20:56:16.630 INFO  [http-nio-8082-exec-1] c.c.h.c.c.ContextHandler [34] - 4d6f592c454c486ca2b68b69db8a79c4 uri: /hzman/aws/user/market/list, original request body: , header: awsuserid=1#marketid=ATVPDKIKX0DER#user-agent=PostmanRuntime/7.32.3#accept=*/*#cache-control=no-cache#postman-token=b2695850-c784-4316-b42b-79134615cf3e#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive, path param: null.
+2023-07-02 20:57:59.677 INFO  [Thread-60] o.s.s.c.ThreadPoolTaskScheduler [208] -  Shutting down ExecutorService 'taskScheduler'
+2023-07-02 20:57:59.682 INFO  [Thread-60] o.s.s.c.ThreadPoolTaskExecutor [208] -  Shutting down ExecutorService 'backTaskExecutor'
+2023-07-02 20:57:59.684 INFO  [Thread-60] c.z.h.HikariDataSource [350] -  HikariPool-1 - Shutdown initiated...
+2023-07-02 20:57:59.692 INFO  [Thread-60] c.z.h.HikariDataSource [352] -  HikariPool-1 - Shutdown completed.
+2023-07-02 20:58:35.429 INFO  [main] c.c.h.s.WebApplication [50] -  Starting WebApplication on admindeMacBook-Pro.local with PID 26817 (/Users/admin/Documents/us/hzman-manager/hzman-server/target/classes started by admin in /Users/admin/Documents/us/hzman-manager)
+2023-07-02 20:58:35.435 INFO  [main] c.c.h.s.WebApplication [652] -  The following profiles are active: dev
+2023-07-02 20:58:37.326 INFO  [main] o.s.b.w.e.t.TomcatWebServer [90] -  Tomcat initialized with port(s): 8082 (http)
+2023-07-02 20:58:37.340 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Initializing ProtocolHandler ["http-nio-8082"]
+2023-07-02 20:58:37.349 INFO  [main] o.a.c.c.StandardService [173] -  Starting service [Tomcat]
+2023-07-02 20:58:37.349 INFO  [main] o.a.c.c.StandardEngine [173] -  Starting Servlet engine: [Apache Tomcat/9.0.31]
+2023-07-02 20:58:37.445 INFO  [main] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring embedded WebApplicationContext
+2023-07-02 20:58:37.445 INFO  [main] o.s.w.c.ContextLoader [284] -  Root WebApplicationContext: initialization completed in 1966 ms
+2023-07-02 20:58:37.503 INFO  [main] c.c.h.c.c.MybatisPlusConfig [45] -  ------------- 重载父类 sqlSessionFactory init-------
+2023-07-02 20:58:37.559 INFO  [main] c.z.h.HikariDataSource [110] -  HikariPool-1 - Starting...
+2023-07-02 20:58:37.979 INFO  [main] c.z.h.HikariDataSource [123] -  HikariPool-1 - Start completed.
+2023-07-02 20:58:39.015 INFO  [main] c.c.h.c.s.SpaManager [333] -  初始化[大号] sellersApi
+2023-07-02 20:58:39.017 INFO  [main] c.c.h.c.s.SpaManager [341] -  初始化[大号] ordersV0Api
+2023-07-02 20:58:39.020 INFO  [main] c.c.h.c.s.SpaManager [349] -  初始化[大号] shipmentApi
+2023-07-02 20:58:39.023 INFO  [main] c.c.h.c.s.SpaManager [357] -  初始化[大号] catalogApi
+2023-07-02 20:58:39.025 INFO  [main] c.c.h.c.s.SpaManager [365] -  初始化[大号] fbaInventoryApi
+2023-07-02 20:58:39.028 INFO  [main] c.c.h.c.s.SpaManager [373] -  初始化[大号] fbaInboundApi
+2023-07-02 20:58:39.031 INFO  [main] c.c.h.c.s.SpaManager [381] -  初始化[大号] financeApi
+2023-07-02 20:58:39.454 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService
+2023-07-02 20:58:39.455 INFO  [main] o.s.s.c.ThreadPoolTaskExecutor [171] -  Initializing ExecutorService 'backTaskExecutor'
+2023-07-02 20:58:39.812 INFO  [商品缓存线程] c.c.h.c.c.ItemDetailCache [124] -  开发环境关闭商品缓存任务
+2023-07-02 20:58:39.825 INFO  [main] c.c.h.c.c.SaleInfoCache [70] -  开发环境关闭商品缓存任务
+2023-07-02 20:58:40.212 INFO  [main] s.d.s.w.PropertySourcedRequestMappingHandlerMapping [69] -  Mapped URL path [/v2/api-docs] onto method [public org.springframework.http.ResponseEntity<springfox.documentation.spring.web.json.Json> springfox.documentation.swagger2.web.Swagger2Controller.getDocumentation(java.lang.String,javax.servlet.http.HttpServletRequest)]
+2023-07-02 20:58:40.565 INFO  [main] o.s.s.c.ThreadPoolTaskScheduler [171] -  Initializing ExecutorService 'taskScheduler'
+2023-07-02 20:58:40.618 INFO  [main] s.d.s.w.p.DocumentationPluginsBootstrapper [160] -  Context refreshed
+2023-07-02 20:58:40.632 INFO  [main] s.d.s.w.p.DocumentationPluginsBootstrapper [163] -  Found 1 custom documentation plugin(s)
+2023-07-02 20:58:40.683 INFO  [main] s.d.s.w.s.ApiListingReferenceScanner [41] -  Scanning for api listing references
+2023-07-02 20:58:40.895 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: payUsingGET_1
+2023-07-02 20:58:40.902 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingGET_1
+2023-07-02 20:58:40.903 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingHEAD_1
+2023-07-02 20:58:40.904 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPOST_1
+2023-07-02 20:58:40.904 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPUT_1
+2023-07-02 20:58:40.905 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPATCH_1
+2023-07-02 20:58:40.905 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingDELETE_1
+2023-07-02 20:58:40.906 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingOPTIONS_1
+2023-07-02 20:58:40.906 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingTRACE_1
+2023-07-02 20:58:40.908 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingGET_2
+2023-07-02 20:58:40.908 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingHEAD_2
+2023-07-02 20:58:40.909 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPOST_2
+2023-07-02 20:58:40.909 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPUT_2
+2023-07-02 20:58:40.910 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingPATCH_2
+2023-07-02 20:58:40.910 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingDELETE_2
+2023-07-02 20:58:40.911 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingOPTIONS_2
+2023-07-02 20:58:40.911 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: indexUsingTRACE_2
+2023-07-02 20:58:40.939 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_1
+2023-07-02 20:58:40.940 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_2
+2023-07-02 20:58:40.944 INFO  [main] s.d.s.w.r.o.CachingOperationNameGenerator [40] -  Generating unique operation named: listItemUsingPOST_3
+2023-07-02 20:58:40.989 INFO  [main] o.a.c.h.Http11NioProtocol [173] -  Starting ProtocolHandler ["http-nio-8082"]
+2023-07-02 20:58:41.024 INFO  [main] o.s.b.w.e.t.TomcatWebServer [202] -  Tomcat started on port(s): 8082 (http) with context path '/hzman'
+2023-07-02 20:58:41.027 INFO  [main] c.c.h.s.WebApplication [59] -  Started WebApplication in 26.085 seconds (JVM running for 31.873)
+2023-07-02 20:58:49.530 INFO  [http-nio-8082-exec-1] o.a.c.c.C.[.[.[/hzman] [173] -  Initializing Spring DispatcherServlet 'dispatcherServlet'
+2023-07-02 20:58:49.531 INFO  [http-nio-8082-exec-1] o.s.w.s.DispatcherServlet [525] -  Initializing Servlet 'dispatcherServlet'
+2023-07-02 20:58:49.547 INFO  [http-nio-8082-exec-1] o.s.w.s.DispatcherServlet [547] -  Completed initialization in 16 ms
+2023-07-02 20:58:49.574 INFO  [http-nio-8082-exec-1] c.c.h.c.c.ContextHandler [34] - c8a2c586747b4b489e4a5002e48e14d9 uri: /hzman/aws/user/market/list, original request body: , header: awsuserid=1#marketid=ATVPDKIKX0DER#user-agent=PostmanRuntime/7.32.3#accept=*/*#cache-control=no-cache#postman-token=f8867c72-d713-4875-a029-be74b6c135b8#host=127.0.0.1:8082#accept-encoding=gzip, deflate, br#connection=keep-alive, path param: null.
+2023-07-02 20:58:52.852 INFO  [Thread-56] o.s.s.c.ThreadPoolTaskScheduler [208] -  Shutting down ExecutorService 'taskScheduler'
+2023-07-02 20:58:52.855 INFO  [Thread-56] o.s.s.c.ThreadPoolTaskExecutor [208] -  Shutting down ExecutorService 'backTaskExecutor'
+2023-07-02 20:58:52.857 INFO  [Thread-56] c.z.h.HikariDataSource [350] -  HikariPool-1 - Shutdown initiated...
+2023-07-02 20:58:52.870 INFO  [Thread-56] c.z.h.HikariDataSource [352] -  HikariPool-1 - Shutdown completed.

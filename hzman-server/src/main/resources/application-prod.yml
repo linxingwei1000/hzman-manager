@@ -7,3 +7,6 @@ spring:
 
 spider:
   switch: true
+
+cache:
+  switch: true

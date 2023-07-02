@@ -7,7 +7,7 @@ import com.cn.hzm.core.exception.HzmUnauthorizedException;
 import com.cn.hzm.core.util.TimeUtil;
 import com.cn.hzm.server.domain.HzmPassport;
 import com.cn.hzm.server.domain.HzmToken;
-import com.cn.hzm.server.meta.HzmPassportStatus;
+import com.cn.hzm.api.meta.HzmPassportStatus;
 import com.cn.hzm.server.service.PassportService;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.http.HttpHeaders;

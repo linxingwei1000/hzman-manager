@@ -23,7 +23,8 @@ import javax.sql.DataSource;
         "com.cn.hzm.item.dao",
         "com.cn.hzm.order.dao",
         "com.cn.hzm.stock.dao",
-        "com.cn.hzm.server.dao"})
+        "com.cn.hzm.server.dao",
+        "com.cn.hzm.core.repository.mapper"})
 @EnableTransactionManagement
 @Slf4j
 public class MybatisPlusConfig {
