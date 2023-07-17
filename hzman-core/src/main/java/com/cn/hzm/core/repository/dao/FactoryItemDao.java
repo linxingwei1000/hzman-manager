@@ -38,6 +38,11 @@ public class FactoryItemDao {
         return factoryItemMapper.selectById(id);
     }
 
+    public List<FactoryItemDo> getAll(){
+        QueryWrapper<FactoryItemDo> query = new QueryWrapper<>();
+        return factoryItemMapper.selectList(query);
+    }
+
     public List<FactoryItemDo> getInfoBySku(String sku){
         QueryWrapper<FactoryItemDo> query = new QueryWrapper<>();
         query.eq("sku", sku);

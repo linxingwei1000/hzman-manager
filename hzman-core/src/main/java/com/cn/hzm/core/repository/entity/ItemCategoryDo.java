@@ -22,8 +22,17 @@ public class ItemCategoryDo {
     @TableField(value = "item_id")
     private Integer itemId;
 
-    @TableField(value = "category_tree_info")
-    private String categoryTreeInfo;
+    @TableField(value = "relation_info")
+    private String relationInfo;
+
+    @TableField(value = "category_title")
+    private String categoryTitle;
+
+    @TableField(value = "category_link")
+    private String categoryLink;
+
+    @TableField(value = "category_rank")
+    private Integer categoryRank;
 
     private Date ctime;
 

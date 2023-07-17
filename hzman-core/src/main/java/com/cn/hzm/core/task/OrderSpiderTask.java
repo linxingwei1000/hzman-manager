@@ -189,7 +189,7 @@ public class OrderSpiderTask implements ITask{
             try {
                 if (!spiderSwitch) {
                     log.info("订单爬取任务已被停止，等待激活重试");
-                    Thread.sleep(60 * 1000);
+                    Thread.sleep(10* 60 * 1000);
                     continue;
                 }
 
@@ -214,7 +214,7 @@ public class OrderSpiderTask implements ITask{
             try {
                 if (!spiderSwitch) {
                     log.info("订单爬取任务已被停止，等待激活重试");
-                    Thread.sleep(60 * 1000);
+                    Thread.sleep(10 * 60 * 1000);
                     continue;
                 }
 
@@ -342,7 +342,6 @@ public class OrderSpiderTask implements ITask{
         long startTime = System.currentTimeMillis();
         AwsSpiderTaskDo awsSpiderTaskDo = awsSpiderTaskDao.select(spiderTaskId);
 
-        //todo 可能时间格式需要转换
         String strBeginDate = awsSpiderTaskDo.getSpiderDepend();
         Date beginDate = TimeUtil.transformUTCToDate(strBeginDate);
         Date endDate = TimeUtil.dateFixByDay(beginDate, 0, 0, 30);
@@ -382,6 +381,8 @@ public class OrderSpiderTask implements ITask{
             total += tmpIds.size();
         }
 
+        //重新读取数据库
+        awsSpiderTaskDo = awsSpiderTaskDao.select(spiderTaskId);
         awsSpiderTaskDo.setSpiderDepend(strEndDate);
         awsSpiderTaskDao.update(awsSpiderTaskDo);
         log.info("爬取订单任务结束，耗时：{}，爬取时间范围：{}--{}, 爬取总数：{}", System.currentTimeMillis() - startTime, strBeginDate, strEndDate, total);
@@ -531,14 +532,14 @@ public class OrderSpiderTask implements ITask{
                             JSONObject jo = (JSONObject) JSONObject.toJSON(response.getPayload().getFinancialEvents());
                             orderFinanceDO = JSONObject.toJavaObject(jo, AmazonOrderFinanceDo.class);
                             jo.remove("shipmentEventList");
-                            orderFinanceDO.setOther_event_list(jo.toJSONString());
+                            orderFinanceDO.setOtherEventList(jo.toJSONString());
                             orderFinanceDO.setAmazonOrderId(order.getAmazonOrderId());
                             result = amazonOrderFinanceDao.createOrderFinance(orderFinanceDO);
                         } else {
                             JSONObject jo = (JSONObject) JSONObject.toJSON(response.getPayload().getFinancialEvents());
                             AmazonOrderFinanceDo newOrderFinanceDO = JSONObject.toJavaObject(jo, AmazonOrderFinanceDo.class);
                             jo.remove("shipmentEventList");
-                            newOrderFinanceDO.setOther_event_list(jo.toJSONString());
+                            newOrderFinanceDO.setOtherEventList(jo.toJSONString());
                             newOrderFinanceDO.setAmazonOrderId(order.getAmazonOrderId());
                             newOrderFinanceDO.setId(orderFinanceDO.getId());
                             newOrderFinanceDO.setCtime(orderFinanceDO.getCtime());

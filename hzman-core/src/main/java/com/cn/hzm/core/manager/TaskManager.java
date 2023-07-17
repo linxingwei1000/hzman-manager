@@ -1,6 +1,5 @@
 package com.cn.hzm.core.manager;
 
-import com.cn.hzm.core.aws.AwsClient;
 import com.cn.hzm.core.cache.SaleInfoCache;
 import com.cn.hzm.core.enums.SpiderType;
 import com.cn.hzm.core.misc.ItemService;
@@ -26,9 +25,6 @@ import java.util.Map;
  */
 @Component
 public class TaskManager {
-
-    @Autowired
-    private AwsUserDao awsUserDao;
 
     @Autowired
     private AwsUserMarketDao awsUserMarketDao;
@@ -62,9 +58,6 @@ public class TaskManager {
 
     @Autowired
     private DailyStatProcessor dailyStatProcessor;
-
-    @Autowired
-    private AwsClient awsClient;
 
     /**
      * 亚马逊seller spi map<awsUserId,<MarketId, spaManager>>

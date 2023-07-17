@@ -1,4 +1,4 @@
-package com.cn.hzm.stock.enums;
+package com.cn.hzm.api.enums;
 
 /**
  * @author xingweilin@clubfactory.com

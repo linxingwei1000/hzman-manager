@@ -15,6 +15,8 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
+import javax.servlet.http.HttpServletResponse;
+import java.io.IOException;
 import java.util.List;
 
 /**
@@ -133,5 +135,12 @@ public class ItemApi {
     @RequestMapping(value = "/remark/del", method = RequestMethod.GET)
     public HzmResponse delRemark(@ApiParam(name = "数据库id") @RequestParam Integer id) {
         return HzmResponse.success(itemService.delRemark(id));
+    }
+
+    @ApiOperation("本地库存商品下载")
+    @RequestMapping(value = "/stock/item/download", method = RequestMethod.GET)
+    public HzmResponse stockItemDownload(HttpServletResponse response) throws IOException {
+        itemService.stockItemDownload(response);
+        return HzmResponse.success("下载成功");
     }
 }

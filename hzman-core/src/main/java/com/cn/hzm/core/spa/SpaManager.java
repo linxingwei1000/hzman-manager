@@ -354,6 +354,14 @@ public class SpaManager {
                 .build();
         log.info("初始化[{}] catalogApi", awsUserDo.getRemark());
 
+        this.productPricingApi = new ProductPricingApi.Builder()
+                .awsAuthenticationCredentials(awsAuthenticationCredentials)
+                .lwaAuthorizationCredentials(lwaAuthorizationCredentials)
+                .awsAuthenticationCredentialsProvider(awsAuthenticationCredentialsProvider)
+                .endpoint(awsMarket.getEndpoint())
+                .build();
+        log.info("初始化[{}] productPricingApi", awsUserDo.getRemark());
+
         this.fbaInventoryApi = new FbaInventoryApi.Builder()
                 .awsAuthenticationCredentials(awsAuthenticationCredentials)
                 .lwaAuthorizationCredentials(lwaAuthorizationCredentials)
@@ -392,8 +400,8 @@ public class SpaManager {
 
         SpaManager spaManager = new SpaManager(awsUserDo, awsMarket, null);
 
-        Item item = spaManager.getItemByAsin("B0BNPF69NN");
+        GetPricingResponse  r = spaManager.getPriceBySku("PHW671104");
 
-        System.out.println(JSONObject.toJSONString(item));
+        System.out.println(JSONObject.toJSONString(r));
     }
 }

@@ -1,6 +1,5 @@
 package com.cn.hzm.core.task;
 
-import com.cn.hzm.core.aws.AwsClient;
 import com.cn.hzm.core.exception.ExceptionCode;
 import com.cn.hzm.core.exception.HzmException;
 import com.cn.hzm.core.misc.ItemService;
@@ -13,17 +12,15 @@ import com.cn.hzm.core.repository.entity.FbaInboundItemDo;
 import com.cn.hzm.core.spa.SpaManager;
 import com.cn.hzm.core.spa.fbainbound.model.*;
 import com.cn.hzm.core.util.ConvertUtil;
+import com.cn.hzm.core.util.TimeUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.threeten.bp.OffsetDateTime;
-import org.threeten.bp.ZoneId;
-
-import java.sql.Timestamp;
 import java.text.ParseException;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.*;
@@ -245,18 +242,14 @@ public class ShipmentSpiderTask implements ITask {
         long startTime = System.currentTimeMillis();
         AwsSpiderTaskDo awsSpiderTaskDo = awsSpiderTaskDao.select(spiderTaskId);
 
-        //todo 时间格式需要转换
         String strBeginDate = awsSpiderTaskDo.getSpiderDepend();
+        Date beginDate1 = TimeUtil.transformUTCToDate(strBeginDate);
         OffsetDateTime beginDate = OffsetDateTime.parse(strBeginDate);
         OffsetDateTime endDate = beginDate.plusMinutes(30);
         String strEndDate = endDate.toInstant().toString();
 
-
-        Timestamp timestamp = Timestamp.valueOf(String.valueOf(endDate.atZoneSameInstant(ZoneId.of("Z")).toLocalDateTime()));
-        int total = 0;
-
         //如果是同一天的请求，endDate为空
-        if (System.currentTimeMillis() - timestamp.getTime() < DURATION_SECOND) {
+        if (System.currentTimeMillis() - beginDate1.getTime() < DURATION_SECOND) {
             //如果拉取当天数据，每6分钟执行一次
             log.info("爬取货物入库单任务未满足时间条件，退出本次任务，休息30分钟");
             Thread.sleep(30 * 60 * 1000);
@@ -281,6 +274,7 @@ public class ShipmentSpiderTask implements ITask {
             parseShipmentInfo(tokenResponse.getPayload().getShipmentData());
         }
 
+        awsSpiderTaskDo = awsSpiderTaskDao.select(spiderTaskId);
         awsSpiderTaskDo.setSpiderDepend(strEndDate);
         awsSpiderTaskDao.update(awsSpiderTaskDo);
         log.info("货物入库单任务结束，耗时：{}，爬取时间范围：{}--{}", System.currentTimeMillis() - startTime, strBeginDate, strEndDate);
@@ -311,15 +305,6 @@ public class ShipmentSpiderTask implements ITask {
             //新接口获取该shipmentId下所有商品
             GetShipmentItemsResponse r = spaManager.getShipmentItemsByShipmentId(shipmentId);
             parseShipmentItemInfo(r.getPayload().getItemData());
-//            String nextToken = r.getPayload().getNextToken();
-//            while (!StringUtils.isEmpty(nextToken)) {
-//                //获取资源
-//                shipmentItemSemaphore.acquire();
-//                ListInboundShipmentItemsByNextTokenResponse tokenResponse = awsClient.getShipmentItemsByNextToken(nextToken);
-//                nextToken = tokenResponse.getListInboundShipmentItemsByNextTokenResult().getNextToken();
-//
-//                parseShipmentItemInfo(tokenResponse.getListInboundShipmentItemsByNextTokenResult().getItemData().getList());
-//            }
         } catch (Exception e) {
             log.error("货运单【{}】爬取失败：", shipmentId, e);
         }

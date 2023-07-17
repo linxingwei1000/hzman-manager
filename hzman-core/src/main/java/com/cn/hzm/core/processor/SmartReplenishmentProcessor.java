@@ -8,7 +8,7 @@ import com.cn.hzm.core.repository.entity.ItemDo;
 import com.cn.hzm.core.repository.entity.ItemInventoryDo;
 import com.cn.hzm.core.repository.entity.SaleInfoDo;
 import com.cn.hzm.core.util.TimeUtil;
-import com.cn.hzm.stock.enums.ReplenishmentEnum;
+import com.cn.hzm.api.enums.ReplenishmentEnum;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;

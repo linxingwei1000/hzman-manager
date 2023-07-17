@@ -3,6 +3,7 @@ package com.cn.hzm.api.dto;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -14,13 +15,10 @@ import java.util.Map;
 @ApiModel(description = "商品类目排名")
 public class CategoryRankDto {
 
-    private String productCategoryId;
+    private String categoryTitle;
 
-    private String productCategoryName;
+    private String categoryLink;
 
-    private Integer rank;
+    private Integer categoryRank;
 
-    private Map<String, CategoryRankDto> childCategoryMap;
-
-    private List<CategoryRankDto> childCategory;
 }

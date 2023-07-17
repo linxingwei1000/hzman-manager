@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author xingweilin@clubfactory.com
@@ -48,6 +49,16 @@ public class ItemInventoryDao {
         QueryWrapper<ItemInventoryDo> query = new QueryWrapper<>();
         query.eq("asin", asin);
         return itemInventoryMapper.selectOne(query);
+    }
+
+    /**
+     * 获取库存
+     */
+    public List<ItemInventoryDo> getInventoryWhenStockNotNull(){
+        QueryWrapper<ItemInventoryDo> query = new QueryWrapper<>();
+        query.ne("local_quantity", 0);
+        query.isNotNull("local_quantity");
+        return itemInventoryMapper.selectList(query);
     }
 
     /**

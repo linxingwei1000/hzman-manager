@@ -333,18 +333,6 @@ CREATE TABLE hzm.hzm_factory_order_item
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='厂家订单商品详情表';
 
 
-
-drop table hzm.hzm_operate_depend;
-CREATE TABLE hzm.hzm_operate_depend
-(
-    `id`            int(11) unsigned NOT NULL AUTO_INCREMENT,
-    `operate_key`   varchar(128) not null comment '操作项',
-    `operate_value` varchar(128) not null comment '依赖值',
-    PRIMARY KEY (`id`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='操作依赖表';
-
-
-
 drop table hzm.hzm_amazon_order_item;
 CREATE TABLE hzm.hzm_amazon_order_item
 (
@@ -398,3 +386,18 @@ CREATE TABLE hzm.hzm_amazon_order_item
     `utime`                                datetime     NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='amazon订单商品表';
+
+
+CREATE TABLE `hzm_item_category_rank`
+(
+    `id`             int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `item_id`        int(11) unsigned NOT NULL COMMENT '商品表id',
+    `relation_info`  varchar(4096) NOT NULL COMMENT '类目相关信息',
+    `category_title` varchar(4096) NOT NULL COMMENT '商品类目标题',
+    `category_link`  varchar(4096) NOT NULL COMMENT '商品类目跳转链接',
+    `category_rank`  int(11) unsigned NOT NULL COMMENT '商品类目中排名',
+    `ctime`          datetime      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `utime`          datetime      NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    KEY              `idx_item_id` (`item_id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品类目排名表';

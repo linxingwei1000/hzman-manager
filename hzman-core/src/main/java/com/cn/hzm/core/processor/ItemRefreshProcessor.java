@@ -41,10 +41,10 @@ public class ItemRefreshProcessor {
     private static final int FAIL_LIMIT = 5;
 
     public void init() {
-        if (!spiderSwitch) {
-            log.info("测试环境关闭商品刷新任务");
-            return;
-        }
+//        if (!spiderSwitch) {
+//            log.info("测试环境关闭商品刷新任务");
+//            return;
+//        }q
 
         ScheduledThreadPoolExecutor orderScheduledTask = new ScheduledThreadPoolExecutor(1);
         orderScheduledTask.scheduleWithFixedDelay(() -> {
@@ -55,19 +55,7 @@ public class ItemRefreshProcessor {
             Map<String, Integer> failTimes = Maps.newHashMap();
             refreshItem(skus, 1, failTimes);
             log.info("=============刷新商品任务结束，任务耗时：{} ", System.currentTimeMillis() - curTime);
-        }, 10, 30 * 60, TimeUnit.SECONDS);
-
-        //类目刷新线程
-        ScheduledThreadPoolExecutor itemCategoryScheduledTask = new ScheduledThreadPoolExecutor(1);
-        itemCategoryScheduledTask.scheduleWithFixedDelay(() -> {
-            List<ItemDo> skus = itemDao.getListByCondition(Maps.newHashMap(), new String[]{"sku","user_market_id"});
-            log.info("=============刷新商品类目信息任务，本次任务需刷新商品个数：{}", skus.size());
-            long curTime = System.currentTimeMillis();
-
-            Map<String, Integer> failTimes = Maps.newHashMap();
-            refreshItemCategory(skus, 1, failTimes);
-            log.info("=============刷新商品类目信息任务，任务耗时：{} ", System.currentTimeMillis() - curTime);
-        }, 10, 30 * 60, TimeUnit.SECONDS);
+        }, 5, 30 * 60, TimeUnit.SECONDS);
     }
 
     private void refreshItem(List<ItemDo> itemDos, Integer epoch, Map<String, Integer> failTimes) {
@@ -101,34 +89,6 @@ public class ItemRefreshProcessor {
 
         if (!CollectionUtils.isEmpty(failSkus)) {
             refreshItem(failSkus, ++epoch, failTimes);
-        }
-    }
-
-    private void refreshItemCategory(List<ItemDo> itemDos, Integer epoch, Map<String, Integer> failTimes) {
-        List<ItemDo> failSkus = Lists.newArrayList();
-        for (ItemDo tmp : itemDos) {
-            try {
-                ItemDo itemDO = itemDao.getItemDOBySku(tmp.getUserMarketId(), tmp.getSku());
-                itemService.processSaleRankInfo(itemDO);
-                Thread.sleep(8000);
-            } catch (Exception e) {
-                log.error("刷新商品类目错误, {}：", tmp.getSku(), e);
-
-                failSkus.add(tmp);
-                Integer times = failTimes.getOrDefault(tmp.getSku(), 0);
-                if (times == FAIL_LIMIT) {
-                    failTimes.remove(tmp.getSku());
-                    failSkus.remove(tmp);
-                    log.info("sku【{}】刷新失败次数超限，请查看商品状态", tmp.getSku());
-                } else {
-                    failTimes.put(tmp.getSku(), ++times);
-                }
-            }
-        }
-        log.info("=============第{}轮刷新商品，失败需要重新刷新个数：{}", epoch, failSkus.size());
-
-        if (!CollectionUtils.isEmpty(failSkus)) {
-            refreshItemCategory(failSkus, ++epoch, failTimes);
         }
     }
 }

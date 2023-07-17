@@ -26,7 +26,7 @@ public class AmazonOrderFinanceDo {
     private String shipmentEventList;
 
     @TableField(value="other_event_list")
-    private String other_event_list;
+    private String otherEventList;
 
     private Date ctime;
 

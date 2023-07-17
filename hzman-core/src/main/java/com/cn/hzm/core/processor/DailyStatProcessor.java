@@ -3,14 +3,14 @@ package com.cn.hzm.core.processor;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cn.hzm.api.dto.ItemDto;
-import com.cn.hzm.core.aws.domain.finance.event.ChargeComponent;
-import com.cn.hzm.core.aws.domain.finance.event.FeeComponent;
-import com.cn.hzm.core.aws.domain.finance.event.ShipmentEventList;
-import com.cn.hzm.core.aws.domain.finance.event.ShipmentItem;
 import com.cn.hzm.core.cache.ItemDetailCache;
 import com.cn.hzm.core.constant.ContextConst;
 import com.cn.hzm.core.repository.dao.*;
 import com.cn.hzm.core.repository.entity.*;
+import com.cn.hzm.core.spa.finance.model.ChargeComponent;
+import com.cn.hzm.core.spa.finance.model.FeeComponent;
+import com.cn.hzm.core.spa.finance.model.ShipmentEventList;
+import com.cn.hzm.core.spa.finance.model.ShipmentItem;
 import com.cn.hzm.core.util.TimeUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
@@ -188,28 +188,28 @@ public class DailyStatProcessor {
             }
 
             ShipmentEventList shipmentEventList = JSONObject.parseObject(amazonOrderFinanceDO.getShipmentEventList(), ShipmentEventList.class);
-            List<ShipmentItem> shipmentItems = shipmentEventList.getList().get(0).getShipmentItemList().getList();
+            List<ShipmentItem> shipmentItems = shipmentEventList.get(0).getShipmentItemList();
             shipmentItems.forEach(shipmentItem -> {
                 SaleInfoDo saleInfoDO = saleDetailInfoMap.get(shipmentItem.getSellerSKU()).get(amazonOrderId);
 
-                for (ChargeComponent chargeComponent : shipmentItem.getItemChargeList().getChargeComponents()) {
+                for (ChargeComponent chargeComponent : shipmentItem.getItemChargeList()) {
                     //设置税费
                     if (chargeComponent.getChargeType().equals("Tax")) {
-                        saleInfoDO.setSaleTax(chargeComponent.getChargeAmount().getCurrencyAmount());
+                        saleInfoDO.setSaleTax(chargeComponent.getChargeAmount().getCurrencyAmount().doubleValue());
                         break;
                     }
                 }
 
-                if (shipmentItem.getItemFeeList() != null && shipmentItem.getItemFeeList().getFeeComponents() != null) {
-                    for (FeeComponent feeComponent : shipmentItem.getItemFeeList().getFeeComponents()) {
+                if (shipmentItem.getItemFeeList() != null) {
+                    for (FeeComponent feeComponent : shipmentItem.getItemFeeList()) {
                         //设置仓储管理费
                         if (feeComponent.getFeeType().equals("FBAPerUnitFulfillmentFee")) {
-                            saleInfoDO.setFbaFulfillmentFee(Math.abs(feeComponent.getFeeAmount().getCurrencyAmount()));
+                            saleInfoDO.setFbaFulfillmentFee(Math.abs(feeComponent.getFeeAmount().getCurrencyAmount().doubleValue()));
                         }
 
                         //设置佣金
                         if (feeComponent.getFeeType().equals("Commission")) {
-                            saleInfoDO.setCommission(Math.abs(feeComponent.getFeeAmount().getCurrencyAmount()));
+                            saleInfoDO.setCommission(Math.abs(feeComponent.getFeeAmount().getCurrencyAmount().doubleValue()));
                         }
                     }
                 }

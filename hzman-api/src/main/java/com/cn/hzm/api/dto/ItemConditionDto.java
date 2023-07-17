@@ -3,6 +3,8 @@ package com.cn.hzm.api.dto;
 import io.swagger.annotations.ApiModel;
 import lombok.Data;
 
+import java.util.Date;
+
 /**
  * @author xingweilin@clubfactory.com
  * @date 2020/7/25 3:57 下午
@@ -40,6 +42,18 @@ public class ItemConditionDto extends PageDto{
      * 商品类型
      */
     private String itemType;
+
+    /**
+     * 上架时间过滤排序
+     */
+    private String startListingTime;
+    private String endListingTime;
+    private Integer listingTimeSortType;
+
+    /**
+     * 是否备注
+     */
+    private Boolean hasRemark;
 
     /**
      * 排序

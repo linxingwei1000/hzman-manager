@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author xingweilin@clubfactory.com
@@ -18,10 +19,10 @@ public class ItemCategoryDao {
     @Autowired
     private ItemCategoryMapper itemCategoryMapper;
 
-    public ItemCategoryDo getItemCategoryByItemId(Integer ItemId) {
+    public List<ItemCategoryDo> getItemCategoryByItemId(Integer itemId) {
         QueryWrapper<ItemCategoryDo> query = new QueryWrapper<>();
-        query.eq("item_id", ItemId);
-        return itemCategoryMapper.selectOne(query);
+        query.eq("item_id", itemId);
+        return itemCategoryMapper.selectList(query);
     }
 
     /**
@@ -43,6 +44,12 @@ public class ItemCategoryDao {
     public void updateItemCategory(ItemCategoryDo itemCategoryDO) {
         itemCategoryDO.setUtime(new Date());
         itemCategoryMapper.updateById(itemCategoryDO);
+    }
+
+    public Integer deleteItemCategoryByItemId(Integer itemId){
+        QueryWrapper<ItemCategoryDo> query = new QueryWrapper<>();
+        query.eq("item_id", itemId);
+        return itemCategoryMapper.delete(query);
     }
 
     public Integer deleteItemCategory(Integer id){

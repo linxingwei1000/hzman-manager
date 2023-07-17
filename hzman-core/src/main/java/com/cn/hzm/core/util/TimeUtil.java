@@ -84,6 +84,15 @@ public class TimeUtil {
         return new Date();
     }
 
+    public static Date getDateByDateFormat(String source) {
+        try {
+            return new SimpleDateFormat(DATE_FORMAT).parse(source);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return new Date();
+    }
+
     public static String getSimpleFormat(Date date) {
         return new SimpleDateFormat(SIMPLE_FORMAT).format(date);
     }

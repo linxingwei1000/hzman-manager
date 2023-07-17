@@ -109,15 +109,15 @@ public class ItemDetailCache {
         relationCacheMap = Maps.newHashMap();
         childrenCacheMap = Maps.newHashMap();
 
+        //启动程序计算智能补货
+        smartReplenishmentProcessor.init();
+
         //异步加载数据
         ExecutorService executor = Executors.newSingleThreadExecutor(r -> {
             Thread t = new Thread(r);
             t.setName("商品缓存线程");
             return t;
         });
-
-        //启动程序计算智能补货
-        smartReplenishmentProcessor.init();
 
         executor.submit(() -> {
             if (!cacheSwitch) {
@@ -169,8 +169,6 @@ public class ItemDetailCache {
             ScheduledThreadPoolExecutor orderScheduledTask = new ScheduledThreadPoolExecutor(1);
             orderScheduledTask.scheduleWithFixedDelay(this::refreshRelationCache, 10, 300, TimeUnit.SECONDS);
         });
-
-
     }
 
     /**
@@ -180,7 +178,9 @@ public class ItemDetailCache {
      * @return
      */
     public List<ItemDto> getCacheBySort(Integer showType, Integer itemStatusType, Integer factoryId,
-                                        String key, String title, String itemType, Integer sortType, Integer userMarketId) {
+                                        String key, String title, String itemType, Integer sortType,
+                                        String startListingTime, String endListingTime, Integer listingDateSortType,
+                                        Boolean hasRemark, Integer userMarketId) {
         Collection<ItemDto> temp;
         if (showType == 2) {
             //展示父子体
@@ -216,9 +216,18 @@ public class ItemDetailCache {
 
             //厂家过滤
             if (factoryId != null) {
-                List<FactoryItemDo> factoryItemDOS = factoryItemDao.getInfoByFactoryId(factoryId);
-                List<String> ItemDTOs = factoryItemDOS.stream().map(FactoryItemDo::getSku).collect(Collectors.toList());
-                temp = temp.stream().filter(itemDTO -> ItemDTOs.contains(itemDTO.getSku())).collect(Collectors.toList());
+
+                if (factoryId == -1) {
+                    //拉取未绑定厂家商品
+                    List<FactoryItemDo> factoryItemDOS = factoryItemDao.getAll();
+                    List<String> ItemDTOs = factoryItemDOS.stream().map(FactoryItemDo::getSku).collect(Collectors.toList());
+                    temp = temp.stream().filter(itemDTO -> !ItemDTOs.contains(itemDTO.getSku())).collect(Collectors.toList());
+                } else {
+                    //拉取指定厂家商品
+                    List<FactoryItemDo> factoryItemDOS = factoryItemDao.getInfoByFactoryId(factoryId);
+                    List<String> ItemDTOs = factoryItemDOS.stream().map(FactoryItemDo::getSku).collect(Collectors.toList());
+                    temp = temp.stream().filter(itemDTO -> ItemDTOs.contains(itemDTO.getSku())).collect(Collectors.toList());
+                }
             }
 
             //sku过滤
@@ -242,6 +251,36 @@ public class ItemDetailCache {
             //商品类型过滤
             if (!StringUtils.isEmpty(itemType)) {
                 temp = temp.stream().filter(item -> item.getItemType().equals(itemType)).collect(Collectors.toList());
+            }
+
+            //备注商品过滤
+            if (hasRemark != null) {
+                if (hasRemark) {
+                    temp = temp.stream().filter(item -> !CollectionUtils.isEmpty(item.getRemarkDtos())).collect(Collectors.toList());
+                } else {
+                    temp = temp.stream().filter(item -> CollectionUtils.isEmpty(item.getRemarkDtos())).collect(Collectors.toList());
+                }
+            }
+
+            //上架时间过滤排序
+            if (startListingTime != null) {
+                startListingTime += ":00";
+                Date startLT = TimeUtil.getDateByDateFormat(startListingTime);
+                temp = temp.stream().filter(itemDto -> itemDto.getListingTime().after(startLT)).collect(Collectors.toList());
+            }
+            if (endListingTime != null) {
+                endListingTime += ":00";
+                Date endLT = TimeUtil.getDateByDateFormat(endListingTime);
+                temp = temp.stream().filter(itemDto -> itemDto.getListingTime().before(endLT)).collect(Collectors.toList());
+            }
+            if (listingDateSortType == null || listingDateSortType == 0) {
+                //按时间从老到新
+                temp = temp.stream().sorted(Comparator.comparing(ItemDto::getListingTime))
+                        .collect(Collectors.toList());
+            } else {
+                //按时间从新到老
+                temp = temp.stream().sorted(Comparator.comparing(ItemDto::getListingTime).reversed())
+                        .collect(Collectors.toList());
             }
         }
 
@@ -337,10 +376,10 @@ public class ItemDetailCache {
             addData(duration3060Day, item.getDuration3060Day());
             addData(setLastYearDuration30Day, item.getLastYearDuration30Day());
 
-            amazonStockQuantity += item.getInventoryDTO().getAmazonStockQuantity();
-            localQuantity += item.getInventoryDTO().getLocalQuantity();
-            amazonTransferQuantity += item.getInventoryDTO().getAmazonTransferQuantity();
-            amazonInboundQuantity += item.getInventoryDTO().getAmazonInboundQuantity();
+            amazonStockQuantity += item.getInventoryDTO().getAmazonStockQuantity() == null ? 0 : item.getInventoryDTO().getAmazonStockQuantity();
+            localQuantity += item.getInventoryDTO().getLocalQuantity() == null ? 0 : item.getInventoryDTO().getLocalQuantity();
+            amazonTransferQuantity += item.getInventoryDTO().getAmazonTransferQuantity() == null ? 0 : item.getInventoryDTO().getAmazonTransferQuantity();
+            amazonInboundQuantity += item.getInventoryDTO().getAmazonInboundQuantity() == null ? 0 : item.getInventoryDTO().getAmazonInboundQuantity();
         }
         relationItem.setToday(today);
         relationItem.setYesterday(yesterday);

@@ -4,13 +4,12 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.cn.hzm.api.dto.*;
 import com.cn.hzm.api.enums.FactoryOrderStatusEnum;
-import com.cn.hzm.core.aws.AwsClient;
-import com.cn.hzm.core.aws.domain.product.*;
-import com.cn.hzm.core.aws.resp.product.GetProductCategoriesForSKUResponse;
 import com.cn.hzm.core.cache.ItemDetailCache;
 import com.cn.hzm.core.cache.ThreadLocalCache;
 import com.cn.hzm.core.enums.AmazonShipmentStatusEnum;
 import com.cn.hzm.core.enums.SpiderType;
+import com.cn.hzm.core.exception.ExceptionCode;
+import com.cn.hzm.core.exception.HzmException;
 import com.cn.hzm.core.manager.AwsUserManager;
 import com.cn.hzm.core.manager.TaskManager;
 import com.cn.hzm.core.processor.SmartReplenishmentProcessor;
@@ -18,13 +17,21 @@ import com.cn.hzm.core.repository.dao.*;
 import com.cn.hzm.core.repository.entity.*;
 import com.cn.hzm.core.spa.SpaManager;
 import com.cn.hzm.core.spa.fbainventory.model.GetInventorySummariesResponse;
-import com.cn.hzm.core.spa.item.model.Item;
+import com.cn.hzm.core.spa.item.model.*;
 import com.cn.hzm.core.util.ConvertUtil;
 import com.cn.hzm.core.util.RandomUtil;
 import com.cn.hzm.core.util.TimeUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.HorizontalAlignment;
+import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.xssf.usermodel.XSSFCell;
+import org.apache.poi.xssf.usermodel.XSSFRow;
+import org.apache.poi.xssf.usermodel.XSSFSheet;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -32,6 +39,9 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.servlet.http.HttpServletResponse;
+import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -48,9 +58,6 @@ public class ItemService {
 
     @Autowired
     private ItemInventoryDao inventoryDao;
-
-    @Autowired
-    private AwsSpiderTaskDao awsSpiderTaskDao;
 
     @Autowired
     private AwsUserMarketDao awsUserMarketDao;
@@ -100,17 +107,14 @@ public class ItemService {
     @Autowired
     private SmartReplenishmentProcessor smartReplenishmentProcessor;
 
-    @Autowired
-    private AwsClient awsClient;
-
     private Map<String, Object> syncLock = Maps.newHashMap();
 
     public JSONObject processListItem(ItemConditionDto conditionDto) {
         List<ItemDto> itemRespList = itemDetailCache.getCacheBySort(conditionDto.getShowType(), conditionDto.getItemStatusType(),
                 conditionDto.getFactoryId(), conditionDto.getKey(), conditionDto.getTitle(), conditionDto.getItemType(),
-                conditionDto.getItemSortType(), ThreadLocalCache.getUser().getUserMarketId());
-
-        //todo 上架时间
+                conditionDto.getItemSortType(), conditionDto.getStartListingTime(), conditionDto.getEndListingTime(),
+                conditionDto.getListingTimeSortType(), conditionDto.getHasRemark(),
+                ThreadLocalCache.getUser().getUserMarketId());
 
         JSONObject respJo = new JSONObject();
         respJo.put("total", itemRespList.size());
@@ -129,7 +133,7 @@ public class ItemService {
     }
 
     //添加备注
-    public boolean addRemark(AddItemRemarkDto remarkDto) {
+    public Integer addRemark(AddItemRemarkDto remarkDto) {
         ItemDo itemDO = itemDao.getById(remarkDto.getItemId());
         if (itemDO == null) {
             throw new RuntimeException("商品不存在");
@@ -141,7 +145,7 @@ public class ItemService {
         itemRemarkDao.insert(itemRemarkDo);
 
         itemDetailCache.refreshCache(ThreadLocalCache.getUser().getUserMarketId(), itemDO.getSku());
-        return true;
+        return itemRemarkDo.getId();
     }
 
     public boolean modRemark(AddItemRemarkDto remarkDto) {
@@ -196,46 +200,54 @@ public class ItemService {
     }
 
     @Transactional(rollbackFor = Exception.class)
-    public void processSync(String sku, Integer awsUserId, String marketId) throws Exception {
+    public void processSync(String sourceSku, Integer awsUserId, String marketId) throws Exception {
         SpaManager spaManager = awsUserManager.getManager(awsUserId, marketId);
+
+        List<String> skus;
+        if(sourceSku.contains(";")){
+            skus = Lists.newArrayList(sourceSku.split(";"));
+        }else{
+            skus = Lists.newArrayList(sourceSku);
+        }
+
         //asin取aws数据：商品信息
-        Item item = spaManager.getItemBySku(sku);
-        if (item == null) {
-            log.info("商品【{}】aws请求为空，等待下次刷新", sku);
-            return;
-            //throw new HzmException(ExceptionCode.REQUEST_SKU_REQUEST_ERROR, "返回结果为空");
-        }
+        for(String sku: skus){
+            Item item = spaManager.getItemBySku(sku);
+            if (item == null) {
+                log.info("商品【{}】aws请求为空，等待下次刷新", sku);
+                return;
+                //throw new HzmException(ExceptionCode.REQUEST_SKU_REQUEST_ERROR, "返回结果为空");
+            }
 
-        AwsUserMarketDo awsUserMarketDo = awsUserMarketDao.getByUserIdAndMarketId(awsUserId, marketId);
-        ItemDo itemDo = ConvertUtil.convertToItemDo(new ItemDo(), item, sku, awsUserMarketDo);
+            AwsUserMarketDo awsUserMarketDo = awsUserMarketDao.getByUserIdAndMarketId(awsUserId, marketId);
+            ItemDo itemDo = ConvertUtil.convertToItemDo(new ItemDo(), item, sku, awsUserMarketDo);
 
-        //获取商品单价
-        if (itemDo.getIsParent() != 1) {
-            Double itemPrice = ConvertUtil.getItemPrice(spaManager.getPriceBySku(sku));
-            itemDo.setItemPrice(itemPrice);
-        } else {
-            itemDo.setItemPrice(0.0);
-        }
-        itemDo.setActive(1);
-        itemDo.setItemCost(0.0);
+            //获取商品单价
+            if (itemDo.getIsParent() != 1) {
+                Double itemPrice = ConvertUtil.getItemPrice(spaManager.getPriceBySku(sku));
+                itemDo.setItemPrice(itemPrice);
+            } else {
+                itemDo.setItemPrice(0.0);
+            }
 
-        ItemDo old = itemDao.getSingleItemDOByAsin(itemDo.getAsin(), itemDo.getSku(), awsUserMarketDo.getId());
-        if (old != null) {
-            itemDo.setId(old.getId());
-            itemDao.updateItem(itemDo);
-        } else {
-            itemDao.createItem(itemDo);
-        }
+            ItemDo old = itemDao.getSingleItemDOByAsin(itemDo.getAsin(), itemDo.getSku(), awsUserMarketDo.getId());
+            if (old != null) {
+                itemDo.setId(old.getId());
+                itemDao.updateItem(itemDo);
+            } else {
+                itemDao.createItem(itemDo);
+            }
 
-        //刷新排名信息
-        //processSaleRankInfo(itemDO);
+            //刷新排名信息
+            processSaleRankInfo(itemDo);
 
-        //保存父子sku信息
-        processRelationShip(itemDo, awsUserMarketDo, spaManager);
+            //保存父子sku信息
+            processRelationShip(itemDo, awsUserMarketDo, spaManager);
 
-        //子类sku刷新库存信息
-        if (itemDo.getIsParent() != 1) {
-            dealSkuInventory(sku, awsUserId, marketId, "refresh", 0);
+            //子类sku刷新库存信息
+            if (itemDo.getIsParent() != 1) {
+                dealSkuInventory(sku, awsUserId, marketId, "refresh", 0);
+            }
         }
     }
 
@@ -319,19 +331,13 @@ public class ItemService {
         //设置尺寸
         itemDTO.setDimension(JSONObject.parseObject(itemDO.getPackageDimension(), PackageDimensionDto.class));
 
-        //设置类目排名
-        ItemCategoryDo itemCategoryDO = itemCategoryDao.getItemCategoryByItemId(itemDO.getId());
-        if (itemCategoryDO != null) {
-            itemDTO.setCategoryRankDTOS(JSONArray.parseArray(itemCategoryDO.getCategoryTreeInfo(), CategoryRankDto.class));
-        }
-
-        //设置最小排名
-        if (!StringUtils.isEmpty(itemDO.getSaleRank().trim())) {
-            SalesRankings salesRankings = JSONArray.parseObject(itemDO.getSaleRank(), SalesRankings.class);
-            if (salesRankings.getSalesRanks() != null) {
-                Optional<Integer> maxOptional = salesRankings.getSalesRanks().stream().map(SalesRank::getRank).min(Comparator.comparing(Integer::intValue));
-                itemDTO.setMaxRank(maxOptional.get());
-            }
+        //设置类目排名&最小排名
+        List<ItemCategoryDo> itemCategoryDOs = itemCategoryDao.getItemCategoryByItemId(itemDO.getId());
+        if (!CollectionUtils.isEmpty(itemCategoryDOs)) {
+            itemDTO.setCategoryRankDTOS(itemCategoryDOs.stream().map(itemCategoryDo -> JSONObject.parseObject(JSONObject.toJSONString(itemCategoryDo), CategoryRankDto.class)).collect(Collectors.toList()));
+            itemDTO.setMaxRank(itemCategoryDOs.stream().map(ItemCategoryDo::getCategoryRank).min(Comparator.comparing(Integer::intValue)).get());
+        }else{
+            itemDTO.setMaxRank(-1);
         }
 
         ItemInventoryDo inventoryDO = inventoryDao.getInventoryBySku(itemDO.getSku(), itemDO.getUserMarketId());
@@ -587,88 +593,35 @@ public class ItemService {
             return;
         }
 
-        SalesRankings salesRankings = JSONArray.parseObject(itemDO.getSaleRank(), SalesRankings.class);
-        if (salesRankings.getSalesRanks() == null) {
+        ItemSalesRanksByMarketplace salesRankings = JSONArray.parseObject(itemDO.getSaleRank(), ItemSalesRanksByMarketplace.class);
+        if (CollectionUtils.isEmpty(salesRankings.getClassificationRanks())) {
             return;
         }
 
-        GetProductCategoriesForSKUResponse response = awsClient.getProductCategoriesForSku(itemDO.getSku());
-        if (response != null) {
-
-            Map<String, Integer> rankMap = Maps.newHashMap();
-            salesRankings.getSalesRanks().forEach(salesRank -> rankMap.put(salesRank.getProductCategoryId(), salesRank.getRank()));
-
-            List<CategoryParent> categoryParents = response.getGetProductCategoriesForSKUResult().getCategoryParents();
-
-            //未获取类目信息，停止刷新类目信息
-            if (categoryParents == null) {
-                return;
-            }
-
-            Map<String, CategoryRankDto> categoryMap = Maps.newHashMap();
-            for (CategoryParent categoryParent : categoryParents) {
-                dealParentCategory(categoryParent, rankMap, categoryMap);
-            }
-            String categoryTreeInfo = JSONObject.toJSONString(categoryMap.values());
-
-            ItemCategoryDo old = itemCategoryDao.getItemCategoryByItemId(itemDO.getId());
-            if (old == null) {
-                old = new ItemCategoryDo();
-                old.setItemId(itemDO.getId());
-                old.setCategoryTreeInfo(categoryTreeInfo);
-                itemCategoryDao.createItemCategory(old);
-            } else {
-                old.setCategoryTreeInfo(categoryTreeInfo);
-                itemCategoryDao.updateItemCategory(old);
-            }
-        }
-    }
-
-    private CategoryRankDto dealParentCategory(CategoryParent categoryParent, Map<String, Integer> rankMap, Map<String, CategoryRankDto> categoryMap) {
-        if (categoryParent.getCategoryParent() != null) {
-            CategoryRankDto categoryRankDTO = dealParentCategory(categoryParent.getCategoryParent(), rankMap, categoryMap);
-
-            Map<String, CategoryRankDto> children = categoryRankDTO.getChildCategoryMap();
-            if (children == null) {
-                children = Maps.newHashMap();
-                categoryRankDTO.setChildCategory(Lists.newArrayList());
-            }
-
-            CategoryRankDto childCategory = children.get(categoryParent.getProductCategoryId());
-            if (childCategory == null) {
-                //组装子类目
-                childCategory = new CategoryRankDto();
-                childCategory.setProductCategoryId(categoryParent.getProductCategoryId());
-                childCategory.setProductCategoryName(categoryParent.getProductCategoryName());
-                if (rankMap.containsKey(categoryParent.getProductCategoryId())) {
-                    childCategory.setRank(rankMap.get(categoryParent.getProductCategoryId()));
-                }
-
-                children.put(categoryParent.getProductCategoryId(), childCategory);
-                categoryRankDTO.getChildCategory().add(childCategory);
-                categoryRankDTO.setChildCategoryMap(children);
-            }
-            return childCategory;
+        List<ItemCategoryDo> categoryDos = Lists.newArrayList();
+        for(ItemClassificationSalesRank classificationSalesRank : salesRankings.getClassificationRanks()){
+            ItemCategoryDo categoryDo = new ItemCategoryDo();
+            categoryDo.setItemId(itemDO.getId());
+            categoryDo.setRelationInfo(classificationSalesRank.getClassificationId());
+            categoryDo.setCategoryTitle(classificationSalesRank.getTitle());
+            categoryDo.setCategoryLink(classificationSalesRank.getLink());
+            categoryDo.setCategoryRank(classificationSalesRank.getRank());
+            categoryDos.add(categoryDo);
         }
 
-        //保留父类类目
-        CategoryRankDto categoryRankDTO = categoryMap.get(categoryParent.getProductCategoryId());
-        if (categoryRankDTO == null) {
-            categoryRankDTO = new CategoryRankDto();
-            categoryMap.put(categoryParent.getProductCategoryId(), categoryRankDTO);
+        //删除老排序关系
+        itemCategoryDao.deleteItemCategoryByItemId(itemDO.getId());
+
+        //添加新关系
+        if(!CollectionUtils.isEmpty(categoryDos)){
+            categoryDos.forEach(categoryDo -> itemCategoryDao.createItemCategory(categoryDo));
         }
-        categoryRankDTO.setProductCategoryId(categoryParent.getProductCategoryId());
-        categoryRankDTO.setProductCategoryName(categoryParent.getProductCategoryName());
-        if (rankMap.containsKey(categoryParent.getProductCategoryId())) {
-            categoryRankDTO.setRank(rankMap.get(categoryParent.getProductCategoryId()));
-        }
-        return categoryRankDTO;
     }
 
     public void processRelationShip(ItemDo itemDo, AwsUserMarketDo awsUserMarketDo, SpaManager spaManager) {
-        Relationships relationships = JSONObject.parseObject(itemDo.getRelationship(), Relationships.class);
+        ItemRelationshipsByMarketplace relationships = JSONObject.parseObject(itemDo.getRelationship(), ItemRelationshipsByMarketplace.class);
         if (itemDo.getIsParent() == 0) {
-            String fatherAsin = relationships.getVariationParent().getIdentifiers().getMarketplaceASIN().getAsin();
+            String fatherAsin = relationships.getRelationships().get(0).getParentAsins().get(0);
             ItemDo fatherItem = itemDao.getItemDOByAsin(fatherAsin, 1, awsUserMarketDo.getId());
             if (fatherItem == null) {
                 Item item = spaManager.getItemByAsin(fatherAsin);
@@ -693,9 +646,7 @@ public class ItemService {
                 fatherChildRelationDao.createRelation(relationDO);
             }
         } else if (itemDo.getIsParent() == 1) {
-            List<String> childAsins = relationships.getVariationChildrens()
-                    .stream().map(child -> child.getIdentifiers().getMarketplaceASIN().getAsin())
-                    .collect(Collectors.toList());
+            List<String> childAsins = relationships.getRelationships().get(0).getChildAsins();
             childAsins.forEach(childAsin -> {
                 ItemDo childItem = itemDao.getItemDOByAsin(childAsin, 0, awsUserMarketDo.getId());
                 if (childItem == null) {
@@ -728,6 +679,80 @@ public class ItemService {
             });
         } else {
             log.info("本sku：{} 即没有子体也没有父体", itemDo.getSku());
+        }
+    }
+
+    /**
+     * 本地库存商品文档下载
+     *
+     * @param response
+     */
+    public void stockItemDownload(HttpServletResponse response) {
+        List<String> rowNameList = Lists.newArrayList("sku", "库存数量");
+        List<String> rowFiledList = Lists.newArrayList("sku", "localNum");
+        String sheetName = "本地库存";
+
+        List<ItemInventoryDo> inventoryDos = inventoryDao.getInventoryWhenStockNotNull();
+        List<List<String>> values = inventoryDos.stream().map(itemInventoryDo -> {
+            ItemDo itemDo = itemDao.getSingleItemDOByAsin(itemInventoryDo.getAsin(), itemInventoryDo.getSku(),
+                    itemInventoryDo.getUserMarketId());
+            return Lists.newArrayList(itemDo.getSku(), String.valueOf(itemInventoryDo.getLocalQuantity()));
+        }).collect(Collectors.toList());
+
+        //创建一个工作蒲
+        XSSFWorkbook wb = new XSSFWorkbook();
+        XSSFSheet sheet = wb.createSheet("sheet1");
+        sheet.setDefaultColumnWidth(19);
+
+        //全局样式
+        CellStyle cellStyle = wb.createCellStyle();
+        cellStyle.setBorderBottom(BorderStyle.THIN);
+        cellStyle.setBorderLeft(BorderStyle.THIN);
+        cellStyle.setBorderRight(BorderStyle.THIN);
+        cellStyle.setBorderTop(BorderStyle.THIN);
+        cellStyle.setAlignment(HorizontalAlignment.CENTER);//居中
+        cellStyle.setVerticalAlignment(VerticalAlignment.CENTER);//上下居中
+
+        //标题
+        XSSFRow row = sheet.createRow(0);
+        for (int i = 0; i < rowNameList.size(); i++) {
+            row.setHeight((short) 450);
+            XSSFCell cell = row.createCell(i);
+            cell.setCellValue(rowNameList.get(i));
+            cell.setCellStyle(cellStyle);
+        }
+
+        XSSFRow fieldRow = sheet.createRow(1);
+        for (int i = 0; i < rowFiledList.size(); i++) {
+            fieldRow.setHeight((short) 450);
+            XSSFCell cell = fieldRow.createCell(i);
+            cell.setCellValue(rowFiledList.get(i));
+            cell.setCellStyle(cellStyle);
+        }
+
+        XSSFRow defaultValueRow = sheet.createRow(2);
+        for(List<String> defaultValue: values){
+            for (int i = 0; i < defaultValue.size(); i++) {
+                defaultValueRow.setHeight((short) 450);
+                XSSFCell cell = defaultValueRow.createCell(i);
+                cell.setCellValue(defaultValue.get(i));
+                cell.setCellStyle(cellStyle);
+            }
+        }
+
+        //数据输出流
+        try {
+            OutputStream output = response.getOutputStream();
+            response.reset();
+            response.setHeader("Content-Disposition",
+                    "attchement;filename=" +
+                            new String((sheetName + ".xlsx").getBytes(StandardCharsets.UTF_8), "ISO8859-1"));
+            response.setContentType("application/msexcel");
+            wb.write(output);
+            wb.close();
+        } catch (Exception e) {
+            log.error("下载模版文件失败：", e);
+            throw new HzmException(ExceptionCode.TEMPLATE_EXCEL_DOWNLOAD_ERROR);
         }
     }
 }
