@@ -215,8 +215,7 @@ public class ItemDetailCache {
             }
 
             //厂家过滤
-            if (factoryId != null) {
-
+            if (factoryId != null && factoryId !=0) {
                 if (factoryId == -1) {
                     //拉取未绑定厂家商品
                     List<FactoryItemDo> factoryItemDOS = factoryItemDao.getAll();
@@ -263,23 +262,23 @@ public class ItemDetailCache {
             }
 
             //上架时间过滤排序
-            if (startListingTime != null) {
+            if (StringUtils.isNotEmpty(startListingTime)) {
                 startListingTime += ":00";
                 Date startLT = TimeUtil.getDateByDateFormat(startListingTime);
-                temp = temp.stream().filter(itemDto -> itemDto.getListingTime().after(startLT)).collect(Collectors.toList());
+                temp = temp.stream().filter(itemDto -> itemDto.getDateListingTime().after(startLT)).collect(Collectors.toList());
             }
-            if (endListingTime != null) {
+            if (StringUtils.isNotEmpty(endListingTime)) {
                 endListingTime += ":00";
                 Date endLT = TimeUtil.getDateByDateFormat(endListingTime);
-                temp = temp.stream().filter(itemDto -> itemDto.getListingTime().before(endLT)).collect(Collectors.toList());
+                temp = temp.stream().filter(itemDto -> itemDto.getDateListingTime().before(endLT)).collect(Collectors.toList());
             }
             if (listingDateSortType == null || listingDateSortType == 0) {
                 //按时间从老到新
-                temp = temp.stream().sorted(Comparator.comparing(ItemDto::getListingTime))
+                temp = temp.stream().sorted(Comparator.comparing(ItemDto::getDateListingTime))
                         .collect(Collectors.toList());
             } else {
                 //按时间从新到老
-                temp = temp.stream().sorted(Comparator.comparing(ItemDto::getListingTime).reversed())
+                temp = temp.stream().sorted(Comparator.comparing(ItemDto::getDateListingTime).reversed())
                         .collect(Collectors.toList());
             }
         }

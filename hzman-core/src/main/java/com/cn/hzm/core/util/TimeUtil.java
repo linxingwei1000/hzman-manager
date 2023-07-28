@@ -1,5 +1,7 @@
 package com.cn.hzm.core.util;
 
+import org.threeten.bp.OffsetDateTime;
+
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
@@ -177,29 +179,6 @@ public class TimeUtil {
      * @return
      */
     public static Date transformNowToUsDate() {
-//        Calendar calendar = new GregorianCalendar();
-//        calendar.set(Calendar.HOUR_OF_DAY, 0);
-//        calendar.set(Calendar.MINUTE, 0);
-//        calendar.set(Calendar.SECOND, 0);
-//        Date date = calendar.getTime();
-//        String strDailyDate = getDateFormat(date);
-//        Boolean isSummer = isSummer(strDailyDate);
-//
-//        calendar.set(Calendar.HOUR_OF_DAY, isSummer? 15 : 16);
-//        Date judge =calendar.getTime();
-//        if(new Date().getTime() < judge.getTime()){
-//            calendar.set(Calendar.DATE, -1);
-//        }
-//        calendar.set(Calendar.HOUR_OF_DAY, 0);
-//        return calendar.getTime();
-
-//        Date now = new Date();
-//        Date date = getDateBySimple(getSimpleFormat(now));
-//        String strDailyDate = getDateFormat(date);
-//        Boolean isSummer = isSummer(strDailyDate);
-//        Date judge = dateFixByDay(date, 0, isSummer ? 15 : 16, 0);
-//        return now.getTime() < judge.getTime() ? dateFixByDay(date, -1, 0, 0) : date;
-
         Date now = new Date();
         String nowStrDate = getDateFormat(now);
         Date date = getDateBySimple(nowStrDate.substring(0, 10));
@@ -213,73 +192,13 @@ public class TimeUtil {
         return System.currentTimeMillis();
     }
 
+    public static String transformOffsetToDate(OffsetDateTime offsetDateTime) {
+        org.threeten.bp.format.DateTimeFormatter formatter = org.threeten.bp.format.DateTimeFormatter.ofPattern(UTC_MILLISECOND_FORMAT);
+        return offsetDateTime.format(formatter);
+    }
+
     public static void main(String[] args) throws ParseException {
-
-        System.out.println(TimeUtil.getZeroUTCDateByDay(-2));
-
-        Date date = transformNowToUsDate();
-        System.out.println(date);
-
-        String strDailyDate = TimeUtil.getDateFormat(date);
-        Boolean isSummer = TimeUtil.isSummer(strDailyDate);
-        Date startDate = TimeUtil.dateFixByDay(date, 0, isSummer ? 15 : 16, 0);
-
-        Date nextDate = TimeUtil.dateFixByDay(date, 1, 0, 0);
-        strDailyDate = TimeUtil.getDateFormat(nextDate);
-        isSummer = TimeUtil.isSummer(strDailyDate);
-        Date endDate = TimeUtil.dateFixByDay(nextDate, 0, isSummer ? 15 : 16, 0);
-
-        System.out.println(startDate);
-        System.out.println(endDate);
-
-
-//        String strTime = "2022-09-23T06:30:00Z";
-//        System.out.println(transformUTCToDate(strTime));
-//        System.out.println(transformNowToUsDate());
-
-//        Date now = new Date();
-//        Date date = getDateBySimple(getSimpleFormat(now));
-//        String strDailyDate = getDateFormat(date);
-//        System.out.println("date :" + date + "str: "+ strDailyDate + "now:" + getDateFormat(now));
-
-//        Date now = new Date();
-//        String nowStrDate = getDateFormat(now);
-//        Date date = getDateBySimple(nowStrDate.substring(0, 10));
-//        String strDailyDate = nowStrDate.substring(0, 10) + " 00:00:00";
-//        System.out.println("date :" + date + "str: "+ strDailyDate + "now:" + getDateFormat(now));
-
-//
-//                String strUtc = "2020-11-18T00:00:39.030Z";
-//        Date milliSecondDate = transformMilliSecondUTCToDate(strUtc);
-//
-//        TimeZone pstTimeZone = TimeZone.getTimeZone("America/Los_Angeles");
-//        DateFormat formatter = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"); // just date, you might want something else
-//        formatter.setTimeZone(pstTimeZone);
-//        String formattedDate = formatter.format(getDateBySimple("2021-03-14"));
-//        System.out.println(formattedDate);
-//
-//        formattedDate = formatter.format(getDateBySimple("2021-03-11"));
-//        System.out.println(formattedDate);
-//
-//        formattedDate = formatter.format(getDateBySimple("2020-08-11"));
-//        System.out.println(formattedDate);
-//
-//        formattedDate = formatter.format(getDateBySimple("2020-02-11"));
-//        System.out.println(formattedDate);
-//
-//
-//        ZoneId zoneId = ZoneId.of("America/Los_Angeles");
-//        ZoneRules rules = zoneId.getRules();
-//
-//        Date today = getDateBySimple("2021-03-14");
-//        Date yester = dateFixByDay(today, -1, 0, 0);
-//        Date tormorrow = dateFixByDay(today, 1, 0, 0);
-//
-//        String strToday = getDateFormat(today);
-//        String strYester = getDateFormat(yester);
-//        String strTormorrow = getDateFormat(tormorrow);
-//        System.out.println(isSummer(strToday));
-//        System.out.println(isSummer(strYester));
-//        System.out.println(isSummer(strTormorrow));
+        OffsetDateTime now= OffsetDateTime.parse("2022-12-01T02:10:51.006Z");
+        System.out.println(transformOffsetToDate(now));
     }
 }

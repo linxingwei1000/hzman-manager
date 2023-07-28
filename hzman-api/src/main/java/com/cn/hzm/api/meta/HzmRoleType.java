@@ -17,6 +17,11 @@ public enum HzmRoleType {
     ROLE_ADMIN("admin", "管理员"),
 
     /**
+     * 运营角色
+     */
+    ROLE_OPERATE("operate", "运营"),
+
+    /**
      * 普通员工角色
      */
     ROLE_EMPLOYEE("employee", "普通员工"),

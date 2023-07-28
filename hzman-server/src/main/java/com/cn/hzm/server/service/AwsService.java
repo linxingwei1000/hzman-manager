@@ -237,6 +237,10 @@ public class AwsService {
 
     private void checkParam(AwsUserDto awsUserDto) {
 
+        if (StringUtils.isEmpty(awsUserDto.getSellerId())) {
+            throw new HzmException(ExceptionCode.AWS_USER_INFO_ERROR, "sellerId为空");
+        }
+
         if (StringUtils.isEmpty(awsUserDto.getAccessKeyId())) {
             throw new HzmException(ExceptionCode.AWS_USER_INFO_ERROR, "accessKeyId为空");
         }

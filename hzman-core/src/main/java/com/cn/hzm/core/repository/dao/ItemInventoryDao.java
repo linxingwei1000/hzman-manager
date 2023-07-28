@@ -56,8 +56,8 @@ public class ItemInventoryDao {
      */
     public List<ItemInventoryDo> getInventoryWhenStockNotNull(){
         QueryWrapper<ItemInventoryDo> query = new QueryWrapper<>();
-        query.ne("local_quantity", 0);
-        query.isNotNull("local_quantity");
+        query.last(" where local_quantity != 0 and local_quantity is not null ");
+        query.select("asin", "sku", "user_market_id", "local_quantity");
         return itemInventoryMapper.selectList(query);
     }
 

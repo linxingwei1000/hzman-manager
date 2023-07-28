@@ -17,6 +17,7 @@ import com.cn.hzm.core.spa.finance.model.ListFinancialEventsResponse;
 import com.cn.hzm.core.spa.item.CatalogApi;
 import com.cn.hzm.core.spa.item.model.Item;
 import com.cn.hzm.core.spa.item.model.ItemSearchResults;
+import com.cn.hzm.core.spa.listings.ListingsApi;
 import com.cn.hzm.core.spa.order.OrdersV0Api;
 import com.cn.hzm.core.spa.order.ShipmentApi;
 import com.cn.hzm.core.spa.order.model.GetOrderItemsResponse;
@@ -56,6 +57,11 @@ public class SpaManager {
      * 商品api
      */
     private CatalogApi catalogApi;
+
+    /**
+     * 列表api
+     */
+    private ListingsApi listingsApi;
 
     /**
      * 仓储api
@@ -144,9 +150,8 @@ public class SpaManager {
      * @throws ApiException
      */
     public Item getItemBySku(String sku) throws ApiException {
-        //todo sellerId 需要替换
         ItemSearchResults results = catalogApi.searchCatalogItems(Lists.newArrayList(awsMarket.getId()), Lists.newArrayList(sku), "SKU", ITEM_DATA,
-                null, "AK0HQWR8PUJRG", null, null, null,
+                null, awsUserDo.getSellerId(), null, null, null,
                 null, null, null);
         if (!CollectionUtils.isEmpty(results.getItems())) {
             return results.getItems().get(0);
@@ -164,6 +169,13 @@ public class SpaManager {
     public GetPricingResponse getPriceByAsin(String asin) throws ApiException {
         return productPricingApi.getPricing(awsMarket.getId(), "Asin", null, Lists.newArrayList(asin)
                 , null, null);
+    }
+
+    public com.cn.hzm.core.spa.listings.model.Item getListingsItem(String sku) throws ApiException {
+        //List<String> includeDatas = Lists.newArrayList("summaries","attributes","issues","offers","fulfillmentAvailability","procurement");
+        List<String> includeDatas = Lists.newArrayList("summaries");
+        com.cn.hzm.core.spa.listings.model.Item item = listingsApi.getListingsItem(awsUserDo.getSellerId(), sku, Lists.newArrayList(awsMarket.getId()), null, includeDatas);
+        return item;
     }
 
     /**
@@ -354,6 +366,14 @@ public class SpaManager {
                 .build();
         log.info("初始化[{}] catalogApi", awsUserDo.getRemark());
 
+        this.listingsApi = new ListingsApi.Builder()
+                .awsAuthenticationCredentials(awsAuthenticationCredentials)
+                .lwaAuthorizationCredentials(lwaAuthorizationCredentials)
+                .awsAuthenticationCredentialsProvider(awsAuthenticationCredentialsProvider)
+                .endpoint(awsMarket.getEndpoint())
+                .build();
+        log.info("初始化[{}] listingsApi", awsUserDo.getRemark());
+
         this.productPricingApi = new ProductPricingApi.Builder()
                 .awsAuthenticationCredentials(awsAuthenticationCredentials)
                 .lwaAuthorizationCredentials(lwaAuthorizationCredentials)
@@ -389,19 +409,19 @@ public class SpaManager {
 
     public static void main(String[] args) throws ApiException {
         AwsUserDo awsUserDo = new AwsUserDo();
+        awsUserDo.setSellerId("AK0HQWR8PUJRG");
         awsUserDo.setAccessKeyId("AKIAZZXRVBF5KSAPKQ4D");
         awsUserDo.setSecretKey("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");
         awsUserDo.setRoleArn("arn:aws:iam::673742915962:role/role_a");
-        awsUserDo.setClientId("amzn1.application-oa2-client.4d99cf8f9a474b058d92a1e2187908e5");
-        awsUserDo.setClientSecret("amzn1.oa2-cs.v1.40e67554e0b100112b3b74f98d9bea5e316df7c135cdab4270bcab62588e1f9a");
-        awsUserDo.setRefreshToken("Atzr|IwEBIOJOrNQg8CejX6CJcr2E3wMkNFLCnfs8SBDGDNgNLHRU3dzvE0zX_GBsB9K21L_XSpfnK5Zu3lLZzwVpnmT8YY1NRDyG-YiPp97JsVlZVyRzN10N_LnKid9sG028AvN2qdgt2PR_v_o570yJBKUAnN1HFs_6XXkCqeGkLkFpech7gYBKthAaXQqBcuHgbbue6pCUqb_0JxWvPcRa94s4t6k_mlblfsaY_6kBEEi1tQvslaMlDPciNxWOFfyui-wWoYFJ0U5NxflDe3M4MMBmzoFsNUSnBMB1aQSqBqQAbUBSpZ_WhpR0ujVG7YEFnRs7JwM");
+        awsUserDo.setClientId("amzn1.application-oa2-client.0e3e98270af54054ba3148898578cead");
+        awsUserDo.setClientSecret("amzn1.oa2-cs.v1.0e859bd13b89725dfd8809cfa98e7b9977c5bc95ad7606e65799c5bf1d73d995");
+        awsUserDo.setRefreshToken("Atzr|IwEBIL-T9IW6pj2GeRkkuYAdTnc5g3qTJA2xHXe-9B4hnBqz0870rvvVLDSTXdyi68G7ApiIBn8tpiSywsufuNO-QIoSTDKdM2_ytv5hUI2Z33X0kjIxaGGjRz3WSmbT7m6FPkzT1M3YLF1A5qcPgnnGJdko5D7HVebRg8wCYVaJ4d4KdXDw-zTG22fbO_lc8bNjTLwH_0RZD7Ru_VW2lTi7vckzU7VKn1fSdwQeltU6IVkkTdZrTB-UHiPxG1iHh9fVEaWXN7LFTo_CxNTjErIydxtlCa4SIEUKhKaCekr8amFBD64xt58L8KZKR2MlfU4v8u8");
 
         AwsMarket awsMarket = AwsMarket.America;
 
         SpaManager spaManager = new SpaManager(awsUserDo, awsMarket, null);
 
-        GetPricingResponse  r = spaManager.getPriceBySku("PHW671104");
-
-        System.out.println(JSONObject.toJSONString(r));
+        //System.out.println(spaManager.getListingsItem("PSZ22-1129-03B"));
+        System.out.println(spaManager.getFinanceByAwsOrderId("PSZ22-1129-03B"));
     }
 }

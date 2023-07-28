@@ -1,6 +1,7 @@
 package com.cn.hzm.server.service;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cn.hzm.core.cache.ThreadLocalCache;
 import com.cn.hzm.core.exception.ExceptionCode;
 import com.cn.hzm.core.exception.HzmException;
 import com.cn.hzm.api.dto.AddItemDeallDto;
@@ -116,7 +117,7 @@ public class ExcelService {
             OutputStream output = response.getOutputStream();
             response.reset();
             response.setHeader("Content-Disposition",
-                    "attchement;filename=" +
+                    "attachment;filename=" +
                             new String((sheetName + ".xlsx").getBytes(StandardCharsets.UTF_8), "ISO8859-1"));
             response.setContentType("application/msexcel");
             wb.write(output);
@@ -127,7 +128,7 @@ public class ExcelService {
         }
     }
 
-    public String dealExcel(InputStream input, Integer excelType) {
+    public String dealExcel(InputStream input, Integer excelType, Integer userMarketId) {
         StringBuilder dealLine = new StringBuilder("成功处理行：");
         StringBuilder emptyRow = new StringBuilder("空数据行：");
         StringBuilder dealErrorRow = new StringBuilder("处理失败行：");
@@ -179,13 +180,13 @@ public class ExcelService {
 
                     if (excelType.equals(1)) {
                         LocalDealDto dto = JSONObject.parseObject(jo.toJSONString(), LocalDealDto.class);
-                        itemService.modLocalNum(dto.getSku(), dto.getLocalNum());
+                        itemService.modLocalNum(dto.getSku(), dto.getLocalNum(), ThreadLocalCache.getUser().getAwsUserId(), ThreadLocalCache.getUser().getMarketId());
                     } else if (excelType.equals(2)) {
                         CostDealDto dto = JSONObject.parseObject(jo.toJSONString(), CostDealDto.class);
-                        itemService.modSkuCost(dto.getAsin(), dto.getSku(), dto.getCost());
+                        itemService.modSkuCost(dto.getAsin(), dto.getSku(), dto.getCost(), ThreadLocalCache.getUser().getUserMarketId());
                     } else {
                         AddItemDeallDto dto = JSONObject.parseObject(jo.toJSONString(), AddItemDeallDto.class);
-                        itemService.excelProcessSync(dto);
+                        itemService.excelProcessSync(dto, ThreadLocalCache.getUser().getAwsUserId(), ThreadLocalCache.getUser().getMarketId());
                     }
                 }catch (Exception e){
                     log.error("excel 处理失败：", e);

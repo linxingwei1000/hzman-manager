@@ -5,6 +5,7 @@ import com.cn.hzm.core.enums.SpiderType;
 import com.cn.hzm.core.exception.ExceptionCode;
 import com.cn.hzm.core.exception.HzmException;
 import com.cn.hzm.core.manager.TaskManager;
+import com.cn.hzm.core.misc.ItemService;
 import com.cn.hzm.core.processor.DailyStatProcessor;
 import com.cn.hzm.core.util.FtpFileUtil;
 import com.cn.hzm.core.cache.ThreadLocalCache;
@@ -40,6 +41,9 @@ public class ToolApi {
 
     @Autowired
     private ExcelService excelService;
+
+    @Autowired
+    private ItemService itemService;
 
     @ApiOperation("修复某一天销量统计")
     @RequestMapping(value = "/sale/fix/daily", method = RequestMethod.GET)
@@ -89,6 +93,20 @@ public class ToolApi {
                                              @RequestParam("excelType") Integer excelType,
                                              HttpServletRequest request) throws IOException {
         InputStream inputStream = file.getInputStream();
-        return HzmResponse.success(excelService.dealExcel(inputStream, excelType));
+        return HzmResponse.success(excelService.dealExcel(inputStream, excelType, null));
+    }
+
+    @ApiOperation("本地库存商品下载")
+    @RequestMapping(value = "/stock/item/download", method = RequestMethod.GET)
+    public HzmResponse stockItemDownload(HttpServletResponse response) throws IOException {
+        itemService.stockItemDownload(response);
+        return HzmResponse.success("下载成功");
+    }
+
+    @ApiOperation("未填写成本商品下载")
+    @RequestMapping(value = "/uncost/item/download", method = RequestMethod.GET)
+    public HzmResponse uncostItemDownload(HttpServletResponse response) throws IOException {
+        itemService.costItemDownload(response);
+        return HzmResponse.success("下载成功");
     }
 }

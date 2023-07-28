@@ -103,6 +103,18 @@ public class ItemDao {
     }
 
     /**
+     * @param userMarketId
+     * @return
+     */
+    public List<ItemDo> getUnCostItemDOS(Integer userMarketId) {
+        QueryWrapper<ItemDo> query = new QueryWrapper<>();
+        query.eq("user_market_id", userMarketId);
+        query.last("and ( item_cost = 0 or item_cost is null )");
+        query.select("asin", "sku");
+        return itemMapper.selectList(query);
+    }
+
+    /**
      * 获取商品类型
      */
     public List<ItemDo> getItemType() {

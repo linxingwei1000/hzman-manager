@@ -100,7 +100,10 @@ public class ItemDto extends RespBaseDto{
     private Boolean haveChildren;
 
     @ApiModelProperty(value = "上架时间")
-    private Date listingTime;
+    private String listingTime;
+
+    @ApiModelProperty(value = "展示上架时间")
+    private Date dateListingTime;
 
     @ApiModelProperty(value = "备注列表")
     private List<ItemRemarkDto> remarkDtos;

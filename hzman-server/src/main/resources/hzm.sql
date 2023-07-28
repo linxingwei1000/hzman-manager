@@ -48,6 +48,7 @@ CREATE TABLE hzm.hzm_aws_user
 (
     `id`            int(11) unsigned NOT NULL AUTO_INCREMENT,
     `remark`        varchar(255)  NOT NULL COMMENT '备注',
+    `seller_id`     varchar(2048) NOT NULL COMMENT '卖家id',
     `access_key_id` varchar(2048) NOT NULL COMMENT '密钥id',
     `secret_key`    varchar(2048) NOT NULL COMMENT '密钥',
     `role_arn`      varchar(2048) NOT NULL COMMENT '角色arn',
@@ -59,17 +60,16 @@ CREATE TABLE hzm.hzm_aws_user
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB default CHARSET=utf8 COMMENT='亚马逊账号';
 
-drop table hzm.hzm_item_remark;
-CREATE TABLE hzm.hzm_item_remark
+drop table hzm.hzm_aws_user_market;
+CREATE TABLE hzm.hzm_aws_user_market
 (
-    `id`      int(11) unsigned NOT NULL AUTO_INCREMENT,
-    `item_id` int(11) unsigned NOT NULL COMMENT '商品id',
-    `remark`  varchar(255) NOT NULL COMMENT '商品备注',
-    `ctime`   datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
-    `utime`   datetime     NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
-    PRIMARY KEY (`id`),
-    KEY       `idx_item_id` (`item_id`)
-) ENGINE=InnoDB default CHARSET=utf8 COMMENT='商品备注';
+    `id`          int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `aws_user_id` int(11) unsigned NOT NULL COMMENT '亚马逊账号id',
+    `market_id`   varchar(255) NOT NULL COMMENT '市场编号',
+    `ctime`       datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `utime`       datetime     NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`)
+) ENGINE=InnoDB COMMENT='亚马逊账号关联市场';
 
 drop table hzm.hzm_aws_spider_task;
 CREATE TABLE hzm.hzm_aws_spider_task
@@ -85,6 +85,17 @@ CREATE TABLE hzm.hzm_aws_spider_task
     KEY              `idx_user_market_id` (`user_market_id`)
 ) ENGINE=InnoDB COMMENT='亚马逊数据爬取任务表';
 
+drop table hzm.hzm_item_remark;
+CREATE TABLE hzm.hzm_item_remark
+(
+    `id`      int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `item_id` int(11) unsigned NOT NULL COMMENT '商品id',
+    `remark`  varchar(255) NOT NULL COMMENT '商品备注',
+    `ctime`   datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `utime`   datetime     NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    KEY       `idx_item_id` (`item_id`)
+) ENGINE=InnoDB default CHARSET=utf8 COMMENT='商品备注';
 
 drop table hzm.hzm_amazon_order;
 CREATE TABLE hzm.hzm_amazon_order
@@ -140,9 +151,11 @@ CREATE TABLE hzm.hzm_item
     `asin`           varchar(128) not null comment 'ASIN',
     `sku`            varchar(128) not null comment 'sku，用户侧填写',
     `title`          varchar(255) not null comment '商品名称',
+    `item_cost`      double unsigned default 0 COMMENT '商品成本',
     `icon`           varchar(512)          default '' comment '商品图片',
     `item_price`     double unsigned not null COMMENT '商品价格',
     `marketplace_id` varchar(128) not null comment '商品市场id',
+    `listing_time`   varchar(128)          default null COMMENT '上架时间',
     `attribute_set`  varchar(4096)         default '' comment '商品属性相关',
     `relationship`   varchar(4096)         default '' comment '价格相关参数',
     `active`         tinyint(4) default 0 COMMENT '商品是否有效',

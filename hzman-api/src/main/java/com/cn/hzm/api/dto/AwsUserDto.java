@@ -20,6 +20,9 @@ public class AwsUserDto {
     @ApiModelProperty(value = "账号备注，唯一")
     private String remark;
 
+    @ApiModelProperty(value = "sellerId")
+    private String sellerId;
+
     @ApiModelProperty(value = "accessKeyId")
     private String accessKeyId;
 

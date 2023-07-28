@@ -21,6 +21,9 @@ public class AwsUserDo {
 
     private String remark;
 
+    @TableField(value = "seller_id")
+    private String sellerId;
+
     @TableField(value = "access_key_id")
     private String accessKeyId;
 

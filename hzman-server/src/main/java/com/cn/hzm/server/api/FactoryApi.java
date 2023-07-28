@@ -34,7 +34,7 @@ public class FactoryApi {
 
     @ApiOperation("列厂家")
     @RequestMapping(value = "/list", method = RequestMethod.POST)
-    @HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN, HzmRoleType.ROLE_EMPLOYEE, HzmRoleType.ROLE_NEW_EMPLOYEE})
+    @HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN, HzmRoleType.ROLE_OPERATE, HzmRoleType.ROLE_EMPLOYEE, HzmRoleType.ROLE_NEW_EMPLOYEE})
     public HzmResponse list(@RequestBody FactoryConditionDto factoryConditionDTO) {
         return HzmResponse.success(factoryDealService.processFactoryList(factoryConditionDTO));
     }

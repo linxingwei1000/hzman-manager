@@ -42,6 +42,7 @@ import org.springframework.util.StringUtils;
 import javax.servlet.http.HttpServletResponse;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
+import java.text.ParseException;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -179,12 +180,13 @@ public class ItemService {
     }
 
     //批量商品添加处理
-    public void excelProcessSync(AddItemDeallDto dto) throws Exception {
+    public void excelProcessSync(AddItemDeallDto dto, Integer awsUserId, String marketId) throws Exception {
         //先爬取商品相关信息
-        processSync(dto.getSku(), ThreadLocalCache.getUser().getAwsUserId(), ThreadLocalCache.getUser().getMarketId());
+        processSync(dto.getSku(), awsUserId, marketId);
 
+        AwsUserMarketDo awsUserMarketDo = awsUserMarketDao.getByUserIdAndMarketId(awsUserId, marketId);
         //修改成本
-        ItemDo itemDO = itemDao.getSingleItemDOByAsin(dto.getAsin(), dto.getSku(), ThreadLocalCache.getUser().getUserMarketId());
+        ItemDo itemDO = itemDao.getSingleItemDOByAsin(dto.getAsin(), dto.getSku(), awsUserMarketDo.getId());
         itemDO.setItemCost(dto.getCost());
         itemDO.setItemRemark(dto.getRemark());
         itemDao.updateItem(itemDO);
@@ -204,14 +206,14 @@ public class ItemService {
         SpaManager spaManager = awsUserManager.getManager(awsUserId, marketId);
 
         List<String> skus;
-        if(sourceSku.contains(";")){
+        if (sourceSku.contains(";")) {
             skus = Lists.newArrayList(sourceSku.split(";"));
-        }else{
+        } else {
             skus = Lists.newArrayList(sourceSku);
         }
 
         //asin取aws数据：商品信息
-        for(String sku: skus){
+        for (String sku : skus) {
             Item item = spaManager.getItemBySku(sku);
             if (item == null) {
                 log.info("商品【{}】aws请求为空，等待下次刷新", sku);
@@ -221,7 +223,8 @@ public class ItemService {
 
             AwsUserMarketDo awsUserMarketDo = awsUserMarketDao.getByUserIdAndMarketId(awsUserId, marketId);
             ItemDo itemDo = ConvertUtil.convertToItemDo(new ItemDo(), item, sku, awsUserMarketDo);
-
+            com.cn.hzm.core.spa.listings.model.Item listItem = spaManager.getListingsItem(sku);
+            ConvertUtil.addListingTime(itemDo, listItem);
             //获取商品单价
             if (itemDo.getIsParent() != 1) {
                 Double itemPrice = ConvertUtil.getItemPrice(spaManager.getPriceBySku(sku));
@@ -311,22 +314,32 @@ public class ItemService {
                 .collect(Collectors.toList());
     }
 
-    public boolean modLocalNum(String sku, Integer curLocalNum) {
-        dealSkuInventory(sku, ThreadLocalCache.getUser().getAwsUserId(), ThreadLocalCache.getUser().getMarketId(), "set", curLocalNum);
+    public boolean modLocalNum(String sku, Integer curLocalNum, Integer awsUserId, String marketId) {
+        dealSkuInventory(sku, awsUserId, marketId, "set", curLocalNum);
         return true;
     }
 
-    public boolean modSkuCost(String asin, String sku, Double cost) {
-        ItemDo itemDO = itemDao.getSingleItemDOByAsin(asin, sku, ThreadLocalCache.getUser().getUserMarketId());
+    public boolean modSkuCost(String asin, String sku, Double cost, Integer userMarketId) {
+        ItemDo itemDO = itemDao.getSingleItemDOByAsin(asin, sku, userMarketId);
         itemDO.setItemCost(cost);
         itemDao.updateItem(itemDO);
-        itemDetailCache.refreshCache(ThreadLocalCache.getUser().getUserMarketId(), itemDO.getSku());
+        itemDetailCache.refreshCache(userMarketId, itemDO.getSku());
         return true;
     }
 
     public ItemDto buildItemDTO(ItemDo itemDO, Date usDate) {
         ItemDto itemDTO = JSONObject.parseObject(JSONObject.toJSONString(itemDO), ItemDto.class);
         itemDTO.setCost(itemDO.getItemCost());
+
+        //设置过滤时间
+        if(!StringUtils.isEmpty(itemDTO.getListingTime())){
+            try {
+                itemDTO.setDateListingTime(TimeUtil.transformMilliSecondUTCToDate(itemDTO.getListingTime()));
+            } catch (ParseException ignored) { }
+        }else{
+            itemDTO.setDateListingTime(new Date());
+            itemDTO.setListingTime(TimeUtil.dateToUTC(itemDTO.getDateListingTime()));
+        }
 
         //设置尺寸
         itemDTO.setDimension(JSONObject.parseObject(itemDO.getPackageDimension(), PackageDimensionDto.class));
@@ -336,7 +349,7 @@ public class ItemService {
         if (!CollectionUtils.isEmpty(itemCategoryDOs)) {
             itemDTO.setCategoryRankDTOS(itemCategoryDOs.stream().map(itemCategoryDo -> JSONObject.parseObject(JSONObject.toJSONString(itemCategoryDo), CategoryRankDto.class)).collect(Collectors.toList()));
             itemDTO.setMaxRank(itemCategoryDOs.stream().map(ItemCategoryDo::getCategoryRank).min(Comparator.comparing(Integer::intValue)).get());
-        }else{
+        } else {
             itemDTO.setMaxRank(-1);
         }
 
@@ -599,7 +612,7 @@ public class ItemService {
         }
 
         List<ItemCategoryDo> categoryDos = Lists.newArrayList();
-        for(ItemClassificationSalesRank classificationSalesRank : salesRankings.getClassificationRanks()){
+        for (ItemClassificationSalesRank classificationSalesRank : salesRankings.getClassificationRanks()) {
             ItemCategoryDo categoryDo = new ItemCategoryDo();
             categoryDo.setItemId(itemDO.getId());
             categoryDo.setRelationInfo(classificationSalesRank.getClassificationId());
@@ -613,7 +626,7 @@ public class ItemService {
         itemCategoryDao.deleteItemCategoryByItemId(itemDO.getId());
 
         //添加新关系
-        if(!CollectionUtils.isEmpty(categoryDos)){
+        if (!CollectionUtils.isEmpty(categoryDos)) {
             categoryDos.forEach(categoryDo -> itemCategoryDao.createItemCategory(categoryDo));
         }
     }
@@ -693,12 +706,29 @@ public class ItemService {
         String sheetName = "本地库存";
 
         List<ItemInventoryDo> inventoryDos = inventoryDao.getInventoryWhenStockNotNull();
-        List<List<String>> values = inventoryDos.stream().map(itemInventoryDo -> {
-            ItemDo itemDo = itemDao.getSingleItemDOByAsin(itemInventoryDo.getAsin(), itemInventoryDo.getSku(),
-                    itemInventoryDo.getUserMarketId());
-            return Lists.newArrayList(itemDo.getSku(), String.valueOf(itemInventoryDo.getLocalQuantity()));
-        }).collect(Collectors.toList());
+        List<List<String>> values = inventoryDos.stream()
+                .map(itemInventoryDo ->Lists.newArrayList(itemInventoryDo.getSku(), String.valueOf(itemInventoryDo.getLocalQuantity())))
+                .collect(Collectors.toList());
+        commonDeal(response, sheetName, rowNameList, rowFiledList, values);
+    }
 
+    /**
+     * 未添加成本商品文档下载
+     *
+     * @param response
+     */
+    public void costItemDownload(HttpServletResponse response) {
+        List<String> rowNameList = Lists.newArrayList("asin", "sku", "成本");
+        List<String> rowFiledList = Lists.newArrayList("asin", "sku", "cost");
+        String sheetName = "成本";
+
+        List<ItemDo> itemDos = itemDao.getUnCostItemDOS(ThreadLocalCache.getUser().getUserMarketId());
+        List<List<String>> values = itemDos.stream().map(itemDo -> Lists.newArrayList(itemDo.getAsin(), itemDo.getSku(), "0")).collect(Collectors.toList());
+        commonDeal(response, sheetName, rowNameList, rowFiledList, values);
+    }
+
+    private void commonDeal(HttpServletResponse response, String sheetName,
+                            List<String> rowNameList, List<String> rowFiledList, List<List<String>> values) {
         //创建一个工作蒲
         XSSFWorkbook wb = new XSSFWorkbook();
         XSSFSheet sheet = wb.createSheet("sheet1");
@@ -730,14 +760,17 @@ public class ItemService {
             cell.setCellStyle(cellStyle);
         }
 
-        XSSFRow defaultValueRow = sheet.createRow(2);
-        for(List<String> defaultValue: values){
+
+        int valueRow = 2;
+        for (List<String> defaultValue : values) {
+            XSSFRow defaultValueRow = sheet.createRow(valueRow);
             for (int i = 0; i < defaultValue.size(); i++) {
                 defaultValueRow.setHeight((short) 450);
                 XSSFCell cell = defaultValueRow.createCell(i);
                 cell.setCellValue(defaultValue.get(i));
                 cell.setCellStyle(cellStyle);
             }
+            valueRow++;
         }
 
         //数据输出流
@@ -745,7 +778,7 @@ public class ItemService {
             OutputStream output = response.getOutputStream();
             response.reset();
             response.setHeader("Content-Disposition",
-                    "attchement;filename=" +
+                    "attachment;filename=" +
                             new String((sheetName + ".xlsx").getBytes(StandardCharsets.UTF_8), "ISO8859-1"));
             response.setContentType("application/msexcel");
             wb.write(output);

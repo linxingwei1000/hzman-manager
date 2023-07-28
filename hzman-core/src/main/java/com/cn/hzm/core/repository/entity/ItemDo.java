@@ -36,6 +36,9 @@ public class ItemDo {
     @TableField(value = "item_cost")
     private Double itemCost;
 
+    @TableField(value= "listing_time")
+    private String listingTime;
+
     @TableField(value = "marketplace_id")
     private String marketplaceId;
 

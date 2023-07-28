@@ -14,6 +14,7 @@ import com.cn.hzm.core.spa.order.model.OrderItem;
 import com.cn.hzm.core.spa.price.model.*;
 import com.cn.hzm.core.spa.price.model.Product;
 import org.springframework.util.CollectionUtils;
+
 import java.text.ParseException;
 
 /**
@@ -120,6 +121,15 @@ public class ConvertUtil {
             }
         }
         return itemDO;
+    }
+
+    public static void addListingTime(ItemDo itemDO, com.cn.hzm.core.spa.listings.model.Item listItem) {
+        for (com.cn.hzm.core.spa.listings.model.ItemSummaryByMarketplace itemSummaryByMarketplace : listItem.getSummaries()) {
+            if (itemSummaryByMarketplace.getMarketplaceId().equals(itemDO.getMarketplaceId())) {
+                itemDO.setListingTime(TimeUtil.transformOffsetToDate(itemSummaryByMarketplace.getCreatedDate()));
+                break;
+            }
+        }
     }
 
     public static Double getItemPrice(GetPricingResponse priceResp) {

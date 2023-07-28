@@ -41,10 +41,10 @@ public class ItemRefreshProcessor {
     private static final int FAIL_LIMIT = 5;
 
     public void init() {
-//        if (!spiderSwitch) {
-//            log.info("测试环境关闭商品刷新任务");
-//            return;
-//        }q
+        if (!spiderSwitch) {
+            log.info("测试环境关闭商品刷新任务");
+            return;
+        }
 
         ScheduledThreadPoolExecutor orderScheduledTask = new ScheduledThreadPoolExecutor(1);
         orderScheduledTask.scheduleWithFixedDelay(() -> {
