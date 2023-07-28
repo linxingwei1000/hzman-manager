@@ -188,11 +188,10 @@ public class DailyStatProcessor {
             }
 
             ShipmentEventList shipmentEventList = JSONObject.parseObject(amazonOrderFinanceDO.getShipmentEventList(), ShipmentEventList.class);
-            List<ShipmentItem> shipmentItems = shipmentEventList.get(0).getShipmentItemList();
-            if(CollectionUtils.isEmpty(shipmentItems)){
+            if(CollectionUtils.isEmpty(shipmentEventList)){
                 return;
             }
-
+            List<ShipmentItem> shipmentItems = shipmentEventList.get(0).getShipmentItemList();
             shipmentItems.forEach(shipmentItem -> {
                 SaleInfoDo saleInfoDO = saleDetailInfoMap.get(shipmentItem.getSellerSKU()).get(amazonOrderId);
 
