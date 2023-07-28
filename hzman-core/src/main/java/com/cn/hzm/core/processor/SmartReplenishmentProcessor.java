@@ -13,6 +13,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
@@ -36,6 +37,9 @@ public class SmartReplenishmentProcessor {
 
     @Autowired
     private ItemInventoryDao itemInventoryDao;
+
+    @Value("${cache.switch:false}")
+    private Boolean cacheSwitch;
 
     private Map<Integer, List<SmartReplenishmentDto>> replenishmentMap;
 
@@ -78,6 +82,10 @@ public class SmartReplenishmentProcessor {
         shipSkus = Maps.newHashMap();
         orderSkus = Maps.newHashMap();
 
+        if (!cacheSwitch) {
+            log.info("开发环境关闭商品缓存任务");
+            return;
+        }
         statDailySaleData();
     }
 
@@ -110,17 +118,6 @@ public class SmartReplenishmentProcessor {
             }
 
             long last30DaySaleNum = saleInfos.stream().map(SaleInfoDo::getSaleNum).count();
-//            long curYearSaleNum = 0;
-//            if (!CollectionUtils.isEmpty(compareMap.get(item.getSku()))) {
-//                curYearSaleNum = compareMap.get(item.getSku()).stream().map(SaleInfoDO::getSaleNum).count();
-//            }
-
-//            long lastYearPredictNum = 0;
-//            if (!CollectionUtils.isEmpty(lastYearPredictMap.get(item.getSku()))) {
-//                lastYearPredictNum = lastYearPredictMap.get(item.getSku()).stream().map(SaleInfoDO::getSaleNum).count();
-//            }
-//            double percentSale = ((double) curYearSaleNum - (double) lastYearSaleNum) / (double) lastYearSaleNum;
-//            long predictNum = (long) (lastYearPredictNum == 0 ? percentSale * lastYearSaleNum : lastYearPredictNum * (1 + percentSale));
 
             ItemInventoryDo inventoryDO = itemInventoryDao.getInventoryBySku(item.getSku(), item.getUserMarketId());
             if (inventoryDO != null) {
@@ -138,9 +135,6 @@ public class SmartReplenishmentProcessor {
         replenishmentMap = tmpMap;
         shipSkus = tmpShips;
         orderSkus = tmpOrders;
-
-        //刷新商品,依赖cache组件定时刷新
-        //itemDetailCache.getCache(Lists.newArrayList(replenishmentMap.keySet()));
     }
 
     private Map<String, List<SaleInfoDo>> dealSaleInfoByDate(Date endDate, Integer duration) {

@@ -1,6 +1,5 @@
 package com.cn.hzm.core.spa;
 
-import com.alibaba.fastjson.JSONObject;
 import com.amazon.SellingPartnerAPIAA.AWSAuthenticationCredentials;
 import com.amazon.SellingPartnerAPIAA.AWSAuthenticationCredentialsProvider;
 import com.amazon.SellingPartnerAPIAA.LWAAuthorizationCredentials;
@@ -32,6 +31,9 @@ import org.threeten.bp.OffsetDateTime;
 
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.Semaphore;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author linxingwei
@@ -63,6 +65,7 @@ public class SpaManager {
      */
     private ListingsApi listingsApi;
 
+
     /**
      * 仓储api
      */
@@ -77,6 +80,7 @@ public class SpaManager {
      * 价格api
      */
     private ProductPricingApi productPricingApi;
+    private Semaphore productPricingSemaphore;
 
     /**
      * 订单api
@@ -187,9 +191,10 @@ public class SpaManager {
      */
     public GetPricingResponse getPriceBySku(String sku) {
         try {
+            productPricingSemaphore.acquire();
             return productPricingApi.getPricing(awsMarket.getId(), "Sku", null, Lists.newArrayList(sku)
                     , null, null);
-        } catch (ApiException e) {
+        } catch (Exception e) {
             log.error("获取商品价格失败：", e);
         }
         return null;
@@ -381,6 +386,13 @@ public class SpaManager {
                 .endpoint(awsMarket.getEndpoint())
                 .build();
         log.info("初始化[{}] productPricingApi", awsUserDo.getRemark());
+        productPricingSemaphore = new Semaphore(2);
+        ScheduledThreadPoolExecutor getOrderScheduledTask = new ScheduledThreadPoolExecutor(1);
+        getOrderScheduledTask.scheduleAtFixedRate(() -> {
+            if (productPricingSemaphore.availablePermits() < 2) {
+                productPricingSemaphore.release(1);
+            }
+        }, 5, 4, TimeUnit.SECONDS);
 
         this.fbaInventoryApi = new FbaInventoryApi.Builder()
                 .awsAuthenticationCredentials(awsAuthenticationCredentials)
@@ -422,6 +434,7 @@ public class SpaManager {
         SpaManager spaManager = new SpaManager(awsUserDo, awsMarket, null);
 
         //System.out.println(spaManager.getListingsItem("PSZ22-1129-03B"));
-        System.out.println(spaManager.getFinanceByAwsOrderId("PSZ22-1129-03B"));
+        GetOrdersResponse resp = spaManager.orderListByOrderIds(Lists.newArrayList("114-2809190-2935453"));
+        System.out.println(resp);
     }
 }
