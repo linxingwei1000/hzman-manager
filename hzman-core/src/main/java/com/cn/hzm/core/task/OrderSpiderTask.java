@@ -123,7 +123,7 @@ public class OrderSpiderTask implements ITask{
             if (orderItemSemaphore.availablePermits() < 30) {
                 orderItemSemaphore.release(1);
             }
-        }, 60, 5, TimeUnit.SECONDS);
+        }, 60000, 4500, TimeUnit.MILLISECONDS);
 
         //订单商品爬取资源定时充能
         orderFinanceSemaphore = new Semaphore(30);
