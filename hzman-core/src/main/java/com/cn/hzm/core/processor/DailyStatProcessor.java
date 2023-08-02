@@ -79,6 +79,7 @@ public class DailyStatProcessor {
 
     /**
      * 统计指定日期销量数据
+     *
      * @param awsUserMarketId
      * @param strDate
      */
@@ -93,13 +94,13 @@ public class DailyStatProcessor {
     @Scheduled(cron = "0 0 17 * * ?")
     public void statDailySaleData() {
         List<AwsUserMarketDo> awsUserMarketDos = awsUserMarketDao.all();
-        awsUserMarketDos.forEach(awsUserMarketDo ->commonDealDate(awsUserMarketDo.getId(), TimeUtil.getZeroUTCDateByDay(-1)));
+        awsUserMarketDos.forEach(awsUserMarketDo -> commonDealDate(awsUserMarketDo.getId(), TimeUtil.getZeroUTCDateByDay(-1)));
     }
 
     @Scheduled(cron = "0 */10 * * * ?")
     public void statTodaySaleData() {
         List<AwsUserMarketDo> awsUserMarketDos = awsUserMarketDao.all();
-        awsUserMarketDos.forEach(awsUserMarketDo ->commonDealDate(awsUserMarketDo.getId(), TimeUtil.transformNowToUsDate()));
+        awsUserMarketDos.forEach(awsUserMarketDo -> commonDealDate(awsUserMarketDo.getId(), TimeUtil.transformNowToUsDate()));
     }
 
     private void commonDealDate(Integer awsUserMarketId, Date date) {
@@ -187,36 +188,11 @@ public class DailyStatProcessor {
                 return;
             }
 
-            ShipmentEventList shipmentEventList = JSONObject.parseObject(amazonOrderFinanceDO.getShipmentEventList(), ShipmentEventList.class);
-            if(CollectionUtils.isEmpty(shipmentEventList)){
-                return;
+            if (amazonOrderFinanceDO.getShipmentEventList().startsWith("{\"list\"")) {
+                oldFinance(amazonOrderFinanceDO, saleDetailInfoMap, amazonOrderId);
+            } else {
+                newFinance(amazonOrderFinanceDO, saleDetailInfoMap, amazonOrderId);
             }
-            List<ShipmentItem> shipmentItems = shipmentEventList.get(0).getShipmentItemList();
-            shipmentItems.forEach(shipmentItem -> {
-                SaleInfoDo saleInfoDO = saleDetailInfoMap.get(shipmentItem.getSellerSKU()).get(amazonOrderId);
-
-                for (ChargeComponent chargeComponent : shipmentItem.getItemChargeList()) {
-                    //设置税费
-                    if (chargeComponent.getChargeType().equals("Tax")) {
-                        saleInfoDO.setSaleTax(chargeComponent.getChargeAmount().getCurrencyAmount().doubleValue());
-                        break;
-                    }
-                }
-
-                if (shipmentItem.getItemFeeList() != null) {
-                    for (FeeComponent feeComponent : shipmentItem.getItemFeeList()) {
-                        //设置仓储管理费
-                        if (feeComponent.getFeeType().equals("FBAPerUnitFulfillmentFee")) {
-                            saleInfoDO.setFbaFulfillmentFee(Math.abs(feeComponent.getFeeAmount().getCurrencyAmount().doubleValue()));
-                        }
-
-                        //设置佣金
-                        if (feeComponent.getFeeType().equals("Commission")) {
-                            saleInfoDO.setCommission(Math.abs(feeComponent.getFeeAmount().getCurrencyAmount().doubleValue()));
-                        }
-                    }
-                }
-            });
         });
 
         saleInfoMap.entrySet().stream()
@@ -261,6 +237,7 @@ public class DailyStatProcessor {
                 });
 
         //刷新本地缓存
+
         itemDetailCache.refreshCaches(awsUserMarketId, Lists.newArrayList(saleInfoMap.keySet()));
         log.info("【{}】销量数据统计完成 共计{}条数据", statDate, saleInfoMap.size());
     }
@@ -278,5 +255,79 @@ public class DailyStatProcessor {
             itemPrice = orderItem.getItemPriceAmount();
         }
         return itemPrice;
+    }
+
+    private void oldFinance(AmazonOrderFinanceDo amazonOrderFinanceDO, Map<String, Map<String, SaleInfoDo>> saleDetailInfoMap, String amazonOrderId) {
+        JSONObject eventJo = JSONObject.parseObject(amazonOrderFinanceDO.getShipmentEventList());
+        JSONArray listJa = eventJo.getJSONArray("list");
+        JSONObject itemJo = listJa.getJSONObject(0).getJSONObject("shipmentItemList").getJSONArray("list").getJSONObject(0);
+
+        SaleInfoDo saleInfoDO = saleDetailInfoMap.get(itemJo.getString("sellerSKU")).get(amazonOrderId);
+
+        if(itemJo.containsKey("itemChargeList")) {
+            if (itemJo.getJSONObject("itemChargeList").containsKey("chargeComponents")) {
+                JSONArray chargeJa = itemJo.getJSONObject("itemChargeList").getJSONArray("chargeComponents");
+                for (int i = 0; i < chargeJa.size(); i++) {
+                    JSONObject chargeJo = chargeJa.getJSONObject(0);
+                    //设置税费
+                    if (chargeJo.getString("chargeType").equals("Tax")) {
+                        saleInfoDO.setSaleTax(chargeJo.getJSONObject("chargeAmount").getDouble("currencyAmount"));
+                        break;
+                    }
+                }
+            }
+        }
+
+        if(itemJo.containsKey("itemFeeList")){
+            if(itemJo.getJSONObject("itemFeeList").containsKey("feeComponents")){
+                JSONArray itemFeeJa = itemJo.getJSONObject("itemFeeList").getJSONArray("feeComponents");
+                for (int i = 0; i < itemFeeJa.size(); i++) {
+                    JSONObject feeJo = itemFeeJa.getJSONObject(0);
+
+                    //设置仓储管理费
+                    if (feeJo.getString("feeType").equals("FBAPerUnitFulfillmentFee")) {
+                        saleInfoDO.setFbaFulfillmentFee(Math.abs(feeJo.getJSONObject("feeAmount").getDouble("currencyAmount")));
+                    }
+
+                    //设置佣金
+                    if (feeJo.getString("feeType").equals("Commission")) {
+                        saleInfoDO.setCommission(Math.abs(feeJo.getJSONObject("feeAmount").getDouble("currencyAmount")));
+                    }
+                }
+            }
+        }
+    }
+
+    private void newFinance(AmazonOrderFinanceDo amazonOrderFinanceDO, Map<String, Map<String, SaleInfoDo>> saleDetailInfoMap, String amazonOrderId) {
+        ShipmentEventList shipmentEventList = JSONObject.parseObject(amazonOrderFinanceDO.getShipmentEventList(), ShipmentEventList.class);
+        if (CollectionUtils.isEmpty(shipmentEventList)) {
+            return;
+        }
+        List<ShipmentItem> shipmentItems = shipmentEventList.get(0).getShipmentItemList();
+        shipmentItems.forEach(shipmentItem -> {
+            SaleInfoDo saleInfoDO = saleDetailInfoMap.get(shipmentItem.getSellerSKU()).get(amazonOrderId);
+
+            for (ChargeComponent chargeComponent : shipmentItem.getItemChargeList()) {
+                //设置税费
+                if (chargeComponent.getChargeType().equals("Tax")) {
+                    saleInfoDO.setSaleTax(chargeComponent.getChargeAmount().getCurrencyAmount().doubleValue());
+                    break;
+                }
+            }
+
+            if (shipmentItem.getItemFeeList() != null) {
+                for (FeeComponent feeComponent : shipmentItem.getItemFeeList()) {
+                    //设置仓储管理费
+                    if (feeComponent.getFeeType().equals("FBAPerUnitFulfillmentFee")) {
+                        saleInfoDO.setFbaFulfillmentFee(Math.abs(feeComponent.getFeeAmount().getCurrencyAmount().doubleValue()));
+                    }
+
+                    //设置佣金
+                    if (feeComponent.getFeeType().equals("Commission")) {
+                        saleInfoDO.setCommission(Math.abs(feeComponent.getFeeAmount().getCurrencyAmount().doubleValue()));
+                    }
+                }
+            }
+        });
     }
 }

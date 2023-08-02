@@ -12,6 +12,7 @@ import com.cn.hzm.core.task.ITask;
 import com.cn.hzm.core.task.OrderSpiderTask;
 import com.cn.hzm.core.task.ShipmentSpiderTask;
 import com.google.common.collect.Maps;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -23,6 +24,7 @@ import java.util.Map;
  * @author linxingwei
  * @date 31.5.23 5:46 下午
  */
+@Slf4j
 @Component
 public class TaskManager {
 
@@ -87,6 +89,7 @@ public class TaskManager {
     public void openSpiderTask(Integer spiderTaskId){
         ITask task = spiderTaskMap.get(spiderTaskId);
         if(task == null){
+            log.info("添加任务：{}", spiderTaskId);
             processAdd(awsSpiderTaskDao.select(spiderTaskId));
             return;
         }
@@ -124,17 +127,21 @@ public class TaskManager {
         AwsUserMarketDo awsUserMarketDo = awsUserMarketDao.getById(spiderTaskDo.getUserMarketId());
         SpaManager spaManager = awsUserManager.getManager(awsUserMarketDo.getAwsUserId(), awsUserMarketDo.getMarketId());
 
+        ITask task;
         if(spiderTaskDo.getSpiderType().equals(SpiderType.CREATE_ORDER.getCode())){
-            OrderSpiderTask task = new OrderSpiderTask(spaManager, spiderTaskDo.getId(), awsSpiderTaskDao, amazonOrderDao,
+            task = new OrderSpiderTask(spaManager, spiderTaskDo.getId(), awsSpiderTaskDao, amazonOrderDao,
                     amazonOrderItemDao, amazonOrderFinanceDao, itemService, dailyStatProcessor, saleInfoCache, true);
             spiderTaskMap.put(spiderTaskDo.getId(), task);
+            log.info("添加任务：{}", spiderTaskDo.getId());
+
         }else{
-            ShipmentSpiderTask task = new ShipmentSpiderTask(spaManager, spiderTaskDo.getId(), awsSpiderTaskDao, fbaInboundDao,
+            task = new ShipmentSpiderTask(spaManager, spiderTaskDo.getId(), awsSpiderTaskDao, fbaInboundDao,
                     fbaInboundItemDao, itemService,true);
             spiderTaskMap.put(spiderTaskDo.getId(), task);
+            log.info("添加任务：{}", spiderTaskDo.getId());
         }
 
         //开启爬取任务
-        spiderTaskMap.forEach((k,v) -> v.start());
+        task.start();
     }
 }

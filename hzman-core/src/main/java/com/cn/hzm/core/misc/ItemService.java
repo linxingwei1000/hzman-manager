@@ -359,9 +359,6 @@ public class ItemService {
             inventoryDTO = new InventoryDto();
         }
 
-        //计算入库中的数量
-        inventoryDTO.setAmazonInboundQuantity(getInBoundNum(itemDO.getSku()));
-
         List<FactoryOrderItemDo> factoryOrderItemDos = factoryOrderItemDao.getOrderBySku(itemDO.getSku());
         Map<Integer, FactoryOrderDo> map = Maps.newHashMap();
         List<FactoryQuantityDto> factoryQuantityDTOS = factoryOrderItemDos.stream().filter(orderItem -> {

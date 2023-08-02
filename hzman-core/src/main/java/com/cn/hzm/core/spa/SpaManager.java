@@ -434,7 +434,8 @@ public class SpaManager {
         SpaManager spaManager = new SpaManager(awsUserDo, awsMarket, null);
 
         //System.out.println(spaManager.getListingsItem("PSZ22-1129-03B"));
-        GetOrdersResponse resp = spaManager.orderListByOrderIds(Lists.newArrayList("114-2809190-2935453"));
-        System.out.println(resp);
+        //GetOrdersResponse r = spaManager.orderListByOrderIds(Lists.newArrayList("114-2809190-2935453"));
+        GetInventorySummariesResponse r = spaManager.getInventoryInfoBySku("JZ19528011A-7");
+        System.out.println(r);
     }
 }

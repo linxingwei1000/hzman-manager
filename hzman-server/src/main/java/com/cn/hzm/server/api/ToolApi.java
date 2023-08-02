@@ -82,7 +82,6 @@ public class ToolApi {
     @ApiOperation("模版文档下载")
     @RequestMapping(value = "/template/excel/download", method = RequestMethod.GET)
     public HzmResponse downloadTemplateExcel(@RequestParam("excelType") Integer excelType, HttpServletResponse response) throws IOException {
-
         excelService.createTemplateExcel(excelType, response);
         return HzmResponse.success("下载成功");
     }

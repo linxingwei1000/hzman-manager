@@ -105,10 +105,12 @@ public class ShipmentSpiderTask implements ITask {
         }, 60, 2, TimeUnit.SECONDS);
 
         //爬取订单任务
+        log.info("添加库存订单任务：{}", spiderTaskId);
         ExecutorService shipmentTask = Executors.newSingleThreadExecutor();
         shipmentTask.execute(this::shipmentSpider);
 
         //更新订单任务
+        log.info("添加库存订单更新任务：{}", spiderTaskId);
         ExecutorService updateShipmentTask = Executors.newSingleThreadExecutor();
         updateShipmentTask.execute(this::shipmentUpdateSpider);
     }

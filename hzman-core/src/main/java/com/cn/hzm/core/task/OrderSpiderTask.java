@@ -123,7 +123,7 @@ public class OrderSpiderTask implements ITask{
             if (orderItemSemaphore.availablePermits() < 30) {
                 orderItemSemaphore.release(1);
             }
-        }, 60000, 4500, TimeUnit.MILLISECONDS);
+        }, 60, 3, TimeUnit.SECONDS);
 
         //订单商品爬取资源定时充能
         orderFinanceSemaphore = new Semaphore(30);
@@ -132,7 +132,7 @@ public class OrderSpiderTask implements ITask{
             if (orderFinanceSemaphore.availablePermits() < 30) {
                 orderFinanceSemaphore.release(1);
             }
-        }, 60000, 4500, TimeUnit.MILLISECONDS);
+        }, 60, 3, TimeUnit.SECONDS);
 
         //批量更新订单财务线程
         updateFinanceThreadExecutor = new ThreadPoolExecutor(2, 2, 60L, TimeUnit.SECONDS,
@@ -145,14 +145,17 @@ public class OrderSpiderTask implements ITask{
 
 
         //爬取订单任务
+        log.info("添加爬取订单任务：{}", spiderTaskId);
         ExecutorService createOrderTask = Executors.newSingleThreadExecutor();
         createOrderTask.execute(this::createOrderSpider);
 
         //更新订单任务
+        log.info("添加更新订单任务：{}", spiderTaskId);
         ExecutorService updateOrderSpider = Executors.newSingleThreadExecutor();
         updateOrderSpider.execute(this::updateOrderSpider);
 
-        //爬取订单任务
+        //爬取订单finance任务
+        log.info("添加爬取订单finance任务：{}", spiderTaskId);
         ExecutorService updateOrderFinanceTask = Executors.newSingleThreadExecutor();
         updateOrderFinanceTask.execute(this::orderFinanceSpider);
     }
@@ -204,7 +207,12 @@ public class OrderSpiderTask implements ITask{
                     log.error("爬虫任务触发限流");
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("订单爬取错误：{}", e.getMessage(), e);
+                try {
+                    Thread.sleep(5 * 1000);
+                } catch (InterruptedException interruptedException) {
+                    interruptedException.printStackTrace();
+                }
             }
         }
     }
@@ -241,7 +249,12 @@ public class OrderSpiderTask implements ITask{
                     log.error("订单状态更新任务触发限流");
                 }
             } catch (Exception e) {
-                e.printStackTrace();
+                log.error("订单更新错误：{}", e.getMessage(), e);
+                try {
+                    Thread.sleep(5 * 1000);
+                } catch (InterruptedException interruptedException) {
+                    interruptedException.printStackTrace();
+                }
             }
         }
     }

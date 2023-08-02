@@ -364,10 +364,9 @@ public class ItemDetailCache {
         SaleInfoDto duration30Day = new SaleInfoDto();
         SaleInfoDto duration3060Day = new SaleInfoDto();
         SaleInfoDto setLastYearDuration30Day = new SaleInfoDto();
-        Integer amazonStockQuantity = 0;
+        Integer fulfillableQuantity = 0;
         Integer localQuantity = 0;
-        Integer amazonTransferQuantity = 0;
-        Integer amazonInboundQuantity = 0;
+        Integer inboundShippedQuantity = 0;
         for (ItemDto item : childItems) {
             addData(today, item.getToday());
             addData(yesterday, item.getYesterday());
@@ -375,10 +374,9 @@ public class ItemDetailCache {
             addData(duration3060Day, item.getDuration3060Day());
             addData(setLastYearDuration30Day, item.getLastYearDuration30Day());
 
-            amazonStockQuantity += item.getInventoryDTO().getAmazonStockQuantity() == null ? 0 : item.getInventoryDTO().getAmazonStockQuantity();
+            fulfillableQuantity += item.getInventoryDTO().getFulfillableQuantity() == null ? 0 : item.getInventoryDTO().getFulfillableQuantity();
             localQuantity += item.getInventoryDTO().getLocalQuantity() == null ? 0 : item.getInventoryDTO().getLocalQuantity();
-            amazonTransferQuantity += item.getInventoryDTO().getAmazonTransferQuantity() == null ? 0 : item.getInventoryDTO().getAmazonTransferQuantity();
-            amazonInboundQuantity += item.getInventoryDTO().getAmazonInboundQuantity() == null ? 0 : item.getInventoryDTO().getAmazonInboundQuantity();
+            inboundShippedQuantity += item.getInventoryDTO().getInboundShippedQuantity() == null ? 0 : item.getInventoryDTO().getInboundShippedQuantity();
         }
         relationItem.setToday(today);
         relationItem.setYesterday(yesterday);
@@ -390,10 +388,9 @@ public class ItemDetailCache {
 
         //库存信息合并
         InventoryDto inventoryDTO = new InventoryDto();
-        inventoryDTO.setAmazonStockQuantity(amazonStockQuantity);
+        inventoryDTO.setFulfillableQuantity(fulfillableQuantity);
         inventoryDTO.setLocalQuantity(localQuantity);
-        inventoryDTO.setAmazonTransferQuantity(amazonTransferQuantity);
-        inventoryDTO.setAmazonInboundQuantity(amazonInboundQuantity);
+        inventoryDTO.setInboundShippedQuantity(inboundShippedQuantity);
         relationItem.setInventoryDTO(inventoryDTO);
         return relationItem;
     }
