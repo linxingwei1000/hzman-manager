@@ -1,7 +1,11 @@
 spring:
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://183.134.62.155:3306/hzm?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&useSSL=false
+#    url: jdbc:mysql://183.134.62.155:3306/hzm?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&useSSL=false
+#    username: root
+#    password: hzman2021yzf
+
+    url: jdbc:mysql://60.190.138.133:3306/hzm?useUnicode=true&characterEncoding=utf-8&zeroDateTimeBehavior=convertToNull&serverTimezone=Asia/Shanghai&useSSL=false
     username: root
     password: hzman2021yzf
 

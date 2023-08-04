@@ -297,9 +297,6 @@ public class ConvertUtil {
             orderItemDO.setCodFeeDiscountCurrencyCode(orderItem.getCoDFeeDiscount().getCurrencyCode());
         }
 
-//        orderItemDO.setGiftMessageText(orderItem.getGiftMessageText());
-//        orderItemDO.setGiftWrapLevel(orderItem.getGiftWrapLevel());
-//        orderItemDO.setInvoiceData(JSONObject.toJSONString(orderItem.getInvoiceData()));
         orderItemDO.setConditionNote(orderItem.getConditionNote());
         orderItemDO.setConditionId(orderItem.getConditionId());
         orderItemDO.setConditionSubtypeId(orderItem.getConditionSubtypeId());
@@ -309,9 +306,16 @@ public class ConvertUtil {
 
         orderItemDO.setTaxCollection(JSONObject.toJSONString(orderItem.getTaxCollection()));
         orderItemDO.setProductInfo(JSONObject.toJSONString(orderItem.getProductInfo()));
-        orderItemDO.setIsGift(orderItem.isIsGift() ? 1 : 0);
-        orderItemDO.setIsTransparency(orderItem.isIsTransparency() ? 1 : 0);
-
+        if (orderItem.isIsGift() != null) {
+            orderItemDO.setIsGift(orderItem.isIsGift() ? 1 : 0);
+        } else {
+            orderItemDO.setIsGift(0);
+        }
+        if (orderItem.isIsTransparency() != null) {
+            orderItemDO.setIsTransparency(orderItem.isIsTransparency() ? 1 : 0);
+        } else {
+            orderItemDO.setIsTransparency(0);
+        }
         return orderItemDO;
     }
 

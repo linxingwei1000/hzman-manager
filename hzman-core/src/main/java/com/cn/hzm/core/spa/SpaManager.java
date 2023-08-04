@@ -435,6 +435,7 @@ public class SpaManager {
 
         //System.out.println(spaManager.getListingsItem("PSZ22-1129-03B"));
         //GetOrdersResponse r = spaManager.orderListByOrderIds(Lists.newArrayList("114-2809190-2935453"));
+        //GetInventorySummariesResponse r = spaManager.getInventoryInfoBySku("JZ19528011A-7");
         GetInventorySummariesResponse r = spaManager.getInventoryInfoBySku("JZ19528011A-7");
         System.out.println(r);
     }

@@ -123,7 +123,7 @@ public class OrderSpiderTask implements ITask{
             if (orderItemSemaphore.availablePermits() < 30) {
                 orderItemSemaphore.release(1);
             }
-        }, 60, 3, TimeUnit.SECONDS);
+        }, 60, 4, TimeUnit.SECONDS);
 
         //订单商品爬取资源定时充能
         orderFinanceSemaphore = new Semaphore(30);
@@ -132,7 +132,7 @@ public class OrderSpiderTask implements ITask{
             if (orderFinanceSemaphore.availablePermits() < 30) {
                 orderFinanceSemaphore.release(1);
             }
-        }, 60, 3, TimeUnit.SECONDS);
+        }, 60, 4, TimeUnit.SECONDS);
 
         //批量更新订单财务线程
         updateFinanceThreadExecutor = new ThreadPoolExecutor(2, 2, 60L, TimeUnit.SECONDS,

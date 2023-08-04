@@ -127,7 +127,7 @@ public class SmartReplenishmentProcessor {
                         addData(tmpShips, item.getUserMarketId(), item.getSku());
                     }
                 } else {
-                    addData(tmpMap, item.getUserMarketId(), createReplenishmentInfo(item.getSku(), last30DaySaleNum - inventoryDO.getAmazonQuantity(), ReplenishmentEnum.REPLENISHMENT_SHIP));
+                    addData(tmpMap, item.getUserMarketId(), createReplenishmentInfo(item.getSku(), last30DaySaleNum - inventoryDO.getAmazonQuantity(), ReplenishmentEnum.REPLENISHMENT_ORDER));
                     addData(tmpOrders, item.getUserMarketId(), item.getSku());
                 }
             }

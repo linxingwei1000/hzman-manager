@@ -52,7 +52,6 @@ public class UserApi {
     }
 
     @ApiOperation(value = "获取用户信息")
-    @HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN})
     @RequestMapping(value = "/get", method = RequestMethod.GET)
     public HzmResponse getUserInfo() {
         return HzmResponse.success(userDealService.getUserInfo());
@@ -67,14 +66,12 @@ public class UserApi {
     }
 
     @ApiOperation(value = "用户信息修改")
-    @HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN})
     @RequestMapping(value = "/update", method = RequestMethod.POST)
     public HzmResponse updateUser(@RequestBody HzmUserDTO hzmUserDTO) {
         return HzmResponse.success(userDealService.updateUser(hzmUserDTO));
     }
 
     @ApiOperation(value = "用户密码修改")
-    @HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN})
     @RequestMapping(value = "/pswd/update", method = RequestMethod.GET)
     public HzmResponse updateUserPassword(@ApiParam(name = "修改用户id") @RequestParam Long userId,
                                       @ApiParam("修改密码值") @RequestParam String password) {
