@@ -6,6 +6,7 @@ import com.amazon.SellingPartnerAPIAA.LWAAuthorizationCredentials;
 import com.cn.hzm.core.enums.AwsMarket;
 import com.cn.hzm.core.repository.entity.AwsUserDo;
 import com.cn.hzm.core.repository.entity.AwsUserMarketDo;
+import com.cn.hzm.core.repository.entity.FbaInboundDo;
 import com.cn.hzm.core.spa.fbainbound.FbaInboundApi;
 import com.cn.hzm.core.spa.fbainbound.model.GetShipmentItemsResponse;
 import com.cn.hzm.core.spa.fbainbound.model.GetShipmentsResponse;
@@ -24,6 +25,7 @@ import com.cn.hzm.core.spa.order.model.GetOrdersResponse;
 import com.cn.hzm.core.spa.price.ProductPricingApi;
 import com.cn.hzm.core.spa.price.model.GetPricingResponse;
 import com.cn.hzm.core.spa.seller.SellersApi;
+import com.cn.hzm.core.util.ConvertUtil;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
@@ -435,8 +437,9 @@ public class SpaManager {
 
         //System.out.println(spaManager.getListingsItem("PSZ22-1129-03B"));
         //GetOrdersResponse r = spaManager.orderListByOrderIds(Lists.newArrayList("114-2809190-2935453"));
-        //GetInventorySummariesResponse r = spaManager.getInventoryInfoBySku("JZ19528011A-7");
-        GetInventorySummariesResponse r = spaManager.getInventoryInfoBySku("JZ19528011A-7");
+        //GetInventorySummariesResponse r = spaManager.getInventoryInfoBySku("RH23-0719-06A");
+        GetShipmentsResponse r = spaManager.getShipmentsByShipmentIds(Lists.newArrayList("FBA17B1J5T9W"));
+        r.getPayload().getShipmentData().forEach(inboundShipmentInfo -> ConvertUtil.convertToShipmentInfoDO(new FbaInboundDo(), inboundShipmentInfo));
         System.out.println(r);
     }
 }

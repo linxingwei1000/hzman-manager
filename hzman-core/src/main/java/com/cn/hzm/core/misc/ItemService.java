@@ -565,6 +565,11 @@ public class ItemService {
                         return;
                     }
 
+                    if(CollectionUtils.isEmpty(response.getPayload().getInventorySummaries())){
+                        log.info("商品【{}】库存aws请求为空，等待下次刷新", sku);
+                        return;
+                    }
+
                     //存在就更新
                     if (inventory == null) {
                         inventory = new ItemInventoryDo();

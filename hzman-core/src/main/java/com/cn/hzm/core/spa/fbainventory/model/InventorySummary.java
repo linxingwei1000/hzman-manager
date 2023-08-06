@@ -42,7 +42,7 @@ public class InventorySummary {
   private InventoryDetails inventoryDetails = null;
 
   @SerializedName("lastUpdatedTime")
-  private OffsetDateTime lastUpdatedTime = null;
+  private String lastUpdatedTime = null;
 
   @SerializedName("productName")
   private String productName = null;
@@ -140,7 +140,7 @@ public class InventorySummary {
     this.inventoryDetails = inventoryDetails;
   }
 
-  public InventorySummary lastUpdatedTime(OffsetDateTime lastUpdatedTime) {
+  public InventorySummary lastUpdatedTime(String lastUpdatedTime) {
     this.lastUpdatedTime = lastUpdatedTime;
     return this;
   }
@@ -150,11 +150,11 @@ public class InventorySummary {
    * @return lastUpdatedTime
   **/
   @ApiModelProperty(value = "The date and time that any quantity was last updated.")
-  public OffsetDateTime getLastUpdatedTime() {
+  public String getLastUpdatedTime() {
     return lastUpdatedTime;
   }
 
-  public void setLastUpdatedTime(OffsetDateTime lastUpdatedTime) {
+  public void setLastUpdatedTime(String lastUpdatedTime) {
     this.lastUpdatedTime = lastUpdatedTime;
   }
 

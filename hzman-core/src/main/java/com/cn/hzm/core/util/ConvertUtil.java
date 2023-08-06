@@ -5,6 +5,7 @@ import com.cn.hzm.core.repository.entity.*;
 import com.cn.hzm.core.spa.StringUtil;
 import com.cn.hzm.core.spa.fbainbound.model.InboundShipmentInfo;
 import com.cn.hzm.core.spa.fbainbound.model.InboundShipmentItem;
+import com.cn.hzm.core.spa.fbainbound.model.ShipmentStatus;
 import com.cn.hzm.core.spa.fbainventory.model.GetInventorySummariesResponse;
 import com.cn.hzm.core.spa.fbainventory.model.InventoryDetails;
 import com.cn.hzm.core.spa.fbainventory.model.InventorySummary;
@@ -326,7 +327,8 @@ public class ConvertUtil {
         fbaInboundDo.setShipmentId(shipmentMember.getShipmentId());
         fbaInboundDo.setShipmentName(shipmentMember.getShipmentName());
         fbaInboundDo.setBoxContentsSource(shipmentMember.getBoxContentsSource() == null ? "" : shipmentMember.getBoxContentsSource().getValue());
-        fbaInboundDo.setShipmentStatus(shipmentMember.getShipmentStatus().getValue());
+        fbaInboundDo.setShipmentStatus(shipmentMember.getShipmentStatus()==null ? ShipmentStatus.WORKING.getValue():
+                shipmentMember.getShipmentStatus().getValue());
         return fbaInboundDo;
     }
 
