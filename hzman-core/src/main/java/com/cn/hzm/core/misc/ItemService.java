@@ -332,11 +332,12 @@ public class ItemService {
         itemDTO.setCost(itemDO.getItemCost());
 
         //设置过滤时间
-        if(!StringUtils.isEmpty(itemDTO.getListingTime())){
+        if (!StringUtils.isEmpty(itemDTO.getListingTime())) {
             try {
                 itemDTO.setDateListingTime(TimeUtil.transformMilliSecondUTCToDate(itemDTO.getListingTime()));
-            } catch (ParseException ignored) { }
-        }else{
+            } catch (ParseException ignored) {
+            }
+        } else {
             itemDTO.setDateListingTime(new Date());
             itemDTO.setListingTime(TimeUtil.dateToUTC(itemDTO.getDateListingTime()));
         }
@@ -358,6 +359,21 @@ public class ItemService {
         if (inventoryDTO == null) {
             inventoryDTO = new InventoryDto();
         }
+
+        //组装预览数据
+        if (inventoryDO != null && !StringUtils.isEmpty(inventoryDO.getReservedQuantity())) {
+            InventoryReservedDetailDto reservedDetailDto = JSONObject.parseObject(inventoryDO.getReservedQuantity(), InventoryReservedDetailDto.class);
+            inventoryDTO.setReservedDetailDto(reservedDetailDto);
+            inventoryDTO.setTotalReservedQuantity(reservedDetailDto != null ? reservedDetailDto.getTotalReservedQuantity() : 0);
+        }
+
+        //不可售组装
+        if (inventoryDO != null && !StringUtils.isEmpty(inventoryDO.getUnfulfillableQuantity())) {
+            InventoryUnfulfillableDetailDto unfulfillableDetailDto = JSONObject.parseObject(inventoryDO.getUnfulfillableQuantity(), InventoryUnfulfillableDetailDto.class);
+            inventoryDTO.setUnfulfillableDetailDto(unfulfillableDetailDto);
+            inventoryDTO.setTotalUnfulfillableQuantity(unfulfillableDetailDto != null ? unfulfillableDetailDto.getTotalUnfulfillableQuantity() : 0);
+        }
+
 
         List<FactoryOrderItemDo> factoryOrderItemDos = factoryOrderItemDao.getOrderBySku(itemDO.getSku());
         Map<Integer, FactoryOrderDo> map = Maps.newHashMap();
@@ -565,7 +581,7 @@ public class ItemService {
                         return;
                     }
 
-                    if(CollectionUtils.isEmpty(response.getPayload().getInventorySummaries())){
+                    if (CollectionUtils.isEmpty(response.getPayload().getInventorySummaries())) {
                         log.info("商品【{}】库存aws请求为空，等待下次刷新", sku);
                         return;
                     }
@@ -709,7 +725,7 @@ public class ItemService {
 
         List<ItemInventoryDo> inventoryDos = inventoryDao.getInventoryWhenStockNotNull();
         List<List<String>> values = inventoryDos.stream()
-                .map(itemInventoryDo ->Lists.newArrayList(itemInventoryDo.getSku(), String.valueOf(itemInventoryDo.getLocalQuantity())))
+                .map(itemInventoryDo -> Lists.newArrayList(itemInventoryDo.getSku(), String.valueOf(itemInventoryDo.getLocalQuantity())))
                 .collect(Collectors.toList());
         commonDeal(response, sheetName, rowNameList, rowFiledList, values);
     }

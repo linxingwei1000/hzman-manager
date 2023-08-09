@@ -139,7 +139,7 @@ public class ConvertUtil {
             return itemPrice;
         }
 
-        if (priceResp != null && priceResp.getPayload() != null) {
+        if (priceResp.getPayload() != null) {
             Price price = priceResp.getPayload().get(0);
 
             Product product = price.getProduct();

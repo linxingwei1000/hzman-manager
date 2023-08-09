@@ -139,7 +139,7 @@ public class SpaManager {
      * @return
      * @throws ApiException
      */
-    public Item getItemByAsin(String asin){
+    public Item getItemByAsin(String asin) {
         try {
             return catalogApi.getCatalogItem(asin, Lists.newArrayList(awsMarket.getId()), ITEM_DATA, null);
         } catch (ApiException e) {
@@ -192,12 +192,26 @@ public class SpaManager {
      * @throws ApiException
      */
     public GetPricingResponse getPriceBySku(String sku) {
-        try {
-            productPricingSemaphore.acquire();
-            return productPricingApi.getPricing(awsMarket.getId(), "Sku", null, Lists.newArrayList(sku)
-                    , null, null);
-        } catch (Exception e) {
-            log.error("获取商品价格失败：", e);
+        int retryTime = 3;
+        for (int i = 0; i < retryTime; i++) {
+            try {
+                productPricingSemaphore.acquire();
+                return productPricingApi.getPricing(awsMarket.getId(), "Sku", null, Lists.newArrayList(sku)
+                        , null, null);
+            } catch (ApiException ae) {
+                if (ae.getCode() == 429) {
+                    log.info("{} 获取价格请求超限，重试获取， {}", sku, i);
+                    try {
+                        Thread.sleep(5 * 1000);
+                    } catch (InterruptedException ignored) { }
+                }else{
+                    log.error("{} 获取商品价格失败：", sku, ae);
+                    break;
+                }
+            } catch (Exception e) {
+                log.error("{} 获取商品价格失败：", sku, e);
+                break;
+            }
         }
         return null;
     }
@@ -300,7 +314,7 @@ public class SpaManager {
         return fbaInboundApi.getShipmentItemsByShipmentId(shipmentId, awsMarket.getId());
     }
 
-    public ListFinancialEventsResponse getFinanceByAwsOrderId(String orderId){
+    public ListFinancialEventsResponse getFinanceByAwsOrderId(String orderId) {
         try {
             return financeApi.listFinancialEventsByOrderId(orderId, null, null);
         } catch (ApiException e) {
@@ -437,9 +451,8 @@ public class SpaManager {
 
         //System.out.println(spaManager.getListingsItem("PSZ22-1129-03B"));
         //GetOrdersResponse r = spaManager.orderListByOrderIds(Lists.newArrayList("114-2809190-2935453"));
-        //GetInventorySummariesResponse r = spaManager.getInventoryInfoBySku("RH23-0719-06A");
-        GetShipmentsResponse r = spaManager.getShipmentsByShipmentIds(Lists.newArrayList("FBA17B1J5T9W"));
-        r.getPayload().getShipmentData().forEach(inboundShipmentInfo -> ConvertUtil.convertToShipmentInfoDO(new FbaInboundDo(), inboundShipmentInfo));
+        GetInventorySummariesResponse r = spaManager.getInventoryInfoBySku("SZ7602B");
+        //GetShipmentsResponse r = spaManager.getShipmentsByShipmentIds(Lists.newArrayList("FBA17B1J5T9W"));
         System.out.println(r);
     }
 }
