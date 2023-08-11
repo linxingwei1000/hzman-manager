@@ -41,7 +41,7 @@ public class FatherChildRelationDao {
     }
 
     /**
-     * 创建商品
+     * 创建关联关系
      *
      * @param relationDO
      */
@@ -49,5 +49,33 @@ public class FatherChildRelationDao {
         relationDO.setUtime(new Date());
         relationDO.setCtime(new Date());
         fatherChildRelationMapper.insert(relationDO);
+    }
+
+    /**
+     * 删除关联关系
+     * @param userMarketId
+     * @param fatherAsin
+     * @param fatherSku
+     * @param childAsin
+     * @param childSku
+     * @return
+     */
+    public Integer deleteRelation(Integer userMarketId, String fatherAsin, String fatherSku,
+                               String childAsin, String childSku){
+        QueryWrapper<FatherChildRelationDo> query = new QueryWrapper<>();
+        query.eq("user_market_id", userMarketId);
+        if(!StringUtils.isEmpty(fatherAsin)){
+            query.eq("father_asin", fatherAsin);
+        }
+        if(!StringUtils.isEmpty(fatherSku)){
+            query.eq("father_sku", fatherSku);
+        }
+        if(!StringUtils.isEmpty(childAsin)){
+            query.eq("child_asin", childAsin);
+        }
+        if(!StringUtils.isEmpty(childSku)){
+            query.eq("child_sku", childSku);
+        }
+        return fatherChildRelationMapper.delete(query);
     }
 }

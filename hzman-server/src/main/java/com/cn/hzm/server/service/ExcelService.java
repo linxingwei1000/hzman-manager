@@ -38,7 +38,8 @@ public class ExcelService {
     private ItemService itemService;
 
     private static final Map<Integer, Integer> EXCEL_FIELD_SIZE = Maps.newHashMap();
-    static{
+
+    static {
         EXCEL_FIELD_SIZE.put(1, 2);
         EXCEL_FIELD_SIZE.put(2, 3);
         EXCEL_FIELD_SIZE.put(3, 5);
@@ -69,7 +70,7 @@ public class ExcelService {
             rowNameList = Lists.newArrayList("asin", "sku", "厂家", "成本", "备注");
             rowFiledList = Lists.newArrayList("asin", "sku", "FactoryId", "cost", "remark");
             defaultValue = Lists.newArrayList("修改此行，输入正确asin", "修改此行，输入正确sku", "输入sku对应的厂家id",
-                    "输入sku对应成本", "输入商品备注");
+                    "0.0", "");
             sheetName = "批量添加";
         }
 
@@ -145,37 +146,33 @@ public class ExcelService {
             }
 
             //跳过标题，从第三行数据开始读取
-            for (int r = 2; r < sheet.getLastRowNum(); r++) {
+            for (int r = 2; r <= sheet.getLastRowNum(); r++) {
                 XSSFRow row = sheet.getRow(r);
                 if (row == null) {
                     emptyRow.append(r).append(",");
                     continue;
                 }
 
-                try{
+                try {
                     JSONObject jo = new JSONObject();
 
-                    boolean isEmpty = false;
                     for (int i = 0; i < fieldNum; i++) {
                         XSSFCell cell = row.getCell(i);
-                        if (cell != null && cell.getCellTypeEnum().equals(CellType.BLANK)) {
-                            emptyRow.append(r).append(",");
-                            isEmpty = true;
-                            break;
+                        if (cell == null) {
+                            //cell没有填，一律按空字符串处理
+                            jo.put(fields.get(i), "");
+                            continue;
                         }
 
-                        if(cell.getCellTypeEnum().equals(CellType.STRING)){
+                        if (cell.getCellTypeEnum().equals(CellType.BLANK)) {
+                            jo.put(fields.get(i), "");
+                        } else if (cell.getCellTypeEnum().equals(CellType.STRING)) {
                             jo.put(fields.get(i), cell.getStringCellValue());
-                        }else if(cell.getCellTypeEnum().equals(CellType.NUMERIC)){
+                        } else if (cell.getCellTypeEnum().equals(CellType.NUMERIC)) {
                             jo.put(fields.get(i), cell.getNumericCellValue());
-                        }else{
+                        } else {
                             jo.put(fields.get(i), cell.getStringCellValue());
                         }
-                    }
-
-                    //包含空数据，不处理
-                    if(isEmpty){
-                        continue;
                     }
 
                     if (excelType.equals(1)) {
@@ -188,7 +185,7 @@ public class ExcelService {
                         AddItemDeallDto dto = JSONObject.parseObject(jo.toJSONString(), AddItemDeallDto.class);
                         itemService.excelProcessSync(dto, ThreadLocalCache.getUser().getAwsUserId(), ThreadLocalCache.getUser().getMarketId());
                     }
-                }catch (Exception e){
+                } catch (Exception e) {
                     log.error("excel 处理失败：", e);
                     dealErrorRow.append(r).append("[").append(e.getMessage()).append("],");
                 }

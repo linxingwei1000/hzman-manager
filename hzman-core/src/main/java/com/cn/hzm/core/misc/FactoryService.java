@@ -170,6 +170,9 @@ public class FactoryService {
      * @param sku
      */
     public void factoryClaimItem(Integer factoryId, String sku, String desc) {
+        if (factoryId == null || factoryDao.getByFid(factoryId) == null) {
+            return;
+        }
 
         FactoryItemDo factoryItemDO = new FactoryItemDo();
         factoryItemDO.setFactoryId(factoryId);

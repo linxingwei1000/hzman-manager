@@ -188,7 +188,6 @@ public class ItemService {
         //修改成本
         ItemDo itemDO = itemDao.getSingleItemDOByAsin(dto.getAsin(), dto.getSku(), awsUserMarketDo.getId());
         itemDO.setItemCost(dto.getCost());
-        itemDO.setItemRemark(dto.getRemark());
         itemDao.updateItem(itemDO);
 
         //添加备注
@@ -268,6 +267,16 @@ public class ItemService {
         ItemInventoryDo inventoryDO = inventoryDao.getInventoryBySkuAndAsin(sku, asin);
         if (inventoryDO != null) {
             inventoryDao.deleteInventory(inventoryDO.getId());
+        }
+
+        if (old != null) {
+            if (old.getIsParent() == 1) {
+                //删除父关系
+                fatherChildRelationDao.deleteRelation(ThreadLocalCache.getUser().getUserMarketId(), old.getAsin(), old.getSku(), null, null);
+            } else {
+                //删除子关系
+                fatherChildRelationDao.deleteRelation(ThreadLocalCache.getUser().getUserMarketId(), null, null, old.getAsin(), old.getSku());
+            }
         }
 
         //删除缓存
