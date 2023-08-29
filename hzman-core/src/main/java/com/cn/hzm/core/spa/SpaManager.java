@@ -449,10 +449,10 @@ public class SpaManager {
 
         SpaManager spaManager = new SpaManager(awsUserDo, awsMarket, null);
 
-        //System.out.println(spaManager.getListingsItem("PSZ22-1129-03B"));
+        //Item r = spaManager.getItemBySku("SET23-0719-01B");
         //GetOrdersResponse r = spaManager.orderListByOrderIds(Lists.newArrayList("114-2809190-2935453"));
-        GetInventorySummariesResponse r = spaManager.getInventoryInfoBySku("SZ7602B");
-        //GetShipmentsResponse r = spaManager.getShipmentsByShipmentIds(Lists.newArrayList("FBA17B1J5T9W"));
+        GetInventorySummariesResponse r = spaManager.getInventoryInfoBySku("SET23-0719-01B");
+        //GetShipmentsResponse r = spaManager.getShipmentsByShipmentIds(Lists.newArrayList("FBA15DJC28G4"));
         System.out.println(r);
     }
 }
