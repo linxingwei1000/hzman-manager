@@ -38,9 +38,6 @@ public class AwsUserDto {
     @ApiModelProperty(value = "clientSecret")
     private String clientSecret;
 
-    @ApiModelProperty(value = "refreshToken")
-    private String refreshToken;
-
     @ApiModelProperty(value = "关联市场列表")
     List<AwsUserMarketDto> marketDtos;
 

@@ -32,6 +32,14 @@ public class FatherChildRelationDao {
         return fatherChildRelationMapper.selectList(query);
     }
 
+    public List<FatherChildRelationDo> getAllRelationByChild(Integer userMarketId, String childSku, String childAsin) {
+        QueryWrapper<FatherChildRelationDo> query = new QueryWrapper<>();
+        query.eq("user_market_id", userMarketId);
+        query.eq("child_sku", childSku);
+        query.eq("child_asin", childAsin);
+        return fatherChildRelationMapper.selectList(query);
+    }
+
     public FatherChildRelationDo getRelationByFatherAndChildAsin(Integer userMarketId, String fatherAsin, String childAsin) {
         QueryWrapper<FatherChildRelationDo> query = new QueryWrapper<>();
         query.eq("user_market_id", userMarketId);

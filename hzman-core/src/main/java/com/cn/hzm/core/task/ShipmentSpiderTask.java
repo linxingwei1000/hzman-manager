@@ -127,7 +127,7 @@ public class ShipmentSpiderTask implements ITask {
     @Override
     public String spideData(List<String> shipmentIds) {
         long startTime = System.currentTimeMillis();
-        List<FbaInboundDo> fbaInboundDos = fbaInboundDao.getAllRecordByShipmentIds(shipmentIds);
+        List<FbaInboundDo> fbaInboundDos = fbaInboundDao.getAllRecordByShipmentIds(spaManager.getAwsUserMarketId(), shipmentIds);
         if (!CollectionUtils.isEmpty(fbaInboundDos)) {
             return "货物单【" + shipmentIds + "】已入库";
         }
@@ -180,8 +180,7 @@ public class ShipmentSpiderTask implements ITask {
                     break;
                 }
 
-
-                List<FbaInboundDo> shipments = fbaInboundDao.getAllRecordByShipmentStatus(needSpiderShipmentStatus);
+                List<FbaInboundDo> shipments = fbaInboundDao.getAllRecordByShipmentStatus(spaManager.getAwsUserMarketId(), needSpiderShipmentStatus);
                 log.info("货物入库单待更新总数量：{}", shipments.size());
                 if (!CollectionUtils.isEmpty(shipments)) {
                     doUpdateShipment(shipments);
@@ -198,7 +197,7 @@ public class ShipmentSpiderTask implements ITask {
     }
 
     private void doUpdateShipment(List<FbaInboundDo> shipments) throws InterruptedException {
-        log.info("货物入库单更新任务开始");
+        log.info("[{}-{}] 货物入库单更新任务开始", spaManager.getAwsUserId(), spaManager.getMarketId());
 
         int dbOrderNum = shipments.size();
         int limit = 10;
@@ -213,7 +212,7 @@ public class ShipmentSpiderTask implements ITask {
                 break;
             }
 
-            log.info("处理更新货物单 start【{}】 end【{}】", start, end);
+            log.info("[{}-{}] 处理更新货物单 start【{}】 end【{}】", spaManager.getAwsUserId(), spaManager.getMarketId(), start, end);
             List<FbaInboundDo> subShipments = shipments.subList(start, end);
 
             List<String> shipmentIds = subShipments.stream().map(FbaInboundDo::getShipmentId).collect(Collectors.toList());
@@ -221,7 +220,8 @@ public class ShipmentSpiderTask implements ITask {
             shipmentSemaphore.acquire();
             GetShipmentsResponse r = spaManager.getShipmentsByShipmentIds(shipmentIds);
             if (r == null) {
-                log.info("货物入库单更新任务任务异常结束，耗时：{}", System.currentTimeMillis() - startTime);
+                log.info("[{}-{}] 货物入库单更新任务任务异常结束，耗时：{}", spaManager.getAwsUserId(), spaManager.getMarketId(),
+                        System.currentTimeMillis() - startTime);
                 return;
             }
 
@@ -236,11 +236,11 @@ public class ShipmentSpiderTask implements ITask {
             }
         }
 
-        log.info("货物入库单更新任务结束，耗时：{}", System.currentTimeMillis() - startTime);
+        log.info("[{}-{}] 货物入库单更新任务结束，耗时：{}", spaManager.getAwsUserId(), spaManager.getMarketId(), System.currentTimeMillis() - startTime);
     }
 
     private void doShipmentSpider() throws ParseException, InterruptedException {
-        log.info("货物入库单爬取开始");
+        log.info("[{}-{}] 货物入库单爬取开始", spaManager.getAwsUserId(), spaManager.getMarketId());
         long startTime = System.currentTimeMillis();
         AwsSpiderTaskDo awsSpiderTaskDo = awsSpiderTaskDao.select(spiderTaskId);
 
@@ -253,7 +253,7 @@ public class ShipmentSpiderTask implements ITask {
         //如果是同一天的请求，endDate为空
         if (System.currentTimeMillis() - beginDate1.getTime() < DURATION_SECOND) {
             //如果拉取当天数据，每6分钟执行一次
-            log.info("爬取货物入库单任务未满足时间条件，退出本次任务，休息30分钟");
+            log.info("[{}-{}] 爬取货物入库单任务未满足时间条件，退出本次任务，休息30分钟", spaManager.getAwsUserId(), spaManager.getMarketId());
             Thread.sleep(30 * 60 * 1000);
             return;
         }
@@ -262,7 +262,8 @@ public class ShipmentSpiderTask implements ITask {
         shipmentSemaphore.acquire();
         GetShipmentsResponse r = spaManager.getShipmentsByDateRange(needSpiderShipmentStatus, beginDate, endDate);
         if (r == null) {
-            log.info("货物入库单任务异常结束，耗时：{}，爬取时间范围：{}--{}", System.currentTimeMillis() - startTime, strBeginDate, endDate);
+            log.info("[{}-{}] 货物入库单任务异常结束，耗时：{}，爬取时间范围：{}--{}", spaManager.getAwsUserId(), spaManager.getMarketId(),
+                    System.currentTimeMillis() - startTime, strBeginDate, endDate);
             return;
         }
 
@@ -279,7 +280,7 @@ public class ShipmentSpiderTask implements ITask {
         awsSpiderTaskDo = awsSpiderTaskDao.select(spiderTaskId);
         awsSpiderTaskDo.setSpiderDepend(strEndDate);
         awsSpiderTaskDao.update(awsSpiderTaskDo);
-        log.info("货物入库单任务结束，耗时：{}，爬取时间范围：{}--{}", System.currentTimeMillis() - startTime, strBeginDate, strEndDate);
+        log.info("[{}-{}] 货物入库单任务结束，耗时：{}，爬取时间范围：{}--{}", spaManager.getAwsUserId(), spaManager.getMarketId(), System.currentTimeMillis() - startTime, strBeginDate, strEndDate);
     }
 
     private void parseShipmentInfo(InboundShipmentList inboundShipments) {
@@ -289,12 +290,12 @@ public class ShipmentSpiderTask implements ITask {
         }
 
         inboundShipments.forEach(inboundShipmentInfo -> {
-            FbaInboundDo fbaInboundDo = fbaInboundDao.getByShipmentId(inboundShipmentInfo.getShipmentId());
+            FbaInboundDo fbaInboundDo = fbaInboundDao.getByShipmentId(spaManager.getAwsUserMarketId(), inboundShipmentInfo.getShipmentId());
             if (fbaInboundDo != null) {
-                ConvertUtil.convertToShipmentInfoDO(fbaInboundDo, inboundShipmentInfo);
+                ConvertUtil.convertToShipmentInfoDO(spaManager.getAwsUserMarketId(), fbaInboundDo, inboundShipmentInfo);
                 fbaInboundDao.updateRecord(fbaInboundDo);
             } else {
-                fbaInboundDao.createRecord(ConvertUtil.convertToShipmentInfoDO(new FbaInboundDo(), inboundShipmentInfo));
+                fbaInboundDao.createRecord(ConvertUtil.convertToShipmentInfoDO(spaManager.getAwsUserMarketId(), new FbaInboundDo(), inboundShipmentInfo));
             }
             //爬去货物单商品列表
             spiderShipmentItem(inboundShipmentInfo.getShipmentId());

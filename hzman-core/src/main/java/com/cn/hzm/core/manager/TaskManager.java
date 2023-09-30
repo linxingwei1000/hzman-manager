@@ -14,6 +14,7 @@ import com.cn.hzm.core.task.ShipmentSpiderTask;
 import com.google.common.collect.Maps;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import javax.annotation.PostConstruct;
@@ -61,6 +62,9 @@ public class TaskManager {
     @Autowired
     private DailyStatProcessor dailyStatProcessor;
 
+    @Value("${cache.switch:false}")
+    private Boolean spiderSwitch;
+
     /**
      * 亚马逊seller spi map<awsUserId,<MarketId, spaManager>>
      */
@@ -68,6 +72,11 @@ public class TaskManager {
 
     @PostConstruct
     public void _init(){
+        if (!spiderSwitch) {
+            log.info("开发环境关闭爬取任务");
+            return;
+        }
+
         //创建爬取任务
         List<AwsSpiderTaskDo> awsUserMarketDos = awsSpiderTaskDao.getActiveSpiderTask();
         awsUserMarketDos.forEach(this::processAdd);

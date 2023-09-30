@@ -111,11 +111,10 @@ public class ItemService {
     private Map<String, Object> syncLock = Maps.newHashMap();
 
     public JSONObject processListItem(ItemConditionDto conditionDto) {
-        List<ItemDto> itemRespList = itemDetailCache.getCacheBySort(conditionDto.getShowType(), conditionDto.getItemStatusType(),
+        List<ItemDto> itemRespList = itemDetailCache.getCacheBySort(conditionDto.getStatusType(),
                 conditionDto.getFactoryId(), conditionDto.getKey(), conditionDto.getTitle(), conditionDto.getItemType(),
                 conditionDto.getItemSortType(), conditionDto.getStartListingTime(), conditionDto.getEndListingTime(),
-                conditionDto.getListingTimeSortType(), conditionDto.getHasRemark(),
-                ThreadLocalCache.getUser().getUserMarketId());
+                conditionDto.getListingTimeSortType(), ThreadLocalCache.getUser().getUserMarketId());
 
         JSONObject respJo = new JSONObject();
         respJo.put("total", itemRespList.size());
@@ -269,18 +268,30 @@ public class ItemService {
             inventoryDao.deleteInventory(inventoryDO.getId());
         }
 
+        String fatherAsin = null;
         if (old != null) {
             if (old.getIsParent() == 1) {
                 //删除父关系
                 fatherChildRelationDao.deleteRelation(ThreadLocalCache.getUser().getUserMarketId(), old.getAsin(), old.getSku(), null, null);
+                fatherAsin = old.getAsin();
             } else {
                 //删除子关系
+                List<FatherChildRelationDo> relationDos = fatherChildRelationDao.getAllRelationByChild(ThreadLocalCache.getUser().getUserMarketId(),
+                        old.getSku(), old.getAsin());
+                if(!CollectionUtils.isEmpty(relationDos)){
+                    fatherAsin = relationDos.get(0).getFatherAsin();
+                }
                 fatherChildRelationDao.deleteRelation(ThreadLocalCache.getUser().getUserMarketId(), null, null, old.getAsin(), old.getSku());
             }
         }
 
         //删除缓存
         itemDetailCache.deleteCache(ThreadLocalCache.getUser().getUserMarketId(), sku);
+
+        //删除父子关系缓存
+        if (!StringUtils.isEmpty(fatherAsin)) {
+            itemDetailCache.refreshRelationCache(ThreadLocalCache.getUser().getUserMarketId(), fatherAsin);
+        }
     }
 
     /**
@@ -352,7 +363,26 @@ public class ItemService {
         }
 
         //设置尺寸
-        itemDTO.setDimension(JSONObject.parseObject(itemDO.getPackageDimension(), PackageDimensionDto.class));
+        JSONObject packageJo = JSONObject.parseObject(itemDO.getPackageDimension());
+        if (packageJo != null && packageJo.containsKey("package")) {
+            JSONObject targetJo = packageJo.getJSONObject("package");
+            PackageDimensionDto dto = new PackageDimensionDto();
+            if (targetJo.containsKey("height")) {
+                dto.setHeight(targetJo.getJSONObject("height").getString("value"));
+            }
+            if (targetJo.containsKey("length")) {
+                dto.setHeight(targetJo.getJSONObject("length").getString("value"));
+            }
+            if (targetJo.containsKey("weight")) {
+                dto.setHeight(targetJo.getJSONObject("weight").getString("value"));
+            }
+            if (targetJo.containsKey("width")) {
+                dto.setHeight(targetJo.getJSONObject("width").getString("value"));
+            }
+            itemDTO.setDimension(dto);
+        } else {
+            itemDTO.setDimension(JSONObject.parseObject(itemDO.getPackageDimension(), PackageDimensionDto.class));
+        }
 
         //设置类目排名&最小排名
         List<ItemCategoryDo> itemCategoryDOs = itemCategoryDao.getItemCategoryByItemId(itemDO.getId());
@@ -441,46 +471,46 @@ public class ItemService {
         return itemDTO;
     }
 
-    private Integer getInBoundNum(String sku) {
-        List<FbaInboundItemDo> records = fbaInboundItemDao.getAllRecordBySku(sku);
-        if (CollectionUtils.isEmpty(records)) {
-            return 0;
-        }
-
-        List<String> shipmentIds = records.stream().map(FbaInboundItemDo::getShipmentId).collect(Collectors.toList());
-        List<FbaInboundDo> infoRecords = fbaInboundDao.getAllRecordByShipmentIds(shipmentIds);
-        Map<String, String> useMap = infoRecords.stream().filter(infoRecord -> !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_CLOSED.getCode())
-                && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_CANCELLED.getCode())
-                && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_DELETED.getCode())
-                && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_ERROR.getCode()))
-                .collect(Collectors.toMap(FbaInboundDo::getShipmentId, FbaInboundDo::getShipmentStatus));
-
-
-        if (CollectionUtils.isEmpty(useMap)) {
-            return 0;
-        }
-
-        int num = 0;
-        for (FbaInboundItemDo record : records) {
-            if (useMap.containsKey(record.getShipmentId())) {
-                String shipmentStatus = useMap.get(record.getShipmentId());
-                if (shipmentStatus.equals(AmazonShipmentStatusEnum.STATUS_RECEIVING.getCode())) {
-                    int quantityShipped = record.getQuantityShipped() != null ? record.getQuantityShipped() : 0;
-                    int quantityReceived = record.getQuantityReceived() != null ? record.getQuantityReceived() : 0;
-                    int remain = quantityShipped - quantityReceived;
-                    if (remain < 0) {
-                        remain = 0;
-                    }
-                    num += remain;
-                } else {
-                    if (record.getQuantityShipped() != null) {
-                        num += record.getQuantityShipped();
-                    }
-                }
-            }
-        }
-        return num;
-    }
+//    private Integer getInBoundNum(String sku) {
+//        List<FbaInboundItemDo> records = fbaInboundItemDao.getAllRecordBySku(sku);
+//        if (CollectionUtils.isEmpty(records)) {
+//            return 0;
+//        }
+//
+//        List<String> shipmentIds = records.stream().map(FbaInboundItemDo::getShipmentId).collect(Collectors.toList());
+//        List<FbaInboundDo> infoRecords = fbaInboundDao.getAllRecordByShipmentIds(shipmentIds);
+//        Map<String, String> useMap = infoRecords.stream().filter(infoRecord -> !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_CLOSED.getCode())
+//                && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_CANCELLED.getCode())
+//                && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_DELETED.getCode())
+//                && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_ERROR.getCode()))
+//                .collect(Collectors.toMap(FbaInboundDo::getShipmentId, FbaInboundDo::getShipmentStatus));
+//
+//
+//        if (CollectionUtils.isEmpty(useMap)) {
+//            return 0;
+//        }
+//
+//        int num = 0;
+//        for (FbaInboundItemDo record : records) {
+//            if (useMap.containsKey(record.getShipmentId())) {
+//                String shipmentStatus = useMap.get(record.getShipmentId());
+//                if (shipmentStatus.equals(AmazonShipmentStatusEnum.STATUS_RECEIVING.getCode())) {
+//                    int quantityShipped = record.getQuantityShipped() != null ? record.getQuantityShipped() : 0;
+//                    int quantityReceived = record.getQuantityReceived() != null ? record.getQuantityReceived() : 0;
+//                    int remain = quantityShipped - quantityReceived;
+//                    if (remain < 0) {
+//                        remain = 0;
+//                    }
+//                    num += remain;
+//                } else {
+//                    if (record.getQuantityShipped() != null) {
+//                        num += record.getQuantityShipped();
+//                    }
+//                }
+//            }
+//        }
+//        return num;
+//    }
 
     private SaleInfoDto getSaleInfoByDate(Date date, String sku, Integer userMarketId) {
         String statDate = TimeUtil.getSimpleFormat(date);
@@ -683,6 +713,7 @@ public class ItemService {
                 relationDO.setFatherAsin(fatherItem.getAsin());
                 relationDO.setChildSku(itemDo.getSku());
                 relationDO.setChildAsin(itemDo.getAsin());
+                relationDO.setUserMarketId(awsUserMarketDo.getId());
                 fatherChildRelationDao.createRelation(relationDO);
             }
         } else if (itemDo.getIsParent() == 1) {
@@ -714,6 +745,7 @@ public class ItemService {
                     relationDO.setFatherAsin(itemDo.getAsin());
                     relationDO.setChildSku(childItem.getSku());
                     relationDO.setChildAsin(childItem.getAsin());
+                    relationDO.setUserMarketId(awsUserMarketDo.getId());
                     fatherChildRelationDao.createRelation(relationDO);
                 }
             });

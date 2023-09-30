@@ -148,9 +148,14 @@ public class AwsService {
             throw new HzmException(ExceptionCode.AWS_MARKET_ERROR, "账号已关联市场");
         }
 
+        if(StringUtils.isEmpty(awsUserMarketDto.getRefreshToken())){
+            throw new HzmException(ExceptionCode.AWS_MARKET_ERROR, "refreshToken必填");
+        }
+
         awsUserMarketDo = new AwsUserMarketDo();
         awsUserMarketDo.setAwsUserId(awsUserMarketDto.getAwsUserId());
         awsUserMarketDo.setMarketId(awsUserMarketDto.getMarketId());
+        awsUserMarketDo.setRefreshToken(awsUserMarketDto.getRefreshToken());
         Integer result = awsUserMarketDao.insert(awsUserMarketDo);
 
         //添加账号市场api
@@ -259,10 +264,6 @@ public class AwsService {
 
         if (StringUtils.isEmpty(awsUserDto.getClientSecret())) {
             throw new HzmException(ExceptionCode.AWS_USER_INFO_ERROR, "clientSecret为空");
-        }
-
-        if (StringUtils.isEmpty(awsUserDto.getRefreshToken())) {
-            throw new HzmException(ExceptionCode.AWS_USER_INFO_ERROR, "refreshToken为空");
         }
 
         AwsUserDo awsUserDo = awsUserDao.getAwsUserByRemark(awsUserDto.getRemark());

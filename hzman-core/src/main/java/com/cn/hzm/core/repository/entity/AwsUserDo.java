@@ -39,9 +39,6 @@ public class AwsUserDo {
     @TableField(value = "client_secret")
     private String clientSecret;
 
-    @TableField(value = "refresh_token")
-    private String refreshToken;
-
     private Date ctime;
 
     private Date utime;

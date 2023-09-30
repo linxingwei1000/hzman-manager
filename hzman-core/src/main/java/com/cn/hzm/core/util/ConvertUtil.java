@@ -192,7 +192,8 @@ public class ConvertUtil {
         itemInventoryDo.calculateTotalQuantity();
     }
 
-    public static AmazonOrderDo convertToAmazonOrderDo(AmazonOrderDo orderDO, Order order) throws ParseException {
+    public static AmazonOrderDo convertToAmazonOrderDo(Integer userMarketId, AmazonOrderDo orderDO, Order order) throws ParseException {
+        orderDO.setUserMarketId(userMarketId);
         orderDO.setAmazonOrderId(order.getAmazonOrderId());
         orderDO.setSellerOrderId(order.getSellerOrderId());
         orderDO.setPurchaseDate(TimeUtil.transform(order.getPurchaseDate()));
@@ -320,7 +321,8 @@ public class ConvertUtil {
         return orderItemDO;
     }
 
-    public static FbaInboundDo convertToShipmentInfoDO(FbaInboundDo fbaInboundDo, InboundShipmentInfo shipmentMember) {
+    public static FbaInboundDo convertToShipmentInfoDO(Integer userMarketId, FbaInboundDo fbaInboundDo, InboundShipmentInfo shipmentMember) {
+        fbaInboundDo.setUserMarketId(userMarketId);
         fbaInboundDo.setFcid(shipmentMember.getDestinationFulfillmentCenterId());
         fbaInboundDo.setLpType(shipmentMember.getLabelPrepType().getValue());
         fbaInboundDo.setShipAddress(JSONObject.toJSONString(shipmentMember.getShipFromAddress()));

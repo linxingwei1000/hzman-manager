@@ -177,110 +177,105 @@ public class ItemDetailCache {
      * @param sortType
      * @return
      */
-    public List<ItemDto> getCacheBySort(Integer showType, Integer itemStatusType, Integer factoryId,
+    public List<ItemDto> getCacheBySort(Integer statusType, Integer factoryId,
                                         String key, String title, String itemType, Integer sortType,
-                                        String startListingTime, String endListingTime, Integer listingDateSortType,
-                                        Boolean hasRemark, Integer userMarketId) {
+                                        String startListingTime, String endListingTime, Integer listingDateSortType, Integer userMarketId) {
         Collection<ItemDto> temp;
-        if (showType == 2) {
-            //展示父子体
-            temp = relationCacheMap.values();
 
-            //父子体asin过滤
-            if (!StringUtils.isEmpty(key)) {
-                temp = temp.stream().filter(item -> item.getAsin().contains(key)).collect(Collectors.toList());
-            }
-
-            //title过滤
-            if (!StringUtils.isEmpty(title)) {
-                String[] keys = title.split(" ");
-                temp = temp.stream().filter(item -> {
-                    for (String subKey : keys) {
-                        if (!item.getTitle().toLowerCase().contains(subKey.toLowerCase())) {
-                            return false;
-                        }
-                    }
-                    return true;
-                }).collect(Collectors.toList());
-            }
-        } else {
-            //展示全商品
-            //dataType:0.全部商品，1.补货，2.订货
-            if (itemStatusType == null || itemStatusType == 0) {
+        switch (statusType) {
+            case 0:
+                //全部商品
                 temp = cache.asMap().values().stream().filter(itemDto -> itemDto.getUserMarketId().equals(userMarketId)).collect(Collectors.toList());
-            } else if (itemStatusType == 1) {
+                break;
+            case 1:
+                //补货商品
                 temp = getCache(userMarketId, smartReplenishmentProcessor.getShipSkus(userMarketId));
-            } else {
+                break;
+            case 2:
+                //订货商品
                 temp = getCache(userMarketId, smartReplenishmentProcessor.getOrderSkus(userMarketId));
-            }
+                break;
+            case 3:
+                //父体
+                temp = relationCacheMap.values().stream().filter(itemDto -> itemDto.getUserMarketId().equals(userMarketId)).collect(Collectors.toList());;
+                break;
+            case 4:
+                //备注商品
+                temp = cache.asMap().values().stream().filter(itemDto -> itemDto.getUserMarketId().equals(userMarketId)).collect(Collectors.toList());
+                temp = temp.stream().filter(item -> !CollectionUtils.isEmpty(item.getRemarkDtos())).collect(Collectors.toList());
+                break;
+            case 5:
+                temp = cache.asMap().values().stream().filter(itemDto -> itemDto.getUserMarketId().equals(userMarketId)).collect(Collectors.toList());
+                temp = temp.stream().filter(item -> CollectionUtils.isEmpty(item.getRemarkDtos())).collect(Collectors.toList());
+                break;
+            default:
+                temp = cache.asMap().values().stream().filter(itemDto -> itemDto.getUserMarketId().equals(userMarketId)).collect(Collectors.toList());
+        }
 
-            //厂家过滤
-            if (factoryId != null && factoryId !=0) {
-                if (factoryId == -1) {
-                    //拉取未绑定厂家商品
-                    List<FactoryItemDo> factoryItemDOS = factoryItemDao.getAll();
-                    List<String> ItemDTOs = factoryItemDOS.stream().map(FactoryItemDo::getSku).collect(Collectors.toList());
-                    temp = temp.stream().filter(itemDTO -> !ItemDTOs.contains(itemDTO.getSku())).collect(Collectors.toList());
-                } else {
-                    //拉取指定厂家商品
-                    List<FactoryItemDo> factoryItemDOS = factoryItemDao.getInfoByFactoryId(factoryId);
-                    List<String> ItemDTOs = factoryItemDOS.stream().map(FactoryItemDo::getSku).collect(Collectors.toList());
-                    temp = temp.stream().filter(itemDTO -> ItemDTOs.contains(itemDTO.getSku())).collect(Collectors.toList());
-                }
-            }
 
-            //sku过滤
-            if (!StringUtils.isEmpty(key)) {
+        //sku过滤
+        if (!StringUtils.isEmpty(key)) {
+            if(statusType.equals(3)){
+                temp = temp.stream().filter(item -> item.getAsin().contains(key)).collect(Collectors.toList());
+            }else{
                 temp = temp.stream().filter(item -> item.getSku().contains(key)).collect(Collectors.toList());
             }
 
-            //title过滤
-            if (!StringUtils.isEmpty(title)) {
-                String[] keys = title.split(" ");
-                temp = temp.stream().filter(item -> {
-                    for (String subKey : keys) {
-                        if (!item.getTitle().toLowerCase().contains(subKey.toLowerCase())) {
-                            return false;
-                        }
+        }
+
+        //title过滤
+        if (!StringUtils.isEmpty(title)) {
+            String[] keys = title.split(" ");
+            temp = temp.stream().filter(item -> {
+                for (String subKey : keys) {
+                    if (!item.getTitle().toLowerCase().contains(subKey.toLowerCase())) {
+                        return false;
                     }
-                    return true;
-                }).collect(Collectors.toList());
-            }
-
-            //商品类型过滤
-            if (!StringUtils.isEmpty(itemType)) {
-                temp = temp.stream().filter(item -> item.getItemType().equals(itemType)).collect(Collectors.toList());
-            }
-
-            //备注商品过滤
-            if (hasRemark != null) {
-                if (hasRemark) {
-                    temp = temp.stream().filter(item -> !CollectionUtils.isEmpty(item.getRemarkDtos())).collect(Collectors.toList());
-                } else {
-                    temp = temp.stream().filter(item -> CollectionUtils.isEmpty(item.getRemarkDtos())).collect(Collectors.toList());
                 }
-            }
+                return true;
+            }).collect(Collectors.toList());
+        }
 
-            //上架时间过滤排序
-            if (StringUtils.isNotEmpty(startListingTime)) {
-                startListingTime += ":00";
-                Date startLT = TimeUtil.getDateByDateFormat(startListingTime);
-                temp = temp.stream().filter(itemDto -> itemDto.getDateListingTime().after(startLT)).collect(Collectors.toList());
-            }
-            if (StringUtils.isNotEmpty(endListingTime)) {
-                endListingTime += ":00";
-                Date endLT = TimeUtil.getDateByDateFormat(endListingTime);
-                temp = temp.stream().filter(itemDto -> itemDto.getDateListingTime().before(endLT)).collect(Collectors.toList());
-            }
-            if (listingDateSortType == null || listingDateSortType == 0) {
-                //按时间从老到新
-                temp = temp.stream().sorted(Comparator.comparing(ItemDto::getDateListingTime))
-                        .collect(Collectors.toList());
+        //厂家过滤
+        if (factoryId != null && factoryId != 0) {
+            if (factoryId == -1) {
+                //拉取未绑定厂家商品
+                List<FactoryItemDo> factoryItemDOS = factoryItemDao.getAll();
+                List<String> ItemDTOs = factoryItemDOS.stream().map(FactoryItemDo::getSku).collect(Collectors.toList());
+                temp = temp.stream().filter(itemDTO -> !ItemDTOs.contains(itemDTO.getSku())).collect(Collectors.toList());
             } else {
-                //按时间从新到老
-                temp = temp.stream().sorted(Comparator.comparing(ItemDto::getDateListingTime).reversed())
-                        .collect(Collectors.toList());
+                //拉取指定厂家商品
+                List<FactoryItemDo> factoryItemDOS = factoryItemDao.getInfoByFactoryId(factoryId);
+                List<String> ItemDTOs = factoryItemDOS.stream().map(FactoryItemDo::getSku).collect(Collectors.toList());
+                temp = temp.stream().filter(itemDTO -> ItemDTOs.contains(itemDTO.getSku())).collect(Collectors.toList());
             }
+        }
+
+
+        //商品类型过滤
+        if (!StringUtils.isEmpty(itemType)) {
+            temp = temp.stream().filter(item -> item.getItemType().equals(itemType)).collect(Collectors.toList());
+        }
+
+        //上架时间过滤排序
+        if (StringUtils.isNotEmpty(startListingTime)) {
+            startListingTime += ":00";
+            Date startLT = TimeUtil.getDateByDateFormat(startListingTime);
+            temp = temp.stream().filter(itemDto -> itemDto.getDateListingTime().after(startLT)).collect(Collectors.toList());
+        }
+        if (StringUtils.isNotEmpty(endListingTime)) {
+            endListingTime += ":00";
+            Date endLT = TimeUtil.getDateByDateFormat(endListingTime);
+            temp = temp.stream().filter(itemDto -> itemDto.getDateListingTime().before(endLT)).collect(Collectors.toList());
+        }
+        if (listingDateSortType == null || listingDateSortType == 0) {
+            //按时间从老到新
+            temp = temp.stream().sorted(Comparator.comparing(ItemDto::getDateListingTime))
+                    .collect(Collectors.toList());
+        } else {
+            //按时间从新到老
+            temp = temp.stream().sorted(Comparator.comparing(ItemDto::getDateListingTime).reversed())
+                    .collect(Collectors.toList());
         }
 
         Comparator<ItemDto> comparator = comparatorMap.getOrDefault(sortType, new TodaySaleDescComparator());
@@ -315,6 +310,9 @@ public class ItemDetailCache {
      * @return
      */
     public List<ItemDto> getCache(Integer userMarketId, List<String> skus) {
+        if(CollectionUtils.isEmpty(skus)){
+            return Lists.newArrayList();
+        }
         List<String> keys = skus.stream().map(sku -> installCacheKey(userMarketId, sku)).collect(Collectors.toList());
         Map<String, ItemDto> cacheMap = cache.getAll(keys);
         return Lists.newArrayList(cacheMap.values());
@@ -355,7 +353,7 @@ public class ItemDetailCache {
 
     //父类用asin做
     public ItemDto installRelationItemDTO(Integer usrMarketId, String asin, Date usDate) {
-        ItemDo fatherItem = itemDao.getItemDOByAsin(asin, usrMarketId, 1);
+        ItemDo fatherItem = itemDao.getItemDOByAsin(asin, 1, usrMarketId);
         ItemDto relationItem = itemService.buildItemDTO(fatherItem, usDate);
         List<ItemDto> childItems = getChildrenItem(usrMarketId, asin);
 
@@ -420,7 +418,6 @@ public class ItemDetailCache {
             }
             if (itemDTO != null) {
                 tmpMap.put(installCacheKey(itemDTO.getUserMarketId(), fatherAsin), itemDTO);
-                //relationCacheMap.put(fatherAsin, itemDTO);
             }
         });
         long endTime = System.currentTimeMillis();
@@ -431,7 +428,6 @@ public class ItemDetailCache {
             ItemDto relationItem = getSingleCache(itemDO.getUserMarketId(), itemDO.getSku());
             if (relationItem != null) {
                 tmpMap.put(installCacheKey(itemDO.getUserMarketId(), itemDO.getAsin()), relationItem);
-                //relationCacheMap.put(itemDO.getAsin(), relationItem);
             }
         });
         startTime = System.currentTimeMillis();
@@ -440,6 +436,18 @@ public class ItemDetailCache {
         //全局替换
         relationCacheMap.clear();
         relationCacheMap.putAll(tmpMap);
+    }
+
+    public void refreshRelationCache(Integer awsUserMarketId, String fatherAsin) {
+        ItemDto itemDTO = null;
+        try {
+            itemDTO = installRelationItemDTO(awsUserMarketId, fatherAsin, TimeUtil.transformNowToUsDate());
+        } catch (Exception e) {
+            log.error("{} 刷新父子关系缓存错误：", fatherAsin, e);
+        }
+        if (itemDTO != null) {
+            relationCacheMap.put(installCacheKey(itemDTO.getUserMarketId(), fatherAsin), itemDTO);
+        }
     }
 
     private void addData(SaleInfoDto saleInfo, SaleInfoDto addSaleInfo) {

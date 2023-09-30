@@ -40,22 +40,25 @@ public class FbaInboundDao {
 
 
 
-    public FbaInboundDo getByShipmentId(String shipmentId){
+    public FbaInboundDo getByShipmentId(Integer userMarketId, String shipmentId){
         QueryWrapper<FbaInboundDo> query = new QueryWrapper<>();
+        query.eq("user_market_id", userMarketId);
         query.eq("shipment_id", shipmentId);
         query.select("id", "shipment_id");
         return fbaInboundMapper.selectOne(query);
     }
 
-    public List<FbaInboundDo> getAllRecordByShipmentIds(List<String> shipmentIds){
+    public List<FbaInboundDo> getAllRecordByShipmentIds(Integer userMarketId, List<String> shipmentIds){
         QueryWrapper<FbaInboundDo> query = new QueryWrapper<>();
+        query.eq("user_market_id", userMarketId);
         query.in("shipment_id", shipmentIds);
         query.select("id", "shipment_id", "shipment_status");
         return fbaInboundMapper.selectList(query);
     }
 
-    public List<FbaInboundDo> getAllRecordByShipmentStatus(List<String> status){
+    public List<FbaInboundDo> getAllRecordByShipmentStatus(Integer userMarketId, List<String> status){
         QueryWrapper<FbaInboundDo> query = new QueryWrapper<>();
+        query.eq("user_market_id", userMarketId);
         query.in("shipment_status", status);
         query.select("shipment_id");
         return fbaInboundMapper.selectList(query);

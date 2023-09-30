@@ -317,7 +317,7 @@ public class OrderSpiderTask implements ITask{
                         AmazonOrderDo update = new AmazonOrderDo();
                         update.setId(old.getId());
                         update.setOtherConfig(old.getOtherConfig());
-                        ConvertUtil.convertToAmazonOrderDo(update, order);
+                        ConvertUtil.convertToAmazonOrderDo(old.getUserMarketId(), update, order);
                         amazonOrderDao.updateOrder(update);
 
                         log.info("更新订单状态 amazonOrderId【{}】purchaseTime:【{}】", amazonId, update.getPurchaseDate());
@@ -351,7 +351,7 @@ public class OrderSpiderTask implements ITask{
     }
 
     private void doSpiderOrder() throws Exception {
-        log.info("爬取订单任务开始");
+        log.info("[{}-{}]爬取订单任务开始", spaManager.getAwsUserId(), spaManager.getMarketId());
         long startTime = System.currentTimeMillis();
         AwsSpiderTaskDo awsSpiderTaskDo = awsSpiderTaskDao.select(spiderTaskId);
 
@@ -363,7 +363,7 @@ public class OrderSpiderTask implements ITask{
 
         if (System.currentTimeMillis() - beginDate.getTime() < DURATION_SECOND) {
             //如果拉取当天数据，每20分钟执行一次
-            log.info("爬取订单任务未满足时间条件，退出本次任务，休息20分钟");
+            log.info("[{}-{}]爬取订单任务未满足时间条件，退出本次任务，休息20分钟", spaManager.getAwsUserId(), spaManager.getMarketId());
             Thread.sleep(20 * 60 * 1000);
             return;
         }
@@ -373,11 +373,13 @@ public class OrderSpiderTask implements ITask{
 
         GetOrdersResponse r = spaManager.orderList(strBeginDate, strEndDate);
         if (r == null) {
-            log.info("爬取订单任务异常结束，耗时：{}，爬取时间范围：{}--{}, 爬取总数：{}", System.currentTimeMillis() - startTime, strBeginDate, strEndDate, total);
+            log.info("[{}-{}]爬取订单任务异常结束，耗时：{}，爬取时间范围：{}--{}, 爬取总数：{}", spaManager.getAwsUserId(), spaManager.getMarketId(),
+                    System.currentTimeMillis() - startTime, strBeginDate, strEndDate, total);
             return;
         }
         List<String> amazonIds = parseOrderResp(awsSpiderTaskDo.getUserMarketId(), r.getPayload().getOrders());
-        log.info("时间段【{}】---【{}】爬取订单数量：{}", strBeginDate, strEndDate, amazonIds.size());
+        log.info("[{}-{}] 时间段【{}】---【{}】爬取订单数量：{}", spaManager.getAwsUserId(), spaManager.getMarketId(),
+                strBeginDate, strEndDate, amazonIds.size());
         getOrderItems(amazonIds);
         total += amazonIds.size();
 
@@ -389,7 +391,8 @@ public class OrderSpiderTask implements ITask{
             nextToken = r.getPayload().getNextToken();
 
             List<String> tmpIds = parseOrderResp(awsSpiderTaskDo.getUserMarketId(), r.getPayload().getOrders());
-            log.info("时间段【{}】---【{}】nextToken 爬取订单数量：{}", strBeginDate, strEndDate, amazonIds.size());
+            log.info("[{}-{}] 时间段【{}】---【{}】nextToken 爬取订单数量：{}", spaManager.getAwsUserId(), spaManager.getMarketId(),
+                    strBeginDate, strEndDate, amazonIds.size());
             getOrderItems(tmpIds);
             total += tmpIds.size();
         }
@@ -398,7 +401,8 @@ public class OrderSpiderTask implements ITask{
         awsSpiderTaskDo = awsSpiderTaskDao.select(spiderTaskId);
         awsSpiderTaskDo.setSpiderDepend(strEndDate);
         awsSpiderTaskDao.update(awsSpiderTaskDo);
-        log.info("爬取订单任务结束，耗时：{}，爬取时间范围：{}--{}, 爬取总数：{}", System.currentTimeMillis() - startTime, strBeginDate, strEndDate, total);
+        log.info("[{}-{}] 爬取订单任务结束，耗时：{}，爬取时间范围：{}--{}, 爬取总数：{}", spaManager.getAwsUserId(), spaManager.getMarketId(),
+                System.currentTimeMillis() - startTime, strBeginDate, strEndDate, total);
     }
 
     /**
@@ -418,7 +422,7 @@ public class OrderSpiderTask implements ITask{
 
             AmazonOrderDo old = amazonOrderDao.getOrderByAmazonId(userMarketId, order.getAmazonOrderId());
             if (old == null) {
-                amazonOrderDao.createOrder(ConvertUtil.convertToAmazonOrderDo(new AmazonOrderDo(), order));
+                amazonOrderDao.createOrder(ConvertUtil.convertToAmazonOrderDo(userMarketId, new AmazonOrderDo(), order));
             }
         }
         return amazonIds;
@@ -504,7 +508,7 @@ public class OrderSpiderTask implements ITask{
     }
 
     private void doSpiderOrderFinance(Set<String> needFixSaleInfoDay, List<AmazonOrderDo> totalOrders) {
-        log.info("数据库中需要爬取订单财务信息数量：{}", totalOrders.size());
+        log.info("[{}-{}] 数据库中需要爬取订单财务信息数量：{}", spaManager.getAwsUserId(), spaManager.getMarketId(), totalOrders.size());
 
         int dbOrderNum = totalOrders.size();
         int limit = 50;
@@ -518,7 +522,7 @@ public class OrderSpiderTask implements ITask{
             List<AmazonOrderDo> subOrders = totalOrders.subList(start, end);
             callables.add(() -> {
                 //获取资源
-                log.info("处理更新财务数据 start【{}】 end【{}】", start, end);
+                log.info("[{}-{}] 处理更新财务数据 start【{}】 end【{}】", spaManager.getAwsUserId(), spaManager.getMarketId(), start, end);
                 Set<String> threadFixSaleInfoDay = Sets.newHashSet();
                 int updateCount = 0;
 
@@ -531,7 +535,8 @@ public class OrderSpiderTask implements ITask{
                         }
 
                         if (response.getPayload().getFinancialEvents().getShipmentEventList() == null) {
-                            log.info("订单财务信息 amazonOrderId【{}】purchaseTime:【{}】为空", order.getAmazonOrderId(), order.getPurchaseDate());
+                            log.info("[{}-{}] 订单财务信息 amazonOrderId【{}】purchaseTime:【{}】为空", spaManager.getAwsUserId(), spaManager.getMarketId(),
+                                    order.getAmazonOrderId(), order.getPurchaseDate());
                             continue;
                         }
 
@@ -560,7 +565,8 @@ public class OrderSpiderTask implements ITask{
                         }
 
                         if (result) {
-                            log.info("更新订单财务信息 amazonOrderId【{}】purchaseTime:【{}】", order.getAmazonOrderId(), order.getPurchaseDate());
+                            log.info("[{}-{}] 更新订单财务信息 amazonOrderId【{}】purchaseTime:【{}】", spaManager.getAwsUserId(),
+                                    spaManager.getMarketId(), order.getAmazonOrderId(), order.getPurchaseDate());
                             threadFixSaleInfoDay.add(TimeUtil.getSimpleFormat(order.getPurchaseDate()));
                             updateCount++;
 
@@ -569,7 +575,8 @@ public class OrderSpiderTask implements ITask{
                             amazonOrderDao.updateOrder(order);
                         }
                     } catch (Exception e) {
-                        log.error("更新订单【{}】财务错误：{}", order.getAmazonOrderId(), e.getMessage(), e);
+                        log.error("[{}-{}] 更新订单【{}】财务错误：{}", spaManager.getAwsUserId(),
+                                spaManager.getMarketId(), order.getAmazonOrderId(), e.getMessage(), e);
                     }
                 }
                 return new UpdateRecordFuture(threadFixSaleInfoDay, updateCount);
@@ -589,7 +596,8 @@ public class OrderSpiderTask implements ITask{
                     log.error("error:", e);
                 }
             }
-            log.info("更新订单财务任务结束，本次任务耗时：{}, 共更新订单【{}】条", System.currentTimeMillis() - startTime, updateAll);
+            log.info("[{}-{}] 更新订单财务任务结束，本次任务耗时：{}, 共更新订单【{}】条", spaManager.getAwsUserId(),
+                    spaManager.getMarketId(), System.currentTimeMillis() - startTime, updateAll);
         } catch (Exception e) {
             log.error("更新订单错误：{}", e.getMessage(), e);
         }

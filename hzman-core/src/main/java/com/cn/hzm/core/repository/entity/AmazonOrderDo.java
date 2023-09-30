@@ -20,7 +20,7 @@ public class AmazonOrderDo {
     private Integer id;
 
     @TableField(value = "user_market_id")
-    private String userMarketId;
+    private Integer userMarketId;
 
     @TableField(value = "amazon_order_id")
     private String amazonOrderId;

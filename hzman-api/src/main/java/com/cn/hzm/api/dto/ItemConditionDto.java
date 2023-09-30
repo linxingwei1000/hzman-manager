@@ -14,14 +14,24 @@ import java.util.Date;
 public class ItemConditionDto extends PageDto{
 
     /**
-     * 展示类型：1.父类sku，2.子类sku
+     * 状态类型
+     * 0：全部商品（子体）
+     * 1：补货商品
+     * 2：订货商品
+     * 3：父体
+     *
+     * 4：备注
+     * 5：未备注
+     *
+     * 6：透明计划（代开发）
+     * 7：被跟卖（代开发）
+     *
+     *
+     * 8：在售（待定）
+     * 9：停售（待定）
+     *
      */
-    private Integer showType;
-
-    /**
-     * 商品状态：0.全部商品，1.补货商品，2.订货商品
-     */
-    private Integer itemStatusType;
+    private Integer statusType;
 
     /**
      * 厂家id
@@ -49,11 +59,6 @@ public class ItemConditionDto extends PageDto{
     private String startListingTime;
     private String endListingTime;
     private Integer listingTimeSortType;
-
-    /**
-     * 是否备注
-     */
-    private Boolean hasRemark;
 
     /**
      * 排序

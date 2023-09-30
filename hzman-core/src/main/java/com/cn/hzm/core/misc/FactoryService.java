@@ -81,8 +81,10 @@ public class FactoryService {
                 orderDTO.setOrderItems(orderItemDOS.stream().map(orderItemDO -> {
                     FactoryOrderItemDto orderItemDTO = JSONObject.parseObject(JSONObject.toJSONString(orderItemDO), FactoryOrderItemDto.class);
                     ItemDo itemDO = itemDao.getItemDOBySku(ThreadLocalCache.getUser().getUserMarketId(), orderItemDO.getSku());
-                    orderItemDTO.setTitle(itemDO.getTitle());
-                    orderItemDTO.setIcon(itemDO.getIcon());
+                    if (itemDO != null) {
+                        orderItemDTO.setTitle(itemDO.getTitle());
+                        orderItemDTO.setIcon(itemDO.getIcon());
+                    }
                     return orderItemDTO;
                 }).collect(Collectors.toList()));
                 return orderDTO;

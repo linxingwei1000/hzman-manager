@@ -19,6 +19,9 @@ public class FbaInboundDo {
     @TableId(type = IdType.AUTO)
     private Integer id;
 
+    @TableField(value = "user_market_id")
+    private Integer userMarketId;
+
     private String fcid;
 
     @TableField(value="lp_type")

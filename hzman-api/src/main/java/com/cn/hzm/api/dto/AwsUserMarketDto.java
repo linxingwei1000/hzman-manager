@@ -31,6 +31,9 @@ public class AwsUserMarketDto {
     @ApiModelProperty(value = "市场区域")
     private String region;
 
+    @ApiModelProperty(value = "refreshToken")
+    private String refreshToken;
+
     List<AwsSpiderTaskDto> awsSpiderTaskDtos;
 
 }

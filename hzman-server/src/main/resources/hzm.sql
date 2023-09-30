@@ -54,7 +54,6 @@ CREATE TABLE hzm.hzm_aws_user
     `role_arn`      varchar(2048) NOT NULL COMMENT '角色arn',
     `client_id`     varchar(2048) NOT NULL COMMENT '客户端id',
     `client_secret` varchar(2048) NOT NULL COMMENT '客户端密钥',
-    `refresh_token` varchar(2048) NOT NULL COMMENT '刷新token',
     `ctime`         datetime      NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `utime`         datetime      NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`)
@@ -66,6 +65,7 @@ CREATE TABLE hzm.hzm_aws_user_market
     `id`          int(11) unsigned NOT NULL AUTO_INCREMENT,
     `aws_user_id` int(11) unsigned NOT NULL COMMENT '亚马逊账号id',
     `market_id`   varchar(255) NOT NULL COMMENT '市场编号',
+    `refresh_token` varchar(2048) NOT NULL COMMENT '刷新token',
     `ctime`       datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `utime`       datetime     NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
     PRIMARY KEY (`id`)

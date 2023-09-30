@@ -117,6 +117,7 @@ public class DailyStatProcessor {
     }
 
     private void statDailySaleInfoByDate(Integer awsUserMarketId, Date startDate, Date endDate) {
+        AwsUserMarketDo awsUserMarketDo = awsUserMarketDao.getById(awsUserMarketId);
         String statDate = TimeUtil.getSimpleFormat(startDate);
         List<AmazonOrderDo> orders = amazonOrderDao.getOrdersByPurchaseDate(awsUserMarketId, startDate, endDate, null, new String[]{"amazon_order_id", "order_status"});
 
@@ -132,7 +133,7 @@ public class DailyStatProcessor {
         if (orders.size() == 0) {
             return;
         }
-        log.info("销量数据统计时间范围：{}----{}, 订单数量：{}", startDate, endDate, orders.size());
+        log.info("[{}-{}]销量数据统计时间范围：{}----{}, 订单数量：{}", awsUserMarketDo.getAwsUserId(), awsUserMarketDo.getMarketId(), startDate, endDate, orders.size());
 
         List<String> amazonOrderIds = orders.stream().map(AmazonOrderDo::getAmazonOrderId).collect(Collectors.toList());
 
@@ -226,6 +227,7 @@ public class DailyStatProcessor {
                     saleInfoDo.setFbaFulfillmentFee(fbaFulfillmentFee);
                     saleInfoDo.setCommission(commission);
                     saleInfoDo.setConfig(ja.toJSONString());
+                    saleInfoDo.setUserMarketId(awsUserMarketId);
 
                     SaleInfoDo old = saleInfoDao.getSaleInfoDOByDate(statDate, awsUserMarketId, entry.getKey());
                     if (old != null) {
@@ -239,7 +241,7 @@ public class DailyStatProcessor {
         //刷新本地缓存
 
         itemDetailCache.refreshCaches(awsUserMarketId, Lists.newArrayList(saleInfoMap.keySet()));
-        log.info("【{}】销量数据统计完成 共计{}条数据", statDate, saleInfoMap.size());
+        log.info("【{}-{}-{}】销量数据统计完成 共计{}条数据", awsUserMarketDo.getAwsUserId(), awsUserMarketDo.getMarketId(), statDate, saleInfoMap.size());
     }
 
     private Double getItemPrice(Integer awsUserMarketId, AmazonOrderItemDo orderItem, Map<String, Double> itemPriceMap) {
