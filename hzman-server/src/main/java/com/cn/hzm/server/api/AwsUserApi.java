@@ -67,6 +67,12 @@ public class AwsUserApi {
         return HzmResponse.success(awsService.createMarketRelation(awsUserMarketDto));
     }
 
+    @ApiOperation("亚马逊市场编辑")
+    @RequestMapping(value = "/market/relation/mod", method = RequestMethod.POST)
+    public HzmResponse modMarket(@RequestBody AwsUserMarketDto awsUserMarketDto) throws Exception {
+        return HzmResponse.success(awsService.modMarketRelation(awsUserMarketDto));
+    }
+
     @ApiOperation("删除亚马逊市场")
     @RequestMapping(value = "/market/relation/delete", method = RequestMethod.GET)
     public HzmResponse deleteMarketRelation(@ApiParam("账号市场关系id") @RequestParam Integer userMarketId) throws Exception {

@@ -208,10 +208,10 @@ public class ConvertUtil {
             orderDO.setOrderAmount(Double.parseDouble(order.getOrderTotal().getAmount()));
             orderDO.setOrderCurrencyCode(order.getOrderTotal().getCurrencyCode());
         }
-        orderDO.setNumberOfItemsShipped(Integer.valueOf(order.getNumberOfItemsShipped()));
-        orderDO.setNumberOfItemsUnshipped(Integer.valueOf(order.getNumberOfItemsUnshipped()));
+        orderDO.setNumberOfItemsShipped(order.getNumberOfItemsShipped());
+        orderDO.setNumberOfItemsUnshipped(order.getNumberOfItemsUnshipped());
         orderDO.setPaymentMethodDetails(JSONObject.toJSONString(order.getPaymentMethodDetails()));
-        orderDO.setPaymentMethod(order.getPaymentMethod().getValue());
+        orderDO.setPaymentMethod(order.getPaymentMethod() != null ? order.getPaymentMethod().getValue() : "");
         orderDO.setMarketplaceId(order.getMarketplaceId());
         if (order.getBuyerInfo() != null) {
             orderDO.setBuyerEmail(order.getBuyerInfo().getBuyerEmail());
@@ -329,7 +329,7 @@ public class ConvertUtil {
         fbaInboundDo.setShipmentId(shipmentMember.getShipmentId());
         fbaInboundDo.setShipmentName(shipmentMember.getShipmentName());
         fbaInboundDo.setBoxContentsSource(shipmentMember.getBoxContentsSource() == null ? "" : shipmentMember.getBoxContentsSource().getValue());
-        fbaInboundDo.setShipmentStatus(shipmentMember.getShipmentStatus()==null ? ShipmentStatus.WORKING.getValue():
+        fbaInboundDo.setShipmentStatus(shipmentMember.getShipmentStatus() == null ? ShipmentStatus.WORKING.getValue() :
                 shipmentMember.getShipmentStatus().getValue());
         return fbaInboundDo;
     }

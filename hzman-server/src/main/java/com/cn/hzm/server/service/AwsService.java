@@ -165,6 +165,20 @@ public class AwsService {
         return result;
     }
 
+    public Integer modMarketRelation(AwsUserMarketDto awsUserMarketDto) {
+        AwsUserMarketDo awsUserMarketDo = awsUserMarketDao.getById(awsUserMarketDto.getId());
+        if (awsUserMarketDo == null) {
+            throw new HzmException(ExceptionCode.AWS_MARKET_ERROR, "市场关联关系不存在");
+        }
+
+        if(StringUtils.isEmpty(awsUserMarketDto.getRefreshToken())){
+            throw new HzmException(ExceptionCode.AWS_MARKET_ERROR, "refreshToken必填");
+        }
+
+        awsUserMarketDo.setRefreshToken(awsUserMarketDto.getRefreshToken());
+        return awsUserMarketDao.mod(awsUserMarketDo);
+    }
+
     public Integer deleteMarketRelation(Integer userMarketId) throws Exception {
         List<AwsSpiderTaskDo> spiderTaskDos = awsSpiderTaskDao.getByUserMarketId(userMarketId);
         if(!CollectionUtils.isEmpty(spiderTaskDos)){

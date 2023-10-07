@@ -25,6 +25,11 @@ public class AwsUserMarketDao {
         return awsUserMarketMapper.insert(awsUserMarketDo);
     }
 
+    public Integer mod(AwsUserMarketDo awsUserMarketDo) {
+        awsUserMarketDo.setUtime(new Date());
+        return awsUserMarketMapper.updateById(awsUserMarketDo);
+    }
+
     public Integer delete(Integer id){
         return awsUserMarketMapper.deleteById(id);
     }
