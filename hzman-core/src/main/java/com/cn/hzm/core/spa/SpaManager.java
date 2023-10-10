@@ -438,29 +438,20 @@ public class SpaManager {
         log.info("{}", sb);
     }
 
-    public static void main(String[] args) throws ApiException {
-        AwsUserDo awsUserDo = new AwsUserDo();
-        awsUserDo.setSellerId("AK0HQWR8PUJRG");
-        awsUserDo.setAccessKeyId("AKIAZZXRVBF5KSAPKQ4D");
-        awsUserDo.setSecretKey("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");
-        awsUserDo.setRoleArn("arn:aws:iam::673742915962:role/role_a");
-        awsUserDo.setClientId("amzn1.application-oa2-client.0e3e98270af54054ba3148898578cead");
-        awsUserDo.setClientSecret("amzn1.oa2-cs.v1.0e859bd13b89725dfd8809cfa98e7b9977c5bc95ad7606e65799c5bf1d73d995");
-        //awsUserDo.setRefreshToken("Atzr|IwEBIL-T9IW6pj2GeRkkuYAdTnc5g3qTJA2xHXe-9B4hnBqz0870rvvVLDSTXdyi68G7ApiIBn8tpiSywsufuNO-QIoSTDKdM2_ytv5hUI2Z33X0kjIxaGGjRz3WSmbT7m6FPkzT1M3YLF1A5qcPgnnGJdko5D7HVebRg8wCYVaJ4d4KdXDw-zTG22fbO_lc8bNjTLwH_0RZD7Ru_VW2lTi7vckzU7VKn1fSdwQeltU6IVkkTdZrTB-UHiPxG1iHh9fVEaWXN7LFTo_CxNTjErIydxtlCa4SIEUKhKaCekr8amFBD64xt58L8KZKR2MlfU4v8u8");
+//    public static void main(String[] args) throws ApiException {
+//        //awsUserDo.setRefreshToken("Atzr|IwEBIL-T9IW6pj2GeRkkuYAdTnc5g3qTJA2xHXe-9B4hnBqz0870rvvVLDSTXdyi68G7ApiIBn8tpiSywsufuNO-QIoSTDKdM2_ytv5hUI2Z33X0kjIxaGGjRz3WSmbT7m6FPkzT1M3YLF1A5qcPgnnGJdko5D7HVebRg8wCYVaJ4d4KdXDw-zTG22fbO_lc8bNjTLwH_0RZD7Ru_VW2lTi7vckzU7VKn1fSdwQeltU6IVkkTdZrTB-UHiPxG1iHh9fVEaWXN7LFTo_CxNTjErIydxtlCa4SIEUKhKaCekr8amFBD64xt58L8KZKR2MlfU4v8u8");
+//
+//        //SpaManager spaManager = big();
+//        SpaManager spaManager = small();
+//
+//        //Item r = spaManager.getItemBySku("S7828E-AU");
+//        GetOrdersResponse r = spaManager.orderListByOrderIds(Lists.newArrayList("114-2540596-7287431"));
+//        //GetInventorySummariesResponse r = spaManager.getInventoryInfoBySku("SET23-0719-01B");
+//        //GetShipmentsResponse r = spaManager.getShipmentsByShipmentIds(Lists.newArrayList("FBA15DJC28G4"));
+//        System.out.println(r);
+//    }
 
-        AwsUserMarketDo awsUserMarketDo = new AwsUserMarketDo();
-        awsUserMarketDo.setRefreshToken("Atzr|IwEBIKKCwMBuzVX1JdlQf57N9gnZES2E2EijZL7b4FY-JQaBMPbzCTz8sZJHeat7Zl5OstRiCIDTcTw0uia6ENMm4bW4KjHqn3KKLkJVttbqCvFHm7siOKj6WETYx4B739cZD16Rm8nTXXoqlFi2yZxE7osYAPIMoSzuWFrDxIA9BIkyoZOteEIYrcyqzifvHz5zUtpOeU5xFwm_8fyOy_2qze8AyzJM7z1VwenWFaga6fIqPKNMWPWyS34XDAr5VDJ4pjE7rn0zsqn2DxDMpou3YPsoknoFLWqiahmip0AbEgiJpsD7ij2OAQHkvEZxG3g4mig");
 
 
 
-        AwsMarket awsMarket = AwsMarket.Australia;
-
-        SpaManager spaManager = new SpaManager(awsUserDo, awsMarket, awsUserMarketDo);
-
-        Item r = spaManager.getItemBySku("S7828E-AU");
-        //GetOrdersResponse r = spaManager.orderListByOrderIds(Lists.newArrayList("114-2809190-2935453"));
-        //GetInventorySummariesResponse r = spaManager.getInventoryInfoBySku("SET23-0719-01B");
-        //GetShipmentsResponse r = spaManager.getShipmentsByShipmentIds(Lists.newArrayList("FBA15DJC28G4"));
-        System.out.println(r);
-    }
 }
