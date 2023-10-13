@@ -368,7 +368,7 @@ public class SpaManager {
         this.ordersV0Api = new OrdersV0Api.Builder()
                 .awsAuthenticationCredentials(awsAuthenticationCredentials)
                 .lwaAuthorizationCredentials(lwaAuthorizationCredentials)
-                .awsAuthenticationCredentialsProvider(awsAuthenticationCredentialsProvider)
+                //.awsAuthenticationCredentialsProvider(awsAuthenticationCredentialsProvider)
                 .endpoint(awsMarket.getEndpoint())
                 .build();
         sb.append("ordersV0Api").append(",");
@@ -376,7 +376,7 @@ public class SpaManager {
         this.shipmentApi = new ShipmentApi.Builder()
                 .awsAuthenticationCredentials(awsAuthenticationCredentials)
                 .lwaAuthorizationCredentials(lwaAuthorizationCredentials)
-                .awsAuthenticationCredentialsProvider(awsAuthenticationCredentialsProvider)
+                //.awsAuthenticationCredentialsProvider(awsAuthenticationCredentialsProvider)
                 .endpoint(awsMarket.getEndpoint())
                 .build();
         sb.append("shipmentApi").append(",");
@@ -384,7 +384,7 @@ public class SpaManager {
         this.catalogApi = new CatalogApi.Builder()
                 .awsAuthenticationCredentials(awsAuthenticationCredentials)
                 .lwaAuthorizationCredentials(lwaAuthorizationCredentials)
-                .awsAuthenticationCredentialsProvider(awsAuthenticationCredentialsProvider)
+                //.awsAuthenticationCredentialsProvider(awsAuthenticationCredentialsProvider)
                 .endpoint(awsMarket.getEndpoint())
                 .build();
         sb.append("catalogApi").append(",");
@@ -392,7 +392,7 @@ public class SpaManager {
         this.listingsApi = new ListingsApi.Builder()
                 .awsAuthenticationCredentials(awsAuthenticationCredentials)
                 .lwaAuthorizationCredentials(lwaAuthorizationCredentials)
-                .awsAuthenticationCredentialsProvider(awsAuthenticationCredentialsProvider)
+                //.awsAuthenticationCredentialsProvider(awsAuthenticationCredentialsProvider)
                 .endpoint(awsMarket.getEndpoint())
                 .build();
         sb.append("listingsApi").append(",");
@@ -400,7 +400,7 @@ public class SpaManager {
         this.productPricingApi = new ProductPricingApi.Builder()
                 .awsAuthenticationCredentials(awsAuthenticationCredentials)
                 .lwaAuthorizationCredentials(lwaAuthorizationCredentials)
-                .awsAuthenticationCredentialsProvider(awsAuthenticationCredentialsProvider)
+                //.awsAuthenticationCredentialsProvider(awsAuthenticationCredentialsProvider)
                 .endpoint(awsMarket.getEndpoint())
                 .build();
         sb.append("productPricingApi").append(",");
@@ -415,7 +415,7 @@ public class SpaManager {
         this.fbaInventoryApi = new FbaInventoryApi.Builder()
                 .awsAuthenticationCredentials(awsAuthenticationCredentials)
                 .lwaAuthorizationCredentials(lwaAuthorizationCredentials)
-                .awsAuthenticationCredentialsProvider(awsAuthenticationCredentialsProvider)
+                //.awsAuthenticationCredentialsProvider(awsAuthenticationCredentialsProvider)
                 .endpoint(awsMarket.getEndpoint())
                 .build();
         sb.append("fbaInventoryApi").append(",");
@@ -423,7 +423,7 @@ public class SpaManager {
         this.fbaInboundApi = new FbaInboundApi.Builder()
                 .awsAuthenticationCredentials(awsAuthenticationCredentials)
                 .lwaAuthorizationCredentials(lwaAuthorizationCredentials)
-                .awsAuthenticationCredentialsProvider(awsAuthenticationCredentialsProvider)
+                //.awsAuthenticationCredentialsProvider(awsAuthenticationCredentialsProvider)
                 .endpoint(awsMarket.getEndpoint())
                 .build();
         sb.append("fbaInboundApi").append(",");
@@ -431,7 +431,7 @@ public class SpaManager {
         this.financeApi = new FinanceApi.Builder()
                 .awsAuthenticationCredentials(awsAuthenticationCredentials)
                 .lwaAuthorizationCredentials(lwaAuthorizationCredentials)
-                .awsAuthenticationCredentialsProvider(awsAuthenticationCredentialsProvider)
+                //.awsAuthenticationCredentialsProvider(awsAuthenticationCredentialsProvider)
                 .endpoint(awsMarket.getEndpoint())
                 .build();
         sb.append("financeApi").append(",");
