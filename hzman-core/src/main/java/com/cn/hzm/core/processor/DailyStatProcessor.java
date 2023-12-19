@@ -88,7 +88,7 @@ public class DailyStatProcessor {
 
         long startTime = System.currentTimeMillis();
         commonDealDate(awsUserMarketId, date);
-        log.info("【{}】销量信息修复结束，耗时:{}", strDate, System.currentTimeMillis() - startTime);
+        log.info("【{}-{}】销量信息修复结束，耗时:{}", strDate, awsUserMarketId, System.currentTimeMillis() - startTime);
     }
 
     @Scheduled(cron = "0 0 17 * * ?")
@@ -120,6 +120,7 @@ public class DailyStatProcessor {
         AwsUserMarketDo awsUserMarketDo = awsUserMarketDao.getById(awsUserMarketId);
         String statDate = TimeUtil.getSimpleFormat(startDate);
         List<AmazonOrderDo> orders = amazonOrderDao.getOrdersByPurchaseDate(awsUserMarketId, startDate, endDate, null, new String[]{"amazon_order_id", "order_status"});
+        log.info("[{}-{}]销量数据统计时间范围：{}----{}, 初始数据库订单数量：{}", awsUserMarketDo.getAwsUserId(), awsUserMarketDo.getMarketId(), startDate, endDate, orders.size());
 
         //空判断，直接返回
         if (CollectionUtils.isEmpty(orders)) {

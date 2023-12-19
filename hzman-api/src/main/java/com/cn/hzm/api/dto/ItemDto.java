@@ -107,4 +107,13 @@ public class ItemDto extends RespBaseDto{
 
     @ApiModelProperty(value = "备注列表")
     private List<ItemRemarkDto> remarkDtos;
+
+    @ApiModelProperty(value = "亚马逊sku链接")
+    private String itemUrl;
+
+    @ApiModelProperty(value = "亚马逊后台sku链接")
+    private String backgroundSkuUrl;
+
+    @ApiModelProperty(value = "亚马逊后台fnsku链接")
+    private String backgroundFnskuUrl;
 }

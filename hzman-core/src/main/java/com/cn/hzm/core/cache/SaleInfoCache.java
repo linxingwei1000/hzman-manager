@@ -40,7 +40,7 @@ public class SaleInfoCache {
 
     private Map<String, SaleInfoDto> dailySaleInfoMap;
 
-    private static final String BEGIN_DATE = "2020-01-01";
+    private static final String BEGIN_DATE = "2022-01-01";
 
     /**
      * 获取每日销量数据

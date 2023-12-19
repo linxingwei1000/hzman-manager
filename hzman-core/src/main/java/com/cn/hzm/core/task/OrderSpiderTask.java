@@ -328,7 +328,7 @@ public class OrderSpiderTask implements ITask{
                         amazonOrderDao.updateOrder(update);
 
                         log.info("[{}-{}] 更新订单状态 amazonOrderId【{}】purchaseTime:【{}】", spaManager.getAwsUserId(), spaManager.getMarketId(), amazonId, update.getPurchaseDate());
-                        threadFixSaleInfoDay.add(TimeUtil.getSimpleFormat(TimeUtil.transform(order.getPurchaseDate())));
+                        threadFixSaleInfoDay.add(TimeUtil.transformNowToUsDate(TimeUtil.transform(order.getPurchaseDate())));
                         updateCount++;
                     }
                 } catch (Exception e) {
@@ -430,7 +430,7 @@ public class OrderSpiderTask implements ITask{
             AmazonOrderDo old = amazonOrderDao.getOrderByAmazonId(userMarketId, order.getAmazonOrderId());
             if (old == null) {
                 //添加修复订单日期
-                needFixSaleInfoDay.add(TimeUtil.getSimpleFormat(TimeUtil.transform(order.getPurchaseDate())));
+                needFixSaleInfoDay.add(TimeUtil.transformNowToUsDate(TimeUtil.transform(order.getPurchaseDate())));
                 amazonOrderDao.createOrder(ConvertUtil.convertToAmazonOrderDo(userMarketId, new AmazonOrderDo(), order));
             }
         }

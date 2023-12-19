@@ -6,7 +6,8 @@ import com.cn.hzm.api.dto.*;
 import com.cn.hzm.api.enums.FactoryOrderStatusEnum;
 import com.cn.hzm.core.cache.ItemDetailCache;
 import com.cn.hzm.core.cache.ThreadLocalCache;
-import com.cn.hzm.core.enums.AmazonShipmentStatusEnum;
+import com.cn.hzm.core.constant.ContextConst;
+import com.cn.hzm.core.enums.AwsMarket;
 import com.cn.hzm.core.enums.SpiderType;
 import com.cn.hzm.core.exception.ExceptionCode;
 import com.cn.hzm.core.exception.HzmException;
@@ -278,7 +279,7 @@ public class ItemService {
                 //删除子关系
                 List<FatherChildRelationDo> relationDos = fatherChildRelationDao.getAllRelationByChild(ThreadLocalCache.getUser().getUserMarketId(),
                         old.getSku(), old.getAsin());
-                if(!CollectionUtils.isEmpty(relationDos)){
+                if (!CollectionUtils.isEmpty(relationDos)) {
                     fatherAsin = relationDos.get(0).getFatherAsin();
                 }
                 fatherChildRelationDao.deleteRelation(ThreadLocalCache.getUser().getUserMarketId(), null, null, old.getAsin(), old.getSku());
@@ -290,7 +291,7 @@ public class ItemService {
 
         //删除父子关系缓存
         if (!StringUtils.isEmpty(fatherAsin)) {
-            itemDetailCache.refreshRelationCache(ThreadLocalCache.getUser().getUserMarketId(), fatherAsin);
+            itemDetailCache.refreshRelationCache(ThreadLocalCache.getUser().getUserMarketId(), fatherAsin, old.getIsParent() == 1);
         }
     }
 
@@ -337,6 +338,23 @@ public class ItemService {
     public boolean modLocalNum(String sku, Integer curLocalNum, Integer awsUserId, String marketId) {
         dealSkuInventory(sku, awsUserId, marketId, "set", curLocalNum);
         return true;
+    }
+
+    public ItemInventoryDo showAwsInventory(String sku, Integer awsUserId, String marketId) {
+        SpaManager spaManager = awsUserManager.getManager(awsUserId, marketId);
+        GetInventorySummariesResponse response = spaManager.getInventoryInfoBySku(sku);
+        if (response == null) {
+            throw new RuntimeException(String.format("商品【%s】库存aws请求为空，等待下次刷新", sku));
+        }
+
+        if (CollectionUtils.isEmpty(response.getPayload().getInventorySummaries())) {
+            throw new RuntimeException(String.format("商品【%s】库存aws请求为空，等待下次刷新", sku));
+        }
+
+        //存在就更新
+        ItemInventoryDo inventory = new ItemInventoryDo();
+        ConvertUtil.convertToInventoryDO(response, inventory, spaManager.getAwsUserMarketId());
+        return inventory;
     }
 
     public boolean modSkuCost(String asin, String sku, Double cost, Integer userMarketId) {
@@ -468,49 +486,37 @@ public class ItemService {
             return itemRemarkDto;
         }).collect(Collectors.toList()));
 
+        AwsUserMarketDo userMarketDo = awsUserMarketDao.getById(itemDO.getUserMarketId());
+        AwsMarket awsMarket = AwsMarket.getByMarketId(userMarketDo.getMarketId());
+
+        //拼装跳转链接
+        Map<String, String> paramMap = Maps.newHashMap();
+        paramMap.put("${ares}", awsMarket.getAres());
+        paramMap.put("${asin}", itemDO.getAsin());
+        paramMap.put("${sku}", itemDO.getSku());
+        paramMap.put("${marketplaceId}", awsMarket.getId());
+        paramMap.put("${productType}", itemDO.getItemType());
+
+        String itemUrl = ContextConst.ITEM_URL;
+        itemDTO.setItemUrl(replaceUrl(itemUrl, paramMap));
+
+        String backgroundSkuUrl = ContextConst.BACKGROUND_SKU_URL;
+        itemDTO.setBackgroundSkuUrl(replaceUrl(backgroundSkuUrl, paramMap));
+
+        String backgroundFnskuUrl = ContextConst.BACKGROUND_FNSKU_URL;
+        itemDTO.setBackgroundFnskuUrl(replaceUrl(backgroundFnskuUrl, paramMap));
+
         return itemDTO;
     }
 
-//    private Integer getInBoundNum(String sku) {
-//        List<FbaInboundItemDo> records = fbaInboundItemDao.getAllRecordBySku(sku);
-//        if (CollectionUtils.isEmpty(records)) {
-//            return 0;
-//        }
-//
-//        List<String> shipmentIds = records.stream().map(FbaInboundItemDo::getShipmentId).collect(Collectors.toList());
-//        List<FbaInboundDo> infoRecords = fbaInboundDao.getAllRecordByShipmentIds(shipmentIds);
-//        Map<String, String> useMap = infoRecords.stream().filter(infoRecord -> !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_CLOSED.getCode())
-//                && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_CANCELLED.getCode())
-//                && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_DELETED.getCode())
-//                && !infoRecord.getShipmentStatus().equals(AmazonShipmentStatusEnum.STATUS_ERROR.getCode()))
-//                .collect(Collectors.toMap(FbaInboundDo::getShipmentId, FbaInboundDo::getShipmentStatus));
-//
-//
-//        if (CollectionUtils.isEmpty(useMap)) {
-//            return 0;
-//        }
-//
-//        int num = 0;
-//        for (FbaInboundItemDo record : records) {
-//            if (useMap.containsKey(record.getShipmentId())) {
-//                String shipmentStatus = useMap.get(record.getShipmentId());
-//                if (shipmentStatus.equals(AmazonShipmentStatusEnum.STATUS_RECEIVING.getCode())) {
-//                    int quantityShipped = record.getQuantityShipped() != null ? record.getQuantityShipped() : 0;
-//                    int quantityReceived = record.getQuantityReceived() != null ? record.getQuantityReceived() : 0;
-//                    int remain = quantityShipped - quantityReceived;
-//                    if (remain < 0) {
-//                        remain = 0;
-//                    }
-//                    num += remain;
-//                } else {
-//                    if (record.getQuantityShipped() != null) {
-//                        num += record.getQuantityShipped();
-//                    }
-//                }
-//            }
-//        }
-//        return num;
-//    }
+    private String replaceUrl(String url, Map<String, String> paramMap){
+        for(Map.Entry<String, String> entry: paramMap.entrySet()){
+            if(url.contains(entry.getKey())){
+                url = url.replace(entry.getKey(), entry.getValue());
+            }
+        }
+        return url;
+    }
 
     private SaleInfoDto getSaleInfoByDate(Date date, String sku, Integer userMarketId) {
         String statDate = TimeUtil.getSimpleFormat(date);
@@ -647,6 +653,27 @@ public class ItemService {
 
     public String spiderShipment(Integer userMarketId, String shipmentId) {
         return taskManager.execTaskByRelationIds(userMarketId, SpiderType.SHIPMENT_INFO.getCode(), Lists.newArrayList(shipmentId));
+    }
+
+    public FbaInboundDto showShipmentItem(Integer userMarketId, String shipmentId, String sku) {
+        FbaInboundDo fbaInboundDo = fbaInboundDao.getByShipmentId(userMarketId, shipmentId);
+        List<FbaInboundItemDo> fbaInboundItemDos = fbaInboundItemDao.getAllRecordBySku(shipmentId, sku);
+
+        FbaInboundDto fbaInboundDto = new FbaInboundDto();
+        fbaInboundDto.setShipmentId(shipmentId);
+        fbaInboundDto.setShipmentName(fbaInboundDo.getShipmentName());
+        fbaInboundDto.setShipmentStatus(fbaInboundDo.getShipmentStatus());
+        fbaInboundDto.setFbaInboundItemDtos(fbaInboundItemDos.stream().map(fbaInboundItemDo -> {
+            FbaInboundItemDto fbaInboundItemDto = new FbaInboundItemDto();
+            fbaInboundItemDto.setSellerSKU(fbaInboundItemDo.getSellerSKU());
+            fbaInboundItemDto.setFulfillmentNetworkSKU(fbaInboundItemDo.getFulfillmentNetworkSKU());
+            fbaInboundItemDto.setQuantityReceived(fbaInboundItemDo.getQuantityReceived());
+            fbaInboundItemDto.setQuantityShipped(fbaInboundItemDo.getQuantityShipped());
+            fbaInboundItemDto.setQuantityInCase(fbaInboundItemDo.getQuantityInCase());
+            return fbaInboundItemDto;
+        }).collect(Collectors.toList()));
+
+        return fbaInboundDto;
     }
 
     public String fnskuQuery(String fnsku) {

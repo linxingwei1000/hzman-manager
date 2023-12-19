@@ -1,5 +1,6 @@
 package com.cn.hzm.core.cache;
 
+import com.alibaba.fastjson.JSONObject;
 import com.cn.hzm.api.dto.InventoryDto;
 import com.cn.hzm.api.dto.ItemDto;
 import com.cn.hzm.api.dto.SaleInfoDto;
@@ -184,6 +185,7 @@ public class ItemDetailCache {
 
         switch (statusType) {
             case 0:
+            case 6:
                 //全部商品
                 temp = cache.asMap().values().stream().filter(itemDto -> itemDto.getUserMarketId().equals(userMarketId)).collect(Collectors.toList());
                 break;
@@ -197,7 +199,8 @@ public class ItemDetailCache {
                 break;
             case 3:
                 //父体
-                temp = relationCacheMap.values().stream().filter(itemDto -> itemDto.getUserMarketId().equals(userMarketId)).collect(Collectors.toList());;
+                temp = relationCacheMap.values().stream().filter(itemDto -> itemDto.getUserMarketId().equals(userMarketId)).collect(Collectors.toList());
+                ;
                 break;
             case 4:
                 //备注商品
@@ -215,9 +218,9 @@ public class ItemDetailCache {
 
         //sku过滤
         if (!StringUtils.isEmpty(key)) {
-            if(statusType.equals(3)){
+            if (statusType.equals(3) || statusType.equals(6)) {
                 temp = temp.stream().filter(item -> item.getAsin().contains(key)).collect(Collectors.toList());
-            }else{
+            } else {
                 temp = temp.stream().filter(item -> item.getSku().contains(key)).collect(Collectors.toList());
             }
 
@@ -310,7 +313,7 @@ public class ItemDetailCache {
      * @return
      */
     public List<ItemDto> getCache(Integer userMarketId, List<String> skus) {
-        if(CollectionUtils.isEmpty(skus)){
+        if (CollectionUtils.isEmpty(skus)) {
             return Lists.newArrayList();
         }
         List<String> keys = skus.stream().map(sku -> installCacheKey(userMarketId, sku)).collect(Collectors.toList());
@@ -438,7 +441,13 @@ public class ItemDetailCache {
         relationCacheMap.putAll(tmpMap);
     }
 
-    public void refreshRelationCache(Integer awsUserMarketId, String fatherAsin) {
+    public void refreshRelationCache(Integer awsUserMarketId, String fatherAsin, boolean isFather) {
+        //是父类，直接删除缓存
+        if (isFather) {
+            relationCacheMap.remove(installCacheKey(awsUserMarketId, fatherAsin));
+            return;
+        }
+
         ItemDto itemDTO = null;
         try {
             itemDTO = installRelationItemDTO(awsUserMarketId, fatherAsin, TimeUtil.transformNowToUsDate());

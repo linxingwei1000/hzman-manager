@@ -3,6 +3,7 @@ package com.cn.hzm.core.repository.dao;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.cn.hzm.core.repository.entity.FbaInboundItemDo;
 import com.cn.hzm.core.repository.mapper.FbaInboundItemMapper;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -38,10 +39,13 @@ public class FbaInboundItemDao {
         fbaInboundItemMapper.updateById(shipmentItemDO);
     }
 
-    public List<FbaInboundItemDo> getAllRecordBySku(String sku){
+    public List<FbaInboundItemDo> getAllRecordBySku(String shipment_id, String sku){
         QueryWrapper<FbaInboundItemDo> query = new QueryWrapper<>();
-        query.eq("seller_sku", sku);
-        query.select("shipment_id", "quantity_shipped", "quantity_received");
+        query.eq("shipment_id", shipment_id);
+        if(StringUtils.isNotEmpty(sku)){
+            query.eq("seller_sku", sku);
+        }
+        query.select("shipment_id", "seller_sku", "fulfillment_network_sku", "quantity_shipped", "quantity_received", "quantity_in_case");
         return fbaInboundItemMapper.selectList(query);
     }
 

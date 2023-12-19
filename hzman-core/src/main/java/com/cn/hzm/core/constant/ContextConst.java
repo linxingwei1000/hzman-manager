@@ -118,4 +118,11 @@ public class ContextConst {
         REGION_MAP.put("us-west-2", "亚洲");
     }
 
+    public static String ITEM_URL = "https://www.amazon.com${ares}/dp/${asin}?th=1";
+
+    public static String BACKGROUND_FNSKU_URL = "https://sellercentral.amazon.com${ares}/skucentral?mSku=${sku}&ref=myi_skuc";
+
+    public static String BACKGROUND_SKU_URL = "https://sellercentral.amazon.com${ares}/abis/listing/edit/offer?marketplaceID=${marketplaceId}&ref=xx_myiedit_cont_myifba&sku=${sku}&asin=${asin}&productType=${productType}#offer";
+
+
 }

@@ -61,6 +61,12 @@ public class AwsUserApi {
         return HzmResponse.success(awsService.marketList());
     }
 
+    @ApiOperation("用户关联亚马逊市场token刷新报警")
+    @RequestMapping(value = "/market/warn", method = RequestMethod.GET)
+    public HzmResponse marketWarnMsg() throws Exception {
+        return HzmResponse.success(awsService.marketWarnMsg());
+    }
+
     @ApiOperation("关联亚马逊市场")
     @RequestMapping(value = "/market/relation/create", method = RequestMethod.POST)
     public HzmResponse relationMarket(@RequestBody AwsUserMarketDto awsUserMarketDto) throws Exception {

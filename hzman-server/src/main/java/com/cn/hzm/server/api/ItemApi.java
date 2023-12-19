@@ -86,6 +86,13 @@ public class ItemApi {
         return HzmResponse.success(itemService.modLocalNum(sku, curLocalNum, ThreadLocalCache.getUser().getAwsUserId(), ThreadLocalCache.getUser().getMarketId()));
     }
 
+    @ApiOperation("实时获取亚马逊远端库存信息")
+    @HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN, HzmRoleType.ROLE_OPERATE, HzmRoleType.ROLE_EMPLOYEE})
+    @RequestMapping(value = "/inventory/aws", method = RequestMethod.GET)
+    public HzmResponse inventoryAws(@ApiParam(name = "sku") @RequestParam String sku) {
+        return HzmResponse.success(itemService.showAwsInventory(sku, ThreadLocalCache.getUser().getAwsUserId(), ThreadLocalCache.getUser().getMarketId()));
+    }
+
     @ApiOperation("商品成本修改")
     @HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN, HzmRoleType.ROLE_OPERATE, HzmRoleType.ROLE_EMPLOYEE})
     @RequestMapping(value = "/cost/mod", method = RequestMethod.GET)
@@ -107,6 +114,14 @@ public class ItemApi {
     @RequestMapping(value = "/shipment", method = RequestMethod.GET)
     public HzmResponse shipment(@ApiParam(name = "shipmentId") @RequestParam String shipmentId) {
         return HzmResponse.success(itemService.spiderShipment(ThreadLocalCache.getUser().getUserMarketId(), shipmentId));
+    }
+
+    @ApiOperation("amazon入库订单号爬取数据展示接口")
+    @HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN, HzmRoleType.ROLE_OPERATE, HzmRoleType.ROLE_EMPLOYEE})
+    @RequestMapping(value = "/shipment/item", method = RequestMethod.GET)
+    public HzmResponse shipmentItem(@ApiParam(name = "shipmentId") @RequestParam String shipmentId,
+                                    @ApiParam(name = "sku") @RequestParam String sku) {
+        return HzmResponse.success(itemService.showShipmentItem(ThreadLocalCache.getUser().getUserMarketId(), shipmentId, sku));
     }
 
     @ApiOperation("FNSKU映射接口")

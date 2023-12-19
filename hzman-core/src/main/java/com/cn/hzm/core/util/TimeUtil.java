@@ -4,10 +4,12 @@ import org.threeten.bp.OffsetDateTime;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.ChronoUnit;
 import java.time.zone.ZoneRules;
 import java.util.Calendar;
 import java.util.Date;
@@ -188,6 +190,31 @@ public class TimeUtil {
         return now.getTime() < judge.getTime() ? dateFixByDay(date, -1, 0, 0) : date;
     }
 
+    /**
+     * 根据购买时间获取对应日期
+     *
+     * @return
+     */
+    public static String transformNowToUsDate(Date purchaseDate) {
+        String strPurchaseTime = getDateFormat(purchaseDate);
+        Date date = getDateBySimple(strPurchaseTime.substring(0, 10));
+        String strDailyDate = strPurchaseTime.substring(0, 10) + " 00:00:00";
+        Boolean isSummer = isSummer(strDailyDate);
+        Date judge = dateFixByDay(date, 0, isSummer ? 15 : 16, 0);
+        purchaseDate = purchaseDate.getTime() < judge.getTime() ? dateFixByDay(date, -1, 0, 0) : date;
+        return getSimpleFormat(purchaseDate);
+    }
+
+    public static Long daysBetweenTwoDate(Date date1, Date date2){
+        String dateStr = getSimpleFormat(date1);
+        String nextDateStr = getSimpleFormat(date2);
+
+        LocalDate localDate = LocalDate.parse(dateStr);
+        LocalDate nextLocalDate = LocalDate.parse(nextDateStr);
+
+        return ChronoUnit.DAYS.between(localDate, nextLocalDate);
+    }
+
     public static long nowMillis() {
         return System.currentTimeMillis();
     }
@@ -198,7 +225,8 @@ public class TimeUtil {
     }
 
     public static void main(String[] args) throws ParseException {
-        OffsetDateTime now= OffsetDateTime.parse("2022-12-01T02:10:51.006Z");
-        System.out.println(transformOffsetToDate(now));
+        Date date = new Date();
+        System.out.println(daysBetweenTwoDate(date, dateFixByYear(date, 1)));
+
     }
 }

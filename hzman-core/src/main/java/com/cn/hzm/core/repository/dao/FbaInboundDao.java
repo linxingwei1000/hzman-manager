@@ -44,7 +44,7 @@ public class FbaInboundDao {
         QueryWrapper<FbaInboundDo> query = new QueryWrapper<>();
         query.eq("user_market_id", userMarketId);
         query.eq("shipment_id", shipmentId);
-        query.select("id", "shipment_id");
+        query.select("id", "shipment_id", "shipment_status");
         return fbaInboundMapper.selectOne(query);
     }
 

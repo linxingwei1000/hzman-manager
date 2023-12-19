@@ -22,13 +22,14 @@ public class ItemConditionDto extends PageDto{
      *
      * 4：备注
      * 5：未备注
+     * 6.全部商品（asin过滤）
      *
-     * 6：透明计划（代开发）
-     * 7：被跟卖（代开发）
+     * 7：透明计划（代开发）
+     * 8：被跟卖（代开发）
      *
      *
-     * 8：在售（待定）
-     * 9：停售（待定）
+     * 9：在售（待定）
+     * 10：停售（待定）
      *
      */
     private Integer statusType;

@@ -1,5 +1,6 @@
 package com.cn.hzm.server.service;
 
+import com.alibaba.fastjson.JSONObject;
 import com.cn.hzm.api.dto.AwsSpiderTaskDto;
 import com.cn.hzm.api.dto.AwsUserDto;
 import com.cn.hzm.api.dto.AwsUserMarketDto;
@@ -17,6 +18,7 @@ import com.cn.hzm.core.repository.entity.AwsSpiderTaskDo;
 import com.cn.hzm.core.repository.entity.AwsUserDo;
 import com.cn.hzm.core.repository.entity.AwsUserMarketDo;
 import com.cn.hzm.core.manager.AwsUserManager;
+import com.cn.hzm.core.util.TimeUtil;
 import com.google.common.collect.Lists;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.BeanUtils;
@@ -24,6 +26,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.util.CollectionUtils;
 
+import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -132,14 +135,42 @@ public class AwsService {
                 AwsUserMarketDto awsUserMarketDto = new AwsUserMarketDto();
                 awsUserMarketDto.setId(awsUserMarketDo.getId());
                 AwsMarket awsMarket = AwsMarket.getByMarketId(awsUserMarketDo.getMarketId());
-                awsUserMarketDto.setShowText(String.format("%s|%s(%s)",
-                        awsUserDo.getRemark(),  awsMarket.getDesc(), awsMarket.getId()));
+                awsUserMarketDto.setShowText(String.format("%s|%s|%s", awsUserDo.getRemark(),  awsMarket.getDesc(), awsMarket.getId()));
                 awsUserMarketDto.setAwsUserId(awsUserMarketDo.getAwsUserId());
                 awsUserMarketDto.setMarketId(awsUserMarketDo.getMarketId());
                 list.add(awsUserMarketDto);
             });
         });
         return list;
+    }
+
+    public JSONObject marketWarnMsg(){
+        List<AwsUserDo> awsUserDos = awsUserDao.all();
+
+        StringBuilder sb = new StringBuilder();
+        awsUserDos.forEach(awsUserDo -> {
+            List<AwsUserMarketDo> awsUserMarketDos = awsUserMarketDao.getByUserId(awsUserDo.getId());
+            awsUserMarketDos.forEach(awsUserMarketDo -> {
+                Long dayNum = TimeUtil.daysBetweenTwoDate(awsUserMarketDo.getUtime(), new Date());
+                int remainDay = 90 - dayNum.intValue();
+
+                if(remainDay < 30){
+                    AwsMarket awsMarket = AwsMarket.getByMarketId(awsUserMarketDo.getMarketId());
+                    String showText = String.format("【%s|%s|%s token还有%d天过期，请注意替换更新】",
+                            awsUserDo.getRemark(),  awsMarket.getDesc(), awsMarket.getId(), remainDay);
+                    sb.append(showText);
+                }
+            });
+        });
+
+        JSONObject jo = new JSONObject();
+        boolean needWarn = false;
+        if(sb.length() > 0){
+            needWarn = true;
+            jo.put("warnMsg", sb);
+        }
+        jo.put("needWarn", needWarn);
+        return jo;
     }
 
     public Integer createMarketRelation(AwsUserMarketDto awsUserMarketDto) {
