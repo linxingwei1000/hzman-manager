@@ -33,7 +33,6 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -264,7 +263,7 @@ public class ItemService {
         }
 
         //删除库存
-        ItemInventoryDo inventoryDO = inventoryDao.getInventoryBySkuAndAsin(sku, asin);
+        ItemInventoryDo inventoryDO = inventoryDao.getInventoryBySkuAndAsin(sku, asin, ThreadLocalCache.getUser().getUserMarketId());
         if (inventoryDO != null) {
             inventoryDao.deleteInventory(inventoryDO.getId());
         }
@@ -306,7 +305,7 @@ public class ItemService {
                 itemDao.deleteItem(itemDO.getId());
 
                 //删除库存
-                ItemInventoryDo inventoryDO = inventoryDao.getInventoryBySkuAndAsin(sku, itemDO.getAsin());
+                ItemInventoryDo inventoryDO = inventoryDao.getInventoryBySkuAndAsin(sku, itemDO.getAsin(), ThreadLocalCache.getUser().getUserMarketId());
                 if (inventoryDO != null) {
                     inventoryDao.deleteInventory(inventoryDO.getId());
                 }
@@ -421,7 +420,12 @@ public class ItemService {
         if (inventoryDO != null && !StringUtils.isEmpty(inventoryDO.getReservedQuantity())) {
             InventoryReservedDetailDto reservedDetailDto = JSONObject.parseObject(inventoryDO.getReservedQuantity(), InventoryReservedDetailDto.class);
             inventoryDTO.setReservedDetailDto(reservedDetailDto);
-            inventoryDTO.setTotalReservedQuantity(reservedDetailDto != null ? reservedDetailDto.getTotalReservedQuantity() : 0);
+            int totalReservedQuantity = 0;
+            if (reservedDetailDto != null) {
+                totalReservedQuantity = reservedDetailDto.getTotalReservedQuantity();
+            }
+            totalReservedQuantity = totalReservedQuantity + (inventoryDTO.getInboundWorkingQuantity() == null ? 0 : inventoryDTO.getInboundWorkingQuantity());
+            inventoryDTO.setTotalReservedQuantity(totalReservedQuantity);
         }
 
         //不可售组装
@@ -482,7 +486,11 @@ public class ItemService {
         List<ItemRemarkDo> remarkDos = itemRemarkDao.selectByItemId(itemDO.getId());
         itemDTO.setRemarkDtos(remarkDos.stream().map(remarkDo -> {
             ItemRemarkDto itemRemarkDto = new ItemRemarkDto();
-            BeanUtils.copyProperties(remarkDo, itemRemarkDto);
+            itemRemarkDto.setId(remarkDo.getId());
+            itemRemarkDto.setItemId(remarkDo.getItemId());
+            itemRemarkDto.setRemark(remarkDo.getRemark());
+            itemRemarkDto.setCtime(TimeUtil.getSimpleFormat(remarkDo.getCtime()));
+            itemRemarkDto.setUtime(TimeUtil.getSimpleFormat(remarkDo.getUtime()));
             return itemRemarkDto;
         }).collect(Collectors.toList()));
 
@@ -503,15 +511,15 @@ public class ItemService {
         String backgroundSkuUrl = ContextConst.BACKGROUND_SKU_URL;
         itemDTO.setBackgroundSkuUrl(replaceUrl(backgroundSkuUrl, paramMap));
 
-        String backgroundFnskuUrl = ContextConst.BACKGROUND_FNSKU_URL;
+        String backgroundFnskuUrl = awsMarket.getCountryCode().equals("UK") ? ContextConst.BACKGROUND_FNSKU_UK_URL : ContextConst.BACKGROUND_FNSKU_URL;
         itemDTO.setBackgroundFnskuUrl(replaceUrl(backgroundFnskuUrl, paramMap));
 
         return itemDTO;
     }
 
-    private String replaceUrl(String url, Map<String, String> paramMap){
-        for(Map.Entry<String, String> entry: paramMap.entrySet()){
-            if(url.contains(entry.getKey())){
+    private String replaceUrl(String url, Map<String, String> paramMap) {
+        for (Map.Entry<String, String> entry : paramMap.entrySet()) {
+            if (url.contains(entry.getKey())) {
                 url = url.replace(entry.getKey(), entry.getValue());
             }
         }

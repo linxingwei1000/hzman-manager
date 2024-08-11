@@ -35,6 +35,9 @@ public class InventoryDto {
     @ApiModelProperty(value = "亚马逊FBA库存量")
     private Integer fulfillableQuantity;
 
+    @ApiModelProperty(value = "亚马逊入库中转数量")
+    private Integer inboundWorkingQuantity;
+
     @ApiModelProperty(value = "亚马逊途中数量")
     private Integer inboundShippedQuantity;
 

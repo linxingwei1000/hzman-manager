@@ -228,7 +228,18 @@ public class FactoryService {
     /**
      * @param fId
      */
+    @Transactional
     public void deleteFactory(Integer fId) {
+
+        //删除厂家订单
+        List<FactoryOrderDo> orderDOS = factoryOrderDao.getOrderByFactoryId(fId);
+        orderDOS.forEach(order -> deleteOrder(order.getId()));
+
+        //删除厂家关联商品
+        List<FactoryItemDo> factoryItemDOS = factoryItemDao.getInfoByFactoryId(fId);
+        factoryItemDOS.forEach(factoryItemDo -> deleteFactoryItem(factoryItemDo.getId()));
+
+        //删除厂家
         factoryDao.deleteFactory(fId);
     }
 

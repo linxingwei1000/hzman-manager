@@ -21,9 +21,9 @@ public class ItemRemarkDto {
     private String remark;
 
     @ApiModelProperty(value = "创建时间")
-    private Date ctime;
+    private String ctime;
 
     @ApiModelProperty(value = "修改时间")
-    private Date utime;
+    private String utime;
 
 }

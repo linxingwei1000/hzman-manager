@@ -65,10 +65,11 @@ public class ItemInventoryDao {
      * 获取库存
      * @param sku
      */
-    public ItemInventoryDo getInventoryBySkuAndAsin(String sku, String asin){
+    public ItemInventoryDo getInventoryBySkuAndAsin(String sku, String asin, Integer userMarketId){
         QueryWrapper<ItemInventoryDo> query = new QueryWrapper<>();
         query.eq("sku", sku);
         query.eq("asin", asin);
+        query.eq("user_market_id", userMarketId);
         return itemInventoryMapper.selectOne(query);
     }
 

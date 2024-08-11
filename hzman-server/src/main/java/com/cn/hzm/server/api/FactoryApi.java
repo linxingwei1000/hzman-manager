@@ -88,12 +88,12 @@ public class FactoryApi {
         return HzmResponse.success(true);
     }
 
-//    @ApiOperation("删除厂家")
-//    @RequestMapping(value = "/del/{fId}", method = RequestMethod.GET)
-//    public HzmResponse deleteItem(@PathVariable Integer fId) {
-//        factoryDealService.deleteFactory(fId);
-//        return HzmResponse.success(true);
-//    }
+    @ApiOperation("删除厂家")
+    @RequestMapping(value = "/delete", method = RequestMethod.GET)
+    public HzmResponse deleteItem(@ApiParam("厂家Id") @RequestParam Integer factoryId) {
+        factoryDealService.deleteFactory(factoryId);
+        return HzmResponse.success(true);
+    }
 
     @ApiOperation("例举厂家订单")
     @RequestMapping(value = "/order/list", method = RequestMethod.POST)

@@ -285,6 +285,7 @@ public class OrderSpiderTask implements ITask{
                 log.info("[{}-{}] 处理更新订单 start【{}】 end【{}】", spaManager.getAwsUserId(), spaManager.getMarketId(), start, end);
                 Set<String> threadFixSaleInfoDay = Sets.newHashSet();
                 int updateCount = 0;
+                String logOrderId = "";
                 try {
                     List<String> subIds = subOrders.stream().map(AmazonOrderDo::getAmazonOrderId).collect(Collectors.toList());
                     getOrderSemaphore.acquire();
@@ -298,6 +299,7 @@ public class OrderSpiderTask implements ITask{
                     Map<String, AmazonOrderDo> orderMap = subOrders.stream().collect(Collectors.toMap(AmazonOrderDo::getAmazonOrderId, orderDO -> orderDO));
                     for (Order order : tmp) {
                         String amazonId = order.getAmazonOrderId();
+                        logOrderId = amazonId;
 
                         //获取资源
                         orderItemSemaphore.acquire();
@@ -332,7 +334,7 @@ public class OrderSpiderTask implements ITask{
                         updateCount++;
                     }
                 } catch (Exception e) {
-                    log.error("[{}-{}] 更新订单错误：{}", spaManager.getAwsUserId(), spaManager.getMarketId(), e.getMessage(), e);
+                    log.error("[{}-{}] 更新订单[{}]错误：{}", spaManager.getAwsUserId(), spaManager.getMarketId(), logOrderId, e.getMessage(), e);
                 }
                 return new UpdateRecordFuture(threadFixSaleInfoDay, updateCount);
             });

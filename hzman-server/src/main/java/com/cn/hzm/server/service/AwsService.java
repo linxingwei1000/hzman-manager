@@ -149,18 +149,13 @@ public class AwsService {
 
         StringBuilder sb = new StringBuilder();
         awsUserDos.forEach(awsUserDo -> {
-            List<AwsUserMarketDo> awsUserMarketDos = awsUserMarketDao.getByUserId(awsUserDo.getId());
-            awsUserMarketDos.forEach(awsUserMarketDo -> {
-                Long dayNum = TimeUtil.daysBetweenTwoDate(awsUserMarketDo.getUtime(), new Date());
-                int remainDay = 90 - dayNum.intValue();
+                Long dayNum = TimeUtil.daysBetweenTwoDate(awsUserDo.getUtime(), new Date());
+                int remainDay = 150 - dayNum.intValue();
 
                 if(remainDay < 30){
-                    AwsMarket awsMarket = AwsMarket.getByMarketId(awsUserMarketDo.getMarketId());
-                    String showText = String.format("【%s|%s|%s token还有%d天过期，请注意替换更新】",
-                            awsUserDo.getRemark(),  awsMarket.getDesc(), awsMarket.getId(), remainDay);
+                    String showText = String.format("【%s client密钥还有%d天过期，请注意替换更新】", awsUserDo.getRemark(), remainDay);
                     sb.append(showText);
                 }
-            });
         });
 
         JSONObject jo = new JSONObject();

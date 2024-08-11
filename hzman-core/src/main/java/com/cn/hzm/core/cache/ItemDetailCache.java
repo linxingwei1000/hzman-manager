@@ -349,7 +349,7 @@ public class ItemDetailCache {
             }
             itemDTO = itemService.buildItemDTO(itemDO, usDate);
         } catch (Exception e) {
-            log.error("item缓存对象创建失败，sku:{} e:", sku, e);
+            log.error("item缓存对象创建失败，userMarketId:{} sku:{} e:", userMarketId, sku, e);
         }
         return itemDTO;
     }
@@ -357,6 +357,10 @@ public class ItemDetailCache {
     //父类用asin做
     public ItemDto installRelationItemDTO(Integer usrMarketId, String asin, Date usDate) {
         ItemDo fatherItem = itemDao.getItemDOByAsin(asin, 1, usrMarketId);
+        if (fatherItem == null) {
+            log.info("父体商品找不到userMarketId:{} {}", usrMarketId, asin);
+            return null;
+        }
         ItemDto relationItem = itemService.buildItemDTO(fatherItem, usDate);
         List<ItemDto> childItems = getChildrenItem(usrMarketId, asin);
 
@@ -367,6 +371,7 @@ public class ItemDetailCache {
         SaleInfoDto setLastYearDuration30Day = new SaleInfoDto();
         Integer fulfillableQuantity = 0;
         Integer localQuantity = 0;
+        Integer inboundWorkingQuantity = 0;
         Integer inboundShippedQuantity = 0;
         for (ItemDto item : childItems) {
             addData(today, item.getToday());
@@ -377,6 +382,7 @@ public class ItemDetailCache {
 
             fulfillableQuantity += item.getInventoryDTO().getFulfillableQuantity() == null ? 0 : item.getInventoryDTO().getFulfillableQuantity();
             localQuantity += item.getInventoryDTO().getLocalQuantity() == null ? 0 : item.getInventoryDTO().getLocalQuantity();
+            inboundWorkingQuantity += item.getInventoryDTO().getInboundWorkingQuantity() == null ? 0 : item.getInventoryDTO().getInboundWorkingQuantity();
             inboundShippedQuantity += item.getInventoryDTO().getInboundShippedQuantity() == null ? 0 : item.getInventoryDTO().getInboundShippedQuantity();
         }
         relationItem.setToday(today);
@@ -391,6 +397,7 @@ public class ItemDetailCache {
         InventoryDto inventoryDTO = new InventoryDto();
         inventoryDTO.setFulfillableQuantity(fulfillableQuantity);
         inventoryDTO.setLocalQuantity(localQuantity);
+        inventoryDTO.setInboundWorkingQuantity(inboundWorkingQuantity);
         inventoryDTO.setInboundShippedQuantity(inboundShippedQuantity);
         relationItem.setInventoryDTO(inventoryDTO);
         return relationItem;

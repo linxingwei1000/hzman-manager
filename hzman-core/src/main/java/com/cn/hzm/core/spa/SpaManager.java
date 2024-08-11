@@ -5,7 +5,6 @@ import com.amazon.SellingPartnerAPIAA.AWSAuthenticationCredentials;
 import com.amazon.SellingPartnerAPIAA.AWSAuthenticationCredentialsProvider;
 import com.amazon.SellingPartnerAPIAA.LWAAuthorizationCredentials;
 import com.cn.hzm.core.enums.AwsMarket;
-import com.cn.hzm.core.repository.entity.AmazonOrderFinanceDo;
 import com.cn.hzm.core.repository.entity.AwsUserDo;
 import com.cn.hzm.core.repository.entity.AwsUserMarketDo;
 import com.cn.hzm.core.spa.fbainbound.FbaInboundApi;
@@ -180,8 +179,7 @@ public class SpaManager {
     public com.cn.hzm.core.spa.listings.model.Item getListingsItem(String sku) throws ApiException {
         //List<String> includeDatas = Lists.newArrayList("summaries","attributes","issues","offers","fulfillmentAvailability","procurement");
         List<String> includeDatas = Lists.newArrayList("summaries");
-        com.cn.hzm.core.spa.listings.model.Item item = listingsApi.getListingsItem(awsUserDo.getSellerId(), sku, Lists.newArrayList(awsMarket.getId()), null, includeDatas);
-        return item;
+        return listingsApi.getListingsItem(awsUserDo.getSellerId(), sku, Lists.newArrayList(awsMarket.getId()), null, includeDatas);
     }
 
     /**
@@ -253,10 +251,17 @@ public class SpaManager {
      * @throws ApiException
      */
     public GetOrdersResponse orderList(String beginTime, String endTime) throws ApiException {
-        return ordersV0Api.getOrders(Lists.newArrayList(awsMarket.getId()), beginTime, endTime
-                , null, null, null, null, null, null,
-                null, null, null, null, null, null,
-                null, null, null);
+        GetOrdersResponse r;
+        try{
+             r = ordersV0Api.getOrders(Lists.newArrayList(awsMarket.getId()), beginTime, endTime
+                    , null, null, null, null, null, null,
+                    null, null, null, null, null, null,
+                    null, null, null);
+        }catch (Exception e){
+            log.error("{}-[{}-{}]", awsMarket.getId(), beginTime, endTime, e);
+            throw e;
+        }
+        return r;
     }
 
     /**
@@ -444,11 +449,12 @@ public class SpaManager {
         //awsUserDo.setRefreshToken("Atzr|IwEBIL-T9IW6pj2GeRkkuYAdTnc5g3qTJA2xHXe-9B4hnBqz0870rvvVLDSTXdyi68G7ApiIBn8tpiSywsufuNO-QIoSTDKdM2_ytv5hUI2Z33X0kjIxaGGjRz3WSmbT7m6FPkzT1M3YLF1A5qcPgnnGJdko5D7HVebRg8wCYVaJ4d4KdXDw-zTG22fbO_lc8bNjTLwH_0RZD7Ru_VW2lTi7vckzU7VKn1fSdwQeltU6IVkkTdZrTB-UHiPxG1iHh9fVEaWXN7LFTo_CxNTjErIydxtlCa4SIEUKhKaCekr8amFBD64xt58L8KZKR2MlfU4v8u8");
 
         //SpaManager spaManager = smallU();
-        //SpaManager spaManager = small();
-
-        //Item r = spaManager.getItemBySku("UK-P1952301C");
+//        SpaManager spaManager = big();
+//
+//        Item r = spaManager.getItemBySku("s51307");
+//        System.out.println(JSONObject.toJSONString(spaManager.getListingsItem("s51307")));
         //GetOrdersResponse r = spaManager.orderListByOrderIds(Lists.newArrayList("406-1466288-1942765"));
-        //GetInventorySummariesResponse r = spaManager.getInventoryInfoBySku("SET23-0719-01B");
+        //GetInventorySummariesResponse r = spaManager.getInventoryInfoBySku("s51307");
         //GetShipmentsResponse r = spaManager.getShipmentsByShipmentIds(Lists.newArrayList("FBA17K6BPX6T"));
         //GetShipmentItemsResponse r = spaManager.getShipmentItemsByShipmentId("FBA17K6BPX6T");
         //ListFinancialEventsResponse r = spaManager.getFinanceByAwsOrderId("114-1989199-7218608");
@@ -459,7 +465,7 @@ public class SpaManager {
 //        orderFinanceDO.setAmazonOrderId("114-1989199-7218608");
 //        System.out.println(orderFinanceDO);
 //        GetOrdersResponse r = spaManager.orderList("2023-11-01T00:00:00Z", "2023-11-01T00:00:30Z");
-//        System.out.println(JSONObject.toJSONString(r));
+        //System.out.println(JSONObject.toJSONString(r));
     }
 
 
