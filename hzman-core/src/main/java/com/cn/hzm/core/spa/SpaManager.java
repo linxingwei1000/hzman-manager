@@ -203,8 +203,9 @@ public class SpaManager {
                     log.info("{} 获取价格请求超限，重试获取， {}", sku, i);
                     try {
                         Thread.sleep(5 * 1000);
-                    } catch (InterruptedException ignored) { }
-                }else{
+                    } catch (InterruptedException ignored) {
+                    }
+                } else {
                     log.error("{} 获取商品价格失败：", sku, ae);
                     break;
                 }
@@ -254,12 +255,15 @@ public class SpaManager {
      */
     public GetOrdersResponse orderList(String beginTime, String endTime) throws ApiException {
         GetOrdersResponse r;
-        try{
-             r = ordersV0Api.getOrders(Lists.newArrayList(awsMarket.getId()), beginTime, endTime
+        try {
+            r = ordersV0Api.getOrders(Lists.newArrayList(awsMarket.getId()), beginTime, endTime
                     , null, null, null, null, null, null,
                     null, null, null, null, null, null,
                     null, null, null);
-        }catch (Exception e){
+        } catch (ApiException apiException) {
+            log.error("{}-[{}-{}] api调用错误：{}", awsMarket.getId(), beginTime, endTime, JSONObject.toJSONString(apiException.getMessage()), apiException);
+            throw apiException;
+        } catch (Exception e) {
             log.error("{}-[{}-{}]", awsMarket.getId(), beginTime, endTime, e);
             throw e;
         }
@@ -455,7 +459,7 @@ public class SpaManager {
 //
         //Item r = spaManager.getItemBySku("S70106-AU");
 //        System.out.println(JSONObject.toJSONString(spaManager.getListingsItem("s51307")));
-       // GetOrdersResponse r = spaManager.orderListByOrderIds(Lists.newArrayList("026-9693917-1106727"));
+        // GetOrdersResponse r = spaManager.orderListByOrderIds(Lists.newArrayList("026-9693917-1106727"));
         //GetInventorySummariesResponse r = spaManager.getInventoryInfoBySku("s51307");
         //GetShipmentsResponse r = spaManager.getShipmentsByShipmentIds(Lists.newArrayList("FBA17K6BPX6T"));
         //GetShipmentItemsResponse r = spaManager.getShipmentItemsByShipmentId("FBA17K6BPX6T");
@@ -474,7 +478,6 @@ public class SpaManager {
 //        ConvertUtil.convertToAmazonOrderDo(6, update, r.getPayload().getOrders().get(0));
 //        System.out.println(JSONObject.toJSONString(update));
     }
-
 
 
 }

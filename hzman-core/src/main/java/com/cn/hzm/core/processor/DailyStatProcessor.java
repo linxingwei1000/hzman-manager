@@ -116,6 +116,33 @@ public class DailyStatProcessor {
         statDailySaleInfoByDate(awsUserMarketId, startDate, endDate);
     }
 
+    public void deleteAmazonOrder(String strDate, Integer num){
+        Date date = TimeUtil.getDateBySimple(strDate);
+        while (num > 0) {
+            String strDailyDate = TimeUtil.getDateFormat(date);
+            Boolean isSummer = TimeUtil.isSummer(strDailyDate);
+            Date startDate = TimeUtil.dateFixByDay(date, 0, isSummer ? 15 : 16, 0);
+
+            Date nextDate = TimeUtil.dateFixByDay(date, 1, 0, 0);
+            strDailyDate = TimeUtil.getDateFormat(nextDate);
+            isSummer = TimeUtil.isSummer(strDailyDate);
+            Date endDate = TimeUtil.dateFixByDay(nextDate, 0, isSummer ? 15 : 16, 0);
+
+            List<AmazonOrderDo> orders = amazonOrderDao.getOrdersByPurchaseDate(null, startDate, endDate, null, new String[]{"amazon_order_id", "order_status"});
+            int deleteNum = 0;
+            int orderItemDeleteNum = 0;
+            int orderFinanceDeleteNum = 0;
+            for(AmazonOrderDo order: orders){
+                deleteNum += amazonOrderDao.deleteOrderByAmazonId(order.getAmazonOrderId());
+                orderItemDeleteNum += amazonOrderItemDao.deleteByOrderId(order.getAmazonOrderId());
+                orderFinanceDeleteNum += amazonOrderFinanceDao.deleteOrderFinanceByBathAmazonId(order.getAmazonOrderId());
+            }
+            log.info("销量数据时间范围：{}----{}, 删除删除数据：order:{} orderItem:{} finance:{}", startDate, endDate, deleteNum, orderItemDeleteNum, orderFinanceDeleteNum);
+            date = TimeUtil.dateFixByDay(date, 1, 0, 0);
+            num--;
+        }
+    }
+
     private void statDailySaleInfoByDate(Integer awsUserMarketId, Date startDate, Date endDate) {
         AwsUserMarketDo awsUserMarketDo = awsUserMarketDao.getById(awsUserMarketId);
         String statDate = TimeUtil.getSimpleFormat(startDate);

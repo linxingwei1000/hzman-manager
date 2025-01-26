@@ -60,6 +60,14 @@ public class ToolApi {
         return HzmResponse.success("true");
     }
 
+    @ApiOperation("删除历史亚马逊订单数据")
+    @RequestMapping(value = "/delete/his/order", method = RequestMethod.GET)
+    public HzmResponse deleteHisOrder(@ApiParam("删除开始日期") @RequestParam String statDate,
+                                   @ApiParam("删除天数") @RequestParam Integer dayNum) {
+        dailyStatProcessor.deleteAmazonOrder(statDate, dayNum);
+        return HzmResponse.success("true");
+    }
+
     @ApiOperation("修复订单数据")
     @RequestMapping(value = "/order/fix", method = RequestMethod.POST)
     public HzmResponse fixOrder(@RequestBody FixOrderDto fixOrderDTO) {

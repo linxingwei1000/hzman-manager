@@ -57,4 +57,10 @@ public class AmazonOrderFinanceDao {
         amazonOrderFinanceDO.setUtime(new Date());
         return amazonOrderFinanceMapper.updateById(amazonOrderFinanceDO) != 0;
     }
+
+    public Integer deleteOrderFinanceByBathAmazonId(String amazonOrderId) {
+        QueryWrapper<AmazonOrderFinanceDo> query = new QueryWrapper<>();
+        query.in("amazon_order_id", amazonOrderId);
+        return amazonOrderFinanceMapper.delete(query);
+    }
 }

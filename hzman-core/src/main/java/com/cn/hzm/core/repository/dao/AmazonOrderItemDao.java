@@ -57,4 +57,10 @@ public class AmazonOrderItemDao {
         orderItemDO.setUtime(new Date());
         return amazonOrderItemMapper.updateById(orderItemDO) != 0;
     }
+
+    public Integer deleteByOrderId(String amazonOrderId) {
+        QueryWrapper<AmazonOrderItemDo> query = new QueryWrapper<>();
+        query.eq("amazon_order_id", amazonOrderId);
+        return amazonOrderItemMapper.delete(query);
+    }
 }

@@ -71,7 +71,9 @@ public class AmazonOrderDao {
 
     public List<AmazonOrderDo> getOrdersByPurchaseDate(Integer awsUserMarketId, Date startDate, Date endDate, String orderStatus, String[] fields) {
         QueryWrapper<AmazonOrderDo> query = new QueryWrapper<>();
-        query.eq("user_market_id", awsUserMarketId);
+        if (awsUserMarketId != null) {
+            query.eq("user_market_id", awsUserMarketId);
+        }
         if (!StringUtils.isEmpty(orderStatus)) {
             query.eq("order_status", orderStatus);
         }
@@ -90,6 +92,12 @@ public class AmazonOrderDao {
         query.eq("user_market_id", userMarketId);
         query.eq("amazon_order_id", amazonOrderId);
         return amazonOrderMapper.selectOne(query);
+    }
+
+    public Integer deleteOrderByAmazonId(String amazonOrderId) {
+        QueryWrapper<AmazonOrderDo> query = new QueryWrapper<>();
+        query.eq("amazon_order_id", amazonOrderId);
+        return amazonOrderMapper.delete(query);
     }
 
     /**
