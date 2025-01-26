@@ -158,6 +158,7 @@ CREATE TABLE hzm.hzm_item
     `listing_time`   varchar(128)          default null COMMENT '上架时间',
     `attribute_set`  varchar(4096)         default '' comment '商品属性相关',
     `relationship`   varchar(4096)         default '' comment '价格相关参数',
+    `activityInfo`   varchar(4096)         default '' comment '活动相关属性',
     `active`         tinyint(4) default 0 COMMENT '商品是否有效',
     `ctime`          datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
     `utime`          datetime     NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',

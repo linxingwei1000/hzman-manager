@@ -116,4 +116,7 @@ public class ItemDto extends RespBaseDto{
 
     @ApiModelProperty(value = "亚马逊后台fnsku链接")
     private String backgroundFnskuUrl;
+
+    @ApiModelProperty(value = "是否透明计划")
+    private Boolean isTransparencyPlan;
 }

@@ -165,4 +165,11 @@ public class ItemApi {
     public HzmResponse delRemark(@ApiParam(name = "数据库id") @RequestParam Integer id) {
         return HzmResponse.success(itemService.delRemark(id));
     }
+
+    @ApiOperation("打标/去标透明计划")
+    @HzmAuthPermission(needRole = {HzmRoleType.ROLE_ADMIN, HzmRoleType.ROLE_OPERATE, HzmRoleType.ROLE_EMPLOYEE})
+    @RequestMapping(value = "/mod/transparency/plan", method = RequestMethod.POST)
+    public HzmResponse modTransparencyPlan(@RequestBody ModItemTransparencyPlayDto dto) {
+        return HzmResponse.success(itemService.modTransparencyPlan(dto));
+    }
 }

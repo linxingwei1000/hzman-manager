@@ -1,12 +1,20 @@
 package com.cn.hzm.core.repository.entity;
 
+import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
+import org.apache.commons.lang3.StringUtils;
 
+import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * @author xingweilin@clubfactory.com
@@ -62,9 +70,31 @@ public class ItemDo {
     @TableField(value = "is_parent")
     private Integer isParent;
 
+    @TableField(value = "activity_info")
+    private String activityInfo;
+
     private Integer active;
 
     private Date ctime;
 
     private Date utime;
+
+    @Data
+    @Builder
+    @AllArgsConstructor
+    @NoArgsConstructor
+    public static class ItemActivityObj implements Serializable {
+        private static final long serialVersionUID = -4024831915728857514L;
+        /**
+         * 是否透明计划
+         */
+        private Boolean isTransparencyPlan = false;
+    }
+
+    public ItemActivityObj getActivityObj() {
+        if(StringUtils.isNotEmpty(getActivityInfo())){
+            return JSONObject.parseObject(getActivityInfo(), ItemActivityObj.class);
+        }
+        return new ItemActivityObj();
+    }
 }

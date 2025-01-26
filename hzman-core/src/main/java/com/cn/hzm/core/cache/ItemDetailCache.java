@@ -211,6 +211,10 @@ public class ItemDetailCache {
                 temp = cache.asMap().values().stream().filter(itemDto -> itemDto.getUserMarketId().equals(userMarketId)).collect(Collectors.toList());
                 temp = temp.stream().filter(item -> CollectionUtils.isEmpty(item.getRemarkDtos())).collect(Collectors.toList());
                 break;
+            case 7:
+                temp = cache.asMap().values().stream().filter(itemDto -> itemDto.getUserMarketId().equals(userMarketId)).collect(Collectors.toList());
+                temp = temp.stream().filter(ItemDto::getIsTransparencyPlan).collect(Collectors.toList());
+                break;
             default:
                 temp = cache.asMap().values().stream().filter(itemDto -> itemDto.getUserMarketId().equals(userMarketId)).collect(Collectors.toList());
         }
@@ -342,14 +346,16 @@ public class ItemDetailCache {
 
     public ItemDto installItemDTO(Integer userMarketId, String sku, Date usDate) {
         ItemDto itemDTO = null;
+        ItemDo itemDO = null;
         try {
-            ItemDo itemDO = itemDao.getItemDOBySku(userMarketId, sku);
+            itemDO = itemDao.getItemDOBySku(userMarketId, sku);
             if (itemDO == null) {
                 return null;
             }
             itemDTO = itemService.buildItemDTO(itemDO, usDate);
         } catch (Exception e) {
-            log.error("item缓存对象创建失败，userMarketId:{} sku:{} e:", userMarketId, sku, e);
+            log.error("item缓存对象创建失败，userMarketId:{} sku:{} item:{} e:", userMarketId, sku,
+                    itemDO != null ? JSONObject.toJSONString(itemDO) : "", e);
         }
         return itemDTO;
     }

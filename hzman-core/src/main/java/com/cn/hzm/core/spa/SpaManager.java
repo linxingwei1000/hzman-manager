@@ -5,6 +5,7 @@ import com.amazon.SellingPartnerAPIAA.AWSAuthenticationCredentials;
 import com.amazon.SellingPartnerAPIAA.AWSAuthenticationCredentialsProvider;
 import com.amazon.SellingPartnerAPIAA.LWAAuthorizationCredentials;
 import com.cn.hzm.core.enums.AwsMarket;
+import com.cn.hzm.core.repository.entity.AmazonOrderDo;
 import com.cn.hzm.core.repository.entity.AwsUserDo;
 import com.cn.hzm.core.repository.entity.AwsUserMarketDo;
 import com.cn.hzm.core.spa.fbainbound.FbaInboundApi;
@@ -25,6 +26,7 @@ import com.cn.hzm.core.spa.order.model.GetOrdersResponse;
 import com.cn.hzm.core.spa.price.ProductPricingApi;
 import com.cn.hzm.core.spa.price.model.GetPricingResponse;
 import com.cn.hzm.core.spa.seller.SellersApi;
+import com.cn.hzm.core.util.ConvertUtil;
 import com.google.common.collect.Lists;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
@@ -445,15 +447,15 @@ public class SpaManager {
         log.info("{}", sb);
     }
 
-    public static void main(String[] args) throws ApiException {
+    public static void main(String[] args) throws Exception {
         //awsUserDo.setRefreshToken("Atzr|IwEBIL-T9IW6pj2GeRkkuYAdTnc5g3qTJA2xHXe-9B4hnBqz0870rvvVLDSTXdyi68G7ApiIBn8tpiSywsufuNO-QIoSTDKdM2_ytv5hUI2Z33X0kjIxaGGjRz3WSmbT7m6FPkzT1M3YLF1A5qcPgnnGJdko5D7HVebRg8wCYVaJ4d4KdXDw-zTG22fbO_lc8bNjTLwH_0RZD7Ru_VW2lTi7vckzU7VKn1fSdwQeltU6IVkkTdZrTB-UHiPxG1iHh9fVEaWXN7LFTo_CxNTjErIydxtlCa4SIEUKhKaCekr8amFBD64xt58L8KZKR2MlfU4v8u8");
 
-        //SpaManager spaManager = smallU();
+        //SpaManager spaManager = smallE();
 //        SpaManager spaManager = big();
 //
-//        Item r = spaManager.getItemBySku("s51307");
+        //Item r = spaManager.getItemBySku("S70106-AU");
 //        System.out.println(JSONObject.toJSONString(spaManager.getListingsItem("s51307")));
-        //GetOrdersResponse r = spaManager.orderListByOrderIds(Lists.newArrayList("406-1466288-1942765"));
+       // GetOrdersResponse r = spaManager.orderListByOrderIds(Lists.newArrayList("026-9693917-1106727"));
         //GetInventorySummariesResponse r = spaManager.getInventoryInfoBySku("s51307");
         //GetShipmentsResponse r = spaManager.getShipmentsByShipmentIds(Lists.newArrayList("FBA17K6BPX6T"));
         //GetShipmentItemsResponse r = spaManager.getShipmentItemsByShipmentId("FBA17K6BPX6T");
@@ -465,7 +467,12 @@ public class SpaManager {
 //        orderFinanceDO.setAmazonOrderId("114-1989199-7218608");
 //        System.out.println(orderFinanceDO);
 //        GetOrdersResponse r = spaManager.orderList("2023-11-01T00:00:00Z", "2023-11-01T00:00:30Z");
-        //System.out.println(JSONObject.toJSONString(r));
+
+//        AmazonOrderDo update = new AmazonOrderDo();
+//        update.setId(2328325);
+//        update.setOtherConfig(null);
+//        ConvertUtil.convertToAmazonOrderDo(6, update, r.getPayload().getOrders().get(0));
+//        System.out.println(JSONObject.toJSONString(update));
     }
 
 

@@ -14,6 +14,7 @@ import com.cn.hzm.core.spa.order.model.Order;
 import com.cn.hzm.core.spa.order.model.OrderItem;
 import com.cn.hzm.core.spa.price.model.*;
 import com.cn.hzm.core.spa.price.model.Product;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.util.CollectionUtils;
 
 import java.text.ParseException;
@@ -203,7 +204,15 @@ public class ConvertUtil {
         orderDO.setSalesChannel(order.getSalesChannel());
         orderDO.setOrderChannel(order.getOrderChannel());
         orderDO.setShipServiceLevel(order.getShipServiceLevel());
-        orderDO.setShippingAddress(JSONObject.toJSONString(order.getShippingAddress()));
+        if(userMarketId.equals(6)){
+            if(order.getShippingAddress() != null){
+                order.getShippingAddress().setCounty("");
+                orderDO.setShippingAddress(JSONObject.toJSONString(order.getShippingAddress()));
+            }
+        }else{
+            orderDO.setShippingAddress(JSONObject.toJSONString(order.getShippingAddress()));
+        }
+
         if (order.getOrderTotal() != null) {
             orderDO.setOrderAmount(Double.parseDouble(order.getOrderTotal().getAmount()));
             orderDO.setOrderCurrencyCode(order.getOrderTotal().getCurrencyCode());

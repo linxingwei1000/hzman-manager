@@ -178,6 +178,19 @@ public class ItemService {
         return true;
     }
 
+    public boolean modTransparencyPlan(ModItemTransparencyPlayDto dto) {
+        //操作商品透明计划标
+        dto.getItemIds().forEach(itemId ->{
+            ItemDo itemDO = itemDao.getById(itemId);
+            ItemDo.ItemActivityObj itemActivityObj = itemDO.getActivityObj();
+            itemActivityObj.setIsTransparencyPlan(dto.getOperate().equals(1));
+            itemDO.setActivityInfo(JSONObject.toJSONString(itemActivityObj));
+            itemDao.updateItem(itemDO);
+            itemDetailCache.refreshCache(ThreadLocalCache.getUser().getUserMarketId(), itemDO.getSku());
+        });
+        return true;
+    }
+
     //批量商品添加处理
     public void excelProcessSync(AddItemDeallDto dto, Integer awsUserId, String marketId) throws Exception {
         //先爬取商品相关信息
@@ -514,6 +527,8 @@ public class ItemService {
         String backgroundFnskuUrl = awsMarket.getCountryCode().equals("UK") ? ContextConst.BACKGROUND_FNSKU_UK_URL : ContextConst.BACKGROUND_FNSKU_URL;
         itemDTO.setBackgroundFnskuUrl(replaceUrl(backgroundFnskuUrl, paramMap));
 
+        //活动类型打标
+        itemDTO.setIsTransparencyPlan(itemDO.getActivityObj().getIsTransparencyPlan());
         return itemDTO;
     }
 
