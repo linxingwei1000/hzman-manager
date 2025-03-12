@@ -126,5 +126,6 @@ public class ContextConst {
 
     public static String BACKGROUND_SKU_URL = "https://sellercentral.amazon.com${ares}/abis/listing/edit/offer?marketplaceID=${marketplaceId}&ref=xx_myiedit_cont_myifba&sku=${sku}&asin=${asin}&productType=${productType}#offer";
 
+    public static final Integer AWS_USA_MARKET_ID = 1;
 
 }

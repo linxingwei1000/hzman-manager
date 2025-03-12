@@ -630,16 +630,20 @@ public class ItemService {
             ItemInventoryDo inventory = inventoryDao.getInventoryBySku(sku, awsUserMarketDo.getId());
             switch (operateType) {
                 case "set":
-                    inventory.setLocalQuantity(dealNum);
-                    inventory.calculateTotalQuantity();
-                    inventoryDao.updateInventory(inventory);
+                    if(inventory != null){
+                        inventory.setLocalQuantity(dealNum);
+                        inventory.calculateTotalQuantity();
+                        inventoryDao.updateInventory(inventory);
+                    }
                     break;
                 case "mod":
-                    Integer localNum = inventory.getLocalQuantity() == null ? 0 : inventory.getLocalQuantity();
-                    int nowLocal = localNum + dealNum;
-                    inventory.setLocalQuantity(Math.max(nowLocal, 0));
-                    inventory.calculateTotalQuantity();
-                    inventoryDao.updateInventory(inventory);
+                    if(inventory != null){
+                        Integer localNum = inventory.getLocalQuantity() == null ? 0 : inventory.getLocalQuantity();
+                        int nowLocal = localNum + dealNum;
+                        inventory.setLocalQuantity(Math.max(nowLocal, 0));
+                        inventory.calculateTotalQuantity();
+                        inventoryDao.updateInventory(inventory);
+                    }
                     break;
                 case "refresh":
                     SpaManager spaManager = awsUserManager.getManager(awsUserId, marketId);

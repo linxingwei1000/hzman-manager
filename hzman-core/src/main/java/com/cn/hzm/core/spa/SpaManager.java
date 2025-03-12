@@ -224,7 +224,7 @@ public class SpaManager {
                     awsMarket.getId(), Lists.newArrayList(awsMarket.getId()), true, null,
                     Lists.newArrayList(sku), null);
         } catch (ApiException e) {
-            log.error("[{}]获取库存信息失败：", sku, e);
+            log.error("[{}-{}-{}]获取库存信息失败：", getAwsUserId(), getMarketId(), sku, e);
         }
         return null;
     }
@@ -261,7 +261,7 @@ public class SpaManager {
                     null, null, null, null, null, null,
                     null, null, null);
         } catch (ApiException apiException) {
-            log.error("{}-[{}-{}] api调用错误：{}", awsMarket.getId(), beginTime, endTime, JSONObject.toJSONString(apiException.getMessage()), apiException);
+            log.error("{}-[{}-{}] orderList：{}", awsMarket.getId(), beginTime, endTime, JSONObject.toJSONString(apiException.getResponseBody()), apiException);
             throw apiException;
         } catch (Exception e) {
             log.error("{}-[{}-{}]", awsMarket.getId(), beginTime, endTime, e);
@@ -294,7 +294,7 @@ public class SpaManager {
             return fbaInboundApi.getShipments("DATE_RANGE",
                     awsMarket.getId(), status, null, lastUpdatedAfter, lastUpdatedBefore, null);
         } catch (ApiException e) {
-            log.error("获取入库单失败：", e);
+            log.error("[{}-{}] 获取入库单失败：", getAwsUserId(), getMarketId(), e);
         }
         return null;
     }
@@ -305,7 +305,7 @@ public class SpaManager {
             return fbaInboundApi.getShipments("SHIPMENT",
                     awsMarket.getId(), null, shipmentIds, null, null, null);
         } catch (ApiException e) {
-            log.error("获取入库单失败：", e);
+            log.error("[{}-{}] 获取入库单失败：", getAwsUserId(), getMarketId(), e);
         }
         return null;
     }
@@ -316,7 +316,7 @@ public class SpaManager {
             return fbaInboundApi.getShipments("NEXT_TOKEN",
                     awsMarket.getId(), null, null, null, null, nextToken);
         } catch (ApiException e) {
-            log.error("获取入库单失败：", e);
+            log.error("[{}-{}]获取入库单失败：", getAwsUserId(), getMarketId(), e);
         }
         return null;
     }
@@ -329,7 +329,7 @@ public class SpaManager {
         try {
             return financeApi.listFinancialEventsByOrderId(orderId, null, null);
         } catch (ApiException e) {
-            log.error("获取财务信息失败：", e);
+            log.error("[{}-{}]获取财务信息失败：", getAwsUserId(), getMarketId(), e);
         }
         return null;
     }

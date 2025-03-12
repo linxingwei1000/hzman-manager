@@ -1,5 +1,7 @@
 package com.cn.hzm.core.task;
 
+import com.cn.hzm.core.constant.ContextConst;
+import com.cn.hzm.core.enums.AwsMarket;
 import com.cn.hzm.core.exception.ExceptionCode;
 import com.cn.hzm.core.exception.HzmException;
 import com.cn.hzm.core.misc.ItemService;
@@ -19,6 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 import org.threeten.bp.OffsetDateTime;
+
 import java.text.ParseException;
 import java.util.Date;
 import java.util.List;
@@ -94,7 +97,7 @@ public class ShipmentSpiderTask implements ITask {
             if (shipmentSemaphore.availablePermits() < 30) {
                 shipmentSemaphore.release(1);
             }
-        }, 60, 2, TimeUnit.SECONDS);
+        }, 60, 10, TimeUnit.SECONDS);
 
         //订单商品爬取资源定时充能
         ScheduledThreadPoolExecutor scheduledTask = new ScheduledThreadPoolExecutor(1);
@@ -102,7 +105,7 @@ public class ShipmentSpiderTask implements ITask {
             if (shipmentItemSemaphore.availablePermits() < 30) {
                 shipmentItemSemaphore.release(1);
             }
-        }, 60, 2, TimeUnit.SECONDS);
+        }, 60, 10, TimeUnit.SECONDS);
 
         //爬取订单任务
         log.info("添加库存订单任务：{}", spiderTaskId);
@@ -309,7 +312,7 @@ public class ShipmentSpiderTask implements ITask {
             GetShipmentItemsResponse r = spaManager.getShipmentItemsByShipmentId(shipmentId);
             parseShipmentItemInfo(r.getPayload().getItemData());
         } catch (Exception e) {
-            log.error("货运单【{}】爬取失败：", shipmentId, e);
+            log.error("[{}-{}]货运单【{}】爬取失败：", spaManager.getAwsUserId(), spaManager.getMarketId(), shipmentId, e);
         }
     }
 
@@ -336,11 +339,23 @@ public class ShipmentSpiderTask implements ITask {
                     fbaInboundItemDao.createRecord(fbaInboundItemDo);
                     //当前库存减去amazon入库
                     try {
+                        log.info("操作sku[{}-{}-{}] 本地库存：{}个",
+                                spaManager.getAwsUserId(), spaManager.getMarketId(), member.getSellerSKU(), -member.getQuantityShipped());
                         itemService.dealSkuInventory(member.getSellerSKU(), spaManager.getAwsUserId(), spaManager.getMarketId(),
                                 "mod", -member.getQuantityShipped());
                         itemService.processSync(member.getSellerSKU(), spaManager.getAwsUserId(), spaManager.getMarketId());
+
+                        //非美国站点，同步删除美国站点本地库存
+                        if (!spaManager.getAwsUserMarketId().equals(ContextConst.AWS_USA_MARKET_ID)) {
+                            log.info("同步操作美国sku[{}-{}-{}] 本地库存：{}个",
+                                    spaManager.getAwsUserId(), spaManager.getMarketId(), member.getSellerSKU(), -member.getQuantityShipped());
+                            itemService.dealSkuInventory(member.getSellerSKU(), ContextConst.AWS_USA_MARKET_ID, AwsMarket.America.getId(),
+                                    "mod", -member.getQuantityShipped());
+                            itemService.processSync(member.getSellerSKU(), ContextConst.AWS_USA_MARKET_ID, AwsMarket.America.getId());
+                        }
                     } catch (Exception e) {
-                        log.error("FBA订单刷新库存失败，sku：{} 可能为新产品  ", member.getSellerSKU(), e);
+                        log.error("[{}-{}]FBA订单刷新库存失败，sku：{} 可能为新产品  ",
+                                spaManager.getAwsUserId(), spaManager.getMarketId(), member.getSellerSKU(), e);
                     }
                 }
             });
