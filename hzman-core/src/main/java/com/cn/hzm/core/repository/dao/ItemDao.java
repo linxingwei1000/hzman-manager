@@ -6,6 +6,7 @@ import com.cn.hzm.core.repository.mapper.ItemMapper;
 import com.google.common.collect.Lists;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import java.util.Date;
 import java.util.List;
@@ -75,6 +76,18 @@ public class ItemDao {
     }
 
     /**
+     * 根据asin
+     *
+     * @param asin
+     * @return
+     */
+    public List<ItemDo> getItemDoByAsin(String asin) {
+        QueryWrapper<ItemDo> query = new QueryWrapper<>();
+        query.eq("asin", asin);
+        return itemMapper.selectList(query);
+    }
+
+    /**
      * sku 数据库判断
      *
      * @param sku
@@ -82,8 +95,45 @@ public class ItemDao {
      */
     public List<ItemDo> getItemDOSBySku(String sku, Integer userMarketId) {
         QueryWrapper<ItemDo> query = new QueryWrapper<>();
-        query.eq("user_market_id", userMarketId);
+        if (userMarketId != null) {
+            query.eq("user_market_id", userMarketId);
+        }
         query.eq("sku", sku);
+        return itemMapper.selectList(query);
+    }
+
+    /**
+     * sku 数据库判断
+     *
+     * @param sku
+     * @return
+     */
+    public List<ItemDo> fuzzyGetItemDOSBySku(String sku, Integer userMarketId) {
+        QueryWrapper<ItemDo> query = new QueryWrapper<>();
+        if (userMarketId != null) {
+            query.eq("user_market_id", userMarketId);
+        }
+        query.like("sku", sku);
+        return itemMapper.selectList(query);
+    }
+
+    /**
+     * sku 数据库判断
+     *
+     * @param beginListTime
+     * @param endListTime
+     * @return
+     */
+    public List<ItemDo> getItemDOSByListingTime(String beginListTime, String endListTime, String[] fields) {
+        QueryWrapper<ItemDo> query = new QueryWrapper<>();
+        if (!StringUtils.isEmpty(beginListTime)) {
+            query.ge("listing_time", beginListTime);
+        }
+        if (!StringUtils.isEmpty(endListTime)) {
+            query.le("listing_time", endListTime);
+        }
+        query.eq("active", 1);
+        query.select(fields);
         return itemMapper.selectList(query);
     }
 
@@ -144,7 +194,7 @@ public class ItemDao {
         itemMapper.updateById(itemDO);
     }
 
-    public Integer deleteItem(Integer id){
+    public Integer deleteItem(Integer id) {
         return itemMapper.deleteById(id);
     }
 }

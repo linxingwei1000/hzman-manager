@@ -1,5 +1,11 @@
 package com.cn.hzm.server.api;
 
+import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
+import com.cn.hzm.api.dto.InventoryDto;
+import com.cn.hzm.api.dto.PackageDimensionDto;
 import com.cn.hzm.core.common.HzmResponse;
 import com.cn.hzm.core.enums.SpiderType;
 import com.cn.hzm.core.exception.ExceptionCode;
@@ -7,10 +13,17 @@ import com.cn.hzm.core.exception.HzmException;
 import com.cn.hzm.core.manager.TaskManager;
 import com.cn.hzm.core.misc.ItemService;
 import com.cn.hzm.core.processor.DailyStatProcessor;
+import com.cn.hzm.core.repository.dao.AsinItemDao;
+import com.cn.hzm.core.repository.dao.ItemDao;
+import com.cn.hzm.core.repository.dao.ItemInventoryDao;
+import com.cn.hzm.core.repository.entity.AsinItemDo;
+import com.cn.hzm.core.repository.entity.ItemDo;
+import com.cn.hzm.core.repository.entity.ItemInventoryDo;
 import com.cn.hzm.core.util.FtpFileUtil;
 import com.cn.hzm.core.cache.ThreadLocalCache;
 import com.cn.hzm.api.dto.FixOrderDto;
 import com.cn.hzm.server.service.ExcelService;
+import com.google.common.collect.Maps;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
@@ -23,6 +36,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Date;
+import java.util.List;
 
 /**
  * @author xingweilin@clubfactory.com
@@ -63,7 +78,7 @@ public class ToolApi {
     @ApiOperation("删除历史亚马逊订单数据")
     @RequestMapping(value = "/delete/his/order", method = RequestMethod.GET)
     public HzmResponse deleteHisOrder(@ApiParam("删除开始日期") @RequestParam String statDate,
-                                   @ApiParam("删除天数") @RequestParam Integer dayNum) {
+                                      @ApiParam("删除天数") @RequestParam Integer dayNum) {
         dailyStatProcessor.deleteAmazonOrder(statDate, dayNum);
         return HzmResponse.success("true");
     }
@@ -115,5 +130,68 @@ public class ToolApi {
     public HzmResponse uncostItemDownload(HttpServletResponse response) throws IOException {
         itemService.costItemDownload(response);
         return HzmResponse.success("下载成功");
+    }
+
+
+    @Autowired
+    private ItemDao itemDao;
+
+    @Autowired
+    private AsinItemDao asinItemDao;
+
+    @Autowired
+    private ItemInventoryDao inventoryDao;
+
+
+    @RequestMapping(value = "/fix/asin/item", method = RequestMethod.GET)
+    public HzmResponse fixAsinItem() {
+        List<ItemDo> items = itemDao.getListByCondition(Maps.newHashMap(),
+                new String[]{"sku", "asin", "icon", "title", "package_dimension", "item_type", "user_market_id"});
+
+
+        items.forEach(itemDo -> {
+            ItemInventoryDo inventoryDO = inventoryDao.getInventoryBySku(itemDo.getSku(), itemDo.getUserMarketId());
+
+            AsinItemDo asinItemDo = asinItemDao.getByAsin(itemDo.getAsin());
+            if (asinItemDo != null) {
+                if (inventoryDO != null) {
+                    Integer localQuantity = asinItemDo.getLocalQuantity() ==null ? 0 : asinItemDo.getLocalQuantity();
+                    asinItemDo.setLocalQuantity(localQuantity + inventoryDO.getLocalQuantity());
+                    asinItemDao.updateItem(asinItemDo);
+                }
+            } else {
+                asinItemDo = new AsinItemDo();
+                asinItemDo.setAsin(itemDo.getAsin());
+                asinItemDo.setTitle(itemDo.getTitle());
+                asinItemDo.setIcon(itemDo.getIcon());
+
+                JSONObject packageJo = JSONObject.parseObject(itemDo.getPackageDimension());
+                if (packageJo != null && packageJo.containsKey("package")) {
+                    JSONObject targetJo = packageJo.getJSONObject("package");
+                    PackageDimensionDto dto = new PackageDimensionDto();
+                    if (targetJo.containsKey("height")) {
+                        dto.setHeight(targetJo.getJSONObject("height").getString("value"));
+                    }
+                    if (targetJo.containsKey("length")) {
+                        dto.setLength(targetJo.getJSONObject("length").getString("value"));
+                    }
+                    if (targetJo.containsKey("weight")) {
+                        dto.setWeight(targetJo.getJSONObject("weight").getString("value"));
+                    }
+                    if (targetJo.containsKey("width")) {
+                        dto.setWidth(targetJo.getJSONObject("width").getString("value"));
+                    }
+                    asinItemDo.setPackageDimension(JSONObject.toJSONString(dto));
+                } else {
+                    asinItemDo.setPackageDimension(itemDo.getPackageDimension());
+                }
+                asinItemDo.setItemType(itemDo.getItemType());
+                asinItemDo.setLocalQuantity(inventoryDO != null ? inventoryDO.getLocalQuantity() : 0);
+                asinItemDo.setActive(1);
+                asinItemDao.createItem(asinItemDo);
+            }
+
+        });
+        return HzmResponse.success("true");
     }
 }

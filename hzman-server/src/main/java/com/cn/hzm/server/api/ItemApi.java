@@ -15,8 +15,6 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.web.bind.annotation.*;
 
 import javax.annotation.Resource;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.util.List;
 
 /**
@@ -36,6 +34,19 @@ public class ItemApi {
     @RequestMapping(value = "/list", method = RequestMethod.POST)
     public HzmResponse listItem(@RequestBody ItemConditionDto conditionDTO) {
         return HzmResponse.success(itemService.processListItem(conditionDTO));
+    }
+
+    @ApiOperation("商品列表V2")
+    @RequestMapping(value = "/list/v2", method = RequestMethod.POST)
+    public HzmResponse listItemV2(@RequestBody ItemConditionDto conditionDTO) {
+        return HzmResponse.success(itemService.processListItemV2(conditionDTO));
+    }
+
+    @ApiOperation("商品列表V2")
+    @RequestMapping(value = "/asin/inventory/local", method = RequestMethod.GET)
+    public HzmResponse asinInventoryLocal(@ApiParam(name = "asinItemId") @RequestParam Integer asinItemId,
+                                          @ApiParam("修改值") @RequestParam Integer curLocalNum) {
+        return HzmResponse.success(itemService.setAsinInventoryLocal(asinItemId, curLocalNum));
     }
 
     @ApiOperation("创建商品")

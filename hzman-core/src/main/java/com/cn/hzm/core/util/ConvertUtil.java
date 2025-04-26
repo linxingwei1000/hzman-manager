@@ -1,6 +1,7 @@
 package com.cn.hzm.core.util;
 
 import com.alibaba.fastjson.JSONObject;
+import com.cn.hzm.api.dto.PackageDimensionDto;
 import com.cn.hzm.core.repository.entity.*;
 import com.cn.hzm.core.spa.StringUtil;
 import com.cn.hzm.core.spa.fbainbound.model.InboundShipmentInfo;
@@ -24,6 +25,38 @@ import java.text.ParseException;
  * @date 2020/7/11 12:20 下午
  */
 public class ConvertUtil {
+
+    public static AsinItemDo convertToItemDo(ItemDo itemDo) {
+        AsinItemDo asinItemDo = new AsinItemDo();
+        asinItemDo.setAsin(itemDo.getAsin());
+        asinItemDo.setTitle(itemDo.getTitle());
+        asinItemDo.setIcon(itemDo.getIcon());
+
+        JSONObject packageJo = JSONObject.parseObject(itemDo.getPackageDimension());
+        if (packageJo != null && packageJo.containsKey("package")) {
+            JSONObject targetJo = packageJo.getJSONObject("package");
+            PackageDimensionDto dto = new PackageDimensionDto();
+            if (targetJo.containsKey("height")) {
+                dto.setHeight(targetJo.getJSONObject("height").getString("value"));
+            }
+            if (targetJo.containsKey("length")) {
+                dto.setLength(targetJo.getJSONObject("length").getString("value"));
+            }
+            if (targetJo.containsKey("weight")) {
+                dto.setWeight(targetJo.getJSONObject("weight").getString("value"));
+            }
+            if (targetJo.containsKey("width")) {
+                dto.setWidth(targetJo.getJSONObject("width").getString("value"));
+            }
+            asinItemDo.setPackageDimension(JSONObject.toJSONString(dto));
+        } else {
+            asinItemDo.setPackageDimension(itemDo.getPackageDimension());
+        }
+        asinItemDo.setItemType(itemDo.getItemType());
+        asinItemDo.setLocalQuantity(0);
+        asinItemDo.setActive(1);
+        return asinItemDo;
+    }
 
     public static ItemDo convertToItemDo(ItemDo itemDO, Item item, String sku, AwsUserMarketDo awsUserMarketDo) {
         itemDO.setUserMarketId(awsUserMarketDo.getId());

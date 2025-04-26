@@ -43,15 +43,21 @@ public class SaleInfoDao {
 
     public SaleInfoDo getSaleInfoDOByDate(String statDate, Integer userMarketId, String sku) {
         QueryWrapper<SaleInfoDo> query = new QueryWrapper<>();
+        query.eq("sku", sku);
         query.eq("stat_date", statDate);
         query.eq("user_market_id", userMarketId);
-        query.eq("sku", sku);
         return saleInfoMapper.selectOne(query);
     }
 
     public List<SaleInfoDo> getSaleInfoDOByDate(Integer userMarketId, String statDate) {
         QueryWrapper<SaleInfoDo> query = new QueryWrapper<>();
         query.eq("user_market_id", userMarketId);
+        query.eq("stat_date", statDate);
+        return saleInfoMapper.selectList(query);
+    }
+
+    public List<SaleInfoDo> getSaleInfoByDate(String statDate) {
+        QueryWrapper<SaleInfoDo> query = new QueryWrapper<>();
         query.eq("stat_date", statDate);
         return saleInfoMapper.selectList(query);
     }

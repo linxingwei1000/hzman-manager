@@ -60,8 +60,6 @@ public class AwsUserManager {
     public void addManager(Integer awsUserMarketId){
         AwsUserMarketDo awsUserMarketDo = awsUserMarketDao.getById(awsUserMarketId);
         processAdd(awsUserMarketDo);
-
-
     }
 
 

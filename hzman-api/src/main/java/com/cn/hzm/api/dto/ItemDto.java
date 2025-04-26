@@ -21,6 +21,9 @@ public class ItemDto extends RespBaseDto{
     @ApiModelProperty(value = "用户市场id")
     private Integer userMarketId;
 
+    @ApiModelProperty
+    private String siteName;
+
     @ApiModelProperty(value = "ASIN", example = "B07BGY7HWK")
     private String asin;
 

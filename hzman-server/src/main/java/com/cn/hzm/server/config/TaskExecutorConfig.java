@@ -4,7 +4,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 
-import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.*;
 
 /**
  * @author xingweilin@clubfactory.com
@@ -23,5 +23,13 @@ public class TaskExecutorConfig {
         executor.setRejectedExecutionHandler(new ThreadPoolExecutor.CallerRunsPolicy());
         executor.initialize();
         return executor;
+    }
+
+    @Bean("processItemInfoThreadExecutor")
+    public ExecutorService processItemInfoThreadExecutor() {
+        // 等待队列
+        BlockingQueue<Runnable> workQueue = new ArrayBlockingQueue<>(1000);
+        return new ThreadPoolExecutor(30, 30, 60L, TimeUnit.SECONDS,
+                workQueue, r -> new Thread(r, "process-item-thread"));
     }
 }

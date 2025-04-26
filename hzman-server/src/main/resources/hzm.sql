@@ -143,6 +143,23 @@ CREATE TABLE hzm.hzm_amazon_order
     PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='amazon订单表';
 
+drop table hzm.hzm_asin_item;
+CREATE TABLE hzm.hzm_asin_item
+(
+    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `asin` varchar(128) NOT NULL COMMENT 'ASIN',
+    `title` varchar(255) NOT NULL COMMENT '商品名称',
+    `icon` varchar(512) DEFAULT '' COMMENT '商品图片',
+    `active` tinyint(4) DEFAULT '0' COMMENT '商品是否有效',
+    `package_dimension` varchar(4096) DEFAULT '' COMMENT '商品包装尺寸',
+    `local_quantity`             int(11) unsigned NOT NULL COMMENT '本地库存',
+    `item_type` varchar(255) DEFAULT '' COMMENT '商品类型',
+    `ctime`          datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `utime`          datetime     NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    KEY `idx_asin` (`asin`)) ENGINE=InnoDB AUTO_INCREMENT=28176 DEFAULT CHARSET=utf8 COMMENT='asin商品表';
+
+
 drop table hzm.hzm_item;
 CREATE TABLE hzm.hzm_item
 (
@@ -415,3 +432,32 @@ CREATE TABLE `hzm_item_category_rank`
     PRIMARY KEY (`id`),
     KEY              `idx_item_id` (`item_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='商品类目排名表';
+
+
+drop table hzm.hzm_deal_file;
+CREATE TABLE hzm.hzm_deal_file
+(
+    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `file_name` varchar(255) NOT NULL COMMENT '文件名',
+    `file_type` tinyint(4) DEFAULT 0 COMMENT '文件类型',
+    `deal_status` tinyint(4) DEFAULT 1 COMMENT '处理状态',
+    `ctime`          datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `utime`          datetime     NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    KEY `idx_file_name` (`file_name`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文件处理列表';
+
+drop table hzm.hzm_deal_file_detail;
+CREATE TABLE hzm.hzm_deal_file_detail
+(
+    `id` int(11) unsigned NOT NULL AUTO_INCREMENT,
+    `local_file_id` int(11) unsigned NOT NULL COMMENT '本地库存文件id',
+    `asin`           varchar(128) not null comment 'ASIN',
+    `sku`            varchar(128) not null comment 'sku',
+    `fnsku`            varchar(128) not null comment 'fnsku',
+    `deal_num`  int(11) unsigned NOT NULL COMMENT '数据量',
+    `deal_status` tinyint(4) DEFAULT '1' COMMENT '处理状态',
+    `deal_result` varchar(255) NOT NULL COMMENT '处理结果',
+    `ctime`          datetime     NOT NULL DEFAULT CURRENT_TIMESTAMP COMMENT '创建时间',
+    `utime`          datetime     NOT NULL ON UPDATE CURRENT_TIMESTAMP COMMENT '更新时间',
+    PRIMARY KEY (`id`),
+    KEY `idx_local_file_id` (`local_file_id`)) ENGINE=InnoDB DEFAULT CHARSET=utf8 COMMENT='文件处理详情表';

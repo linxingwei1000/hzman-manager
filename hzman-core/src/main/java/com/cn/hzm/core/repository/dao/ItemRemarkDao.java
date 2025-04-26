@@ -25,6 +25,12 @@ public class ItemRemarkDao {
         return itemRemarkMapper.selectById(id);
     }
 
+    public List<ItemRemarkDo> selectAll(String[] fields){
+        QueryWrapper<ItemRemarkDo> query = new QueryWrapper<>();
+        query.select(fields);
+        return itemRemarkMapper.selectList(query);
+    }
+
     public List<ItemRemarkDo> selectByItemId(Integer itemId){
         QueryWrapper<ItemRemarkDo> query = new QueryWrapper<>();
         query.eq("item_id", itemId);

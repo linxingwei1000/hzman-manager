@@ -77,6 +77,10 @@ public class SmartReplenishmentProcessor {
         return this.orderSkus.get(userMarketId);
     }
 
+    public Map<Integer, List<String>> getSkusAll(Integer status) {
+        return status.equals(1) ? this.shipSkus : this.orderSkus;
+    }
+
     public void init() {
         replenishmentMap = Maps.newHashMap();
         shipSkus = Maps.newHashMap();

@@ -133,6 +133,10 @@ public class SpaManager {
         return awsUserMarketDo.getId();
     }
 
+    public String getSiteName(){
+        return String.format("%s|%s", awsUserDo.getRemark(), awsMarket.getCountryCode());
+    }
+
     /**
      * 根据asin获取亚马逊商品
      *

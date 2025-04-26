@@ -40,6 +40,16 @@ public class SaleInfoCache {
 
     private Map<String, SaleInfoDto> dailySaleInfoMap;
 
+    /**
+     * asin -> 日期 -> 销量
+     */
+    private Map<String, Map<String, SaleInfoDto>> asinTotalDailySaleInfoMap;
+
+    /**
+     * asin -> 日期 -> userMarketId -> 销量
+     */
+    private Map<String, Map<String, Map<Integer, SaleInfoDto>>> asinDailySaleInfoWithMarketMap;
+
     private static final String BEGIN_DATE = "2023-01-01";
 
     /**
@@ -71,6 +81,8 @@ public class SaleInfoCache {
             return;
         }
         dailySaleInfoMap = Maps.newHashMap();
+        asinTotalDailySaleInfoMap = Maps.newHashMap();
+        asinDailySaleInfoWithMarketMap = Maps.newHashMap();
         List<AwsUserMarketDo> awsUserMarketDos = awsUserMarketDao.all();
 
         Date usDate = TimeUtil.transformNowToUsDate();

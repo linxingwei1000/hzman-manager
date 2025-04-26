@@ -80,15 +80,15 @@ public class ItemDetailCache {
 
         comparatorMap = Maps.newHashMap();
         comparatorMap.put(ContextConst.ITEM_SORT_TODAY_DESC, new TodaySaleDescComparator());
-        comparatorMap.put(ContextConst.ITEM_SORT_TODAY_ASC, new TodaySaleAscComparator());
+        comparatorMap.put(ContextConst.ITEM_SORT_TODAY_ASC, new TodaySaleDescComparator());
         comparatorMap.put(ContextConst.ITEM_SORT_YESTERDAY_DESC, new YesterdaySaleDescComparator());
-        comparatorMap.put(ContextConst.ITEM_SORT_YESTERDAY_ASC, new YesterdaySaleAscComparator());
+        comparatorMap.put(ContextConst.ITEM_SORT_YESTERDAY_ASC, new YesterdaySaleDescComparator());
         comparatorMap.put(ContextConst.ITEM_SORT_SALE_INVENTORY_DESC, new SaleInventoryDescComparator());
-        comparatorMap.put(ContextConst.ITEM_SORT_SALE_INVENTORY_ASC, new SaleInventoryAscComparator());
+        comparatorMap.put(ContextConst.ITEM_SORT_SALE_INVENTORY_ASC, new SaleInventoryDescComparator());
         comparatorMap.put(ContextConst.ITEM_SORT_LOCAL_INVENTORY_DESC, new LocalInventoryDescComparator());
-        comparatorMap.put(ContextConst.ITEM_SORT_LOCAL_INVENTORY_ASC, new LocalInventoryAscComparator());
+        comparatorMap.put(ContextConst.ITEM_SORT_LOCAL_INVENTORY_ASC, new LocalInventoryDescComparator());
         comparatorMap.put(ContextConst.ITEM_SORT_30_DAY_DESC, new Sale30DescComparator());
-        comparatorMap.put(ContextConst.ITEM_SORT_30_DAY_ASC, new Sale30AscComparator());
+        comparatorMap.put(ContextConst.ITEM_SORT_30_DAY_ASC, new Sale30DescComparator());
 
         cache = Caffeine.newBuilder()
                 .maximumSize(10000)
@@ -407,6 +407,12 @@ public class ItemDetailCache {
         inventoryDTO.setInboundShippedQuantity(inboundShippedQuantity);
         relationItem.setInventoryDTO(inventoryDTO);
         return relationItem;
+    }
+
+    //获取父类子体数量
+    public Integer getChildrenItemNum(Integer userMarketId, String asin) {
+        List<FatherChildRelationDo> relations = fatherChildRelationDao.getAllRelation(userMarketId, asin);
+        return CollectionUtils.isEmpty(relations) ? 0 : relations.size();
     }
 
     //获取父类子体

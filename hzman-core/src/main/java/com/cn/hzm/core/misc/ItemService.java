@@ -6,6 +6,7 @@ import com.cn.hzm.api.dto.*;
 import com.cn.hzm.api.enums.FactoryOrderStatusEnum;
 import com.cn.hzm.core.cache.ItemDetailCache;
 import com.cn.hzm.core.cache.ThreadLocalCache;
+import com.cn.hzm.core.cache.comparator.SortHelper;
 import com.cn.hzm.core.constant.ContextConst;
 import com.cn.hzm.core.enums.AwsMarket;
 import com.cn.hzm.core.enums.SpiderType;
@@ -24,26 +25,31 @@ import com.cn.hzm.core.util.RandomUtil;
 import com.cn.hzm.core.util.TimeUtil;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
+import com.google.common.collect.Sets;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.BorderStyle;
-import org.apache.poi.ss.usermodel.CellStyle;
-import org.apache.poi.ss.usermodel.HorizontalAlignment;
-import org.apache.poi.ss.usermodel.VerticalAlignment;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpServletResponse;
+import java.io.InputStream;
 import java.io.OutputStream;
 import java.nio.charset.StandardCharsets;
 import java.text.ParseException;
 import java.util.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 /**
@@ -53,6 +59,9 @@ import java.util.stream.Collectors;
 @Slf4j
 @Service
 public class ItemService {
+
+    @Autowired
+    private AsinItemDao asinItemDao;
 
     @Autowired
     private ItemDao itemDao;
@@ -105,6 +114,9 @@ public class ItemService {
     @Autowired
     private ItemDetailCache itemDetailCache;
 
+    @Resource(name = "processItemInfoThreadExecutor")
+    private ExecutorService executorService;
+
     @Autowired
     private SmartReplenishmentProcessor smartReplenishmentProcessor;
 
@@ -120,6 +132,453 @@ public class ItemService {
         respJo.put("total", itemRespList.size());
         respJo.put("data", conditionDto.pageResult(itemRespList));
         return respJo;
+    }
+
+    public JSONObject processListItemV2(ItemConditionDto conditionDto) {
+        String[] selectFields = new String[]{"id", "asin", "title"};
+        List<AsinItemDo> asinItemDos;
+        List<Integer> selectItemIds = Lists.newArrayList();
+        switch (conditionDto.getStatusType()) {
+            case 0:
+            case 6:
+                //全部商品
+                asinItemDos = asinItemDao.selectAll(selectFields);
+                break;
+            case 1:
+            case 2:
+                //补货/订货商品
+                Map<Integer, List<String>> userMarketIdSkus = smartReplenishmentProcessor.getSkusAll(conditionDto.getStatusType());
+                Set<String> asins = Sets.newHashSet();
+                userMarketIdSkus.forEach((userMarketId, skus) -> skus.forEach(sku -> {
+                    ItemDo itemDo = itemDao.getItemDOBySku(userMarketId, sku);
+                    if (itemDo != null) {
+                        selectItemIds.add(itemDo.getId());
+                        asins.add(itemDo.getAsin());
+                    }
+                }));
+                asinItemDos = asins.size() == 0 ? Lists.newArrayList() : asinItemDao.getByAsins(asins, selectFields);
+                break;
+            case 3:
+                //父体
+                List<ItemDo> fatherItems = itemDao.getItemByParentType(1, new String[]{"user_market_id", "sku", "asin"});
+                Set<String> fatherAsins = fatherItems.stream().map(ItemDo::getAsin).collect(Collectors.toSet());
+                asinItemDos = fatherAsins.size() == 0 ? Lists.newArrayList() : asinItemDao.getByAsins(fatherAsins, selectFields);
+                break;
+            case 4:
+                //备注商品
+                List<ItemRemarkDo> remarkDos = itemRemarkDao.selectAll(new String[]{"item_id"});
+                Set<Integer> itemIds = remarkDos.stream().map(ItemRemarkDo::getItemId).collect(Collectors.toSet());
+                Set<String> remarkAsins = itemIds.stream()
+                        .map(itemId -> {
+                            selectItemIds.add(itemId);
+                            ItemDo itemDo = itemDao.getById(itemId);
+                            return itemDo == null ? null : itemDo.getAsin();
+                        }).filter(asin -> !StringUtils.isEmpty(asin)).collect(Collectors.toSet());
+                asinItemDos = remarkAsins.size() == 0 ? Lists.newArrayList() : asinItemDao.getByAsins(remarkAsins, selectFields);
+                break;
+            case 5:
+                //未备注，找老板商量，直接去掉
+//                temp = cache.asMap().values().stream().filter(itemDto -> itemDto.getUserMarketId().equals(userMarketId)).collect(Collectors.toList());
+//                temp = temp.stream().filter(item -> CollectionUtils.isEmpty(item.getRemarkDtos())).collect(Collectors.toList());
+//                break;
+            case 7:
+                List<ItemDo> itemDos = itemDao.getListByCondition(Maps.newHashMap(), new String[]{"id", "asin", "activity_info"});
+                Set<String> transparencyPlanAsins = itemDos.stream()
+                        .filter(itemDo -> itemDo.getActivityObj().getIsTransparencyPlan())
+                        .map(item -> {
+                            selectItemIds.add(item.getId());
+                            return item.getAsin();
+                        })
+                        .collect(Collectors.toSet());
+                asinItemDos = transparencyPlanAsins.size() == 0 ? Lists.newArrayList() : asinItemDao.getByAsins(transparencyPlanAsins, selectFields);
+                break;
+            default:
+                asinItemDos = asinItemDao.selectAll(selectFields);
+        }
+
+        //asin过滤 or sku过滤
+        if (!StringUtils.isEmpty(conditionDto.getKey())) {
+            if (conditionDto.getStatusType().equals(6)) {
+                asinItemDos = asinItemDos.stream()
+                        .filter(item -> item.getAsin().contains(conditionDto.getKey()))
+                        .collect(Collectors.toList());
+            } else {
+                List<ItemDo> skuItems = itemDao.fuzzyGetItemDOSBySku(conditionDto.getKey(), null);
+                Set<String> selectAsins = Sets.newHashSet();
+                skuItems.forEach(skuItem -> {
+                    selectAsins.add(skuItem.getAsin());
+                    selectItemIds.add(skuItem.getId());
+                });
+                asinItemDos = asinItemDos.stream()
+                        .filter(asinItemDo -> selectAsins.contains(asinItemDo.getAsin()))
+                        .collect(Collectors.toList());
+            }
+
+        }
+
+        //title过滤
+        if (!StringUtils.isEmpty(conditionDto.getTitle())) {
+            String[] keys = conditionDto.getTitle().split(" ");
+            asinItemDos = asinItemDos.stream().filter(item -> {
+                for (String subKey : keys) {
+                    if (!item.getTitle().toLowerCase().contains(subKey.toLowerCase())) {
+                        return false;
+                    }
+                }
+                return true;
+            }).collect(Collectors.toList());
+        }
+
+        //厂家过滤
+        Integer factoryId = conditionDto.getFactoryId();
+        if (factoryId != null && factoryId != 0) {
+            List<FactoryItemDo> factoryItemDOS;
+            if (factoryId == -1) {
+                //拉取未绑定厂家商品
+                factoryItemDOS = factoryItemDao.getAll();
+            } else {
+                //拉取指定厂家商品
+                factoryItemDOS = factoryItemDao.getInfoByFactoryId(factoryId);
+            }
+
+            Set<String> selectAsins = Sets.newHashSet();
+            factoryItemDOS.forEach(factoryItemDo -> {
+                List<ItemDo> factoryItems = itemDao.getItemDOSBySku(factoryItemDo.getSku(), null);
+                factoryItems.forEach(factoryItem -> {
+                    selectAsins.add(factoryItem.getAsin());
+                    selectItemIds.add(factoryItem.getId());
+                });
+
+            });
+            asinItemDos = asinItemDos.stream()
+                    .filter(asinItemDo -> (factoryId == -1) != selectAsins.contains(asinItemDo.getAsin()))
+                    .collect(Collectors.toList());
+        }
+
+        //商品类型过滤
+        if (!StringUtils.isEmpty(conditionDto.getItemType())) {
+            asinItemDos = asinItemDos.stream()
+                    .filter(item -> item.getItemType().equals(conditionDto.getItemType()))
+                    .collect(Collectors.toList());
+        }
+
+        //上架时间过滤排序
+        String startListingTime = conditionDto.getStartListingTime();
+        if (!StringUtils.isEmpty(startListingTime)) {
+            startListingTime += ":00";
+        }
+        String endListingTime = conditionDto.getEndListingTime();
+        if (!StringUtils.isEmpty(endListingTime)) {
+            endListingTime += ":00";
+        }
+
+        if (!StringUtils.isEmpty(startListingTime) || !StringUtils.isEmpty(endListingTime)) {
+            List<ItemDo> listingTimeItems = itemDao.getItemDOSByListingTime(startListingTime, endListingTime, new String[]{"id", "asin", "title"});
+            if (!CollectionUtils.isEmpty(listingTimeItems)) {
+                Integer listingDateSortType = conditionDto.getListingTimeSortType();
+                if (listingDateSortType == null || listingDateSortType == 0) {
+                    //按时间从老到新
+                    listingTimeItems = listingTimeItems.stream().sorted(Comparator.comparing(ItemDo::getListingTime))
+                            .collect(Collectors.toList());
+                } else {
+                    //按时间从新到老
+                    listingTimeItems = listingTimeItems.stream().sorted(Comparator.comparing(ItemDo::getListingTime).reversed())
+                            .collect(Collectors.toList());
+                }
+                //上架时间过滤出的asin
+                List<String> listingTimeAsins = listingTimeItems.stream().map(ItemDo::getAsin).collect(Collectors.toList());
+                Map<String, AsinItemDo> map = asinItemDos.stream().collect(Collectors.toMap(AsinItemDo::getAsin, a -> a));
+                asinItemDos = listingTimeAsins.stream()
+                        .map(listingTimeAsin -> map.getOrDefault(listingTimeAsin, null))
+                        .filter(Objects::nonNull)
+                        .collect(Collectors.toList());
+            }
+        }
+
+
+        List<SaleInfoDo> saleInfoDos;
+        Date usDate = TimeUtil.transformNowToUsDate();
+        if (conditionDto.getItemSortType().equals(ContextConst.ITEM_SORT_TODAY_DESC)) {
+            String strDate = TimeUtil.getSimpleFormat(usDate);
+            saleInfoDos = saleInfoDao.getSaleInfoByDate(strDate);
+        } else if (conditionDto.getItemSortType().equals(ContextConst.ITEM_SORT_YESTERDAY_DESC)) {
+            usDate = TimeUtil.dateFixByDay(usDate, -1, 0, 0);
+            String strDate = TimeUtil.getSimpleFormat(usDate);
+            saleInfoDos = saleInfoDao.getSaleInfoByDate(strDate);
+        } else if (conditionDto.getItemSortType().equals(ContextConst.ITEM_SORT_30_DAY_DESC)) {
+            Date beginDate = TimeUtil.dateFixByDay(usDate, -30, 0, 0);
+            String strEndDate = TimeUtil.getSimpleFormat(usDate);
+            String strBeginDate = TimeUtil.getSimpleFormat(beginDate);
+            saleInfoDos = saleInfoDao.getSaleInfoByDurationDate(null, null, strBeginDate, strEndDate);
+        } else {
+            saleInfoDos = Lists.newArrayList();
+        }
+
+
+        Map<String, List<SaleInfoDo>> asinSaleInfoMap = Maps.newHashMap();
+        saleInfoDos.forEach(saleInfoDo -> {
+            List<ItemDo> itemDos = itemDao.getItemDOSBySku(saleInfoDo.getSku(), saleInfoDo.getUserMarketId());
+            itemDos.forEach(itemDo -> {
+                List<SaleInfoDo> tmpSaleInfos = asinSaleInfoMap.getOrDefault(itemDo.getAsin(), Lists.newArrayList());
+                tmpSaleInfos.add(saleInfoDo);
+                asinSaleInfoMap.put(itemDo.getAsin(), tmpSaleInfos);
+            });
+        });
+
+        List<AsinItemDto> asinItemDtos = Lists.newArrayList();
+        asinItemDos.forEach(asinItemDo -> {
+            AsinItemDto asinItemDto = new AsinItemDto();
+            asinItemDto.setId(asinItemDo.getId());
+            asinItemDto.setAsin(asinItemDo.getAsin());
+
+            List<SaleInfoDo> tmpSaleInfos = asinSaleInfoMap.get(asinItemDo.getAsin());
+
+            int totalOrderNum = 0;
+            int totalSaleNum = 0;
+            double totalSaleVolume = 0.0;
+            double totalTaxFee = 0.0;
+            double totalFbaFulfillmentFee = 0.0;
+            double totalCommission = 0.0;
+            if (!CollectionUtils.isEmpty(tmpSaleInfos)) {
+                for (SaleInfoDo saleInfo : tmpSaleInfos) {
+                    int orderNum = saleInfo.getOrderNum() == null ? 0 : saleInfo.getOrderNum();
+                    int saleNum = saleInfo.getSaleNum() == null ? 0 : saleInfo.getSaleNum();
+                    double saleVolume = saleInfo.getSaleVolume() == null ? 0.0 : saleInfo.getSaleVolume();
+                    double taxFee = saleInfo.getSaleTax() == null ? 0.0 : saleInfo.getSaleTax();
+                    double fbaFulfillmentFee = saleInfo.getFbaFulfillmentFee() == null ? 0.0 : saleInfo.getFbaFulfillmentFee();
+                    double commission = saleInfo.getCommission() == null ? 0.0 : saleInfo.getCommission();
+
+                    totalOrderNum += orderNum;
+                    totalSaleNum += saleNum;
+                    totalSaleVolume += saleVolume;
+                    totalTaxFee += taxFee;
+                    totalFbaFulfillmentFee += fbaFulfillmentFee;
+                    totalCommission += commission;
+                }
+            }
+
+            double unitPrice = totalSaleVolume;
+            if (totalSaleNum != 0) {
+                unitPrice = totalSaleVolume / totalSaleNum;
+            }
+
+            SaleInfoDto saleInfoDTO = new SaleInfoDto();
+            saleInfoDTO.setOrderNum(totalOrderNum);
+            saleInfoDTO.setSaleNum(totalSaleNum);
+            saleInfoDTO.setSaleVolume(RandomUtil.saveDefaultDecimal(totalSaleVolume));
+            saleInfoDTO.setSaleTax(RandomUtil.saveDefaultDecimal(totalTaxFee));
+            saleInfoDTO.setFbaFulfillmentFee(RandomUtil.saveDefaultDecimal(totalFbaFulfillmentFee));
+            saleInfoDTO.setCommission(RandomUtil.saveDefaultDecimal(totalCommission));
+            saleInfoDTO.setUnitPrice(RandomUtil.saveDefaultDecimal(unitPrice));
+
+            //计算净收入
+            double income = totalSaleVolume - totalTaxFee - totalFbaFulfillmentFee - totalCommission;
+            saleInfoDTO.setIncome(RandomUtil.saveDefaultDecimal(income));
+            asinItemDto.setSortSaleInfo(saleInfoDTO);
+            asinItemDtos.add(asinItemDto);
+        });
+
+        Set<AsinItemDto> sortSet = Sets.newTreeSet((o1, o2) -> {
+            SaleInfoDto s1 = o1.getSortSaleInfo();
+            SaleInfoDto s2 = o2.getSortSaleInfo();
+            if (conditionDto.getItemSortType().equals(ContextConst.ITEM_SORT_TODAY_DESC)
+                    || conditionDto.getItemSortType().equals(ContextConst.ITEM_SORT_YESTERDAY_DESC)
+                    || conditionDto.getItemSortType().equals(ContextConst.ITEM_SORT_30_DAY_DESC)) {
+                return SortHelper.compareEach(s2.getSaleNum(), s1.getSaleNum(), o2.getAsin(), o1.getAsin());
+            }
+
+            //暂时这么写
+            return SortHelper.compareEach(s1.getSaleNum(), s2.getSaleNum(), o2.getAsin(), o1.getAsin());
+        });
+        sortSet.addAll(asinItemDtos);
+        List<AsinItemDto> result = conditionDto.pageResult(Lists.newArrayList(sortSet));
+
+        List<AsinItemDo> selectAsinItems = CollectionUtils.isEmpty(result) ? Lists.newArrayList() : asinItemDao.selectByIds(
+                result.stream().map(AsinItemDto::getId).collect(Collectors.toList()));
+        Map<Integer, AsinItemDo> selectMap = selectAsinItems.stream().collect(Collectors.toMap(AsinItemDo::getId, a -> a));
+
+        //多线程组装返回结果
+        List<Callable<Boolean>> dealCallables = Lists.newArrayList();
+        int threadNum = result.size() / 5 + (result.size() % 5 != 0 ? 1 : 0);
+        for (int i = 0; i < threadNum; i++) {
+            int finalI = i;
+            dealCallables.add(() -> {
+                int begin = finalI * 5;
+                int end = Math.min((finalI + 1) * 5, result.size());
+                result.subList(begin, end).forEach(
+                        asinItemDto -> {
+                            AsinItemDo asinItemDo = selectMap.get(asinItemDto.getId());
+                            asinItemDto.setIcon(asinItemDo.getIcon());
+                            asinItemDto.setTitle(asinItemDo.getTitle());
+                            asinItemDto.setLocalQuantity(asinItemDo.getLocalQuantity());
+
+                            Date curDate = TimeUtil.transformNowToUsDate();
+                            asinItemDto.setDimension(JSONObject.parseObject(asinItemDo.getPackageDimension(), PackageDimensionDto.class));
+                            List<ItemDo> itemDos = itemDao.getItemDoByAsin(asinItemDto.getAsin());
+
+                            //本地库存修改展示修改，有美国展示美国，没有美国展示第一个商品sku
+                            String showSku = itemDos.get(0).getSku();
+                            for(ItemDo itemDo : itemDos){
+                                if(itemDo.getUserMarketId().equals(1)){
+                                    showSku = itemDo.getSku();
+                                    break;
+                                }
+                            }
+                            asinItemDto.setShowSku(showSku);
+
+                            asinItemDto.setSiteItems(itemDos.stream()
+                                    .filter(itemDo -> CollectionUtils.isEmpty(selectItemIds) || selectItemIds.contains(itemDo.getId()))
+                                    .map(itemDo -> buildItemDTO(itemDo, curDate))
+                                    .collect(Collectors.toList()));
+
+                            //构造子体数据
+                            if (conditionDto.getStatusType().equals(3)) {
+                                asinItemDto.getSiteItems().forEach(fatherItem -> {
+                                    Integer itemNum = itemDetailCache.getChildrenItemNum(fatherItem.getUserMarketId(), fatherItem.getAsin());
+                                    fatherItem.setChildrenNum(itemNum);
+                                    fatherItem.setHaveChildren(itemNum != 0);
+                                });
+                            }
+
+                            List<SaleInfoDto> calculateSaleInfos = asinItemDto.
+                                    getSiteItems().stream().map(ItemDto::getToday).collect(Collectors.toList());
+                            asinItemDto.setToday(statSaleInfo(calculateSaleInfos));
+                            calculateSaleInfos = asinItemDto.
+                                    getSiteItems().stream().map(ItemDto::getYesterday).collect(Collectors.toList());
+                            asinItemDto.setYesterday(statSaleInfo(calculateSaleInfos));
+                            calculateSaleInfos = asinItemDto.
+                                    getSiteItems().stream().map(ItemDto::getDuration30Day).collect(Collectors.toList());
+                            asinItemDto.setDuration30Day(statSaleInfo(calculateSaleInfos));
+                            calculateSaleInfos = asinItemDto.
+                                    getSiteItems().stream().map(ItemDto::getDuration3060Day).collect(Collectors.toList());
+                            asinItemDto.setDuration3060Day(statSaleInfo(calculateSaleInfos));
+                            calculateSaleInfos = asinItemDto.
+                                    getSiteItems().stream().map(ItemDto::getLastYearDuration30Day).collect(Collectors.toList());
+                            asinItemDto.setLastYearDuration30Day(statSaleInfo(calculateSaleInfos));
+                        });
+                return true;
+            });
+        }
+
+        try {
+            List<Future<Boolean>> returnFutures = executorService.invokeAll(dealCallables);
+            for (Future<Boolean> booleanFuture : returnFutures) {
+                boolean resultBool = booleanFuture.get();
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        JSONObject respJo = new JSONObject();
+        respJo.put("total", sortSet.size());
+        respJo.put("data", result);
+        return respJo;
+
+    }
+
+    public Boolean setAsinInventoryLocal(Integer asinItemId, Integer curLocalNum){
+        AsinItemDo asinItemDo = asinItemDao.selectById(asinItemId);
+        asinItemDo.setLocalQuantity(curLocalNum);
+        asinItemDao.updateItem(asinItemDo);
+        return true;
+    }
+
+    private SaleInfoDto statSaleInfo(List<SaleInfoDto> calculateSaleInfos) {
+        int totalOrderNum = 0;
+        int totalSaleNum = 0;
+        double totalSaleVolume = 0.0;
+        double totalTaxFee = 0.0;
+        double totalFbaFulfillmentFee = 0.0;
+        double totalCommission = 0.0;
+        if (!CollectionUtils.isEmpty(calculateSaleInfos)) {
+            for (SaleInfoDto saleInfoDto : calculateSaleInfos) {
+                totalOrderNum += saleInfoDto.getOrderNum();
+                totalSaleNum += saleInfoDto.getSaleNum();
+                totalSaleVolume += saleInfoDto.getSaleVolume();
+                totalTaxFee += saleInfoDto.getSaleTax();
+                totalFbaFulfillmentFee += saleInfoDto.getFbaFulfillmentFee();
+                totalCommission += saleInfoDto.getCommission();
+            }
+        }
+
+        double unitPrice = totalSaleVolume;
+        if (totalSaleNum != 0) {
+            unitPrice = totalSaleVolume / totalSaleNum;
+        }
+
+        SaleInfoDto saleInfoDTO = new SaleInfoDto();
+        saleInfoDTO.setOrderNum(totalOrderNum);
+        saleInfoDTO.setSaleNum(totalSaleNum);
+        saleInfoDTO.setSaleVolume(RandomUtil.saveDefaultDecimal(totalSaleVolume));
+        saleInfoDTO.setSaleTax(RandomUtil.saveDefaultDecimal(totalTaxFee));
+        saleInfoDTO.setFbaFulfillmentFee(RandomUtil.saveDefaultDecimal(totalFbaFulfillmentFee));
+        saleInfoDTO.setCommission(RandomUtil.saveDefaultDecimal(totalCommission));
+        saleInfoDTO.setUnitPrice(RandomUtil.saveDefaultDecimal(unitPrice));
+
+        //计算净收入
+        double income = totalSaleVolume - totalTaxFee - totalFbaFulfillmentFee - totalCommission;
+        saleInfoDTO.setIncome(RandomUtil.saveDefaultDecimal(income));
+        return saleInfoDTO;
+    }
+
+    private List<AsinItemDto> mockAsinList() {
+        List<AsinItemDto> asinItemDtos = Lists.newArrayList();
+
+        String iconUrl = "https://sellercentral.amazon.com/abis/listing/edit/offer?marketplaceID=ATVPDKIKX0DER&ref=xx_myiedit_cont_myifba&sku=S7312B-Round-T&asin=B09CD6726J&productType=NECKLACE#offer";
+
+        List<String> asins = Lists.newArrayList(
+                "B01I9XYKOG", "B0746BY7M2", "B07PFWC3FK", "B07C3M2JBB", "B07ZNL5MTR",
+                "B07B1V2R2W", "B074DDZ472", "B078ZS6NMJ", "B079P4NKTC", "B07VHDJNPX");
+        for (int i = 0; i < 10; i++) {
+            AsinItemDto asinItemDto = new AsinItemDto();
+            asinItemDto.setId(i);
+            asinItemDto.setAsin(asins.get(i));
+            asinItemDto.setIcon(iconUrl);
+            asinItemDto.setTitle(String.format("mockTitle-%d", i));
+
+            asinItemDto.setToday(mockSaleInfo(i));
+            asinItemDto.setYesterday(mockSaleInfo(i));
+            asinItemDto.setDuration30Day(mockSaleInfo(i));
+            asinItemDto.setDuration3060Day(mockSaleInfo(i));
+            asinItemDto.setLastYearDuration30Day(mockSaleInfo(i));
+
+            asinItemDto.setLocalQuantity(i);
+
+            PackageDimensionDto dto = new PackageDimensionDto();
+            dto.setHeight("2.7");
+            dto.setLength("2.8");
+            dto.setWeight("2.9");
+            dto.setWidth("3.0");
+            asinItemDto.setDimension(dto);
+
+            List<ItemDo> itemDos = itemDao.getItemDoByAsin(asinItemDto.getAsin());
+
+            Date usDate = TimeUtil.transformNowToUsDate();
+            asinItemDto.setSiteItems(itemDos.stream()
+                    .map(itemDo -> {
+                        ItemDto itemDto = buildItemDTO(itemDo, usDate);
+                        Integer userMarketId = itemDto.getUserMarketId();
+                        AwsUserMarketDo awsUserMarketDo = awsUserMarketDao.getById(userMarketId);
+                        String siteName = awsUserManager.getManager(awsUserMarketDo.getAwsUserId(), awsUserMarketDo.getMarketId()).getSiteName();
+                        itemDto.setSiteName(siteName);
+                        return itemDto;
+                    }).collect(Collectors.toList()));
+            asinItemDtos.add(asinItemDto);
+        }
+        return asinItemDtos;
+    }
+
+    private SaleInfoDto mockSaleInfo(int i) {
+        SaleInfoDto saleInfoDTO = new SaleInfoDto();
+        saleInfoDTO.setUserMarketId(0);
+        saleInfoDTO.setOrderNum(i);
+        saleInfoDTO.setSaleNum(i);
+        saleInfoDTO.setSaleVolume(RandomUtil.saveDefaultDecimal(0.0D + i));
+        saleInfoDTO.setSaleTax(RandomUtil.saveDefaultDecimal(0.0D + i));
+        saleInfoDTO.setFbaFulfillmentFee(RandomUtil.saveDefaultDecimal(0.0D + i));
+        saleInfoDTO.setCommission(RandomUtil.saveDefaultDecimal(0.0D + i));
+        saleInfoDTO.setUnitPrice(RandomUtil.saveDefaultDecimal(0.0D + i));
+        return saleInfoDTO;
     }
 
     public List<ItemDto> getChildrenItem(Integer userMarketId, String asin) {
@@ -180,7 +639,7 @@ public class ItemService {
 
     public boolean modTransparencyPlan(ModItemTransparencyPlayDto dto) {
         //操作商品透明计划标
-        dto.getItemIds().forEach(itemId ->{
+        dto.getItemIds().forEach(itemId -> {
             ItemDo itemDO = itemDao.getById(itemId);
             ItemDo.ItemActivityObj itemActivityObj = itemDO.getActivityObj();
             itemActivityObj.setIsTransparencyPlan(dto.getOperate().equals(1));
@@ -250,6 +709,12 @@ public class ItemService {
                 itemDao.updateItem(itemDo);
             } else {
                 itemDao.createItem(itemDo);
+
+                //创建asinItem
+                if (asinItemDao.getByAsin(itemDo.getAsin()) == null) {
+                    AsinItemDo asinItemDo = ConvertUtil.convertToItemDo(itemDo);
+                    asinItemDao.createItem(asinItemDo);
+                }
             }
 
             //刷新排名信息
@@ -401,13 +866,13 @@ public class ItemService {
                 dto.setHeight(targetJo.getJSONObject("height").getString("value"));
             }
             if (targetJo.containsKey("length")) {
-                dto.setHeight(targetJo.getJSONObject("length").getString("value"));
+                dto.setLength(targetJo.getJSONObject("length").getString("value"));
             }
             if (targetJo.containsKey("weight")) {
-                dto.setHeight(targetJo.getJSONObject("weight").getString("value"));
+                dto.setWeight(targetJo.getJSONObject("weight").getString("value"));
             }
             if (targetJo.containsKey("width")) {
-                dto.setHeight(targetJo.getJSONObject("width").getString("value"));
+                dto.setWidth(targetJo.getJSONObject("width").getString("value"));
             }
             itemDTO.setDimension(dto);
         } else {
@@ -509,6 +974,9 @@ public class ItemService {
 
         AwsUserMarketDo userMarketDo = awsUserMarketDao.getById(itemDO.getUserMarketId());
         AwsMarket awsMarket = AwsMarket.getByMarketId(userMarketDo.getMarketId());
+        //拼装站点名
+        String siteName = awsUserManager.getManager(userMarketDo.getAwsUserId(), userMarketDo.getMarketId()).getSiteName();
+        itemDTO.setSiteName(siteName);
 
         //拼装跳转链接
         Map<String, String> paramMap = Maps.newHashMap();
@@ -628,21 +1096,39 @@ public class ItemService {
         synchronized (syncLock.get(sku)) {
             AwsUserMarketDo awsUserMarketDo = awsUserMarketDao.getByUserIdAndMarketId(awsUserId, marketId);
             ItemInventoryDo inventory = inventoryDao.getInventoryBySku(sku, awsUserMarketDo.getId());
+
+            List<ItemDo> itemDos = itemDao.getItemDOSBySku(sku, awsUserMarketDo.getId());
             switch (operateType) {
                 case "set":
-                    if(inventory != null){
+                    if (inventory != null) {
                         inventory.setLocalQuantity(dealNum);
                         inventory.calculateTotalQuantity();
                         inventoryDao.updateInventory(inventory);
+
+                        itemDos.forEach(itemDo -> {
+                            AsinItemDo asinItemDo = asinItemDao.getByAsin(itemDo.getAsin());
+                            if (asinItemDo != null) {
+                                asinItemDo.setLocalQuantity(dealNum);
+                                asinItemDao.updateItem(asinItemDo);
+                            }
+                        });
                     }
                     break;
                 case "mod":
-                    if(inventory != null){
+                    if (inventory != null) {
                         Integer localNum = inventory.getLocalQuantity() == null ? 0 : inventory.getLocalQuantity();
                         int nowLocal = localNum + dealNum;
                         inventory.setLocalQuantity(Math.max(nowLocal, 0));
                         inventory.calculateTotalQuantity();
                         inventoryDao.updateInventory(inventory);
+
+                        itemDos.forEach(itemDo -> {
+                            AsinItemDo asinItemDo = asinItemDao.getByAsin(itemDo.getAsin());
+                            if (asinItemDo != null) {
+                                asinItemDo.setLocalQuantity(Math.max(nowLocal, 0));
+                                asinItemDao.updateItem(asinItemDo);
+                            }
+                        });
                     }
                     break;
                 case "refresh":
@@ -671,6 +1157,24 @@ public class ItemService {
                 default:
             }
             itemDetailCache.refreshCache(awsUserMarketDo.getId(), sku);
+
+            //刷新asin 商品 本地库存
+            itemDos.forEach(itemDo -> {
+                AsinItemDo asinItemDo = asinItemDao.getByAsin(itemDo.getAsin());
+                if (asinItemDo != null) {
+                    List<ItemDo> tmpItemDos = itemDao.getItemDoByAsin(itemDo.getAsin());
+
+                    int localInventory = 0;
+                    for(ItemDo tmp: tmpItemDos){
+                        ItemInventoryDo tmpInventory = inventoryDao.getInventoryBySku(tmp.getSku(), awsUserMarketDo.getId());
+                        if(tmpInventory != null){
+                            localInventory += tmpInventory.getLocalQuantity();
+                        }
+                    }
+                    asinItemDo.setLocalQuantity(localInventory);
+                    asinItemDao.updateItem(asinItemDo);
+                }
+            });
         }
     }
 
@@ -756,6 +1260,12 @@ public class ItemService {
                 fatherItem.setItemPrice(0.0);
                 fatherItem.setSku(StringUtils.isEmpty(fatherItem.getSku()) ? "" : fatherItem.getSku());
                 itemDao.createItem(fatherItem);
+
+                if (asinItemDao.getByAsin(fatherItem.getAsin()) == null) {
+                    AsinItemDo asinItemDo = ConvertUtil.convertToItemDo(fatherItem);
+                    asinItemDao.createItem(asinItemDo);
+                }
+
                 log.info("创建父sku商品：{}", fatherItem.getAsin());
             }
 
@@ -787,6 +1297,11 @@ public class ItemService {
 
                     childItem.setActive(1);
                     itemDao.createItem(childItem);
+
+                    if (asinItemDao.getByAsin(childItem.getAsin()) == null) {
+                        AsinItemDo asinItemDo = ConvertUtil.convertToItemDo(childItem);
+                        asinItemDao.createItem(asinItemDo);
+                    }
 
                     dealSkuInventory(childItem.getSku(), awsUserMarketDo.getAwsUserId(), awsUserMarketDo.getMarketId(), "refresh", 0);
                 }
