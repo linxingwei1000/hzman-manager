@@ -42,7 +42,7 @@ public class ItemApi {
         return HzmResponse.success(itemService.processListItemV2(conditionDTO));
     }
 
-    @ApiOperation("商品列表V2")
+    @ApiOperation("商品列表V2库存设置")
     @RequestMapping(value = "/asin/inventory/local", method = RequestMethod.GET)
     public HzmResponse asinInventoryLocal(@ApiParam(name = "asinItemId") @RequestParam Integer asinItemId,
                                           @ApiParam("修改值") @RequestParam Integer curLocalNum) {

@@ -35,6 +35,8 @@ public enum ExceptionCode {
   TEMPLATE_EXCEL_DOWNLOAD_ERROR(20010, "模版文件下载失败"),
   TEMPLATE_EXCEL_DEAL_ERROR(20011, "批量操作文件处理失败"),
   DEAL_FILE_EXIST(20012, "处理文件已存在"),
+  SALE_INFO_BEGIN_MUST(20013, "未选中开始日期"),
+  SALE_INFO_END_MUST(20014, "未选中开始日期"),
 
   AWS_USER_INFO_ERROR(20100, "亚马逊账号错误："),
   AWS_MARKET_ERROR(20101, "亚马逊市场关联操作错误："),

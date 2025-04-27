@@ -1166,7 +1166,7 @@ public class ItemService {
 
                     int localInventory = 0;
                     for(ItemDo tmp: tmpItemDos){
-                        ItemInventoryDo tmpInventory = inventoryDao.getInventoryBySku(tmp.getSku(), awsUserMarketDo.getId());
+                        ItemInventoryDo tmpInventory = inventoryDao.getInventoryBySku(tmp.getSku(), tmp.getUserMarketId());
                         if(tmpInventory != null){
                             localInventory += tmpInventory.getLocalQuantity();
                         }

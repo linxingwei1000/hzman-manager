@@ -1,5 +1,6 @@
 package com.cn.hzm.core.util;
 
+import com.google.common.collect.Lists;
 import org.threeten.bp.OffsetDateTime;
 
 import java.text.ParseException;
@@ -11,16 +12,15 @@ import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
 import java.time.zone.ZoneRules;
-import java.util.Calendar;
-import java.util.Date;
-import java.util.GregorianCalendar;
-import java.util.TimeZone;
+import java.util.*;
 
 /**
  * @author xingweilin@clubfactory.com
  * @date 2020/7/7 9:33 下午
  */
 public class TimeUtil {
+
+    private static final String MONTH_FORMAT = "yyyy-MM";
 
     private static final String SIMPLE_FORMAT = "yyyy-MM-dd";
 
@@ -96,6 +96,43 @@ public class TimeUtil {
         }
         return new Date();
     }
+
+    public static List<String> getDailyDateByDuration(String beginDate, String endDate){
+        DateTimeFormatter dailyFormat = DateTimeFormatter.ofPattern(SIMPLE_FORMAT);
+
+        LocalDate localDate = LocalDate.parse(beginDate);
+        List<String> dates = Lists.newArrayList(beginDate);
+        while(true){
+            localDate = localDate.plusDays(1);
+            String curDate = localDate.format(dailyFormat);
+            if(curDate.equals(endDate)){
+                break;
+            }
+            dates.add(curDate);
+        }
+        dates.add(endDate);
+        return dates;
+    }
+
+    public static List<String> getMonthDateByDuration(String beginMonth, String endMonth){
+        DateTimeFormatter dailyFormat = DateTimeFormatter.ofPattern(MONTH_FORMAT);
+
+        List<String> months = Lists.newArrayList(beginMonth);
+
+        beginMonth += "-01";
+        LocalDate localDate = LocalDate.parse(beginMonth);
+        while(true){
+            localDate = localDate.plusMonths(1);
+            String curMonth = localDate.format(dailyFormat);
+            if(curMonth.equals(endMonth)){
+                break;
+            }
+            months.add(curMonth);
+        }
+        months.add(endMonth);
+        return months;
+    }
+
 
     public static String getSimpleFormat(Date date) {
         return new SimpleDateFormat(SIMPLE_FORMAT).format(date);
@@ -225,8 +262,10 @@ public class TimeUtil {
     }
 
     public static void main(String[] args) throws ParseException {
-        Date date = new Date();
-        System.out.println(daysBetweenTwoDate(date, dateFixByYear(date, 1)));
+        List<String> a = getDailyDateByDuration("2025-04-20", "2025-04-26");
+        System.out.println(a);
 
+        a = getMonthDateByDuration("2025-01", "2025-04");
+        System.out.println(a);
     }
 }

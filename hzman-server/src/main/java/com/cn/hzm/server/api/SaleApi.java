@@ -34,9 +34,14 @@ public class SaleApi {
         return HzmResponse.success(saleInfoService.getCurSaleInfo());
     }
 
+    @ApiOperation("历史销量")
+    @RequestMapping(value = "/his/data", method = RequestMethod.POST)
+    public HzmResponse curDate(@RequestBody SaleConditionDto saleConditionDTO) {
+        return HzmResponse.success(saleInfoService.getSkuHisSaleInfo(saleConditionDTO.getSku(), saleConditionDTO.getUserMarketId()));
+    }
 
     @ApiOperation("销量数据")
-    @RequestMapping(value = "/info", method = RequestMethod.POST)
+    @RequestMapping(value = "/data/condition", method = RequestMethod.POST)
     public HzmResponse listItem(@RequestBody SaleConditionDto saleConditionDTO) {
         return HzmResponse.success(saleInfoService.getSaleInfo(saleConditionDTO));
     }

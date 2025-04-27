@@ -73,4 +73,19 @@ public class SaleInfoDao {
         }
         return saleInfoMapper.selectList(query);
     }
+
+    public List<SaleInfoDo> getMonthSaleInfoByDurationDate(String sku, Integer userMarketId, String statBeginDate, String statEndDate) {
+        QueryWrapper<SaleInfoDo> query = new QueryWrapper<>();
+        query.select("left(stat_date,7) as stat_date, " +
+                "sum(sale_num) as sale_num," +
+                "sum(order_num) as order_num," +
+                "sum(sale_volume) as sale_volume," +
+                "sum(sale_tax) as sale_tax," +
+                "sum(fba_fulfillment_fee) as fba_fulfillment_fee," +
+                "sum(commission) as commission");
+        query.eq("sku", sku);
+        query.last(String.format("and left(stat_date,7) >= '%s' and left(stat_date,7) <= '%s'\n" +
+                " and user_market_id=%d group by left(stat_date,7)", statBeginDate, statEndDate, userMarketId));
+        return saleInfoMapper.selectList(query);
+    }
 }

@@ -3,20 +3,27 @@ package com.cn.hzm.server.service;
 import com.alibaba.fastjson.JSONObject;
 import com.cn.hzm.api.dto.*;
 import com.cn.hzm.core.cache.ThreadLocalCache;
+import com.cn.hzm.core.exception.ExceptionCode;
+import com.cn.hzm.core.exception.HzmException;
 import com.cn.hzm.core.repository.dao.SaleInfoDao;
 import com.cn.hzm.core.repository.entity.SaleInfoDo;
 import com.cn.hzm.core.util.RandomUtil;
 import com.cn.hzm.core.util.TimeUtil;
 import com.cn.hzm.core.cache.SaleInfoCache;
 import com.google.common.collect.Lists;
+import com.google.common.collect.Maps;
+import io.swagger.annotations.ApiModelProperty;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /**
  * @author xingweilin@clubfactory.com
@@ -48,87 +55,123 @@ public class SaleInfoService {
         return jo;
     }
 
-    public JSONObject getSaleInfo(SaleConditionDto saleConditionDTO) {
-        String endDate;
-        Date eDate;
-        if (StringUtils.isEmpty(saleConditionDTO.getEndDate())) {
-            eDate = TimeUtil.transformNowToUsDate();
-            endDate = TimeUtil.getSimpleFormat(eDate);
-        } else {
-            endDate = saleConditionDTO.getEndDate();
-            eDate = TimeUtil.getDateBySimple(endDate);
+    public HisSaleInfoAggrDto getSkuHisSaleInfo(String sku, Integer userMarketId){
+        Date usDate = TimeUtil.transformNowToUsDate();
+        HisSaleInfoAggrDto hisSaleInfoAggrDto = new HisSaleInfoAggrDto();
+        hisSaleInfoAggrDto.setDuration30Day(getSaleInfoByDurationDate(usDate, sku, userMarketId));
+        hisSaleInfoAggrDto.setDuration3060Day(getSaleInfoByDurationDate(TimeUtil.dateFixByDay(usDate, -30, 0, 0), sku, userMarketId));
+        hisSaleInfoAggrDto.setLastYearDuration30Day(getSaleInfoByDurationDate(TimeUtil.dateFixByYear(usDate, -1), sku, userMarketId));
+        return hisSaleInfoAggrDto;
+    }
+
+    public List<SaleInfoDurationDto> getSaleInfo(SaleConditionDto saleConditionDTO) {
+        if(StringUtils.isEmpty(saleConditionDTO.getBeginDate())){
+            throw new HzmException(ExceptionCode.SALE_INFO_BEGIN_MUST);
         }
 
-        String beginDate;
-        Date bDate;
-        if (StringUtils.isEmpty(saleConditionDTO.getBeginDate())) {
-            bDate = TimeUtil.dateFixByDay(eDate, -30, 0, 0);
-            beginDate = TimeUtil.getSimpleFormat(bDate);
-        } else {
-            beginDate = saleConditionDTO.getBeginDate();
-            bDate = TimeUtil.getDateBySimple(beginDate);
+        if(StringUtils.isEmpty(saleConditionDTO.getEndDate())){
+            throw new HzmException(ExceptionCode.SALE_INFO_END_MUST);
         }
 
-        Date nextDate = TimeUtil.dateFixByDay(bDate, 1, 0, 0);
-        List<SaleInfoDescDto> saleInfos = Lists.newArrayList();
-        if (StringUtils.isEmpty(saleConditionDTO.getSku())) {
-            while (true) {
-                SaleInfoDto saleInfoDTO = saleInfoCache.getDailySaleInfo(ThreadLocalCache.getUser().getUserMarketId(), beginDate);
-                SaleInfoDescDto saleInfoDescDTO = new SaleInfoDescDto();
-                saleInfoDescDTO.setSaleNum(saleInfoDTO.getSaleNum());
-                saleInfoDescDTO.setOrderNum(saleInfoDTO.getOrderNum());
-                saleInfoDescDTO.setSaleVolume(saleInfoDTO.getSaleVolume());
-                saleInfoDescDTO.setUnitPrice(saleInfoDTO.getUnitPrice());
-                saleInfoDescDTO.setSaleTax(saleInfoDTO.getSaleTax());
-                saleInfoDescDTO.setFbaFulfillmentFee(saleInfoDTO.getFbaFulfillmentFee());
-                saleInfoDescDTO.setCommission(saleInfoDTO.getCommission());
-                saleInfoDescDTO.setSaleDate(beginDate);
+        List<SaleInfoDo> resultList;
+        List<String> dates;
+        if(saleConditionDTO.getType().equals(1)){
+            dates = TimeUtil.getDailyDateByDuration(saleConditionDTO.getBeginDate(), saleConditionDTO.getEndDate());
+            resultList = saleInfoDao.getSaleInfoByDurationDate(saleConditionDTO.getSku(),
+                    saleConditionDTO.getUserMarketId(), saleConditionDTO.getBeginDate(), saleConditionDTO.getEndDate());
+        }else{
+            dates = TimeUtil.getMonthDateByDuration(saleConditionDTO.getBeginDate(), saleConditionDTO.getEndDate());
+            resultList = saleInfoDao.getMonthSaleInfoByDurationDate(saleConditionDTO.getSku(),
+                    saleConditionDTO.getUserMarketId(), saleConditionDTO.getBeginDate(), saleConditionDTO.getEndDate());
+        }
 
-                //计算净收入
-                double income = saleInfoDescDTO.getSaleVolume() - saleInfoDescDTO.getSaleTax() - saleInfoDescDTO.getFbaFulfillmentFee() - saleInfoDescDTO.getCommission();
-                saleInfoDescDTO.setIncome(RandomUtil.saveDefaultDecimal(income));
-                saleInfoDescDTO.setSku("all");
-                saleInfos.add(saleInfoDescDTO);
-                if (beginDate.equals(endDate)) {
-                    break;
+        Map<String, SaleInfoDo> resultMap = CollectionUtils.isEmpty(resultList) ?
+                Maps.newHashMap() : resultList.stream().collect(Collectors.toMap(SaleInfoDo::getStatDate, a -> a));
+
+        List<SaleInfoDurationDto> saleInfoDurationDtos = Lists.newArrayList();
+        dates.forEach(statDate ->{
+            SaleInfoDo saleInfoDo = resultMap.get(statDate);
+            SaleInfoDescDto saleInfoDTO;
+            if(saleInfoDo == null){
+                saleInfoDTO = new SaleInfoDescDto();
+                saleInfoDTO.setSaleNum(0);
+                saleInfoDTO.setOrderNum(0);
+                saleInfoDTO.setSaleVolume(0.0);
+                saleInfoDTO.setUnitPrice(0.0);
+                saleInfoDTO.setSaleTax(0.0);
+                saleInfoDTO.setFbaFulfillmentFee(0.0);
+                saleInfoDTO.setCommission(0.0);
+                saleInfoDTO.setIncome(0.0);
+            }else{
+                saleInfoDTO = new SaleInfoDescDto();
+                saleInfoDTO.setSaleNum(saleInfoDo.getSaleNum());
+                saleInfoDTO.setOrderNum(saleInfoDo.getOrderNum());
+                saleInfoDTO.setSaleVolume(saleInfoDo.getSaleVolume());
+                if (saleInfoDo.getSaleNum() == 0) {
+                    saleInfoDTO.setUnitPrice(0.0);
+                } else {
+                    saleInfoDTO.setUnitPrice(saleInfoDo.getSaleVolume() / (double) saleInfoDo.getSaleNum());
                 }
-                beginDate = TimeUtil.getSimpleFormat(nextDate);
-                nextDate = TimeUtil.dateFixByDay(nextDate, 1, 0, 0);
+                saleInfoDTO.setSaleTax(saleInfoDo.getSaleTax());
+                saleInfoDTO.setFbaFulfillmentFee(saleInfoDo.getFbaFulfillmentFee());
+                saleInfoDTO.setCommission(saleInfoDo.getCommission());
+                double income = saleInfoDTO.getSaleVolume() - saleInfoDTO.getSaleTax() - saleInfoDTO.getFbaFulfillmentFee() - saleInfoDTO.getCommission();
+                saleInfoDTO.setIncome(RandomUtil.saveDefaultDecimal(income));
             }
-        } else {
-            List<SaleInfoDo> compareList = saleInfoDao.getSaleInfoByDurationDate(saleConditionDTO.getSku(),
-                    ThreadLocalCache.getUser().getUserMarketId(), beginDate, endDate);
-            if (!CollectionUtils.isEmpty(compareList)) {
-                compareList.forEach(saleInfoDO -> {
-                    SaleInfoDescDto saleInfoDTO = new SaleInfoDescDto();
-                    saleInfoDTO.setSaleNum(saleInfoDO.getSaleNum());
-                    saleInfoDTO.setOrderNum(saleInfoDO.getOrderNum());
-                    saleInfoDTO.setSaleVolume(saleInfoDO.getSaleVolume());
-                    if (saleInfoDO.getSaleNum() == 0) {
-                        saleInfoDTO.setUnitPrice(0.0);
-                    } else {
-                        saleInfoDTO.setUnitPrice(saleInfoDO.getSaleVolume() / (double) saleInfoDO.getSaleNum());
-                    }
-                    saleInfoDTO.setSaleDate(saleInfoDO.getStatDate());
-                    saleInfoDTO.setSku(saleInfoDO.getSku());
-                    saleInfoDTO.setSaleTax(saleInfoDO.getSaleTax());
-                    saleInfoDTO.setFbaFulfillmentFee(saleInfoDO.getFbaFulfillmentFee());
-                    saleInfoDTO.setCommission(saleInfoDO.getCommission());
-                    double income = saleInfoDTO.getSaleVolume() - saleInfoDTO.getSaleTax() - saleInfoDTO.getFbaFulfillmentFee() - saleInfoDTO.getCommission();
-                    saleInfoDTO.setIncome(RandomUtil.saveDefaultDecimal(income));
+            saleInfoDTO.setSaleDate(statDate);
+            saleInfoDTO.setSku(saleConditionDTO.getSku());
 
-                    saleInfos.add(saleInfoDTO);
-                });
+            SaleInfoDurationDto saleInfoDurationDto = new SaleInfoDurationDto();
+            saleInfoDurationDto.setDate(saleInfoDTO.getSaleDate());
+            saleInfoDurationDto.setNum(saleInfoDTO.getSaleNum());
+            saleInfoDurationDto.setDetailInfo(saleInfoDTO);
+            saleInfoDurationDtos.add(saleInfoDurationDto);
+        });
+        return saleInfoDurationDtos;
+    }
+
+    private SaleInfoDto getSaleInfoByDurationDate(Date date, String sku, Integer userMarketId) {
+        Date beginDate = TimeUtil.dateFixByDay(date, -30, 0, 0);
+        String strEndDate = TimeUtil.getSimpleFormat(date);
+        String strBeginDate = TimeUtil.getSimpleFormat(beginDate);
+        List<SaleInfoDo> compareList = saleInfoDao.getSaleInfoByDurationDate(sku, userMarketId, strBeginDate, strEndDate);
+
+        int saleNum = 0;
+        int orderNum = 0;
+        double saleVolume = 0.0;
+        double taxFee = 0.0;
+        double fbaFulfillmentFee = 0.0;
+        double commission = 0.0;
+        if (!CollectionUtils.isEmpty(compareList)) {
+            for (SaleInfoDo saleInfo : compareList) {
+                saleNum += saleInfo.getSaleNum();
+                orderNum += saleInfo.getOrderNum();
+                saleVolume += saleInfo.getSaleVolume();
+                taxFee += saleInfo.getSaleTax();
+                fbaFulfillmentFee += saleInfo.getFbaFulfillmentFee();
+                commission += saleInfo.getCommission();
             }
         }
-        JSONObject jo = new JSONObject();
-        jo.put("num", saleInfos.size());
-        jo.put("info", saleInfos);
-        return jo;
+        SaleInfoDto saleInfoDTO = new SaleInfoDto();
+        saleInfoDTO.setSaleNum(saleNum);
+        saleInfoDTO.setOrderNum(orderNum);
+        saleInfoDTO.setSaleVolume(RandomUtil.saveDefaultDecimal(saleVolume));
+        if (saleNum == 0) {
+            saleInfoDTO.setUnitPrice(0.0);
+        } else {
+            saleInfoDTO.setUnitPrice(saleVolume / (double) saleNum);
+        }
+
+        saleInfoDTO.setSaleTax(RandomUtil.saveDefaultDecimal(taxFee));
+        saleInfoDTO.setFbaFulfillmentFee(RandomUtil.saveDefaultDecimal(fbaFulfillmentFee));
+        saleInfoDTO.setCommission(RandomUtil.saveDefaultDecimal(commission));
+        //计算净收入
+        double income = saleVolume - taxFee - fbaFulfillmentFee - commission;
+        saleInfoDTO.setIncome(RandomUtil.saveDefaultDecimal(income));
+        return saleInfoDTO;
     }
 
     private SaleInfoDto dealDurationSaleInfoDTO(Date beginDate, Integer dayNum) {
-
         SaleInfoDto saleInfoDTO = saleInfoCache.getDailySaleInfo(ThreadLocalCache.getUser().getUserMarketId(), TimeUtil.getSimpleFormat(beginDate));
         Date nextDate = TimeUtil.dateFixByDay(beginDate, 1, 0, 0);
 

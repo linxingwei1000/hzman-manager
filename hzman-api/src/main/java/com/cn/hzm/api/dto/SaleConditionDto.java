@@ -17,6 +17,16 @@ public class SaleConditionDto {
     private String sku;
 
     /**
+     * 用户站点id
+     */
+    private Integer userMarketId;
+
+    /**
+     * 销量数据类型:1.天级别，2.月级别
+     */
+    private Integer type;
+
+    /**
      * 搜索类型
      */
     private String beginDate;
